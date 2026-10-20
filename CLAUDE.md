@@ -25,10 +25,27 @@ Repository: private https://github.com/DanilchukV/stomatologia-landing, branch `
 logged in as DanilchukV. Commits use the GitHub noreply address — never the real email: the
 account has email privacy protection and a push with it is rejected (GH007). The global
 `user.email` on the Mac is the real address, so this repo has a local
-`26150007+DanilchukV@users.noreply.github.com`; don't reset it.
+`26150007+DanilchukV@users.noreply.github.com`; don't reset it. Every new clone needs it too (see below).
 
 After every finished change — a commit with a clear message **in English** and `git push`. The
 user wants to be able to roll back "N changes", so don't squash changes into one commit.
+
+## Setting up on a new computer
+
+The project is worked on from the Mac and from the Windows PC that also has Nitowska
+(`nitowska-landing`); the clone goes into the same parent folder, next to `nitowska-landing`.
+On Windows, in PowerShell, from the folder that contains `nitowska-landing`:
+
+```powershell
+gh repo clone DanilchukV/stomatologia-landing
+cd stomatologia-landing
+git config user.name "DanilchukV"
+git config user.email "26150007+DanilchukV@users.noreply.github.com"
+code .
+```
+
+`gh` must be logged in as DanilchukV (the repo is private). Phone preview over Wi-Fi on Windows
+needs `tools\lan-setup.ps1` once (asks for admin rights; Nitowska's setup covers port 8080 only).
 
 ## Structure
 
@@ -40,7 +57,7 @@ assets/js/data.js          content the scripts use: clinics, services, staff, sy
 assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
 assets/icons/              favicon (svg + 32 px png), apple-touch-icon, og-image (1200×630)
-tools/                     dev scripts (dev, serve, shot) — NOT DEPLOYED
+tools/                     dev scripts: dev, serve, shot (.sh for macOS, .ps1 for Windows), lan-setup.ps1 — NOT DEPLOYED
 docs/knowledge.md          knowledge base: how the sections work and why — NOT DEPLOYED
 .github/workflows/pages.yml  publishes index.html + assets/ to GitHub Pages
 ```
@@ -72,15 +89,22 @@ those two; a new top-level file (`robots.txt`, `404.html`, …) must be added to
 ## Preview
 
 ```bash
-tools/dev.sh             # server + desktop tab + Chrome mobile window (~390 px, iPhone user agent)
+tools/dev.sh             # macOS: server + desktop tab + Chrome mobile window (~390 px, iPhone user agent)
 tools/dev.sh -NoOpen     # server only
 tools/dev.sh -Stop       # stop the server (it has no window, it runs in the background)
 ```
 
-**"Start the site" / "run the site" / "open the preview"** means `tools/dev.sh`. The address is
-`http://127.0.0.1:8081/` — port **8081**, because Nitowska uses 8080 and both may run at once. The
-server listens on the whole network; `dev.sh` prints the phone link for the same Wi-Fi. If a server
-is already running, a second one doesn't start.
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\dev.ps1           # Windows: the same
+powershell -ExecutionPolicy Bypass -File tools\dev.ps1 -NoOpen   # server only
+powershell -ExecutionPolicy Bypass -File tools\lan-setup.ps1     # once: allow phones on the Wi-Fi (UAC)
+```
+
+**"Start the site" / "run the site" / "open the preview"** means `tools/dev.sh` (macOS) or
+`tools\dev.ps1` (Windows). The address is `http://127.0.0.1:8081/` (`http://localhost:8081/` on
+Windows) — port **8081**, because Nitowska uses 8080 and both may run at once. The server prints the
+phone link for the same Wi-Fi. If a server is already running, a second one doesn't start. On
+Windows the server runs in a minimised PowerShell window — close it to stop the server.
 
 Opening via `file://` doesn't work for self-hosted fonts (browsers block them from `file://`).
 
@@ -100,6 +124,8 @@ tools/shot.sh -Target "#services" -Js "ov('#services .card')" -NoShot
 `-Js` is an expression evaluated in the page, with helpers `ov(sel)` (horizontal overflow) and
 `box(sel)` (coordinates and size). `-Do` is a JS action before scrolling and the shot (fill fields,
 press a button). Screenshots: `$TMPDIR/stomatologia-shots/shot-<width>.png` — view them with Read.
+On Windows: `powershell -ExecutionPolicy Bypass -File tools\shot.ps1` with the same parameters;
+screenshots go to `%TEMP%\stomatologia-shots\`.
 The harness is `tools/shot.html` (index.html in an iframe, animations off). If the page hides
 blocks until they scroll into view, add that class to the harness's style override, or shots of
 lower sections come out blank.
