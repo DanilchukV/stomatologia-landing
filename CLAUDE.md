@@ -9,8 +9,9 @@ Talk to the user in Russian.
 
 ## Status
 
-Skeleton only: tools, the Pages workflow, docs and this file. The site isn't imported yet — see
-"Open tasks".
+The clinic is VestMedServis, a dental clinic in Brest (Belarus); the site is in Russian
+(`lang="ru"`). `index.html` is still the original Claude Design export, committed as downloaded
+(`ffa5378`); converting it to proper code is open task 1.
 
 ## Stack
 
@@ -120,21 +121,37 @@ not failed. Nothing is live yet.
 
 ### 1. Import the prototype
 
-The user downloads her HTML from the Claude chat into `~/Downloads` and names the file. Then:
+The original is the first site commit, `ffa5378` (for comparison: `git show ffa5378:index.html`).
+It is a Claude Design "bundler" export (~1.2 MB), not a plain page. What's inside:
 
-1. Look at what it is: a plain HTML page, an HTML with base64-embedded images/fonts, or a
-   React/JSX artifact (Babel/React/Tailwind loaded from a CDN in the browser). For React/JSX, tell
-   the user what converting it to plain HTML/CSS/JS involves before starting.
-2. First commit — the file exactly as downloaded, as `index.html` ("Initial state from the design
-   chat"), so there is always the original to compare with and roll back to.
+- `<script type="__bundler/manifest">` — 13 packed files as base64 JSON: 4 JPEG + 1 WebP images,
+  5 Manrope woff2 (Google Fonts subsets — the OFL licence comment at the top of the file must stay
+  with the fonts), 3 JS files.
+- `<script type="__bundler/ext_resources">` — React 18.3.1 and ReactDOM UMD from jsdelivr.
+- `<script type="__bundler/template">` — the real page as a JSON string: `<html lang="ru">`, title,
+  styles with some `@media` blocks (900/860/620/480 px…), but no `<meta name="viewport">`. The
+  design canvas is 1440 × 7800. Sections by id: top, pick, calm, services, doctors, clinics,
+  reviews, news, faq, book (a booking block with name/phone fields and validation).
+- A `text/x-dc` script — the page logic as a `DCLogic` component (~90 KB): data (clinics, doctors,
+  services…) plus the interactivity (tabs, carousels, the service/doctor picker, the booking form).
+- The doctor photos are hotlinked from `dentall.by/storage/experts/…`. They must be downloaded into
+  `assets/img/`; ask the user first whether the site may use them.
+
+Steps:
+
+1. Tell the user what the conversion involves (the DCLogic/React interactivity rewritten as plain
+   JS) before starting.
+2. Unpack the manifest and the template with a one-off script (keep it out of the repo, in the
+   session scratchpad); check the page works the same without the bundler and without React.
 3. Split it into the structure above: CSS to `assets/css/style.css`, JS to `assets/js/main.js`
    (each script starting with `'use strict'`), base64 images and fonts to files in `assets/`,
    external images (Unsplash etc.) downloaded into `assets/img/`, Google Fonts self-hosted as woff2,
    Tailwind CDN classes compiled into real CSS. Images to WebP: `cwebp -q 80 -m 6 -sharp_yuv`
    (installed via Homebrew). Images below the first screen get `loading="lazy"`; the hero image
    doesn't.
-4. Compare with the original: screenshots of the downloaded file and of the new site at 1440 and
-   390 must match. Fix the phone layout if the prototype has none.
+4. Compare with the original: screenshots of the original and of the new site at 1440 must match.
+   Add `<meta name="viewport" content="width=device-width, initial-scale=1">` and check 390 —
+   the existing `@media` blocks may not cover the whole page on a phone.
 5. Basic head: `<title>`, `description`, Open Graph tags + `og-image` (for a nice link preview in
    messengers), favicon, `<html lang>` matching the site language.
 6. Commit in steps (extraction, images, fonts, head…), not as one big commit. Record anything
