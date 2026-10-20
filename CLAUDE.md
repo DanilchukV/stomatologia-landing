@@ -10,8 +10,9 @@ Talk to the user in Russian.
 ## Status
 
 The clinic is VestMedServis, a dental clinic in Brest (Belarus); the site is in Russian
-(`lang="ru"`). `index.html` is still the original Claude Design export, committed as downloaded
-(`ffa5378`); converting it to proper code is open task 1.
+(`lang="ru"`). The original Claude Design export is commit `ffa5378`; on 2026-10-20 it was rewritten
+as plain HTML/CSS/JS (no React, no CDN) and made responsive — see `docs/knowledge.md`. Some content
+from the design is still missing (open task 1).
 
 ## Stack
 
@@ -34,10 +35,11 @@ user wants to be able to roll back "N changes", so don't squash changes into one
 ```
 index.html                 the page markup
 assets/css/style.css       all styles
-assets/js/main.js          all scripts
-assets/img/                images (WebP; JPEG only where WebP saves under ~5%)
-assets/fonts/              self-hosted woff2
-assets/icons/              favicon, apple-touch-icon, og-image
+assets/js/main.js          all behaviour (state → render, click actions via data-act)
+assets/js/data.js          content the scripts use: clinics, services, staff, symptoms, tooth map
+assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
+assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
+assets/icons/              favicon (svg + 32 px png), apple-touch-icon, og-image (1200×630)
 tools/                     dev scripts (dev, serve, shot) — NOT DEPLOYED
 docs/knowledge.md          knowledge base: how the sections work and why — NOT DEPLOYED
 .github/workflows/pages.yml  publishes index.html + assets/ to GitHub Pages
@@ -119,44 +121,22 @@ not failed. Nothing is live yet.
 
 ## Open tasks
 
-### 1. Import the prototype
+### 1. Missing content from the design
 
-The original is the first site commit, `ffa5378` (for comparison: `git show ffa5378:index.html`).
-It is a Claude Design "bundler" export (~1.2 MB), not a plain page. What's inside:
+The import is done; these pieces were not in the export and are waiting for the user (asked on
+2026-10-20). Where each one plugs in is described in `docs/knowledge.md`.
 
-- `<script type="__bundler/manifest">` — 13 packed files as base64 JSON: 4 JPEG + 1 WebP images,
-  5 Manrope woff2 (Google Fonts subsets — the OFL licence comment at the top of the file must stay
-  with the fonts), 3 JS files.
-- `<script type="__bundler/ext_resources">` — React 18.3.1 and ReactDOM UMD from jsdelivr.
-- `<script type="__bundler/template">` — the real page as a JSON string: `<html lang="ru">`, title,
-  styles with some `@media` blocks (900/860/620/480 px…), but no `<meta name="viewport">`. The
-  design canvas is 1440 × 7800. Sections by id: top, pick, calm, services, doctors, clinics,
-  reviews, news, faq, book (a booking block with name/phone fields and validation).
-- A `text/x-dc` script — the page logic as a `DCLogic` component (~90 KB): data (clinics, doctors,
-  services…) plus the interactivity (tabs, carousels, the service/doctor picker, the booking form).
-- The doctor photos are hotlinked from `dentall.by/storage/experts/…`. They must be downloaded into
-  `assets/img/` (dentall.by is the clinic's own site; the user confirmed on 2026-10-20 that the
-  photos may be used).
-
-Steps:
-
-1. Tell the user what the conversion involves (the DCLogic/React interactivity rewritten as plain
-   JS) before starting.
-2. Unpack the manifest and the template with a one-off script (keep it out of the repo, in the
-   session scratchpad); check the page works the same without the bundler and without React.
-3. Split it into the structure above: CSS to `assets/css/style.css`, JS to `assets/js/main.js`
-   (each script starting with `'use strict'`), base64 images and fonts to files in `assets/`,
-   external images (Unsplash etc.) downloaded into `assets/img/`, Google Fonts self-hosted as woff2,
-   Tailwind CDN classes compiled into real CSS. Images to WebP: `cwebp -q 80 -m 6 -sharp_yuv`
-   (installed via Homebrew). Images below the first screen get `loading="lazy"`; the hero image
-   doesn't.
-4. Compare with the original: screenshots of the original and of the new site at 1440 must match.
-   Add `<meta name="viewport" content="width=device-width, initial-scale=1">` and check 390 —
-   the existing `@media` blocks may not cover the whole page on a phone.
-5. Basic head: `<title>`, `description`, Open Graph tags + `og-image` (for a nice link preview in
-   messengers), favicon, `<html lang>` matching the site language.
-6. Commit in steps (extraction, images, fonts, head…), not as one big commit. Record anything
-   non-obvious in `docs/knowledge.md`.
+- **6 service photos** (cards and the open category panel) — they live only on Claude Design's
+  server (`/_blob/…`). Put them into `assets/img/services/` as WebP and wire `.svc-card__photo` /
+  `.svc-panel__photo`.
+- **4 legal PDFs** — public contract, internal rules, guarantees, possible complications. Links
+  already point to `assets/docs/public-contract.pdf`, `internal-rules.pdf`, `guarantees.pdf`,
+  `complications.pdf`.
+- **Pages `blog.html`, `vacancies.html`, `documents.html`** — other pages of the design project;
+  export them too or drop the links (user to decide).
+- **Reviews page 2** — placeholder cards; real Google reviews, or remove the page.
+- **Booking delivery** — the form only shows "Заявка отправлена"; decide where requests go
+  (Web3Forms to email as in Nitowska, or Telegram) and add it to the submit handler.
 
 ### 2. Go public and switch on Pages
 
