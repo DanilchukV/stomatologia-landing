@@ -1,0 +1,48 @@
+<!doctype html>
+<!-- Harness for tools/shot.sh: loads index.html in an iframe of the given width, prepares the page
+     for a shot (no animations, scrolled to the element) and optionally runs a JS measurement.
+     URL params: w, h, t (CSS selector), off, js, do (JS action before scrolling), wait (ms after it, default 400). -->
+<meta charset="utf-8">
+<style>html,body{margin:0;background:#fff}iframe{border:0;display:block;background:#fff}pre{margin:0}</style>
+<body>
+<pre id="RES"></pre>
+<script>
+var q = new URLSearchParams(location.search);
+var W = +q.get('w') || 1440, H = +q.get('h') || 900, T = q.get('t'), OFF = +(q.get('off') || 100), JS = q.get('js'), DO = q.get('do'), WAIT = +(q.get('wait') || 400);
+var res = document.getElementById('RES');
+var f = document.createElement('iframe');
+f.style.width = W + 'px'; f.style.height = H + 'px';
+f.src = '../index.html';
+document.body.insertBefore(f, res);
+
+function done(text) { res.textContent = text; document.title = 'READY'; }
+
+f.onload = function () {
+  var w = f.contentWindow, d = w.document;
+  // no animations or smooth scrolling; if the page has a scroll-reveal class, force it visible here too
+  var st = d.createElement('style');
+  st.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}html{scroll-behavior:auto!important}';
+  d.head.appendChild(st);
+  d.fonts.ready.then(function () {
+    var el = T ? d.querySelector(T) : null;
+    if (T && !el) { done('ERROR: selector not found: ' + T); return; }
+    setTimeout(function () {
+      // -Do: an action before the shot (fill fields, click a button); scrolling happens after it
+      if (DO) { try { new w.Function('document', DO)(d); } catch (e) { done('ERROR in -Do: ' + e.message); return; } }
+      if (el) w.scrollTo(0, el.getBoundingClientRect().top + w.scrollY - OFF);
+      setTimeout(function () {
+        if (!JS) { done('ok'); return; }
+        // measurement helpers: ov(sel) — horizontal overflow, box(sel) — size and position
+        function ov(sel) { return [].map.call(d.querySelectorAll(sel), function (e) {
+          return (e.scrollWidth > e.clientWidth + 1 ? 'OVERFLOW ' : 'ok ') + e.scrollWidth + '/' + e.clientWidth; }); }
+        function box(sel) { return [].map.call(d.querySelectorAll(sel), function (e) {
+          var r = e.getBoundingClientRect(); return Math.round(r.left) + ',' + Math.round(r.top) + ' ' + Math.round(r.width) + '×' + Math.round(r.height); }); }
+        try {
+          var v = new w.Function('ov', 'box', 'document', 'return (' + JS + ')')(ov, box, d);
+          done(typeof v === 'string' ? v : JSON.stringify(v));
+        } catch (e) { done('ERROR: ' + e.message); }
+      }, WAIT);
+    }, 300);
+  });
+};
+</script>
