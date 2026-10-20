@@ -135,7 +135,8 @@ It is a Claude Design "bundler" export (~1.2 MB), not a plain page. What's insid
 - A `text/x-dc` script — the page logic as a `DCLogic` component (~90 KB): data (clinics, doctors,
   services…) plus the interactivity (tabs, carousels, the service/doctor picker, the booking form).
 - The doctor photos are hotlinked from `dentall.by/storage/experts/…`. They must be downloaded into
-  `assets/img/`; ask the user first whether the site may use them.
+  `assets/img/` (dentall.by is the clinic's own site; the user confirmed on 2026-10-20 that the
+  photos may be used).
 
 Steps:
 
