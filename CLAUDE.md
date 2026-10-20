@@ -57,6 +57,7 @@ assets/js/data.js          content the scripts use: clinics, services, staff, sy
 assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
 assets/icons/              favicon (svg + 32 px png), apple-touch-icon, og-image (1200×630)
+assets/docs/               legal PDFs linked from the footer (shrunk scans from dentall.by)
 tools/                     dev scripts: dev, serve, shot (.sh for macOS, .ps1 for Windows), lan-setup.ps1 — NOT DEPLOYED
 docs/knowledge.md          knowledge base: how the sections work and why — NOT DEPLOYED
 .github/workflows/pages.yml  publishes index.html + assets/ to GitHub Pages
@@ -155,9 +156,6 @@ The import is done; these pieces were not in the export and are waiting for the 
 - **6 service photos** (cards and the open category panel) — they live only on Claude Design's
   server (`/_blob/…`). Put them into `assets/img/services/` as WebP and wire `.svc-card__photo` /
   `.svc-panel__photo`.
-- **4 legal PDFs** — public contract, internal rules, guarantees, possible complications. Links
-  already point to `assets/docs/public-contract.pdf`, `internal-rules.pdf`, `guarantees.pdf`,
-  `complications.pdf`.
 - **Pages `blog.html`, `vacancies.html`, `documents.html`** — other pages of the design project;
   export them too or drop the links (user to decide).
 - **Reviews page 2** — placeholder cards; real Google reviews, or remove the page.

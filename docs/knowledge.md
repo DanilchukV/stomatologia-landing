@@ -129,5 +129,12 @@ keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typ
 
 - `blog.html`, `vacancies.html`, `documents.html` — separate pages of the Claude Design project,
   not exported yet.
-- `assets/docs/public-contract.pdf`, `internal-rules.pdf`, `guarantees.pdf`, `complications.pdf` —
-  the legal documents from the footer and the booking consent; the files are still in Claude Design.
+
+## Legal documents
+
+`assets/docs/*.pdf` — public contract, internal rules, guarantees, possible complications (footer and
+booking consent). Taken from the clinic's site dentall.by on 2026-10-21 (the copies in Claude Design
+were not exported). The originals are 300 dpi colour scans, ~40 MB in total; they were rebuilt page
+by page to 4.6 MB: text pages as 200 dpi black-and-white (CCITT G4), the page with the stamp and
+signature as a 150 dpi colour JPEG. If a document changes, take the new PDF from dentall.by and shrink
+it the same way (pypdf + Pillow; a one-off script, not kept in the repo).
