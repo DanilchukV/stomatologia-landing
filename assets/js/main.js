@@ -55,7 +55,7 @@
 
   // Rebuilds el only when its structure key changes; keeps keyboard focus on the same [data-focus] item.
   function mount(el, key, build) {
-    if (el.dataset.key === key) return;
+    if (el.dataset.key === key) return false;
     const a = document.activeElement;
     const f = a && el.contains(a) ? a.dataset.focus : null;
     el.innerHTML = build();
@@ -64,6 +64,7 @@
       const t = $$('[data-focus]', el).find((x) => x.dataset.focus === f);
       if (t) t.focus({ preventScroll: true });
     }
+    return true;
   }
   function scrollToId(id) {
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -352,16 +353,22 @@
   }
 
   /* ---------- doctors carousel ---------- */
+  // on a phone the whole tab is one swipeable row (CSS), so no pages
+  const swipeMedia = window.matchMedia('(max-width: 640px)');
   function renderDoctors() {
     $$('.doc-tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.role === state.docRole));
     const list = D.doctors.filter((d) => state.docRole === 'all' || d.role === state.docRole);
     const pages = Math.max(1, Math.ceil(list.length / DOCS_PER_PAGE));
     const page = Math.min(state.docPage, pages - 1);
-    mount($('#doc-track'), state.docRole + page, () => list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE).map((d) => `<article class="doc">
+    const swipe = swipeMedia.matches;
+    const track = $('#doc-track');
+    const shown = swipe ? list : list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE);
+    const rebuilt = mount(track, state.docRole + (swipe ? 'all' : page), () => shown.map((d) => `<article class="doc">
         <div class="doc__photo"><span class="doc__ini" aria-hidden="true">${initials(d.name)}</span><img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy"></div>
         <div class="doc__info"><h3 class="doc__name">${esc(d.name)}</h3><span class="doc__spec">${esc(d.spec)}</span></div>
         <div class="doc__foot">${d.cat ? `<span class="doc__cat">${esc(d.cat)}</span>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-name="${esc(d.name)}">Записаться</a>` : ''}</div>
       </article>`).join(''));
+    if (rebuilt) track.scrollLeft = 0;
     const multi = pages > 1;
     $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
     $('#doc-dots-row').hidden = !multi;
@@ -618,6 +625,7 @@
   render();
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
+  swipeMedia.addEventListener('change', render);
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
