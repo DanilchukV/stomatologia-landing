@@ -166,7 +166,8 @@ The import is done; these pieces were not in the export and are waiting for the 
 
 - **Vacancies content** — the design lists 4 positions (therapist, nurse, administrator, dental
   technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
-  orthodontist, …). The user decides which list is right.
+  orthodontist, …). On hold: the user said on 2026-10-21 to leave the vacancies as they are for now —
+  don't change them or bring it up until the user does.
 
 ### 2. Go public and switch on Pages
 
