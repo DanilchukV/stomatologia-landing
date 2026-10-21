@@ -125,10 +125,6 @@ keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typ
 **Requests are not delivered anywhere yet** — submit only shows "Заявка отправлена". The delivery
 (e.g. Web3Forms, as in Nitowska, or a Telegram bot) goes into the form's submit handler in `main.js`.
 
-## Links waiting for content
-
-- `blog.html`, `vacancies.html` — separate pages of the Claude Design project, not exported yet.
-
 ## Inner pages
 
 Each page of the design project is exported from Claude Design separately ("html" zip: the
@@ -147,6 +143,27 @@ the file sizes in the cards (the design quoted the 10–15 MB originals) and one
 - Guarantee terms: four directions, all tables are in the HTML (`hidden` except the current one).
 - Visit rules: six cards shown two at a time with dots; without JS all six show.
 - The anchors `#doc-contract`, `#doc-rules`, `#doc-guar`, `#doc-comp`, `#guar`, `#rules` can be linked to.
+
+## Blog page
+
+Made from the design's "Блог и акции" export on 2026-10-21; at 1440 px the layout matches it.
+- The design reads articles inside the page; here every article is in the HTML (`<article id="post-…"
+  hidden>`) and the address hash picks one: `blog.html#klkt`, `#xray`, `#promo-ct`. So articles have
+  their own links (the home page's news cards and the services' "Читать по теме" point at them), the
+  browser's Back returns to the list, and the tab title becomes the article title.
+- Pictures: the export pointed at `/_blob/…` files; they are the same three pictures as the home page's
+  news cards (same posts, same crops), so those files are reused, plus 1200 px copies for the article
+  image (`srcset`).
+- Rubric tabs only list rubrics that have posts, with counts.
+- "Статья на сайте клиники" links to the same article on dentall.by.
+
+## Vacancies page
+
+Made from the design's "Вакансии" export on 2026-10-21; at 1440 px it matches it (only the photo
+re-encoding differs). The four positions and their terms are the design's text, not the live
+vacancies from dentall.by (see open task 1 in `CLAUDE.md`). One position open at a time;
+"Откликнуться" fills the position in the form. The CV field shows the chosen file's name.
+The form uses the same checks as booking (`form.js`) and is not delivered anywhere yet either.
 
 ## Legal documents
 

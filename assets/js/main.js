@@ -288,7 +288,7 @@
           sc.items ? `<ul class="bullets">${sc.items.map((x) => `<li><span>${esc(glue(x))}</span></li>`).join('')}</ul>` : ''}${
           sc.p ? `<p class="svc-more__p">${esc(glue(sc.p))}</p>` : ''}</div>`).join('')}
         ${m.note ? `<p class="svc-more__note">${esc(glue(m.note))}</p>` : ''}
-        ${reads.length ? `<div class="reads"><span class="caps">Читать по теме</span>${reads.map((t) => `<a class="read" href="blog.html">${icon('i-article', 16, 2.2)}${esc(t)}</a>`).join('')}</div>` : ''}
+        ${reads.length ? `<div class="reads"><span class="caps">Читать по теме</span>${reads.map(([id, t]) => `<a class="read" href="blog.html#${id}">${icon('i-article', 16, 2.2)}${esc(t)}</a>`).join('')}</div>` : ''}
       </div></div></div>` : '';
     return `<div class="svc-row" data-svc="${esc(n)}">
       <div class="svc-row__bar">
@@ -383,61 +383,8 @@
 
   /* ---------- booking ---------- */
   const form = $('#book-form');
-  const fields = { name: form.elements.name, phone: form.elements.phone };
-  const touched = { name: false, phone: false };
-  let tried = false;
-
-  function nameError(v) {
-    const s = v.trim();
-    if (!s) return 'Укажите имя';
-    if (s.length < 2) return 'Имя слишком короткое';
-    if (!/^[A-Za-zА-Яа-яЁёІіЎў' -]+$/.test(s)) return 'Только буквы, без цифр и символов';
-    if (!/[аеёиоуыэюяіaeiouy]/i.test(s) || /(.)\1\1/i.test(s) || /[бвгджзйклмнпрстфхцчшщbcdfghjklmnpqrstvwxz]{4,}/i.test(s)) return 'Проверьте, правильно ли написано имя';
-    return '';
-  }
-  function phoneError(v) {
-    const d = v.replace(/\D/g, '');
-    if (!d || d === '375') return 'Укажите номер телефона';
-    if (d.length < 12) return 'Номер неполный: нужно 9 цифр после +375';
-    if (!/^375(25|29|33|44|1\d|2\d)/.test(d)) return 'Проверьте код оператора: 25, 29, 33 или 44';
-    return '';
-  }
-  // +375 (29) 123-45-67; a local 80… prefix becomes 375
-  function formatPhone(raw) {
-    let d = raw.replace(/\D/g, '');
-    if (d.startsWith('80')) d = '375' + d.slice(2);
-    else if (d && !d.startsWith('375') && !'375'.startsWith(d)) d = '375' + d;
-    d = d.slice(0, 12);
-    if (!d) return '';
-    let out = '+' + d.slice(0, 3);
-    if (d.length > 3) out += ' (' + d.slice(3, 5);
-    if (d.length >= 5) out += ')';
-    if (d.length > 5) out += ' ' + d.slice(5, 8);
-    if (d.length > 8) out += '-' + d.slice(8, 10);
-    if (d.length > 10) out += '-' + d.slice(10, 12);
-    return out;
-  }
-  const errorOf = { name: nameError, phone: phoneError };
-  function showErrors() {
-    Object.keys(fields).forEach((k) => {
-      const err = errorOf[k](fields[k].value);
-      const show = !!err && (touched[k] || tried);
-      fields[k].setAttribute('aria-invalid', show);
-      const box = $('#err-' + k);
-      box.hidden = !show;
-      box.lastElementChild.textContent = err;
-    });
-  }
-  fields.name.addEventListener('input', showErrors);
-  fields.phone.addEventListener('input', () => { fields.phone.value = formatPhone(fields.phone.value); showErrors(); });
-  Object.keys(fields).forEach((k) => fields[k].addEventListener('blur', () => { if (fields[k].value) touched[k] = true; showErrors(); }));
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const bad = Object.keys(fields).find((k) => errorOf[k](fields[k].value));
-    if (bad) { tried = true; showErrors(); fields[bad].focus(); return; }
-    // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
-    set({ sent: true });
-  });
+  // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
+  window.SiteForm.bind(form, () => set({ sent: true }));
 
   function renderBooking() {
     const sym = currentSymptom();

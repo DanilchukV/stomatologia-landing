@@ -52,10 +52,15 @@ needs `tools\lan-setup.ps1` once (asks for admin rights; Nitowska's setup covers
 ```
 index.html                 the home page
 documents.html             documents page (legal PDFs, guarantee terms, visit rules)
+blog.html                  blog: article list and articles (blog.html#klkt opens one)
+vacancies.html             vacancies and the job application form
 assets/css/style.css       all styles
 assets/js/header.js        header burger menu, on every page
 assets/js/main.js          home page behaviour (state → render, click actions via data-act)
+assets/js/form.js          name/phone validation shared by the booking and application forms
 assets/js/documents.js     documents page behaviour
+assets/js/blog.js          blog page behaviour
+assets/js/vacancies.js     vacancies page behaviour
 assets/js/data.js          content the scripts use: clinics, services, staff, symptoms, tooth map
 assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
@@ -162,11 +167,13 @@ The import is done; these pieces were not in the export and are waiting for the 
 - **6 service photos** (cards and the open category panel) — they live only on Claude Design's
   server (`/_blob/…`). Put them into `assets/img/services/` as WebP and wire `.svc-card__photo` /
   `.svc-panel__photo`.
-- **Pages `blog.html`, `vacancies.html`** — other pages of the design project; the user exports
-  them from Claude Design ("html" zip, like `documents.html` was made from) and they get converted.
+- **Vacancies content** — the design lists 4 positions (therapist, nurse, administrator, dental
+  technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
+  orthodontist, …). The user decides which list is right.
 - **Reviews page 2** — placeholder cards; real Google reviews, or remove the page.
-- **Booking delivery** — the form only shows "Заявка отправлена"; decide where requests go
-  (Web3Forms to email as in Nitowska, or Telegram) and add it to the submit handler.
+- **Form delivery** — the booking form and the job application (with a CV file) only show
+  "отправлено"; decide where they go (Web3Forms to email as in Nitowska, or Telegram) and add it to
+  the `SiteForm.bind` callbacks in `main.js` and `vacancies.js`.
 
 ### 2. Go public and switch on Pages
 
