@@ -21,7 +21,8 @@ frameworks, no CDNs at runtime (fonts, icons and libraries are self-hosted in `a
 
 ## Git
 
-Repository: private https://github.com/DanilchukV/stomatologia-landing, branch `main`. `gh` is
+Repository: **public** https://github.com/DanilchukV/stomatologia-landing, branch `main` (public since
+2026-10-21 — everything committed is visible to anyone, so never commit private data). `gh` is
 logged in as DanilchukV. Commits use the GitHub noreply address — never the real email: the
 account has email privacy protection and a push with it is rejected (GH007). The global
 `user.email` on the Mac is the real address, so this repo has a local
@@ -44,7 +45,7 @@ git config user.email "26150007+DanilchukV@users.noreply.github.com"
 code .
 ```
 
-`gh` must be logged in as DanilchukV (the repo is private). Phone preview over Wi-Fi on Windows
+`gh` must be logged in as DanilchukV (for pushing). Phone preview over Wi-Fi on Windows
 needs `tools\lan-setup.ps1` once (asks for admin rights; Nitowska's setup covers port 8080 only).
 
 ## Structure
@@ -151,36 +152,26 @@ spacing, text): change → commit → push, no screenshots. They look at the ope
 
 ## Publishing (GitHub Pages)
 
-`.github/workflows/pages.yml` deploys on every push to `main`: it copies `index.html` and `assets/`
-into `_site/` and publishes that, so `tools/`, `docs/` and this file never go live. GitHub Free
-serves Pages only from **public** repos; the user wants the repo private until the site is ready,
-so the job has `if: !github.event.repository.private` — while private, every run is "skipped",
-not failed. Nothing is live yet.
+**Live: https://danilchukv.github.io/stomatologia-landing/** (since 2026-10-21).
+`.github/workflows/pages.yml` deploys on every push to `main`, so **a push is a release** (live in
+about a minute): it copies the root `*.html` pages and `assets/` into `_site/` and publishes that, so
+`tools/`, `docs/` and this file never go live (checked: they answer 404). GitHub Free serves Pages only
+from public repos; the job's `if: !github.event.repository.private` would skip deploys if the repo were
+made private again.
 
 ## Open tasks
 
-### 1. Missing content from the design
+### 1. Form delivery — the live forms send nothing
 
-The import is done; these pieces were not in the export and are waiting for the user (asked on
-2026-10-20). Where each one plugs in is described in `docs/knowledge.md`.
+The booking form (home page) and the job application with a CV file (vacancies) only show
+"отправлено"; requests go nowhere. The user chose on 2026-10-21 to publish the site anyway. Agree where
+they go (Web3Forms to email as in Nitowska — needs the clinic's address and the access key Web3Forms
+mails to it; or Telegram) and add the sending to the `SiteForm.bind` callbacks in `main.js` and
+`vacancies.js`.
+
+### 2. Content on hold
 
 - **Vacancies content** — the design lists 4 positions (therapist, nurse, administrator, dental
   technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
   orthodontist, …). On hold: the user said on 2026-10-21 to leave the vacancies as they are for now —
   don't change them or bring it up until the user does.
-
-### 2. Go public and switch on Pages
-
-Only when the user says the site is ready to share:
-
-0. Form delivery (the user decided on 2026-10-21 to do it at this step): the booking form and the job
-   application (with a CV file) only show "отправлено" for now. Agree where they go (Web3Forms to email
-   as in Nitowska, or Telegram) and add it to the `SiteForm.bind` callbacks in `main.js` and
-   `vacancies.js`.
-1. The whole git history becomes public — check it for anything private first (personal phone
-   numbers or emails, API keys, the clinic's internal notes in comments).
-2. `gh repo edit DanilchukV/stomatologia-landing --visibility public --accept-visibility-change-consequences`
-3. `gh api -X POST repos/DanilchukV/stomatologia-landing/pages -f build_type=workflow`
-4. `gh workflow run pages.yml`, wait for it (`gh run watch`), then open
-   https://danilchukv.github.io/stomatologia-landing/ and check it on desktop and phone.
-5. Update this file: the repo is public, the site link, "Nothing is live yet" removed.
