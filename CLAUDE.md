@@ -164,9 +164,6 @@ not failed. Nothing is live yet.
 The import is done; these pieces were not in the export and are waiting for the user (asked on
 2026-10-20). Where each one plugs in is described in `docs/knowledge.md`.
 
-- **6 service photos** (cards and the open category panel) — they live only on Claude Design's
-  server (`/_blob/…`). Put them into `assets/img/services/` as WebP and wire `.svc-card__photo` /
-  `.svc-panel__photo`.
 - **Vacancies content** — the design lists 4 positions (therapist, nurse, administrator, dental
   technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
   orthodontist, …). The user decides which list is right.

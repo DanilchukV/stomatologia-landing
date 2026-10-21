@@ -268,7 +268,9 @@
   function panelHeadHTML(cat) {
     const nd = D.doctors.filter((d) => cat.roles.includes(d.role)).length;
     const meta = cat.items.length + ' ' + servicesWord(cat.items.length) + ' · ' + (cat.id === 'diag' ? 'рентгенолаборанты' : nd + ' ' + doctorsWord(nd));
-    return `<div class="svc-panel__intro">
+    const img = 'assets/img/services/' + cat.id;
+    return `<span class="svc-panel__photo" data-cat="${cat.id}" aria-hidden="true"><img src="${img}.webp" srcset="${img}-800.webp 800w, ${img}.webp 1600w" sizes="(max-width: 1240px) 66vw, 792px" alt=""></span>
+      <div class="svc-panel__intro">
         <button type="button" class="back-link" data-act="cat-close">${icon('i-back', 16, 2.4)}Все разделы</button>
         <h3 class="svc-panel__name">${esc(cat.name)}</h3>
         <p class="svc-panel__desc">${esc(nb(cat.desc))}</p>

@@ -89,12 +89,13 @@ a 2 × 2 grid.
   (X-rays are walk-in).
 - Expanding rows animate `grid-template-rows: 0fr → 1fr`; the collapsed content also gets
   `visibility: hidden`, so links and buttons inside it are out of the tab order.
-- **Photos are missing.** The export pointed at `/_blob/…` files that live only on Claude Design's
-  server. The slots are ready: `.svc-card__photo` (176 px strip, fades into the card) and
-  `.svc-panel__photo` (66 % of the dark panel head, needs a left-fading mask). Positions from the
-  export for the panel photo: diag 70% 30%, treat 50% 62%, prost 75% 62%, aesthetic 50% 38%,
-  surgery 50% 62%, ortho 45% 55%; the mask fade ends at 24 % for "treat", 48 % for the rest. On the
-  cards the export forced `center`.
+- Photos: `assets/img/services/<category>.webp` (1600 px) and `-800.webp`, from the images the user
+  supplied on 2026-10-21 (same pictures and crops as the design). Cards: a 176 px strip that bleeds to the
+  card edges and fades into the card; the `<img>` is lazy, so the six photos don't load with the page.
+  The open category's dark head: the photo covers its right 66 % and fades in from its left edge
+  (`--fade`, 24 % for "treat", 48 % for the rest); the per-category crops are in CSS
+  (`.svc-panel__photo[data-cat=…]`). On phones the photo becomes a band above the text, which would
+  otherwise sit on a bright part of the picture.
 
 ## Selected services (cart) and back-to-top
 
