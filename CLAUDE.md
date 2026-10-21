@@ -170,7 +170,6 @@ The import is done; these pieces were not in the export and are waiting for the 
 - **Vacancies content** — the design lists 4 positions (therapist, nurse, administrator, dental
   technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
   orthodontist, …). The user decides which list is right.
-- **Reviews page 2** — placeholder cards; real Google reviews, or remove the page.
 
 ### 2. Go public and switch on Pages
 

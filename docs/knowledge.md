@@ -112,8 +112,11 @@ see patients (therapist, orthopedist, surgeon, orthodontist) get a "Записа
 
 ## Reviews
 
-Page 2 is still the design's placeholder cards ("[Текст отзыва из Google…]", dashed border) —
-waiting for real Google reviews.
+The four reviews published on dentall.by/reviews (checked 2026-10-21; there are no more), shortened
+the way the design shortened the first three; the design's second page of Google placeholders was
+removed (the user chose this). The row is a native scroll-snap strip: 3 cards in view on desktop,
+2 below 900 px, one with a peek of the next on phones (swipe). The arrows and dots scroll it by one
+card; the number of dots is computed from what fits, so adding a review needs only the HTML.
 
 ## Booking
 

@@ -38,7 +38,7 @@
     tooth: null, scope: null, skipTooth: false, symptom: null, recAll: false,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
     docPick: null, cart: [], cartOpen: false,
-    docRole: 'all', docPage: 0, revPage: 0,
+    docRole: 'all', docPage: 0,
     sent: false
   };
   function set(patch) {
@@ -376,10 +376,27 @@
   }
 
   /* ---------- reviews ---------- */
+  // The row scrolls natively (swipe on phones); arrows and dots move it one card at a time.
+  const revTrack = $('#rev-track');
+  const revDots = $('#rev-dots');
+  const revStep = () => revTrack.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(revTrack).columnGap);
+  const revCount = () => Math.round((revTrack.scrollWidth - revTrack.clientWidth) / revStep()) + 1;
+  const revCurrent = () => Math.round(revTrack.scrollLeft / revStep());
   function renderReviews() {
-    $$('[data-rev-page]').forEach((el) => { el.hidden = +el.dataset.revPage !== state.revPage; });
-    $$('[data-act="rev-page"]').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === state.revPage));
+    const n = revCount();
+    mount(revDots, String(n), () => Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="Отзывы ${k + 1} из ${n}" data-act="rev-go" data-pos="${k}"></button>`).join(''));
+    const cur = revCurrent();
+    $$('.dot', revDots).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.pos === cur));
+    revDots.hidden = n < 2;
+    $$('.reviews__nav').forEach((el) => { el.hidden = n < 2; });
   }
+  const revGo = (k) => revTrack.scrollTo({ left: k * revStep(), behavior: 'smooth' });
+  let revTick = false;
+  revTrack.addEventListener('scroll', () => {
+    if (revTick) return;
+    revTick = true;
+    requestAnimationFrame(() => { revTick = false; renderReviews(); });
+  }, { passive: true });
 
   /* ---------- booking ---------- */
   const form = $('#book-form');
@@ -532,9 +549,9 @@
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p }); },
     'book-doc': (t) => set({ docPick: t.dataset.name }),
 
-    'rev-page': (t) => set({ revPage: +t.dataset.page }),
-    'rev-prev': () => set({ revPage: (state.revPage + 1) % 2 }),
-    'rev-next': () => set({ revPage: (state.revPage + 1) % 2 }),
+    'rev-go': (t) => revGo(+t.dataset.pos),
+    'rev-prev': () => { const n = revCount(); revGo((revCurrent() - 1 + n) % n); },
+    'rev-next': () => { const n = revCount(); revGo((revCurrent() + 1) % n); },
 
     top: () => window.scrollTo(0, 0)
   };
@@ -566,7 +583,7 @@
   buildTeeth();
   render();
   window.addEventListener('scroll', schedule, { passive: true });
-  window.addEventListener('resize', schedule);
+  window.addEventListener('resize', () => { schedule(); renderReviews(); });
   swipeMedia.addEventListener('change', render);
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists
