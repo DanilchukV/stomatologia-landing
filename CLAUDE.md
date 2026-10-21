@@ -171,14 +171,15 @@ The import is done; these pieces were not in the export and are waiting for the 
   technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
   orthodontist, …). The user decides which list is right.
 - **Reviews page 2** — placeholder cards; real Google reviews, or remove the page.
-- **Form delivery** — the booking form and the job application (with a CV file) only show
-  "отправлено"; decide where they go (Web3Forms to email as in Nitowska, or Telegram) and add it to
-  the `SiteForm.bind` callbacks in `main.js` and `vacancies.js`.
 
 ### 2. Go public and switch on Pages
 
 Only when the user says the site is ready to share:
 
+0. Form delivery (the user decided on 2026-10-21 to do it at this step): the booking form and the job
+   application (with a CV file) only show "отправлено" for now. Agree where they go (Web3Forms to email
+   as in Nitowska, or Telegram) and add it to the `SiteForm.bind` callbacks in `main.js` and
+   `vacancies.js`.
 1. The whole git history becomes public — check it for anything private first (personal phone
    numbers or emails, API keys, the clinic's internal notes in comments).
 2. `gh repo edit DanilchukV/stomatologia-landing --visibility public --accept-visibility-change-consequences`
