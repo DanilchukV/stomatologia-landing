@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- Harness for tools/shot.sh: loads index.html in an iframe of the given width, prepares the page
      for a shot (no animations, scrolled to the element) and optionally runs a JS measurement.
-     URL params: w, h, t (CSS selector), off, js, do (JS action before scrolling), wait (ms after it, default 400). -->
+     URL params: p (page, default index.html), w, h, t (CSS selector), off, js, do (JS action before scrolling), wait (ms after it, default 400). -->
 <meta charset="utf-8">
 <style>html,body{margin:0;background:#fff}iframe{border:0;display:block;background:#fff}pre{margin:0}</style>
 <body>
@@ -12,7 +12,7 @@ var W = +q.get('w') || 1440, H = +q.get('h') || 900, T = q.get('t'), OFF = +(q.g
 var res = document.getElementById('RES');
 var f = document.createElement('iframe');
 f.style.width = W + 'px'; f.style.height = H + 'px';
-f.src = '../index.html';
+f.src = '../' + (q.get('p') || 'index.html');
 document.body.insertBefore(f, res);
 
 function done(text) { res.textContent = text; document.title = 'READY'; }

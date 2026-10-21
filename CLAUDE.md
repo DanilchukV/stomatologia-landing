@@ -50,9 +50,12 @@ needs `tools\lan-setup.ps1` once (asks for admin rights; Nitowska's setup covers
 ## Structure
 
 ```
-index.html                 the page markup
+index.html                 the home page
+documents.html             documents page (legal PDFs, guarantee terms, visit rules)
 assets/css/style.css       all styles
-assets/js/main.js          all behaviour (state → render, click actions via data-act)
+assets/js/header.js        header burger menu, on every page
+assets/js/main.js          home page behaviour (state → render, click actions via data-act)
+assets/js/documents.js     documents page behaviour
 assets/js/data.js          content the scripts use: clinics, services, staff, symptoms, tooth map
 assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
@@ -84,8 +87,10 @@ server serves from the root. Inside `style.css` paths are relative to the CSS fi
 grep -rnE '(src|href)="/[^/]|url\(["'\'']?/[^/]' index.html assets/css
 ```
 
-**Everything the site needs lives in `index.html` and `assets/`.** The Pages workflow copies only
-those two; a new top-level file (`robots.txt`, `404.html`, …) must be added to its `cp` line.
+**Everything the site needs lives in the root `*.html` pages and `assets/`.** The Pages workflow
+copies only those; any other new top-level file (`robots.txt`, `sitemap.xml`, …) must be added to its
+`cp` line. A new page copies the header and footer markup of `documents.html` (shared CSS and
+`header.js`) and gets its own small script.
 
 ## Preview
 
@@ -121,7 +126,8 @@ tools/shot.sh -Target ".hero h1" -Width 1440 -Height 200 -Scale 3
 tools/shot.sh -Target "#services" -Js "ov('#services .card')" -NoShot
 ```
 
-`-Target` is a CSS selector: the page scrolls to it (`-Offset`, 100 px from the top by default).
+`-Page documents.html` shoots another page (default `index.html`). `-Target` is a CSS selector: the
+page scrolls to it (`-Offset`, 100 px from the top by default).
 `-Js` is an expression evaluated in the page, with helpers `ov(sel)` (horizontal overflow) and
 `box(sel)` (coordinates and size). `-Do` is a JS action before scrolling and the shot (fill fields,
 press a button). Screenshots: `$TMPDIR/stomatologia-shots/shot-<width>.png` — view them with Read.
@@ -156,8 +162,8 @@ The import is done; these pieces were not in the export and are waiting for the 
 - **6 service photos** (cards and the open category panel) — they live only on Claude Design's
   server (`/_blob/…`). Put them into `assets/img/services/` as WebP and wire `.svc-card__photo` /
   `.svc-panel__photo`.
-- **Pages `blog.html`, `vacancies.html`, `documents.html`** — other pages of the design project;
-  export them too or drop the links (user to decide).
+- **Pages `blog.html`, `vacancies.html`** — other pages of the design project; the user exports
+  them from Claude Design ("html" zip, like `documents.html` was made from) and they get converted.
 - **Reviews page 2** — placeholder cards; real Google reviews, or remove the page.
 - **Booking delivery** — the form only shows "Заявка отправлена"; decide where requests go
   (Web3Forms to email as in Nitowska, or Telegram) and add it to the submit handler.

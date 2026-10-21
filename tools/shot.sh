@@ -1,6 +1,7 @@
 #!/bin/bash
 # Screenshots and measurements without opening windows.
 # Examples:
+#   tools/shot.sh -Page documents.html                 # another page of the site
 #   tools/shot.sh                                   # 1440 and 390, top of the page
 #   tools/shot.sh -Target "#services" -Width 1440,1024,390
 #   tools/shot.sh -Target ".hero h1" -Width 1440 -Scale 3 -Height 200
@@ -11,10 +12,11 @@
 # tools/shot.html is the harness; helpers ov(sel) and box(sel); -Do runs before scrolling and the shot.
 # Shots: $TMPDIR/stomatologia-shots/shot-<width>.png. Starts the server if it isn't running.
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-WIDTH="1440,390"; HEIGHT=900; TARGET=""; JS=""; DO=""; WAIT=""; SCALE=1; OFFSET=100; NOSHOT=0
+PAGE=""; WIDTH="1440,390"; HEIGHT=900; TARGET=""; JS=""; DO=""; WAIT=""; SCALE=1; OFFSET=100; NOSHOT=0
 OUT="${TMPDIR:-/tmp/}stomatologia-shots"; PORT=8081
 while [ $# -gt 0 ]; do
   case "$1" in
+    -Page) PAGE="$2"; shift ;;
     -Width) WIDTH="$2"; shift ;;
     -Height) HEIGHT="$2"; shift ;;
     -Target) TARGET="$2"; shift ;;
@@ -60,6 +62,7 @@ browser() {
 
 for W in $(echo "$WIDTH" | tr ',' ' '); do
   QS="w=$W&h=$HEIGHT&off=$OFFSET"
+  [ -n "$PAGE" ] && QS="$QS&p=$(urlenc "$PAGE")"
   [ -n "$DO" ] && QS="$QS&do=$(urlenc "$DO")"
   [ -n "$WAIT" ] && QS="$QS&wait=$WAIT"
   [ -n "$TARGET" ] && QS="$QS&t=$(urlenc "$TARGET")"

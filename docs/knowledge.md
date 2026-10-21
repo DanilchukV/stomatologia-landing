@@ -127,14 +127,32 @@ keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typ
 
 ## Links waiting for content
 
-- `blog.html`, `vacancies.html`, `documents.html` — separate pages of the Claude Design project,
-  not exported yet.
+- `blog.html`, `vacancies.html` — separate pages of the Claude Design project, not exported yet.
+
+## Inner pages
+
+Each page of the design project is exported from Claude Design separately ("html" zip: the
+`*.dc.html` page, its runtime and an `assets/` folder with uploaded files). They share the home page's
+`style.css`, fonts and icons; the header is the same markup with `hdr--sub` (a thin bottom line instead
+of the scroll shadow), the address is a plain link to `index.html#clinics` (no clinic drop-down), and
+nav links point to sections of `index.html`. `header.js` (the burger) runs on every page; each page
+has its own small script. `tools/shot.sh -Page <file>` screenshots a page other than the home page.
+
+## Documents page
+
+Made from the design's "Документы" export on 2026-10-21; at 1440 px it matches the export except
+the file sizes in the cards (the design quoted the 10–15 MB originals) and one line break.
+- Cards: "Кратко о документе" opens a summary (one card at a time; closing scrolls the card back into
+  view). "Скачать PDF" uses `download` with a readable Russian file name.
+- Guarantee terms: four directions, all tables are in the HTML (`hidden` except the current one).
+- Visit rules: six cards shown two at a time with dots; without JS all six show.
+- The anchors `#doc-contract`, `#doc-rules`, `#doc-guar`, `#doc-comp`, `#guar`, `#rules` can be linked to.
 
 ## Legal documents
 
-`assets/docs/*.pdf` — public contract, internal rules, guarantees, possible complications (footer and
-booking consent). Taken from the clinic's site dentall.by on 2026-10-21 (the copies in Claude Design
-were not exported). The originals are 300 dpi colour scans, ~40 MB in total; they were rebuilt page
+`assets/docs/*.pdf` — public contract, internal rules, guarantees, possible complications (footer,
+booking consent, documents page). Taken from the clinic's site dentall.by on 2026-10-21; they are
+byte-identical to the files in the design's export. The originals are 300 dpi colour scans, ~40 MB in total; they were rebuilt page
 by page to 4.6 MB: text pages as 200 dpi black-and-white (CCITT G4), the page with the stamp and
 signature as a 150 dpi colour JPEG. If a document changes, take the new PDF from dentall.by and shrink
 it the same way (pypdf + Pillow; a one-off script, not kept in the repo).

@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       # Only the site goes live: tools/, docs/ and CLAUDE.md stay in the repo
-      - run: mkdir _site && cp -r index.html assets _site/
+      - run: mkdir _site && cp -r *.html assets _site/
       - uses: actions/upload-pages-artifact@v5
       - id: deploy
         uses: actions/deploy-pages@v5

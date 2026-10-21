@@ -1,5 +1,6 @@
 ﻿# Screenshots and measurements without opening windows (Windows; tools/shot.sh is the macOS version).
 # Examples:
+#   powershell -File tools\shot.ps1 -Page documents.html             # another page of the site
 #   powershell -File tools\shot.ps1                                   # 1440 and 390, top of the page
 #   powershell -File tools\shot.ps1 -Target "#services" -Width 1440,1024,390
 #   powershell -File tools\shot.ps1 -Target ".hero h1" -Width 1440 -Scale 3 -Height 200
@@ -12,6 +13,7 @@
 # -Do: a JS action before scrolling and the shot (fill a field, click a button), variable document. -Wait: ms to wait after it (default 400).
 # Shots: %TEMP%\stomatologia-shots\shot-<width>.png. Starts the server if it isn't running.
 param(
+    [string]$Page,
     [string[]]$Width = @("1440", "390"),
     [int]$Height = 900,
     [string]$Target,
@@ -58,6 +60,7 @@ function Invoke-Browser([string[]]$extra, [string]$url, [string]$stdout) {
 [int[]]$widths = @($Width -join "," -split '[,\s]+' | Where-Object { $_ } | ForEach-Object { [int]$_ })
 foreach ($w in $widths) {
     $qs = "w=$w&h=$Height&off=$Offset&wait=$Wait"
+    if ($Page) { $qs += '&p=' + [Web.HttpUtility]::UrlEncode($Page) }
     if ($Do) { $qs += '&do=' + [Web.HttpUtility]::UrlEncode($Do) }
     if ($Target) { $qs += '&t=' + [Web.HttpUtility]::UrlEncode($Target) }
     $base = "http://localhost:$Port/tools/shot.html?$qs"

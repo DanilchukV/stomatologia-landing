@@ -34,7 +34,7 @@
 
   /* ---------- state ---------- */
   const state = {
-    clinic: 0, addrOpen: false, menuOpen: false,
+    clinic: 0, addrOpen: false,
     tooth: null, scope: null, skipTooth: false, symptom: null, recAll: false,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
     docPick: null, cart: [], cartOpen: false,
@@ -89,8 +89,6 @@
     btn.setAttribute('aria-expanded', state.addrOpen);
     btn.setAttribute('aria-label', 'Выбрать клинику: сейчас ' + c.area);
     $('#addr-drop').hidden = !state.addrOpen;
-    hdr.classList.toggle('is-menu', state.menuOpen);
-    $('.hdr__burger').setAttribute('aria-expanded', state.menuOpen);
   }
 
   /* ---------- tooth picker ---------- */
@@ -513,7 +511,6 @@
     'addr-toggle': () => set({ addrOpen: !state.addrOpen }),
     clinic: (t) => set({ clinic: +t.dataset.clinic, addrOpen: false }),
     'clinic-next': () => set({ clinic: (state.clinic + 1) % D.clinics.length }),
-    'menu-toggle': () => set({ menuOpen: !state.menuOpen }),
 
     tooth: (t) => {
       const n = +t.dataset.tooth;
@@ -598,16 +595,14 @@
 
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-act]');
-    // clicks outside close the clinic drop-down and the mobile menu; a nav link closes the menu
-    const patch = {};
-    if (state.addrOpen && !e.target.closest('.addr')) patch.addrOpen = false;
-    if (state.menuOpen && (!e.target.closest('.hdr') || e.target.closest('.hdr__menu a'))) patch.menuOpen = false;
-    if (Object.keys(patch).length) Object.assign(state, patch);
+    // a click outside closes the clinic drop-down
+    const closeAddr = state.addrOpen && !e.target.closest('.addr');
+    if (closeAddr) state.addrOpen = false;
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
-    else if (Object.keys(patch).length) render();
+    else if (closeAddr) render();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && (state.addrOpen || state.menuOpen)) set({ addrOpen: false, menuOpen: false });
+    if (e.key === 'Escape' && state.addrOpen) set({ addrOpen: false });
   });
 
   /* ---------- start ---------- */
