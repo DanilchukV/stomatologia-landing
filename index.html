@@ -35,6 +35,8 @@
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9.5l6 5 6-5"/></symbol>
   <symbol id="i-chev-row" viewBox="0 0 24 24"><path d="M6.5 9.75l5.5 4.5 5.5-4.5"/></symbol>
   <symbol id="i-chev-up" viewBox="0 0 24 24"><path d="M6 14.5l6-5 6 5"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M14.6 6l-6 6 6 6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9.4 6l6 6-6 6"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
@@ -74,6 +76,7 @@
       <nav class="nav" aria-label="Главное меню">
         <a class="nav__link" href="#calm">О клинике</a>
         <a class="nav__link" href="#services">Услуги</a>
+        <a class="nav__link" href="#doctors">Врачи</a>
         <a class="nav__link" href="#clinics">Контакты</a>
       </nav>
       <div class="hdr__contact">
@@ -325,6 +328,29 @@
   </div>
 </section>
 
+<!-- Doctors -->
+<section class="doctors" id="doctors">
+  <div class="wrap doctors__in">
+    <div class="doctors__head">
+      <h2 class="title">Наши врачи</h2>
+      <p class="doctors__lead"><span class="one-line">В&nbsp;команде 4&nbsp;врача-стоматолога и&nbsp;2&nbsp;медсестры.</span><span class="one-line">Скоро здесь появятся их&nbsp;фото и&nbsp;имена.</span></p>
+    </div>
+    <div class="tabs-scroll doc-tabs" id="doc-tabs" role="tablist" aria-label="Специальность">
+      <button class="chip doc-tab" type="button" role="tab" aria-selected="true" aria-controls="doc-track" data-act="doc-filter" data-role="all">Все</button>
+      <button class="chip doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-track" data-act="doc-filter" data-role="dent">Врачи</button>
+      <button class="chip doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-track" data-act="doc-filter" data-role="nurse">Медсёстры</button>
+    </div>
+    <div class="doc-carousel">
+      <div class="doc-grid" id="doc-track" role="tabpanel" aria-live="polite"></div>
+      <button type="button" class="btn btn--ghost side-arrow side-arrow--prev" data-act="doc-prev" aria-label="Предыдущие врачи"><svg class="ic" width="18" height="18" stroke-width="2.4" aria-hidden="true"><use href="#i-prev"/></svg></button>
+      <button type="button" class="btn btn--ghost side-arrow side-arrow--next" data-act="doc-next" aria-label="Следующие врачи"><svg class="ic" width="18" height="18" stroke-width="2.4" aria-hidden="true"><use href="#i-next"/></svg></button>
+    </div>
+    <div class="dots-row" id="doc-dots-row">
+      <div class="dots" id="doc-dots" role="group" aria-label="Страницы врачей"></div>
+    </div>
+  </div>
+</section>
+
 <!-- Contacts -->
 <section class="clinics" id="clinics">
   <div class="wrap clinics__in">
@@ -438,6 +464,7 @@
         <span class="ftr__h">Навигация</span>
         <a class="ftr__link" href="#calm">О клинике</a>
         <a class="ftr__link" href="#services">Услуги</a>
+        <a class="ftr__link" href="#doctors">Врачи</a>
         <a class="ftr__link" href="#clinics">Контакты</a>
         <a class="ftr__link" href="#faq">Частые вопросы</a>
         <a class="ftr__link" href="#book">Запись на приём</a>

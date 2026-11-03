@@ -58,7 +58,7 @@ assets/css/style.css       all styles
 assets/js/header.js        header burger menu, on every page
 assets/js/main.js          home page behaviour (state → render, click actions via data-act)
 assets/js/form.js          name/phone validation of the booking form
-assets/js/data.js          content the scripts use: clinics, services, symptoms, tooth map
+assets/js/data.js          content the scripts use: clinic, services, staff, symptoms, tooth map
 assets/img/                images (WebP; JPEG only where WebP saves under ~5%)
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
 assets/icons/              favicon (svg + 32 px png), apple-touch-icon, og-image (1200×630)
@@ -166,7 +166,8 @@ mails to it; or Telegram) and add the sending to the `SiteForm.bind` callback in
 ### 2. Grevitident content still missing
 
 The site was switched to Grevitident on 2026-11-03 with only what stom-brest.com gives. Waiting for the
-user: opening hours, legal entity and УНП for the footer, social links, doctors, reviews, prices and
-figures for "О клинике". The services catalogue (`cats`, `serviceText`, `serviceMore`, `recommend` in
+user: opening hours, legal entity and УНП for the footer, social links, reviews, prices and
+figures for "О клинике"; the doctors section has six placeholders (4 dentists, 2 nurses) waiting for
+names and photos. The services catalogue (`cats`, `serviceText`, `serviceMore`, `recommend` in
 `data.js`) is still VestMedServis's list — it includes CT (КЛКТ), microscope work, aligners and other
 items the new clinic may not offer; check it against the clinic's real price list.

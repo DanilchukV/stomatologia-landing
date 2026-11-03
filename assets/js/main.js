@@ -1,6 +1,6 @@
 'use strict';
 // Page behaviour: header, tooth picker, services panel, selected-services cart,
-// booking form. Content comes from data.js.
+// doctors carousel, booking form. Content comes from data.js.
 (function () {
   const D = window.SITE_DATA;
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -16,12 +16,14 @@
   const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one
     : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many);
   const servicesWord = (n) => plural(n, 'услуга', 'услуги', 'услуг');
+  const initials = (name) => name.split(' ').slice(0, 2).map((w) => w[0]).join('');
   const icon = (id, size, stroke) => `<svg class="ic" width="${size}" height="${size}" stroke-width="${stroke}" aria-hidden="true"><use href="#${id}"/></svg>`;
 
   /* ---------- constants ---------- */
   const WISDOM = [1, 16, 17, 32];
-  const SPY = ['calm', 'services', 'clinics'];
+  const SPY = ['calm', 'services', 'doctors', 'clinics'];
   const SVC_LIMIT = 6;
+  const DOCS_PER_PAGE = 4;
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
   const isConsult = (n) => CONSULT_SUBS.some(([, cn]) => cn === n);
@@ -31,6 +33,7 @@
     tooth: null, scope: null, skipTooth: false, symptom: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false,
     cart: [], cartOpen: false,
+    docRole: 'all', docPage: 0,
     sent: false
   };
   function set(patch) {
@@ -283,6 +286,34 @@
     $('.cart__pill').setAttribute('aria-expanded', state.cartOpen);
   }
 
+  /* ---------- doctors carousel ---------- */
+  // on a phone the whole tab is one swipeable row (CSS), so no pages
+  const swipeMedia = window.matchMedia('(max-width: 640px)');
+  const PERSON = '<svg class="doc__ph" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5"/></svg>';
+  function renderDoctors() {
+    $$('.doc-tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.role === state.docRole));
+    const list = D.doctors.filter((d) => state.docRole === 'all' || d.role === state.docRole);
+    const pages = Math.max(1, Math.ceil(list.length / DOCS_PER_PAGE));
+    const page = Math.min(state.docPage, pages - 1);
+    const swipe = swipeMedia.matches;
+    const track = $('#doc-track');
+    const shown = swipe ? list : list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE);
+    // until a name and photo arrive, the card shows a silhouette and the speciality as its title
+    const rebuilt = mount(track, state.docRole + (swipe ? 'all' : page), () => shown.map((d) => `<article class="doc">
+        <div class="doc__photo">${d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : ''}</div>
+        <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}</span></div>
+        <div class="doc__foot">${d.role === 'dent' ? '<a href="#book" class="doc__book">Записаться</a>' : ''}</div>
+      </article>`).join(''));
+    if (rebuilt) track.scrollLeft = 0;
+    const multi = pages > 1;
+    $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
+    $('#doc-dots-row').hidden = !multi;
+    const dots = $('#doc-dots');
+    mount(dots, state.docRole, () => Array.from({ length: pages }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="Страница ${k + 1} из ${pages}" data-act="doc-page" data-page="${k}"></button>`).join(''));
+    $$('.dot', dots).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === page));
+  }
+  const docPages = () => Math.max(1, Math.ceil(D.doctors.filter((d) => state.docRole === 'all' || d.role === state.docRole).length / DOCS_PER_PAGE));
+
   /* ---------- booking ---------- */
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
@@ -408,6 +439,11 @@
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => x.n !== t.dataset.svc) }),
     'cart-clear': () => set({ cart: [], cartOpen: false }),
 
+    'doc-filter': (t) => set({ docRole: t.dataset.role, docPage: 0 }),
+    'doc-page': (t) => set({ docPage: +t.dataset.page }),
+    'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p }); },
+    'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p }); },
+
     top: () => window.scrollTo(0, 0)
   };
 
@@ -421,6 +457,7 @@
     renderPicker();
     renderServices();
     renderCart();
+    renderDoctors();
     renderBooking();
     updateFloating();
   }
@@ -428,5 +465,9 @@
   render();
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
+  swipeMedia.addEventListener('change', render);
   onScroll();
+  // the doctors grid is built by script, so re-apply an anchor from the address once it exists
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target) target.scrollIntoView();
 })();

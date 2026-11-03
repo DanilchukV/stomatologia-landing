@@ -126,6 +126,10 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 [aria-pressed="true"] .box { background: var(--ink); }
 [aria-pressed="true"] .box .ic { opacity: 1; }
 
+.dots { display: flex; align-items: center; gap: 10px; }
+.dot { width: 10px; height: 10px; border-radius: 999px; border: none; padding: 0; background: var(--line); cursor: pointer; transition: width .25s ease, background-color .2s; }
+.dot[aria-pressed="true"] { width: 28px; background: var(--ink); }
+
 /* expand/collapse: grid rows 0fr ↔ 1fr animates to the content's real height */
 .drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s var(--ease-out); }
 .drawer > div { overflow: hidden; min-height: 0; visibility: hidden; transition: visibility 0s .35s; }
@@ -533,6 +537,46 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 @media (max-width: 480px) {
   .svc-row__content { padding: 0 16px 18px 20px; }
   .step3__btn { flex: 1 1 100%; }
+}
+
+/* ===== Doctors ===== */
+.doctors { background: var(--bg); padding: var(--sec-y) var(--gutter) 0; }
+.doctors__in { display: flex; flex-direction: column; gap: 28px; }
+.doctors__head { display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: flex-start; justify-content: space-between; }
+.doctors__lead { margin: 10px 0 0 auto; color: var(--muted); line-height: 1.6; }
+.doctors__lead .one-line { display: block; }
+.doc-tabs { display: flex; flex-wrap: nowrap; gap: 6px; overflow-x: auto; padding: 2px; margin: -2px; }
+.doc-tab { flex: 1 0 auto; white-space: nowrap; min-height: 44px; padding: 0 12px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.doc-carousel { position: relative; }
+.doc-grid { display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.doc { background: var(--white); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease; animation: pageIn .3s ease both; }
+.doc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(38, 62, 73, .12); }
+.doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
+.doc__ini { font-family: var(--f-head); font-weight: 700; font-size: 56px; color: var(--ink); opacity: .55; }
+.doc__ph { display: block; color: var(--accent-ink); opacity: .55; }
+.doc__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.doc__info { display: flex; flex-direction: column; gap: 4px; padding: 0 8px; }
+.doc__name { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 18px; line-height: 1.25; text-wrap: balance; min-height: 2.5em; }
+.doc__spec { font-size: 14px; line-height: 1.4; color: var(--muted); display: block; min-height: 2.8em; }
+.doc__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; padding: 0 8px; min-height: 28px; }
+.doc__book { font-size: 14px; font-weight: 600; text-underline-offset: 3px; margin-left: auto; }
+.side-arrow { position: absolute; top: 38%; transform: translateY(-50%); z-index: 3; box-shadow: 0 6px 16px rgba(38, 62, 73, .14); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; }
+.side-arrow .ic { display: block; }
+.side-arrow--prev { left: -22px; }
+.side-arrow--next { right: -22px; }
+.side-arrow:hover, .side-arrow:active { transform: translateY(-50%) scale(1.06); }
+.dots-row { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 4px; }
+
+@media (max-width: 900px) {
+  .doc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* phone: all doctors of the tab in one swipeable row instead of pages */
+@media (max-width: 640px) {
+  .doc-grid { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter) 12px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .doc-grid::-webkit-scrollbar { display: none; }
+  .doc { flex: 0 0 78%; max-width: 300px; scroll-snap-align: start; animation: none; }
+  .doc:hover { transform: none; box-shadow: none; }
+  .side-arrow, .dots-row { display: none; }
 }
 
 /* ===== Clinics ===== */

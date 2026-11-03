@@ -116,9 +116,14 @@ moves up while the cart is visible.
 
 ## Doctors
 
-The staff section, the doctor choice in the services panel and the picker's "Кто примет" list showed
-VestMedServis staff and were removed on 2026-11-03 (in git history before that date). To bring them
-back for the new clinic: a `doctors` list in `data.js` and roles per category and symptom.
+The VestMedServis staff was removed on 2026-11-03; the section came back the same day with six
+placeholders for Grevitident (the user: 4 dentists and 2 nurses, names and photos later). Each `doctors`
+entry in `data.js` has `name`, `spec`, `role` (`dent` / `nurse`, the two tabs) and `photo` (file in
+`assets/img/doctors/`, without `.webp`). While `name` is empty the card shows a silhouette, the speciality
+as its title and "Фото и имя скоро появятся"; fill the entries and update the lead text in `index.html`.
+Desktop/tablet: 4 per page with arrows and dots. Phone (≤ 640 px): one horizontal scroll-snap row.
+Dentists get a "Записаться" link to the booking form. The doctor choice in the services panel and the
+picker's "Кто примет" list are not restored (in git history before 2026-11-03).
 
 ## Contacts
 
