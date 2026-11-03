@@ -579,8 +579,6 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 .doctors__head { display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: flex-start; justify-content: space-between; }
 .doctors__lead { margin: 10px 0 0 auto; color: var(--muted); line-height: 1.6; }
 .doctors__lead .one-line { display: block; }
-.doc-tabs { display: flex; flex-wrap: nowrap; gap: 6px; overflow-x: auto; padding: 2px; margin: -2px; }
-.doc-tab { flex: 1 0 auto; white-space: nowrap; min-height: 44px; padding: 0 12px; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .doc-carousel { position: relative; }
 .doc-grid { display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .doc { background: var(--white); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease; animation: pageIn .3s ease both; }

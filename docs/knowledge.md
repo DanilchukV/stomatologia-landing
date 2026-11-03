@@ -123,8 +123,11 @@ The VestMedServis staff was removed on 2026-11-03; the section came back the sam
 since names are empty), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
 `.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
 update the lead text in `index.html`.
-- Section: tabs by role, 4 per page with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
+- Section: no tabs (the user wants one list: doctors, then nurses), 4 per page with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
   doctor (not the nurses) has "Записаться", which also picks that doctor for the booking summary.
+- Automatic choice: opening a category, ticking a consultation or picking a symptom selects the only
+  doctor with those roles (`autoDoc`); with none or several it stays "любой свободный". The visitor can
+  still change it.
 - Doctor choice: in the services panel (column 2, doctors of `cats[].roles`; in diagnostics, of the
   ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
   cart and booking summary. Categories or symptoms whose role has nobody (orthopedist) say "Врача
