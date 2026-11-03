@@ -7,11 +7,23 @@
   const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
 
   /* ---------- text helpers ---------- */
-  // non-breaking space after short words so they never end a line
-  const glue = (s) => String(s || '')
-    .replace(/(^|[\s(«])(и|в|с|к|о|у|а|из|за|на|по|до|от|для|без|под|над|при|про|или|не|ни|то|что|как|их|его|со|во|об|же|бы) /gi, '$1$2 ')
-    .replace(/ (—|–) /g, ' $1 ');
-  const nb = (s) => s.replace(/(^|\s)(и|в|с|к|о|у|а|на|по|до|от|для|без|под|или|не|том) /gi, '$1$2 ');
+  // Russian line breaks: short words stick to the next word, particles and dashes to the previous one,
+  // numbers to the word after them; repeated until stable so chains like «и в 6 месяцев» glue whole
+  const SHORT = 'и|а|но|да|в|во|с|со|к|ко|о|об|обо|у|из|за|на|по|до|от|для|без|под|над|при|про|изо|или|не|ни|то|что|как|их|его|её|ее|мы|вы|он|она|оно|они|я|это|так|все|всё|вас|вам|нас|нам|раз';
+  const SHORT_RE = new RegExp(`(^|[\\s(«"—])(${SHORT}) (?=\\S)`, 'gi');
+  const glue = (s) => {
+    let t = String(s || '');
+    let prev;
+    do {
+      prev = t;
+      t = t.replace(SHORT_RE, '$1$2 ')
+        .replace(/(\S) (ли|же|бы|ль)(?=[\s.,!?:;)]|$)/g, '$1 $2')
+        .replace(/(\S) ([—–])/g, '$1 $2')
+        .replace(/(^|[^\d-])(\d+) (?=[а-яёА-ЯЁ%])/g, '$1$2 ')
+        .replace(/(^|[\s(«])(г|ул|д|т|им|см|пр)\. /g, '$1$2. ');
+    } while (t !== prev);
+    return t;
+  };
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one
     : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many);
@@ -121,10 +133,10 @@
     jaw.classList.toggle('is-jaw', s.scope === 'jaw');
     $$('.tooth', jaw).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.tooth === tooth));
 
-    $('#tooth-hint').textContent = tooth !== null
+    $('#tooth-hint').textContent = glue(tooth !== null
       ? `Выбран зуб ${qn(tooth)} — ${D.toothNames[tooth]}, ${tooth <= 16 ? 'верхняя' : 'нижняя'} челюсть, ${sideOf(tooth) === 'справа' ? 'правая' : 'левая'} сторона`
       : s.scope === 'jaw' ? 'Вопрос по всей челюсти — выберите, что беспокоит'
-        : s.skipTooth ? 'Зуб не выбран — подскажем по симптому' : 'Нажмите на зуб — он подсветится';
+        : s.skipTooth ? 'Зуб не выбран — подскажем по симптому' : 'Нажмите на зуб — он подсветится');
     $('.jaw__reset').textContent = s.scope === 'jaw' ? '← Выбрать один зуб' : '← Выбрать зуб заново';
 
     const cur = sym ? 3 : stage2 ? 2 : 1;
@@ -141,7 +153,7 @@
     mount(wrap, (s.scope === 'jaw' ? 'jaw' : 'tooth') + wisdom, () => groups.map(([title, ids]) => `<div class="sym-group"><span class="caps">${title}</span><div class="sym-group__chips">${
       ids.filter((id) => id !== 'wisdom' || wisdom).map((id) => {
         const x = D.symptoms.find((y) => y.id === id);
-        return `<button type="button" class="sym-chip" aria-pressed="false" data-act="symptom" data-id="${id}" data-focus="sym:${id}">${esc(x.label)}</button>`;
+        return `<button type="button" class="sym-chip" aria-pressed="false" data-act="symptom" data-id="${id}" data-focus="sym:${id}">${esc(glue(x.label))}</button>`;
       }).join('')}</div></div>`).join(''));
     $$('.sym-chip', wrap).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === s.symptom));
     wrap.classList.toggle('has-sel', !!sym);
@@ -160,24 +172,24 @@
     const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
     const recDocs = docsFor(rec.roles);
     const toothLabel = tooth !== null ? `Зуб ${qn(tooth)} · ${D.toothNames[tooth]}, ${sideOf(tooth)} ${jawOf(tooth)}` : 'Зуб не выбран';
-    const svcs = rec.svcs.map((n) => `<button type="button" class="check-row" aria-pressed="${inCart(n)}" data-act="rec-svc" data-svc="${esc(n)}" data-focus="rsvc:${esc(n)}"><span class="box">${icon('i-check', 13, 3.2)}</span><span class="check-row__label">${esc(n)}</span></button>`).join('');
+    const svcs = rec.svcs.map((n) => `<button type="button" class="check-row" aria-pressed="${inCart(n)}" data-act="rec-svc" data-svc="${esc(n)}" data-focus="rsvc:${esc(n)}"><span class="box">${icon('i-check', 13, 3.2)}</span><span class="check-row__label">${esc(glue(n))}</span></button>`).join('');
     const docs = recDocs.slice().sort((a, b) => (b.id === s.docPick) - (a.id === s.docPick))
       .filter((d, k) => s.recAll || k < 3)
       .map((d) => {
         const sel = s.docPick === d.id;
-        return `<button type="button" class="opt-row" aria-pressed="${sel}" data-act="rec-doc" data-id="${d.id}" data-focus="rdoc:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="opt-row__text"><span class="opt-row__name">${esc(docTitle(d))}</span>${d.name ? `<span class="opt-row__sub">${esc(d.spec)}</span>` : ''}</span>${sel ? icon('i-check', 18, 2.8) : ''}</button>`;
+        return `<button type="button" class="opt-row" aria-pressed="${sel}" data-act="rec-doc" data-id="${d.id}" data-focus="rdoc:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="opt-row__text"><span class="opt-row__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="opt-row__sub">${esc(d.spec)}</span>` : ''}</span>${sel ? icon('i-check', 18, 2.8) : ''}</button>`;
       }).join('');
     const more = recDocs.length > 3 ? `<button type="button" class="link-btn" data-act="rec-more" data-focus="rmore">${s.recAll ? 'Свернуть' : `Показать всех (${recDocs.length})`}</button>` : '';
     const who = recDocs.length ? docs + more : '<span class="hint__small">Врача подберём при записи.</span>';
-    return `<div class="hint__tags"><span class="tag">${toothLabel}</span><span class="tag">${esc(sym.label)}</span></div>
+    return `<div class="hint__tags"><span class="tag">${toothLabel}</span><span class="tag">${esc(glue(sym.label))}</span></div>
       <h4 class="hint__title">${esc(glue(sym.title))}</h4>
       <p class="hint__text">${esc(glue(sym.text))}</p>
-      ${WISDOM.includes(tooth) && sym.id !== 'wisdom' ? '<p class="hint__note">Это зуб мудрости — возможно, понадобится консультация хирурга.</p>' : ''}
-      <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(cat.name)}</span></div>
+      ${WISDOM.includes(tooth) && sym.id !== 'wisdom' ? `<p class="hint__note">${glue('Это зуб мудрости — возможно, понадобится консультация хирурга.')}</p>` : ''}
+      <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
       <div class="hint__sec"><span class="caps">Вероятно понадобится</span>${svcs}<span class="hint__small">Отметьте — услуги попадут в запись на приём.</span></div>
       <div class="hint__sec" id="rec-who"><div class="hint__who-head"><span class="caps">Кто примет</span><span class="hint__small">${rec.roles.map((r) => ROLE_NAME[r]).join(' и ')}</span></div>${who}</div>
       <div class="hint__actions"><a class="btn btn--dark hint__cta" href="#book"><span>Записаться</span><span class="hint__dot" aria-hidden="true"></span><span>${esc(D.clinic.area)}</span></a><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и врачи направления</a></div>
-      <p class="hint__disclaimer">Это подсказка, а не диагноз. Точный план врач составит после осмотра.</p>`;
+      <p class="hint__disclaimer">${glue('Это подсказка, а не диагноз. Точный план врач составит после осмотра.')}</p>`;
   }
 
   /* ---------- services panel ---------- */
@@ -206,8 +218,8 @@
     const consRoles = cat.id === 'diag' ? Object.keys(CONSULT_ROLE).filter(inCart).map((k) => CONSULT_ROLE[k]) : [];
     const roles = catRoles(cat, state.cart);
     const docs = docsFor(roles);
-    $('#doc-pick-who').textContent = docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
-      : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи';
+    $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
+      : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
 
     const opts = [{ id: 'any', title: 'Любой свободный врач', av: '★', sub: 'подберём по времени' }]
       .concat(docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : '' })));
@@ -225,7 +237,7 @@
     const parts = [];
     if (n) parts.push('Выбрано ' + n + ' ' + servicesWord(n));
     if (state.docPick) parts.push('врач: ' + docLabel());
-    $('#step3-sum').textContent = parts.length ? parts.join(' · ') : 'Можно не выбирать — администратор поможет подобрать услугу и врача по телефону.';
+    $('#step3-sum').textContent = glue(parts.length ? parts.join(' · ') : 'Можно не выбирать — администратор поможет подобрать услугу и врача по телефону.');
   }
 
   function panelShellHTML() {
@@ -264,8 +276,8 @@
     return `<span class="svc-panel__photo" data-cat="${cat.id}" aria-hidden="true"><img src="${img}.webp" srcset="${img}-800.webp 800w, ${img}.webp 1600w" sizes="(max-width: 1240px) 66vw, 792px" alt=""></span>
       <div class="svc-panel__intro">
         <button type="button" class="back-link" data-act="cat-close">${icon('i-back', 16, 2.4)}Все разделы</button>
-        <h3 class="svc-panel__name">${esc(cat.name)}</h3>
-        <p class="svc-panel__desc">${esc(nb(cat.desc))}</p>
+        <h3 class="svc-panel__name">${esc(glue(cat.name))}</h3>
+        <p class="svc-panel__desc">${esc(glue(cat.desc))}</p>
       </div>
       <span class="svc-panel__meta">${meta}</span>`;
   }
@@ -304,7 +316,7 @@
     check.setAttribute('aria-label', (sel ? 'Убрать из записи: ' : 'Добавить к записи: ') + n);
     const toggle = $('.svc-row__toggle', row);
     toggle.setAttribute('aria-expanded', open);
-    $('.svc-row__label', row).textContent = subSel.length ? n + ' · ' + subSel.map(([l]) => l.toLowerCase()).join(', ') : n;
+    $('.svc-row__label', row).textContent = glue(subSel.length ? n + ' · ' + subSel.map(([l]) => l.toLowerCase()).join(', ') : n);
     row.lastElementChild.classList.toggle('is-open', open);
     $$('.svc-subs__chip', row).forEach((b) => b.setAttribute('aria-pressed', inCart(b.dataset.sub)));
     const moreBtn = $('.more-btn', row);
@@ -334,7 +346,7 @@
       <button type="button" class="cart__pill" data-act="cart-toggle" aria-expanded="false" aria-controls="cart-pop"><span class="cart__count" id="cart-count"></span><span id="cart-label"></span>${icon('i-chev-up', 16, 2.4)}</button>`);
     $('#cart-pop').hidden = !state.cartOpen;
     $('#cart-title').textContent = 'Выбрано ' + n + ' ' + servicesWord(n);
-    const items = state.cart.map((x) => `<div class="cart__item"><span class="cart__tick">${icon('i-check', 13, 3.2)}</span><span class="cart__info"><span class="cart__name">${esc(x.n)}</span><span class="cart__cat">${esc(x.cat)}</span></span><button type="button" class="cart__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></div>`).join('');
+    const items = state.cart.map((x) => `<div class="cart__item"><span class="cart__tick">${icon('i-check', 13, 3.2)}</span><span class="cart__info"><span class="cart__name">${esc(glue(x.n))}</span><span class="cart__cat">${esc(glue(x.cat))}</span></span><button type="button" class="cart__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></div>`).join('');
     mount($('#cart-list'), items, () => items);
     $('#cart-doc').textContent = docLabel();
     $('#cart-count').textContent = n;
@@ -406,7 +418,7 @@
     let reason = 'Осмотр и консультация';
     if (sym) reason = (state.scope === 'jaw' && tooth === null ? 'Вся челюсть · ' : '') + (tooth !== null ? `Зуб ${qn(tooth)} (${D.toothNames[tooth]}) · ` : '') + sym.label.toLowerCase();
     if (state.cart.length) reason = 'Услуги: ' + state.cart.map((x) => x.n).join(', ');
-    $('#book-reason').textContent = reason;
+    $('#book-reason').textContent = glue(reason);
     $('#book-doctor').textContent = docLabel();
     form.hidden = state.sent;
     $('#book-done').hidden = !state.sent;

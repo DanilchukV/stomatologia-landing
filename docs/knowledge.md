@@ -44,6 +44,17 @@ The hero photo (AI-generated, from the design) had the VestMedServis logo on the
 out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
 re-encoded as WebP). `og-image.jpg` was rebuilt from an HTML layout with the new logo and address.
 
+## Typography (line breaks)
+
+Russian rules, applied on 2026-11-03 to every visible text: short words (prepositions, conjunctions,
+pronouns, «не», «что», «как»…) are glued to the next word with `&nbsp;`; «ли», «же», «бы» and a dash
+to the previous word; a number to the word after it («6&nbsp;месяцев», «от&nbsp;3 до&nbsp;6»);
+«г.&nbsp;Брест», «ул.&nbsp;Воровского,&nbsp;27», «офис&nbsp;150», «Шаг&nbsp;2». In `index.html` these
+are literal `&nbsp;`; texts the script renders go through `glue()` in `main.js`, which applies the same
+rules (data.js stays plain). Phone numbers never break: `a[href^="tel:"]` and `.nowrap` are `nowrap`.
+CSS: headings and `summary` use `text-wrap: balance`, paragraphs `pretty`. When adding copy, write
+`&nbsp;` the same way (or run it through `glue()` if it is rendered by script).
+
 ## Fonts
 
 Manrope (headings), Onest (text) and Playfair Display italic (only the motto in "О клинике").
