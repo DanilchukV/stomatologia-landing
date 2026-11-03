@@ -137,6 +137,15 @@ side by side; under 760 px they stack.
 The four VestMedServis reviews (a scroll-snap carousel) were removed on 2026-11-03; the markup, script and
 styles are in git history before that date.
 
+## FAQ
+
+Native `<details>`; opening is instant, so a click on `summary` is intercepted and the item's height is
+animated (Web Animations, 320 ms) from its current height to the open or closed one; the questions below
+slide down instead of jumping. While closing, `.is-closing` turns the icon and shadow back at once and
+`open` is cleared when the animation ends; a click mid-way cancels and reverses from the current height.
+Skipped with `prefers-reduced-motion`. Note: headless Chrome in `tools/shot` does not advance animations,
+so to check end states call `getAnimations()[0].finish()` in `-Do`.
+
 ## Booking
 
 The summary shows the reason (selected services, or tooth + symptom from the
