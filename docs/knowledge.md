@@ -79,7 +79,8 @@ width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on 
   1, 16, 17, 32 — only for them the "Мешает зуб мудрости" chip appears, and another symptom on a
   wisdom tooth adds a note about the surgeon.
 - "Вопрос по всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
-- The hint lists `recommend[symptom].svcs`; ticking adds them to the cart.
+- The hint lists `recommend[symptom].svcs` (ticking adds them to the cart) and the doctors of
+  `recommend[symptom].roles`; the picked doctor is moved to the top of the list.
 - On a phone the steps bar shows only the current step's title.
 - ≥ 1000 px the hint column is sticky and its card scrolls inside itself.
 
@@ -116,14 +117,19 @@ moves up while the cart is visible.
 
 ## Doctors
 
-The VestMedServis staff was removed on 2026-11-03; the section came back the same day with six
-placeholders for Grevitident (the user: 4 dentists and 2 nurses, names and photos later). Each `doctors`
-entry in `data.js` has `name`, `spec`, `role` (`dent` / `nurse`, the two tabs) and `photo` (file in
-`assets/img/doctors/`, without `.webp`). While `name` is empty the card shows a silhouette, the speciality
-as its title and "Фото и имя скоро появятся"; fill the entries and update the lead text in `index.html`.
-Desktop/tablet: 4 per page with arrows and dots. Phone (≤ 640 px): one horizontal scroll-snap row.
-Dentists get a "Записаться" link to the booking form. The doctor choice in the services panel and the
-picker's "Кто примет" list are not restored (in git history before 2026-11-03).
+The VestMedServis staff was removed on 2026-11-03; the section came back the same day for Grevitident:
+4 dentists (therapist, surgeon, orthodontist and one whose speciality is not known yet, role `dent`) and
+2 nurses; names and photos later. Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
+since names are empty), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
+`.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
+update the lead text in `index.html`.
+- Section: tabs by role, 4 per page with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
+  doctor (not the nurses) has "Записаться", which also picks that doctor for the booking summary.
+- Doctor choice: in the services panel (column 2, doctors of `cats[].roles`; in diagnostics, of the
+  ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
+  cart and booking summary. Categories or symptoms whose role has nobody (orthopedist) say "Врача
+  подберём при записи"; when the 4th doctor's speciality is known, change its `role`.
+- On phones the doctor cards in the services panel go two per row.
 
 ## Contacts
 
@@ -148,7 +154,7 @@ so to check end states call `getAnimations()[0].finish()` in `-Do`.
 
 ## Booking
 
-The summary shows the reason (selected services, or tooth + symptom from the
+The summary shows the doctor and the reason (selected services, or tooth + symptom from the
 picker). Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
 375. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.

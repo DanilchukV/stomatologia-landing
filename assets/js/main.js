@@ -16,7 +16,9 @@
   const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one
     : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many);
   const servicesWord = (n) => plural(n, 'услуга', 'услуги', 'услуг');
+  const doctorsWord = (n) => plural(n, 'врач', 'врача', 'врачей');
   const initials = (name) => name.split(' ').slice(0, 2).map((w) => w[0]).join('');
+  const person = (size) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5"/></svg>`;
   const icon = (id, size, stroke) => `<svg class="ic" width="${size}" height="${size}" stroke-width="${stroke}" aria-hidden="true"><use href="#${id}"/></svg>`;
 
   /* ---------- constants ---------- */
@@ -24,15 +26,19 @@
   const SPY = ['calm', 'services', 'doctors', 'clinics'];
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
+  const DOC_LIMIT = 3;
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
-  const isConsult = (n) => CONSULT_SUBS.some(([, cn]) => cn === n);
+  const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
+  const isConsult = (n) => !!CONSULT_ROLE[n];
+  const ROLE_NAME = { ther: 'терапевт', orth: 'ортопед', surg: 'хирург', ortd: 'ортодонт' };
+  const BOOKABLE = ['ther', 'orth', 'surg', 'ortd', 'dent'];
 
   /* ---------- state ---------- */
   const state = {
-    tooth: null, scope: null, skipTooth: false, symptom: null,
-    cat: null, svcOpen: null, svcMore: null, svcAll: false,
-    cart: [], cartOpen: false,
+    tooth: null, scope: null, skipTooth: false, symptom: null, recAll: false,
+    cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
+    docPick: null, cart: [], cartOpen: false,
     docRole: 'all', docPage: 0,
     sent: false
   };
@@ -46,6 +52,12 @@
   const catById = (id) => D.cats.find((c) => c.id === id);
   const catOfService = (n) => (D.cats.find((c) => c.items.includes(n)) || { name: '' }).name;
   const currentSymptom = () => D.symptoms.find((x) => x.id === state.symptom) || null;
+  // doctors are picked by id: names are empty until the clinic sends them, so the speciality stands in
+  const docById = (id) => D.doctors.find((d) => d.id === id);
+  const docsFor = (roles) => D.doctors.filter((d) => roles.includes(d.role));
+  const docTitle = (d) => d.name || d.spec;
+  const docLabel = () => (state.docPick && state.docPick !== 'any' ? docTitle(docById(state.docPick)) : 'любой свободный');
+  const docAvatar = (d, size) => (d.name ? initials(d.name) : person(size));
 
   // Rebuilds el only when its structure key changes; keeps keyboard focus on the same [data-focus] item.
   function mount(el, key, build) {
@@ -141,16 +153,26 @@
     const s = state;
     const tooth = s.tooth;
     const cat = catById(sym.cat);
-    const rec = D.recommend[sym.id] || { svcs: [] };
+    const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
+    const recDocs = docsFor(rec.roles);
     const toothLabel = tooth !== null ? `Зуб ${qn(tooth)} · ${D.toothNames[tooth]}, ${sideOf(tooth)} ${jawOf(tooth)}` : 'Зуб не выбран';
     const svcs = rec.svcs.map((n) => `<button type="button" class="check-row" aria-pressed="${inCart(n)}" data-act="rec-svc" data-svc="${esc(n)}" data-focus="rsvc:${esc(n)}"><span class="box">${icon('i-check', 13, 3.2)}</span><span class="check-row__label">${esc(n)}</span></button>`).join('');
+    const docs = recDocs.slice().sort((a, b) => (b.id === s.docPick) - (a.id === s.docPick))
+      .filter((d, k) => s.recAll || k < 3)
+      .map((d) => {
+        const sel = s.docPick === d.id;
+        return `<button type="button" class="opt-row" aria-pressed="${sel}" data-act="rec-doc" data-id="${d.id}" data-focus="rdoc:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="opt-row__text"><span class="opt-row__name">${esc(docTitle(d))}</span>${d.name ? `<span class="opt-row__sub">${esc(d.spec)}</span>` : ''}</span>${sel ? icon('i-check', 18, 2.8) : ''}</button>`;
+      }).join('');
+    const more = recDocs.length > 3 ? `<button type="button" class="link-btn" data-act="rec-more" data-focus="rmore">${s.recAll ? 'Свернуть' : `Показать всех (${recDocs.length})`}</button>` : '';
+    const who = recDocs.length ? docs + more : '<span class="hint__small">Врача подберём при записи.</span>';
     return `<div class="hint__tags"><span class="tag">${toothLabel}</span><span class="tag">${esc(sym.label)}</span></div>
       <h4 class="hint__title">${esc(glue(sym.title))}</h4>
       <p class="hint__text">${esc(glue(sym.text))}</p>
       ${WISDOM.includes(tooth) && sym.id !== 'wisdom' ? '<p class="hint__note">Это зуб мудрости — возможно, понадобится консультация хирурга.</p>' : ''}
       <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(cat.name)}</span></div>
       <div class="hint__sec"><span class="caps">Вероятно понадобится</span>${svcs}<span class="hint__small">Отметьте — услуги попадут в запись на приём.</span></div>
-      <div class="hint__actions"><a class="btn btn--dark hint__cta" href="#book"><span>Записаться</span><span class="hint__dot" aria-hidden="true"></span><span>${esc(D.clinic.area)}</span></a><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Все услуги направления</a></div>
+      <div class="hint__sec" id="rec-who"><div class="hint__who-head"><span class="caps">Кто примет</span><span class="hint__small">${rec.roles.map((r) => ROLE_NAME[r]).join(' и ')}</span></div>${who}</div>
+      <div class="hint__actions"><a class="btn btn--dark hint__cta" href="#book"><span>Записаться</span><span class="hint__dot" aria-hidden="true"></span><span>${esc(D.clinic.area)}</span></a><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и врачи направления</a></div>
       <p class="hint__disclaimer">Это подсказка, а не диагноз. Точный план врач составит после осмотра.</p>`;
   }
 
@@ -176,8 +198,30 @@
     moreSvcs.setAttribute('aria-expanded', expanded);
     moreSvcs.firstChild.textContent = expanded ? 'Свернуть' : 'Показать ещё ' + (cat.items.length - SVC_LIMIT);
 
+    // doctor choice: in diagnostics it follows the chosen consultation
+    const consRoles = cat.id === 'diag' ? Object.keys(CONSULT_ROLE).filter(inCart).map((k) => CONSULT_ROLE[k]) : [];
+    const roles = consRoles.length ? consRoles : cat.id === 'diag' ? [] : cat.roles;
+    const docs = docsFor(roles);
+    $('#doc-pick-who').textContent = docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
+      : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи';
+
+    const opts = [{ id: 'any', title: 'Любой свободный врач', av: '★', sub: 'подберём по времени' }]
+      .concat(docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : '' })));
+    const picked = state.docPick && state.docPick !== 'any' ? opts.findIndex((d) => d.id === state.docPick) : -1;
+    const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
+    const grid = $('#doc-pick-grid');
+    mount(grid, roles.join() + docsExpanded, () => opts.filter((d, k) => docsExpanded || k < DOC_LIMIT).map((d) => `<button type="button" class="doc-card" aria-pressed="false" data-act="panel-doc" data-id="${d.id}" data-focus="pdoc:${d.id}"><span class="doc-card__av">${d.av}</span><span class="doc-card__text"><span class="doc-card__name">${esc(d.title)}</span>${d.sub ? `<span class="doc-card__sub">${esc(d.sub)}</span>` : ''}</span><span class="doc-card__tick">${icon('i-check', 16, 2.8)}</span></button>`).join(''));
+    $$('.doc-card', grid).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === state.docPick));
+    const moreDocs = $('#docs-all');
+    moreDocs.hidden = opts.length <= DOC_LIMIT;
+    moreDocs.setAttribute('aria-expanded', docsExpanded);
+    moreDocs.firstChild.textContent = docsExpanded ? 'Свернуть' : 'Показать ещё ' + (opts.length - DOC_LIMIT);
+
     const n = state.cart.filter((x) => x.cat === cat.name).length;
-    $('#step3-sum').textContent = n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — администратор поможет подобрать услугу по телефону.';
+    const parts = [];
+    if (n) parts.push('Выбрано ' + n + ' ' + servicesWord(n));
+    if (state.docPick) parts.push('врач: ' + docLabel());
+    $('#step3-sum').textContent = parts.length ? parts.join(' · ') : 'Можно не выбирать — администратор поможет подобрать услугу и врача по телефону.';
   }
 
   function panelShellHTML() {
@@ -195,9 +239,14 @@
               <div class="svc-list" id="svc-list"></div>
               <button type="button" class="btn btn--ghost more-wide" id="svc-all" data-act="svc-all" aria-expanded="false"><span></span>${icon('i-chev-row', 16, 2.4)}</button>
             </div>
+            <div class="doc-pick" id="pick-doctor">
+              <div class="panel-label"><span class="num">2</span><h4 class="panel-h">Выберите врача</h4><span class="doc-pick__who" id="doc-pick-who"></span></div>
+              <div class="doc-pick__grid" id="doc-pick-grid"></div>
+              <button type="button" class="btn btn--ghost more-wide" id="docs-all" data-act="docs-all" aria-expanded="false"><span></span>${icon('i-chev', 16, 2.4)}</button>
+            </div>
           </div>
           <div class="step3">
-            <div class="step3__main"><span class="num">2</span><div class="step3__text"><h4 class="step3__h">Записаться</h4><span class="step3__sum" id="step3-sum"></span></div></div>
+            <div class="step3__main"><span class="num">3</span><div class="step3__text"><h4 class="step3__h">Записаться</h4><span class="step3__sum" id="step3-sum"></span></div></div>
             <a href="#book" class="btn btn--dark step3__btn" data-act="cart-close">Записаться на приём${icon('i-arrow', 16, 2.4)}</a>
           </div>
         </div>
@@ -205,7 +254,8 @@
   }
 
   function panelHeadHTML(cat) {
-    const meta = cat.items.length + ' ' + servicesWord(cat.items.length);
+    const nd = docsFor(cat.roles).length;
+    const meta = cat.items.length + ' ' + servicesWord(cat.items.length) + (nd ? ' · ' + nd + ' ' + doctorsWord(nd) : '');
     const img = 'assets/img/services/' + cat.id;
     return `<span class="svc-panel__photo" data-cat="${cat.id}" aria-hidden="true"><img src="${img}.webp" srcset="${img}-800.webp 800w, ${img}.webp 1600w" sizes="(max-width: 1240px) 66vw, 792px" alt=""></span>
       <div class="svc-panel__intro">
@@ -272,6 +322,7 @@
           <button type="button" class="cart__close" data-act="cart-toggle" aria-label="Свернуть">${icon('i-close', 16, 2.4)}</button></div>
         <div class="cart__list" id="cart-list"></div>
         <div class="cart__foot">
+          <span class="cart__doc">Врач: <b id="cart-doc"></b></span>
           <span class="cart__note">Администратор перезвонит, подберёт удобное время и подтвердит запись.</span>
           <div class="cart__actions"><button type="button" class="btn btn--ghost cart__clear" data-act="cart-clear">Очистить</button><a href="#book" class="btn btn--dark cart__book" data-act="cart-close">Записаться${icon('i-arrow', 16, 2.4)}</a></div>
         </div>
@@ -281,6 +332,7 @@
     $('#cart-title').textContent = 'Выбрано ' + n + ' ' + servicesWord(n);
     const items = state.cart.map((x) => `<div class="cart__item"><span class="cart__tick">${icon('i-check', 13, 3.2)}</span><span class="cart__info"><span class="cart__name">${esc(x.n)}</span><span class="cart__cat">${esc(x.cat)}</span></span><button type="button" class="cart__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></div>`).join('');
     mount($('#cart-list'), items, () => items);
+    $('#cart-doc').textContent = docLabel();
     $('#cart-count').textContent = n;
     $('#cart-label').textContent = state.cartOpen ? 'Свернуть' : 'Записаться';
     $('.cart__pill').setAttribute('aria-expanded', state.cartOpen);
@@ -302,7 +354,7 @@
     const rebuilt = mount(track, state.docRole + (swipe ? 'all' : page), () => shown.map((d) => `<article class="doc">
         <div class="doc__photo">${d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : ''}</div>
         <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}</span></div>
-        <div class="doc__foot">${d.role === 'dent' ? '<a href="#book" class="doc__book">Записаться</a>' : ''}</div>
+        <div class="doc__foot">${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
       </article>`).join(''));
     if (rebuilt) track.scrollLeft = 0;
     const multi = pages > 1;
@@ -352,6 +404,7 @@
     if (sym) reason = (state.scope === 'jaw' && tooth === null ? 'Вся челюсть · ' : '') + (tooth !== null ? `Зуб ${qn(tooth)} (${D.toothNames[tooth]}) · ` : '') + sym.label.toLowerCase();
     if (state.cart.length) reason = 'Услуги: ' + state.cart.map((x) => x.n).join(', ');
     $('#book-reason').textContent = reason;
+    $('#book-doctor').textContent = docLabel();
     form.hidden = state.sent;
     $('#book-done').hidden = !state.sent;
     $('#book-consent').hidden = state.sent;
@@ -409,7 +462,7 @@
     set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat }]) });
   }
   function openCat(id) {
-    set({ cat: id, svcAll: false });
+    set({ cat: id, docPick: null, docsAll: false, svcAll: false });
     scrollToId('svc-panel');
   }
   const actions = {
@@ -424,6 +477,15 @@
     'reset-tooth': () => set({ tooth: null, skipTooth: false, scope: null, symptom: null }),
     symptom: (t) => set({ symptom: state.symptom === t.dataset.id ? null : t.dataset.id }),
     'rec-svc': (t) => toggleCart(t.dataset.svc, catOfService(t.dataset.svc)),
+    'rec-doc': (t) => {
+      const id = t.dataset.id;
+      if (state.docPick === id) { set({ docPick: null }); return; }
+      const rec = D.recommend[state.symptom];
+      const hiddenNow = state.recAll && docsFor(rec.roles).findIndex((d) => d.id === id) >= 3;
+      set(hiddenNow ? { docPick: id, recAll: false } : { docPick: id });
+      if (hiddenNow) scrollToId('rec-who');
+    },
+    'rec-more': () => { const was = state.recAll; set({ recAll: !was }); if (was) scrollToId('rec-who'); },
     'go-cat': (t, e) => {
       e.preventDefault();
       const sym = currentSymptom();
@@ -433,7 +495,7 @@
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {
       if (t.dataset.cat === state.cat) return;
-      set({ cat: t.dataset.cat, svcAll: false, svcOpen: null });
+      set({ cat: t.dataset.cat, docPick: null, docsAll: false, svcAll: false, svcOpen: null });
       scrollToId('svc-panel');
     },
     'cat-close': () => { set({ cat: null }); scrollToId('services'); },
@@ -447,7 +509,7 @@
     'svc-sub': (t) => {
       const cn = t.dataset.sub;
       const rest = state.cart.filter((x) => !isConsult(x.n));
-      set({ cart: inCart(cn) ? rest : rest.concat([{ n: cn, cat: catById(state.cat).name }]) });
+      set({ cart: inCart(cn) ? rest : rest.concat([{ n: cn, cat: catById(state.cat).name }]), docPick: null, docsAll: false });
     },
     'svc-toggle': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcOpen: state.svcOpen === n ? null : n }); },
     'svc-more': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcMore: state.svcMore === n ? null : n }); },
@@ -459,6 +521,12 @@
         scrollToId('pick-svc');
       } else set({ svcAll: true });
     },
+    'panel-doc': (t) => set({ docPick: state.docPick === t.dataset.id ? null : t.dataset.id }),
+    'docs-all': (t) => {
+      const collapsing = t.getAttribute('aria-expanded') === 'true';
+      set({ docsAll: !collapsing });
+      if (collapsing) scrollToId('pick-doctor');
+    },
 
     'cart-toggle': () => set({ cartOpen: !state.cartOpen }),
     'cart-close': () => set({ cartOpen: false }),
@@ -469,6 +537,7 @@
     'doc-page': (t) => set({ docPage: +t.dataset.page }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p }); },
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p }); },
+    'book-doc': (t) => set({ docPick: t.dataset.id }),
 
     top: () => window.scrollTo(0, 0)
   };

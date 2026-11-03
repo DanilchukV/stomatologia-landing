@@ -167,7 +167,7 @@ mails to it; or Telegram) and add the sending to the `SiteForm.bind` callback in
 
 The site was switched to Grevitident on 2026-11-03 with only what stom-brest.com gives. Waiting for the
 user: opening hours, legal entity and УНП for the footer, social links, reviews, prices and
-figures for "О клинике"; the doctors section has six placeholders (4 dentists, 2 nurses) waiting for
-names and photos. The services catalogue (`cats`, `serviceText`, `serviceMore`, `recommend` in
+figures for "О клинике"; the doctors (therapist, surgeon, orthodontist, a 4th dentist of unknown
+speciality, 2 nurses) wait for names and photos. The services catalogue (`cats`, `serviceText`, `serviceMore`, `recommend` in
 `data.js`) is still VestMedServis's list — it includes CT (КЛКТ), microscope work, aligners and other
 items the new clinic may not offer; check it against the clinic's real price list.
