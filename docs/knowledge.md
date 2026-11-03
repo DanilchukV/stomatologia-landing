@@ -10,7 +10,7 @@ template with `{{…}}` bindings, `sc-if`/`sc-for` tags and ~600 inline styles, 
 by React from a `DCLogic` component. On 2026-10-20 it was rewritten as static HTML + CSS + JS:
 
 - `index.html` — all static content; dynamic parts have empty containers that `main.js` fills.
-- `assets/js/data.js` — the content the logic needs (clinics, service categories and texts, staff,
+- `assets/js/data.js` — the content the logic needs (clinics, service categories and texts,
   symptoms, recommendations, tooth outlines). Generated from the export's `DCLogic`; edit it by hand now.
 - `assets/js/main.js` — one `state` object; `set(patch)` merges and calls `render()`, which updates
   every widget. Clicks are delegated: an element with `data-act="name"` runs `actions.name`.
@@ -28,8 +28,7 @@ Dropped from the export because nothing on the page used them: the clinic pop-up
 (`popupOnLoad`, it had no markup), a promo flag, tab-scroll arrows, a doctor "preview", and the
 cross-page `localStorage` jump (`vms-goto`) — native anchors do that job.
 
-Small behaviour additions over the export: "Записаться" on a doctor card also picks that doctor
-for the booking summary; footer service links open that category's panel.
+Small behaviour addition over the export: footer service links open that category's panel.
 
 ## Fonts
 
@@ -68,8 +67,7 @@ width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on 
   1, 16, 17, 32 — only for them the "Мешает зуб мудрости" chip appears, and another symptom on a
   wisdom tooth adds a note about the surgeon.
 - "Вопрос по всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
-- The hint lists `recommend[symptom].svcs` (ticking adds them to the cart) and the doctors of
-  `recommend[symptom].roles`; the picked doctor is moved to the top of the list.
+- The hint lists `recommend[symptom].svcs`; ticking adds them to the cart.
 - On a phone the steps bar shows only the current step's title.
 - ≥ 1000 px the hint column is sticky and its card scrolls inside itself.
 
@@ -82,11 +80,9 @@ a 2 × 2 grid.
 ## Services
 
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
-  categories. Lists show 6 services / 3 doctors with "Показать ещё".
+  categories. The list shows 6 services with "Показать ещё".
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one
-  (therapist / orthopedist / surgeon / orthodontist), only one at a time. In diagnostics the
-  doctor list follows the chosen consultation; without one it is just "Любой свободный врач"
-  (X-rays are walk-in).
+  (therapist / orthopedist / surgeon / orthodontist), only one at a time.
 - Expanding rows animate `grid-template-rows: 0fr → 1fr`; the collapsed content also gets
   `visibility: hidden`, so links and buttons inside it are out of the tab order.
 - Photos: `assets/img/services/<category>.webp` (1600 px) and `-800.webp`, from the images the user
@@ -106,10 +102,9 @@ moves up while the cart is visible.
 
 ## Doctors
 
-40 people from `data.js`; photos are dentall.by originals resized to 600 px WebP
-(`assets/img/doctors/<surname>.webp`). Desktop/tablet: 4 per page with arrows and dots. Phone
-(≤ 640 px): the whole tab is one horizontal scroll-snap row, no pages, no arrows. Only roles that
-see patients (therapist, orthopedist, surgeon, orthodontist) get a "Записаться" link.
+The staff section, the doctor choice in the services panel and the picker's "Кто примет" list showed
+VestMedServis staff and were removed on 2026-11-03 (in git history before that date). To bring them
+back for the new clinic: a `doctors` list in `data.js` and roles per category and symptom.
 
 ## Reviews
 
@@ -121,8 +116,8 @@ card; the number of dots is computed from what fits, so adding a review needs on
 
 ## Booking
 
-The summary shows the chosen clinic, the reason (selected services, or tooth + symptom from the
-picker) and the doctor. Validation as in the export: name — letters only, at least 2, rejects
+The summary shows the chosen clinic and the reason (selected services, or tooth + symptom from the
+picker). Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
 375. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
 

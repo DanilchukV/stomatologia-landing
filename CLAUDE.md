@@ -56,8 +56,8 @@ assets/css/style.css       all styles
 assets/js/header.js        header burger menu, on every page
 assets/js/main.js          home page behaviour (state → render, click actions via data-act)
 assets/js/form.js          name/phone validation of the booking form
-assets/js/data.js          content the scripts use: clinics, services, staff, symptoms, tooth map
-assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
+assets/js/data.js          content the scripts use: clinics, services, symptoms, tooth map
+assets/img/                images (WebP; JPEG only where WebP saves under ~5%)
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
 assets/icons/              favicon (svg + 32 px png), apple-touch-icon, og-image (1200×630)
 tools/                     dev scripts: dev, serve, shot (.sh for macOS, .ps1 for Windows), lan-setup.ps1 — NOT DEPLOYED
