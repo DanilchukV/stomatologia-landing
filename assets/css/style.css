@@ -404,11 +404,6 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 .about__title-box { flex: 1 1 520px; display: flex; flex-direction: column; gap: 16px; }
 .title--about { font-size: clamp(32px, 4vw, 52px); line-height: 1.08; color: var(--ink); }
 .about__lead { flex: 1 1 360px; margin: 0; color: var(--ink-2); font-size: 18px; }
-.stats { display: flex; flex-wrap: wrap; margin: 0 -28px; row-gap: 28px; }
-.stat { flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; padding: 8px 28px; border-right: 1px solid rgba(38, 62, 73, .14); }
-.stat:last-child { border-right: none; }
-.stat__num { font-family: var(--f-head); font-weight: 700; font-size: clamp(44px, 5vw, 64px); line-height: 1; letter-spacing: -.02em; color: var(--ink); }
-.stat__label { color: var(--ink-2); font-size: 16px; }
 .promise { display: flex; flex-direction: column; gap: 28px; padding-top: 48px; border-top: 1px solid rgba(38, 62, 73, .14); }
 .promise__title { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 24px; color: var(--ink); }
 .promise__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 32px; }
@@ -422,23 +417,8 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 .motto__text { margin: 0; font-family: var(--f-quote); font-weight: 400; font-style: italic; font-size: 17px; line-height: 1.4; letter-spacing: .005em; color: var(--ink); }
 .motto__by { color: var(--muted); font-size: 14px; white-space: nowrap; }
 
-/* the -28px bleed of the stats row only fits while the 1200px column has side room */
-@media (max-width: 1255px) {
-  .stats { margin: 0 -24px; }
-  .stat { padding: 8px 24px; }
-}
-@media (max-width: 900px) {
-  .stats { display: grid; grid-template-columns: 1fr 1fr; margin: 0; }
-  .stat { padding: 18px 16px 18px 0; border-right: none; border-bottom: 1px solid rgba(38, 62, 73, .14); }
-  .stat:nth-child(odd) { border-right: 1px solid rgba(38, 62, 73, .14); }
-  .stat:nth-child(even) { padding-left: 24px; }
-  .stat:nth-last-child(-n + 2) { border-bottom: none; }
-}
 @media (max-width: 640px) {
   .about__in { gap: 40px; }
-  .stat:nth-child(even) { padding-left: 20px; }
-  .stat__num { font-size: 36px; }
-  .stat__label { font-size: 15px; }
   .promise { padding-top: 36px; }
   .promise__grid { gap: 20px; }
   .promise__h { min-height: 0; }

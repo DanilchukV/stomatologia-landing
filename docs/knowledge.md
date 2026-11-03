@@ -85,9 +85,11 @@ width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on 
 
 ## About
 
-The stats row bleeds 28 px to each side so the first number lines up with the text; that only fits
-while the 1200 px column has side room, so below 1256 px it is 24 px, and below 900 px the stats are
-a 2 × 2 grid.
+The export had a row of four numbers (years, patients, staff, branches) between the lead and the
+promises; they were VestMedServis figures and the row was removed on 2026-11-03 together with its
+styles. If the new clinic gives its own figures, the markup and CSS are in git history.
+The hero facts, the about lead, the promises and the FAQ were rewritten from what stom-brest.com says
+about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with Damon braces).
 
 ## Services
 
