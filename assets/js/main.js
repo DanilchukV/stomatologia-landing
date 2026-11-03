@@ -1,6 +1,6 @@
 'use strict';
 // Page behaviour: header, tooth picker, services panel, selected-services cart,
-// reviews carousel, booking form. Content comes from data.js.
+// booking form. Content comes from data.js.
 (function () {
   const D = window.SITE_DATA;
   const $ = (sel, root) => (root || document).querySelector(sel);
@@ -20,7 +20,7 @@
 
   /* ---------- constants ---------- */
   const WISDOM = [1, 16, 17, 32];
-  const SPY = ['calm', 'services', 'clinics', 'reviews'];
+  const SPY = ['calm', 'services', 'clinics'];
   const SVC_LIMIT = 6;
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
@@ -299,29 +299,6 @@
     $('.cart__pill').setAttribute('aria-expanded', state.cartOpen);
   }
 
-  /* ---------- reviews ---------- */
-  // The row scrolls natively (swipe on phones); arrows and dots move it one card at a time.
-  const revTrack = $('#rev-track');
-  const revDots = $('#rev-dots');
-  const revStep = () => revTrack.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(revTrack).columnGap);
-  const revCount = () => Math.round((revTrack.scrollWidth - revTrack.clientWidth) / revStep()) + 1;
-  const revCurrent = () => Math.round(revTrack.scrollLeft / revStep());
-  function renderReviews() {
-    const n = revCount();
-    mount(revDots, String(n), () => Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="Отзывы ${k + 1} из ${n}" data-act="rev-go" data-pos="${k}"></button>`).join(''));
-    const cur = revCurrent();
-    $$('.dot', revDots).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.pos === cur));
-    revDots.hidden = n < 2;
-    $$('.reviews__nav').forEach((el) => { el.hidden = n < 2; });
-  }
-  const revGo = (k) => revTrack.scrollTo({ left: k * revStep(), behavior: 'smooth' });
-  let revTick = false;
-  revTrack.addEventListener('scroll', () => {
-    if (revTick) return;
-    revTick = true;
-    requestAnimationFrame(() => { revTick = false; renderReviews(); });
-  }, { passive: true });
-
   /* ---------- booking ---------- */
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
@@ -451,11 +428,6 @@
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => x.n !== t.dataset.svc) }),
     'cart-clear': () => set({ cart: [], cartOpen: false }),
 
-
-    'rev-go': (t) => revGo(+t.dataset.pos),
-    'rev-prev': () => { const n = revCount(); revGo((revCurrent() - 1 + n) % n); },
-    'rev-next': () => { const n = revCount(); revGo((revCurrent() + 1) % n); },
-
     top: () => window.scrollTo(0, 0)
   };
 
@@ -477,13 +449,12 @@
     renderPicker();
     renderServices();
     renderCart();
-    renderReviews();
     renderBooking();
     updateFloating();
   }
   buildTeeth();
   render();
   window.addEventListener('scroll', schedule, { passive: true });
-  window.addEventListener('resize', () => { schedule(); renderReviews(); });
+  window.addEventListener('resize', schedule);
   onScroll();
 })();

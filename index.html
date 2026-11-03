@@ -35,8 +35,6 @@
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9.5l6 5 6-5"/></symbol>
   <symbol id="i-chev-row" viewBox="0 0 24 24"><path d="M6.5 9.75l5.5 4.5 5.5-4.5"/></symbol>
   <symbol id="i-chev-up" viewBox="0 0 24 24"><path d="M6 14.5l6-5 6 5"/></symbol>
-  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M14.6 6l-6 6 6 6"/></symbol>
-  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9.4 6l6 6-6 6"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
@@ -48,7 +46,6 @@
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
-  <symbol id="i-quote" viewBox="0 0 28 22"><path d="M0 22V13C0 5.5 4 1.2 11 0l1.2 3.3C8 4.5 6 7.2 5.8 11H11v11H0zm16 0V13c0-7.5 4-11.8 11-13l1.2 3.3C24 4.5 22 7.2 21.8 11H27v11H16z"/></symbol>
   <symbol id="i-map" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
     <rect width="400" height="180" fill="#F1F3F4"/>
     <path d="M250 0 C 236 40, 300 70, 290 110 S 330 160, 320 180 L 400 180 L 400 0 Z" fill="#CEEAD6"/>
@@ -100,7 +97,6 @@
         <a class="nav__link" href="#calm">О клинике</a>
         <a class="nav__link" href="#services">Услуги</a>
         <a class="nav__link" href="#clinics">Контакты</a>
-        <a class="nav__link" href="#reviews">Отзывы</a>
       </nav>
       <div class="hdr__clinics" role="group" aria-label="Клиника">
         <span class="hdr__clinics-title">Клиника</span>
@@ -408,42 +404,6 @@
   </div>
 </section>
 
-<!-- Reviews -->
-<section class="reviews" id="reviews">
-  <div class="wrap reviews__in">
-    <div class="reviews__head">
-      <h2 class="title">Отзывы пациентов</h2>
-      <div class="reviews__nav">
-        <button type="button" class="btn btn--ghost round-btn" data-act="rev-prev" aria-label="Предыдущие отзывы"><svg class="ic" width="18" height="18" stroke-width="2.4" aria-hidden="true"><use href="#i-prev"/></svg></button>
-        <button type="button" class="btn btn--ghost round-btn" data-act="rev-next" aria-label="Следующие отзывы"><svg class="ic" width="18" height="18" stroke-width="2.4" aria-hidden="true"><use href="#i-next"/></svg></button>
-      </div>
-    </div>
-    <div class="rev-track" id="rev-track">
-      <figure class="review">
-        <div class="review__top"><svg class="review__q" width="28" height="22" aria-hidden="true"><use href="#i-quote"/></svg><span class="stars" role="img" aria-label="5 из 5">★★★★★</span></div>
-        <blockquote class="review__text">Приехала из Пинска с невыносимой болью в щеке. Сразу приняла терапевт, отвели на компьютерную томографию, через 5 минут осмотрел хирург, поставили правильный диагноз — и в одно посещение вылечили зуб. Боль прошла.</blockquote>
-        <figcaption class="review__by"><span class="review__name">Тамара</span><span class="review__meta">г. Пинск · врачи Савчук и Михович</span></figcaption>
-      </figure>
-      <figure class="review">
-        <div class="review__top"><svg class="review__q" width="28" height="22" aria-hidden="true"><use href="#i-quote"/></svg><span class="stars" role="img" aria-label="5 из 5">★★★★★</span></div>
-        <blockquote class="review__text">Недавно протезировалась, ставила коронки из циркония. Всё очень понравилось! Теперь могу улыбаться. Спасибо доктору и технику! Кстати, недорого.</blockquote>
-        <figcaption class="review__by"><span class="review__name">Ольга</span><span class="review__meta">г. Брест</span></figcaption>
-      </figure>
-      <figure class="review">
-        <div class="review__top"><svg class="review__q" width="28" height="22" aria-hidden="true"><use href="#i-quote"/></svg><span class="stars" role="img" aria-label="5 из 5">★★★★★</span></div>
-        <blockquote class="review__text">Пришла за протезированием, а теперь ходим сюда всей семьёй. Здесь лечат не только то, на что жалуешься: делают общий снимок и подробно рассказывают о состоянии зубов и суставов.</blockquote>
-        <figcaption class="review__by"><span class="review__name">Ольга Евгеньевна</span><span class="review__meta">г. Брест</span></figcaption>
-      </figure>
-      <figure class="review">
-        <div class="review__top"><svg class="review__q" width="28" height="22" aria-hidden="true"><use href="#i-quote"/></svg><span class="stars" role="img" aria-label="5 из 5">★★★★★</span></div>
-        <blockquote class="review__text">Ходим сюда с дочкой с пяти лет. Врачи умеют найти подход к детям: поговорят, улыбнутся, подарят наклейки — ребёнок счастлив. Администраторы приветливые и всегда напоминают о визите накануне.</blockquote>
-        <figcaption class="review__by"><span class="review__name">Елена</span><span class="review__meta">г. Брест · врач Дявго</span></figcaption>
-      </figure>
-    </div>
-    <div class="dots" id="rev-dots" role="group" aria-label="Отзывы"></div>
-  </div>
-</section>
-
 <!-- FAQ -->
 <section class="faq-sec" id="faq">
   <div class="wrap faq-sec__in">
@@ -540,7 +500,6 @@
         <a class="ftr__link" href="#calm">О клинике</a>
         <a class="ftr__link" href="#services">Услуги</a>
         <a class="ftr__link" href="#clinics">Контакты</a>
-        <a class="ftr__link" href="#reviews">Отзывы</a>
         <a class="ftr__link" href="#faq">Частые вопросы</a>
         <a class="ftr__link" href="#book">Запись на приём</a>
       </nav>
