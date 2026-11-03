@@ -162,3 +162,11 @@ The booking form only shows "отправлено"; requests go nowhere. The use
 they go (Web3Forms to email as in Nitowska — needs the clinic's address and the access key Web3Forms
 mails to it; or Telegram) and add the sending to the `SiteForm.bind` callback in `main.js`.
 
+
+### 2. Grevitident content still missing
+
+The site was switched to Grevitident on 2026-11-03 with only what stom-brest.com gives. Waiting for the
+user: opening hours, legal entity and УНП for the footer, social links, doctors, reviews, prices and
+figures for "О клинике". The services catalogue (`cats`, `serviceText`, `serviceMore`, `recommend` in
+`data.js`) is still VestMedServis's list — it includes CT (КЛКТ), microscope work, aligners and other
+items the new clinic may not offer; check it against the clinic's real price list.
