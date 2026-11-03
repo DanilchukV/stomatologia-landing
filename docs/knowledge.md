@@ -37,7 +37,8 @@ The logo is the user's `logo.svg` (tooth + «Гревитидент» + «сто
 (the same file with the navy text white, the subtitle and the tooth's dark gradient stops light).
 The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the 32 px and
 apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
-accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and navy.
+accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
+user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant and icons were redone).
 
 The hero photo (AI-generated, from the design) had the VestMedServis logo on the coat; it was painted
 out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
