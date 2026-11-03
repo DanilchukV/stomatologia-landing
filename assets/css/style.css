@@ -158,9 +158,8 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 .hdr__menu { display: contents; }
 .hdr__call, .hdr__burger { display: none; }
 
-.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
-.logo:hover { color: var(--ink); }
-.logo__name { font-family: var(--f-head); font-weight: 600; font-size: 24px; letter-spacing: -.01em; }
+.logo { display: block; flex: none; }
+.logo__img { display: block; height: 48px; width: auto; }
 
 .addr__btn { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px 0 14px; text-decoration: none; border: none; border-left: 1px solid var(--tint); border-radius: 0; background: transparent; color: var(--ink); font-size: 14px; white-space: nowrap; cursor: pointer; text-align: left; transition: color .15s; }
 .addr__btn:hover { color: var(--accent-ink); }
@@ -221,9 +220,7 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 @media (max-width: 639px) {
   :root { --hdr-h: 70px; }
   .hdr__in { padding-top: 11px; padding-bottom: 11px; }
-  .logo { gap: 10px; }
-  .logo__mark { width: 38px; height: 38px; }
-  .logo__name { font-size: 21px; }
+  .logo__img { height: 38px; }
   .addr { display: none; }
   .hdr__cta { flex: 1 1 100%; }
 }
@@ -640,9 +637,8 @@ section[id] { scroll-margin-top: calc(var(--hdr-h) + 2px); }
 .ftr__in { display: flex; flex-direction: column; gap: 48px; }
 .ftr__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 40px 32px; }
 .ftr__brand { display: flex; flex-direction: column; gap: 18px; }
-.ftr__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.ftr__logo svg { display: block; flex: none; margin-left: -6px; }
-.ftr__logo span { font-family: var(--f-head); font-weight: 600; font-size: 22px; color: var(--white); }
+.ftr__logo { align-self: flex-start; }
+.ftr__logo img { display: block; height: 46px; width: auto; }
 .ftr__about { margin: 0; font-size: 15px; line-height: 1.6; color: #B9D3DC; text-wrap: pretty; }
 .ftr__col { display: flex; flex-direction: column; gap: 12px; }
 .ftr__contacts { gap: 14px; }

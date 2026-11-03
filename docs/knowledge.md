@@ -30,6 +30,19 @@ cross-page `localStorage` jump (`vms-goto`) — native anchors do that job.
 
 Small behaviour addition over the export: footer service links open that category's panel.
 
+## Brand
+
+The logo is the user's `logo.svg` (tooth + «Гревитидент» + «стоматологическая клиника», text in outlines):
+`assets/img/logo.svg` in the header (48 px high, 38 px on phones) and `logo-light.svg` in the dark footer
+(the same file with the navy text white, the subtitle and the tooth's dark gradient stops light).
+The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the 32 px and
+apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
+accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and navy.
+
+The hero photo (AI-generated, from the design) had the VestMedServis logo on the coat; it was painted
+out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
+re-encoded as WebP). `og-image.jpg` was rebuilt from an HTML layout with the new logo and address.
+
 ## Fonts
 
 Manrope (headings), Onest (text) and Playfair Display italic (only the motto in "О клинике").

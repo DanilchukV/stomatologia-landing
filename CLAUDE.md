@@ -9,8 +9,10 @@ Talk to the user in Russian.
 
 ## Status
 
-The clinic is VestMedServis, a dental clinic in Brest (Belarus); the site is in Russian
-(`lang="ru"`). The original Claude Design export is commit `ffa5378`; on 2026-10-20 it was rewritten
+The clinic is **Grevitident** («Гревитидент»), a dental office in Brest (Belarus): ul. Vorovskogo 27,
+office 150; its old site is stom-brest.com. The site is in Russian (`lang="ru"`). Until 2026-11-03 the
+site was made for another clinic, VestMedServis; its staff, reviews, blog, documents and vacancies were
+then removed (in git history) until the new clinic has its own. The original Claude Design export is commit `ffa5378`; on 2026-10-20 it was rewritten
 as plain HTML/CSS/JS (no React, no CDN) and made responsive — see `docs/knowledge.md`. Some content
 from the design is still missing (open task 1).
 
