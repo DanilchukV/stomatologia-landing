@@ -86,6 +86,14 @@ width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on 
 
 ## About
 
+Two columns from 1000 px: text (title, lead, the three promises in a column, the motto pinned to the
+bottom) and a photo collage that stretches to the text's height: one large tile (with the address
+chip) and two small ones. Below 1000 px one column: the collage goes between the lead and the
+promises, which line up in a row again. The tiles are placeholders («Кабинет», «Холл», «Оборудование»,
+"фото скоро появится") until the clinic sends photos: replace a tile's `.about__ph-in` with
+`<img src="assets/img/…" alt="…" loading="lazy">`, which covers the tile (WebP, about 1600 px wide for
+the large one).
+
 The export had a row of four numbers (years, patients, staff, branches) between the lead and the
 promises; they were VestMedServis figures and the row was removed on 2026-11-03 together with its
 styles. If the new clinic gives its own figures, the markup and CSS are in git history.
