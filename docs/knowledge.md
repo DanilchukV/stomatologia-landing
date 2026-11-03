@@ -10,7 +10,7 @@ template with `{{…}}` bindings, `sc-if`/`sc-for` tags and ~600 inline styles, 
 by React from a `DCLogic` component. On 2026-10-20 it was rewritten as static HTML + CSS + JS:
 
 - `index.html` — all static content; dynamic parts have empty containers that `main.js` fills.
-- `assets/js/data.js` — the content the logic needs (clinics, service categories and texts,
+- `assets/js/data.js` — the content the logic needs (clinic address, service categories and texts,
   symptoms, recommendations, tooth outlines). Generated from the export's `DCLogic`; edit it by hand now.
 - `assets/js/main.js` — one `state` object; `set(patch)` merges and calls `render()`, which updates
   every widget. Clicks are delegated: an element with `data-act="name"` runs `actions.name`.
@@ -39,13 +39,12 @@ is a variable font, so one `@font-face` per subset covers all weights. Licences:
 ## Header
 
 Breakpoints, from wide to narrow:
-- ≥ 1390 px — the export's layout: logo + clinic, nav, phone with hours, CTA, one row.
+- ≥ 1390 px — the export's layout: logo + address, nav, phone with hours, CTA, one row.
 - < 1390 — the phone number and hours are visually hidden (still read by screen readers), only
   the round icon stays; that is what lets the row fit down to 1280.
 - < 1280 — burger: `.hdr__menu` (nav + contacts) becomes a drop-down panel. On desktop it is
   `display: contents`, so its children stay flex items of the header row.
-- < 640 — the clinic selector leaves the header; the menu shows its own clinic choice
-  (`.hdr__clinics`).
+- < 640 — the address leaves the header (the menu's "Контакты" leads to it).
 
 `--hdr-h` is the header height at each breakpoint (82 / 74 / 70); sticky bars and
 `scroll-margin-top` use it. Scroll-spy marks the nav link of the section crossing 140 px from the top.
@@ -106,6 +105,13 @@ The staff section, the doctor choice in the services panel and the picker's "К�
 VestMedServis staff and were removed on 2026-11-03 (in git history before that date). To bring them
 back for the new clinic: a `doctors` list in `data.js` and roles per category and symptom.
 
+## Contacts
+
+One address (the export had two VestMedServis clinics with a switcher in the header, the menu, the
+contacts and the booking summary; removed on 2026-11-03). The header address is a plain link to
+`#clinics`. The contacts card puts the map (a static picture that opens Google Maps) and the address
+side by side; under 760 px they stack.
+
 ## Reviews
 
 The four VestMedServis reviews (a scroll-snap carousel) were removed on 2026-11-03; the markup, script and
@@ -113,7 +119,7 @@ styles are in git history before that date.
 
 ## Booking
 
-The summary shows the chosen clinic and the reason (selected services, or tooth + symptom from the
+The summary shows the reason (selected services, or tooth + symptom from the
 picker). Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
 375. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.

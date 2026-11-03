@@ -1,10 +1,7 @@
 'use strict';
-// Site content used by main.js: clinics, service categories, staff, symptom hints, tooth map.
+// Site content used by main.js: clinic address, service categories, symptom hints, tooth map.
 window.SITE_DATA = {
-  clinics: [
-    {"name":"Клиника на Ломоносова","area":"Ломоносова, 1-1","addr":"г. Брест, ул. Ломоносова, 1-1","hours":"Будни с 8:00 до 20:00","note":"Выходные: рентген-кабинет с 8:00 до 20:00"},
-    {"name":"Клиника на Махновича","area":"Махновича, 14","addr":"г. Брест, ул. Махновича, 14","hours":"Будни с 8:00 до 20:00","note":"Выходные: рентген-кабинет с 8:00 до 20:00"}
-  ],
+  clinic: {"area":"Воровского, 27"},
   // tab: short label in the services tab bar
   cats: [
     {"id":"diag","name":"Консультация и диагностика","tab":"Диагностика","desc":"Консультация специалиста и цифровая диагностика: снимки, 3D-томография, сканирование и фотопротокол.","items":["Консультация специалистов","Прицельная радиовизиография","Телерентгенография","3D-томография (КЛКТ)","Интраоральное сканирование","Фотопротокол"]},

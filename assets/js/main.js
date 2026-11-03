@@ -28,7 +28,6 @@
 
   /* ---------- state ---------- */
   const state = {
-    clinic: 0, addrOpen: false,
     tooth: null, scope: null, skipTooth: false, symptom: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false,
     cart: [], cartOpen: false,
@@ -65,23 +64,8 @@
     }));
   }
 
-  /* ---------- header and clinic choice ---------- */
+  /* ---------- header ---------- */
   const hdr = $('#hdr');
-  function renderClinic() {
-    const c = D.clinics[state.clinic];
-    $$('[data-clinic-area]').forEach((el) => { el.textContent = c.area; });
-    $$('[data-clinic-name]').forEach((el) => { el.textContent = c.name; });
-    $$('[data-act="clinic"]').forEach((b) => {
-      const on = +b.dataset.clinic === state.clinic;
-      b.setAttribute('aria-pressed', on);
-      if (b.classList.contains('clinic__btn')) b.textContent = on ? 'Выбрана' : 'Выбрать эту клинику';
-    });
-    $$('[data-clinic-card]').forEach((el) => el.classList.toggle('is-sel', +el.dataset.clinicCard === state.clinic));
-    const btn = $('.addr__btn');
-    btn.setAttribute('aria-expanded', state.addrOpen);
-    btn.setAttribute('aria-label', 'Выбрать клинику: сейчас ' + c.area);
-    $('#addr-drop').hidden = !state.addrOpen;
-  }
 
   /* ---------- tooth picker ---------- */
   const jaw = $('#jaw');
@@ -163,7 +147,7 @@
       ${WISDOM.includes(tooth) && sym.id !== 'wisdom' ? '<p class="hint__note">Это зуб мудрости — возможно, понадобится консультация хирурга.</p>' : ''}
       <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(cat.name)}</span></div>
       <div class="hint__sec"><span class="caps">Вероятно понадобится</span>${svcs}<span class="hint__small">Отметьте — услуги попадут в запись на приём.</span></div>
-      <div class="hint__actions"><a class="btn btn--dark hint__cta" href="#book"><span>Записаться</span><span class="hint__dot" aria-hidden="true"></span><span>${esc(D.clinics[s.clinic].area)}</span></a><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Все услуги направления</a></div>
+      <div class="hint__actions"><a class="btn btn--dark hint__cta" href="#book"><span>Записаться</span><span class="hint__dot" aria-hidden="true"></span><span>${esc(D.clinic.area)}</span></a><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Все услуги направления</a></div>
       <p class="hint__disclaimer">Это подсказка, а не диагноз. Точный план врач составит после осмотра.</p>`;
   }
 
@@ -372,10 +356,6 @@
     scrollToId('svc-panel');
   }
   const actions = {
-    'addr-toggle': () => set({ addrOpen: !state.addrOpen }),
-    clinic: (t) => set({ clinic: +t.dataset.clinic, addrOpen: false }),
-    'clinic-next': () => set({ clinic: (state.clinic + 1) % D.clinics.length }),
-
     tooth: (t) => {
       const n = +t.dataset.tooth;
       if (state.tooth === n) { set({ tooth: null }); return; }
@@ -433,19 +413,11 @@
 
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-act]');
-    // a click outside closes the clinic drop-down
-    const closeAddr = state.addrOpen && !e.target.closest('.addr');
-    if (closeAddr) state.addrOpen = false;
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
-    else if (closeAddr) render();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && state.addrOpen) set({ addrOpen: false });
   });
 
   /* ---------- start ---------- */
   function render() {
-    renderClinic();
     renderPicker();
     renderServices();
     renderCart();
