@@ -1,5 +1,5 @@
 'use strict';
-// Name and phone checks shared by the forms: booking (home page) and job application (vacancies).
+// Name and phone checks for the booking form.
 window.SiteForm = (function () {
   function nameError(v) {
     const s = v.trim();

@@ -282,7 +282,6 @@
     const subs = n === CONSULT ? `<div class="svc-subs"><span class="caps">Выберите специалиста</span><div class="svc-subs__chips">${
       CONSULT_SUBS.map(([label, cn]) => `<button type="button" class="chip svc-subs__chip" aria-pressed="false" data-act="svc-sub" data-sub="${cn}">${label}</button>`).join('')}</div></div>` : '';
     const m = D.serviceMore[n];
-    const reads = D.serviceReads[n] || [];
     const more = m ? `<button type="button" class="more-btn" data-act="svc-more" aria-expanded="false"><span></span>${icon('i-chev', 14, 2.6)}</button>
       <div class="drawer drawer--more"><div><div class="svc-more">
         <p class="svc-more__lead">${esc(glue(m.lead))}</p>
@@ -290,7 +289,6 @@
           sc.items ? `<ul class="bullets">${sc.items.map((x) => `<li><span>${esc(glue(x))}</span></li>`).join('')}</ul>` : ''}${
           sc.p ? `<p class="svc-more__p">${esc(glue(sc.p))}</p>` : ''}</div>`).join('')}
         ${m.note ? `<p class="svc-more__note">${esc(glue(m.note))}</p>` : ''}
-        ${reads.length ? `<div class="reads"><span class="caps">Читать по теме</span>${reads.map(([id, t]) => `<a class="read" href="blog.html#${id}">${icon('i-article', 16, 2.2)}${esc(t)}</a>`).join('')}</div>` : ''}
       </div></div></div>` : '';
     return `<div class="svc-row" data-svc="${esc(n)}">
       <div class="svc-row__bar">

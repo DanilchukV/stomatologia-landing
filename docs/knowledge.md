@@ -129,51 +129,9 @@ keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typ
 **Requests are not delivered anywhere yet** — submit only shows "Заявка отправлена". The delivery
 (e.g. Web3Forms, as in Nitowska, or a Telegram bot) goes into the form's submit handler in `main.js`.
 
-## Inner pages
+## Removed pages
 
-Each page of the design project is exported from Claude Design separately ("html" zip: the
-`*.dc.html` page, its runtime and an `assets/` folder with uploaded files). They share the home page's
-`style.css`, fonts and icons; the header is the same markup with `hdr--sub` (a thin bottom line instead
-of the scroll shadow), the address is a plain link to `index.html#clinics` (no clinic drop-down), and
-nav links point to sections of `index.html`. `header.js` (the burger) runs on every page; each page
-has its own small script. `tools/shot.sh -Page <file>` screenshots a page other than the home page.
-
-## Documents page
-
-Made from the design's "Документы" export on 2026-10-21; at 1440 px it matches the export except
-the file sizes in the cards (the design quoted the 10–15 MB originals) and one line break.
-- Cards: "Кратко о документе" opens a summary (one card at a time; closing scrolls the card back into
-  view). "Скачать PDF" uses `download` with a readable Russian file name.
-- Guarantee terms: four directions, all tables are in the HTML (`hidden` except the current one).
-- Visit rules: six cards shown two at a time with dots; without JS all six show.
-- The anchors `#doc-contract`, `#doc-rules`, `#doc-guar`, `#doc-comp`, `#guar`, `#rules` can be linked to.
-
-## Blog page
-
-Made from the design's "Блог и акции" export on 2026-10-21; at 1440 px the layout matches it.
-- The design reads articles inside the page; here every article is in the HTML (`<article id="post-…"
-  hidden>`) and the address hash picks one: `blog.html#klkt`, `#xray`, `#promo-ct`. So articles have
-  their own links (the home page's news cards and the services' "Читать по теме" point at them), the
-  browser's Back returns to the list, and the tab title becomes the article title.
-- Pictures: the export pointed at `/_blob/…` files; they are the same three pictures as the home page's
-  news cards (same posts, same crops), so those files are reused, plus 1200 px copies for the article
-  image (`srcset`).
-- Rubric tabs only list rubrics that have posts, with counts.
-- "Статья на сайте клиники" links to the same article on dentall.by.
-
-## Vacancies page
-
-Made from the design's "Вакансии" export on 2026-10-21; at 1440 px it matches it (only the photo
-re-encoding differs). The four positions and their terms are the design's text, not the live
-vacancies from dentall.by (see open task 1 in `CLAUDE.md`). One position open at a time;
-"Откликнуться" fills the position in the form. The CV field shows the chosen file's name.
-The form uses the same checks as booking (`form.js`) and is not delivered anywhere yet either.
-
-## Legal documents
-
-`assets/docs/*.pdf` — public contract, internal rules, guarantees, possible complications (footer,
-booking consent, documents page). Taken from the clinic's site dentall.by on 2026-10-21; they are
-byte-identical to the files in the design's export. The originals are 300 dpi colour scans, ~40 MB in total; they were rebuilt page
-by page to 4.6 MB: text pages as 200 dpi black-and-white (CCITT G4), the page with the stamp and
-signature as a 150 dpi colour JPEG. If a document changes, take the new PDF from dentall.by and shrink
-it the same way (pypdf + Pillow; a one-off script, not kept in the repo).
+The blog, documents and vacancies pages (with their scripts, the legal PDFs and the news block on the
+home page) were built for VestMedServis and removed on 2026-11-03, when the site was switched to the
+Grevitident clinic, which has no such content yet. They are in git history (before that date) if the
+new clinic needs them back.

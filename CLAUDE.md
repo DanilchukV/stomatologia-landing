@@ -52,21 +52,14 @@ needs `tools\lan-setup.ps1` once (asks for admin rights; Nitowska's setup covers
 
 ```
 index.html                 the home page
-documents.html             documents page (legal PDFs, guarantee terms, visit rules)
-blog.html                  blog: article list and articles (blog.html#klkt opens one)
-vacancies.html             vacancies and the job application form
 assets/css/style.css       all styles
 assets/js/header.js        header burger menu, on every page
 assets/js/main.js          home page behaviour (state → render, click actions via data-act)
-assets/js/form.js          name/phone validation shared by the booking and application forms
-assets/js/documents.js     documents page behaviour
-assets/js/blog.js          blog page behaviour
-assets/js/vacancies.js     vacancies page behaviour
+assets/js/form.js          name/phone validation of the booking form
 assets/js/data.js          content the scripts use: clinics, services, staff, symptoms, tooth map
 assets/img/                images (WebP; JPEG only where WebP saves under ~5%); doctors/ — staff photos
 assets/fonts/              self-hosted woff2 + OFL.txt (licences, keep with the fonts)
 assets/icons/              favicon (svg + 32 px png), apple-touch-icon, og-image (1200×630)
-assets/docs/               legal PDFs linked from the footer (shrunk scans from dentall.by)
 tools/                     dev scripts: dev, serve, shot (.sh for macOS, .ps1 for Windows), lan-setup.ps1 — NOT DEPLOYED
 docs/knowledge.md          knowledge base: how the sections work and why — NOT DEPLOYED
 .github/workflows/pages.yml  publishes index.html + assets/ to GitHub Pages
@@ -95,8 +88,8 @@ grep -rnE '(src|href)="/[^/]|url\(["'\'']?/[^/]' index.html assets/css
 
 **Everything the site needs lives in the root `*.html` pages and `assets/`.** The Pages workflow
 copies only those; any other new top-level file (`robots.txt`, `sitemap.xml`, …) must be added to its
-`cp` line. A new page copies the header and footer markup of `documents.html` (shared CSS and
-`header.js`) and gets its own small script.
+`cp` line. A new page reuses the header and footer markup of `index.html` (shared CSS and `header.js`)
+and gets its own small script.
 
 ## Preview
 
@@ -132,7 +125,7 @@ tools/shot.sh -Target ".hero h1" -Width 1440 -Height 200 -Scale 3
 tools/shot.sh -Target "#services" -Js "ov('#services .card')" -NoShot
 ```
 
-`-Page documents.html` shoots another page (default `index.html`). `-Target` is a CSS selector: the
+`-Page <file>.html` shoots another page (default `index.html`). `-Target` is a CSS selector: the
 page scrolls to it (`-Offset`, 100 px from the top by default).
 `-Js` is an expression evaluated in the page, with helpers `ov(sel)` (horizontal overflow) and
 `box(sel)` (coordinates and size). `-Do` is a JS action before scrolling and the shot (fill fields,
@@ -163,15 +156,7 @@ made private again.
 
 ### 1. Form delivery — the live forms send nothing
 
-The booking form (home page) and the job application with a CV file (vacancies) only show
-"отправлено"; requests go nowhere. The user chose on 2026-10-21 to publish the site anyway. Agree where
+The booking form only shows "отправлено"; requests go nowhere. The user chose on 2026-10-21 to publish the site anyway. Agree where
 they go (Web3Forms to email as in Nitowska — needs the clinic's address and the access key Web3Forms
-mails to it; or Telegram) and add the sending to the `SiteForm.bind` callbacks in `main.js` and
-`vacancies.js`.
+mails to it; or Telegram) and add the sending to the `SiteForm.bind` callback in `main.js`.
 
-### 2. Content on hold
-
-- **Vacancies content** — the design lists 4 positions (therapist, nurse, administrator, dental
-  technician) with placeholder terms; dentall.by/vacancy lists other ones (orthopedist, surgeon,
-  orthodontist, …). On hold: the user said on 2026-10-21 to leave the vacancies as they are for now —
-  don't change them or bring it up until the user does.
