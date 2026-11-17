@@ -152,7 +152,7 @@ moves up while the cart is visible.
 
 The VestMedServis staff was removed on 2026-11-03; the section came back the same day for Grevitident:
 4 dentists (therapist, surgeon, orthodontist, orthopedist — the 4th was a "Врач-стоматолог" of unknown speciality until 2026-11-17) and
-2 nurses. Since 2026-11-17 they have invented names (user's request, placeholders until the real ones)
+2 nurses, plus 2 administrators (role `admin`, added 2026-11-17; the section title became «Наша команда»). Since 2026-11-17 they have invented names (user's request, placeholders until the real ones)
 and short specialities without «Стоматолог-» (`Терапевт`, `Хирург`…). Photos (2026-11-17, from the user, white background): `assets/img/doctors/<id>.webp`,
 600×800 (3:4 crop of the source, cwebp -q 80); `mix-blend-mode: multiply` on a light tint box turns the white
 background into the box colour, so nothing may be drawn under a photo. Clinic photos in the About collage:
@@ -160,8 +160,8 @@ background into the box colour, so nothing may be drawn under a photo. Clinic ph
 since names may change), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
 `.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
 update the lead text in `index.html`.
-- Section: no tabs (the user wants one list: doctors, then nurses), 4 per page with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
-  doctor (not the nurses) has "Записаться", which also picks that doctor for the booking summary.
+- Section: no tabs (the user wants one list: doctors, then nurses, then administrators), 4 per page (2 pages) with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
+  doctor (not the nurses or administrators) has "Записаться", which also picks that doctor for the booking summary.
 - No "любой свободный врач" option (removed on the user's request, 2026-11-17): a concrete doctor is
   always named. Opening a category, ticking a consultation or picking a symptom selects the doctor of
   the first role in `roles` (`autoDoc`; so the order of `roles` sets the default, e.g. aesthetics →
