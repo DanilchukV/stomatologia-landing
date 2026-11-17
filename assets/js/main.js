@@ -44,7 +44,7 @@
   const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
   const isConsult = (n) => !!CONSULT_ROLE[n];
   const ROLE_NAME = { ther: 'терапевт', orth: 'ортопед', surg: 'хирург', ortd: 'ортодонт' };
-  const BOOKABLE = ['ther', 'orth', 'surg', 'ortd', 'dent'];
+  const BOOKABLE = ['ther', 'orth', 'surg', 'ortd'];
 
   /* ---------- state ---------- */
   const state = {

@@ -78,12 +78,12 @@ window.SITE_DATA = {
     "Микроимпланты": {"lead":"Небольшие титановые опоры, которые временно устанавливаются в кость и служат дополнительной точкой опоры при ортодонтическом лечении.","sections":[{"h":"Зачем нужны","items":["Помогают точнее и предсказуемее перемещать зубы","Позволяют решать сложные задачи без нагрузки на соседние зубы","Используются вместе с брекетами"]}],"note":"После завершения нужного этапа лечения микроимпланты снимаются. Необходимость определяет ортодонт."}
   },
   // staff: name and photo (file in assets/img/doctors/, without .webp) stay empty until the clinic sends them;
-  // role: ther — терапевт, surg — хирург, ortd — ортодонт, orth — ортопед, dent — speciality not known yet
+  // role: ther — терапевт, surg — хирург, ortd — ортодонт, orth — ортопед
   doctors: [
     {"id":"ther","name":"","spec":"Стоматолог-терапевт","role":"ther","photo":""},
     {"id":"surg","name":"","spec":"Стоматолог-хирург","role":"surg","photo":""},
     {"id":"ortd","name":"","spec":"Стоматолог-ортодонт","role":"ortd","photo":""},
-    {"id":"dent","name":"","spec":"Врач-стоматолог","role":"dent","photo":""},
+    {"id":"orth","name":"","spec":"Стоматолог-ортопед","role":"orth","photo":""},
     {"id":"nurse1","name":"","spec":"Медицинская сестра","role":"nurse","photo":""},
     {"id":"nurse2","name":"","spec":"Медицинская сестра","role":"nurse","photo":""}
   ],

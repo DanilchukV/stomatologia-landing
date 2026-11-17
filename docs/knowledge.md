@@ -138,7 +138,7 @@ moves up while the cart is visible.
 ## Doctors
 
 The VestMedServis staff was removed on 2026-11-03; the section came back the same day for Grevitident:
-4 dentists (therapist, surgeon, orthodontist and one whose speciality is not known yet, role `dent`) and
+4 dentists (therapist, surgeon, orthodontist, orthopedist — the 4th was a "Врач-стоматолог" of unknown speciality until 2026-11-17) and
 2 nurses; names and photos later. Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
 since names are empty), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
 `.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
@@ -151,8 +151,8 @@ update the lead text in `index.html`.
   врач" card, and clicking it doesn't unselect it (user's request, 2026-11-17).
 - Doctor choice: in the services panel (column 2, doctors of `cats[].roles`; in diagnostics, of the
   ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
-  cart and booking summary. Categories or symptoms whose role has nobody (orthopedist) say "Врача
-  подберём при записи"; when the 4th doctor's speciality is known, change its `role`.
+  cart and booking summary. Categories or symptoms whose role has nobody say "Врача
+  подберём при записи".
 - On phones the doctor cards in the services panel go two per row.
 
 ## Contacts
