@@ -709,6 +709,15 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .field__input { min-height: 52px; border-radius: 14px; border: 1.5px solid var(--accent); background: var(--white); color: var(--ink); padding: 0 16px; font-size: 16px; transition: border-color .15s, box-shadow .15s; }
 .field__input[aria-invalid="true"] { border-color: #E5484D; box-shadow: 0 0 0 3px rgba(229, 72, 77, .25); }
 .field__err { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #FFB8B8; font-weight: 500; }
+.when { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.when__label { padding: 0; font-size: 14px; font-weight: 500; color: var(--tint); }
+.when__opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.when__opt { position: relative; display: flex; }
+.when__opt input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.when__opt span { flex: 1; min-height: 48px; display: flex; align-items: center; justify-content: center; padding: 0 10px; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, .28); color: var(--white); font-size: 15px; font-weight: 600; cursor: pointer; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+.when__opt:hover span { border-color: var(--accent); background: rgba(255, 255, 255, .08); }
+.when__opt input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+.when__opt input:focus-visible + span { outline: 2px solid var(--white); outline-offset: 2px; }
 .book__send { margin-top: auto; min-height: 56px; font-size: 17px; }
 .book__done { display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 24px; background: rgba(255, 255, 255, .08); }
 .book__done-title { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 24px; }
@@ -719,6 +728,9 @@ p, li, dd, figcaption { text-wrap: pretty; }
 
 @media (max-width: 860px) {
   .book__consent { flex: 1 1 100%; }
+}
+@media (max-width: 480px) {
+  .when__opts { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ===== Footer ===== */

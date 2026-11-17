@@ -182,6 +182,12 @@ picker). Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
 375. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
 
+**Preferred time** (2026-11-17): radio pills `name="time"` — утром / днём / вечером / любое (default),
+shown in the summary as "Время". No date and no real slots on purpose: the administrator calls back and
+agrees the exact time. Hours are not shown because the clinic's opening hours are still unknown. A real
+calendar with free/blocked slots and a doctors' admin panel was discussed and postponed (it needs a
+backend such as Supabase, logins and handling of patients' personal data).
+
 **Requests are not delivered anywhere yet** — submit only shows "Заявка отправлена". The delivery
 (e.g. Web3Forms, as in Nitowska, or a Telegram bot) goes into the form's submit handler in `main.js`.
 

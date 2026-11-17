@@ -411,6 +411,7 @@
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
   window.SiteForm.bind(form, () => set({ sent: true }));
+  form.addEventListener('change', (e) => { if (e.target.name === 'time') renderBooking(); });
 
   function renderBooking() {
     const sym = currentSymptom();
@@ -420,6 +421,7 @@
     if (state.cart.length) reason = 'Услуги: ' + state.cart.map((x) => x.n).join(', ');
     $('#book-reason').textContent = glue(reason);
     $('#book-doctor').textContent = docLabel();
+    $('#book-time').textContent = form.elements.time.value;
     form.hidden = state.sent;
     $('#book-done').hidden = !state.sent;
     $('#book-consent').hidden = state.sent;
