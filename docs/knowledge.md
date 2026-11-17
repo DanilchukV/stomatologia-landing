@@ -153,7 +153,10 @@ moves up while the cart is visible.
 The VestMedServis staff was removed on 2026-11-03; the section came back the same day for Grevitident:
 4 dentists (therapist, surgeon, orthodontist, orthopedist — the 4th was a "Врач-стоматолог" of unknown speciality until 2026-11-17) and
 2 nurses. Since 2026-11-17 they have invented names (user's request, placeholders until the real ones)
-and short specialities without «Стоматолог-» (`Терапевт`, `Хирург`…); photos later. Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
+and short specialities without «Стоматолог-» (`Терапевт`, `Хирург`…). Photos (2026-11-17, from the user, white background): `assets/img/doctors/<id>.webp`,
+600×800 (3:4 crop of the source, cwebp -q 80); `mix-blend-mode: multiply` on a light tint box turns the white
+background into the box colour, so nothing may be drawn under a photo. Clinic photos in the About collage:
+`assets/img/clinic/` (building 1400 px wide with the address chip, reception and cabinet 900 px). Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
 since names may change), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
 `.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
 update the lead text in `index.html`.

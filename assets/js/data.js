@@ -80,12 +80,12 @@ window.SITE_DATA = {
   // staff: name and photo (file in assets/img/doctors/, without .webp) stay empty until the clinic sends them;
   // role: ther — терапевт, surg — хирург, ortd — ортодонт, orth — ортопед
   doctors: [
-    {"id":"ther","name":"Анна Ковалёва","spec":"Терапевт","role":"ther","photo":""},
-    {"id":"surg","name":"Дмитрий Савицкий","spec":"Хирург","role":"surg","photo":""},
-    {"id":"ortd","name":"Ольга Литвинович","spec":"Ортодонт","role":"ortd","photo":""},
-    {"id":"orth","name":"Сергей Журавский","spec":"Ортопед","role":"orth","photo":""},
-    {"id":"nurse1","name":"Екатерина Мельник","spec":"Медицинская сестра","role":"nurse","photo":""},
-    {"id":"nurse2","name":"Ирина Шевчук","spec":"Медицинская сестра","role":"nurse","photo":""}
+    {"id":"ther","name":"Анна Ковалёва","spec":"Терапевт","role":"ther","photo":"ther"},
+    {"id":"surg","name":"Дмитрий Савицкий","spec":"Хирург","role":"surg","photo":"surg"},
+    {"id":"ortd","name":"Ольга Литвинович","spec":"Ортодонт","role":"ortd","photo":"ortd"},
+    {"id":"orth","name":"Сергей Журавский","spec":"Ортопед","role":"orth","photo":"orth"},
+    {"id":"nurse1","name":"Екатерина Мельник","spec":"Медицинская сестра","role":"nurse","photo":"nurse1"},
+    {"id":"nurse2","name":"Ирина Шевчук","spec":"Медицинская сестра","role":"nurse","photo":"nurse2"}
   ],
   // cat: service category the hint points to
   symptoms: [
