@@ -314,7 +314,7 @@
                 <div class="svc-sum__v svc-form__fields">
                   ${fieldHTML('name', 'Имя', 'text', 'autocomplete="name" maxlength="40" placeholder="Как к вам обращаться"')}
                   ${fieldHTML('phone', 'Телефон', 'tel', 'autocomplete="tel" inputmode="tel" placeholder="+375 (29) 123-45-67"')}
-                  ${fieldHTML('email', 'Эл. почта (необязательно)', 'email', 'autocomplete="email" inputmode="email" maxlength="80" placeholder="name@mail.ru"')}
+                  ${fieldHTML('email', 'Эл. почта (необязательно)', 'email', 'autocomplete="email" inputmode="email" maxlength="80" placeholder="name@mail.com"')}
                 </div>
               </form>
               <div class="svc-done" id="svc-done" hidden>
