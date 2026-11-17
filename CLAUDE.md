@@ -93,6 +93,11 @@ copies only those; any other new top-level file (`robots.txt`, `sitemap.xml`, â€
 `cp` line. A new page reuses the header and footer markup of `index.html` (shared CSS and `header.js`)
 and gets its own small script.
 
+**Bump `?v=` on CSS/JS links after changing them.** GitHub Pages lets browsers cache files for 10
+minutes, and a normal reload re-fetches the page but not its scripts, so the user saw old behaviour
+with new markup. `index.html` links `style.css` and the scripts as `â€¦?v=YYYYMMDDx`; in a commit that
+changes anything in `assets/css` or `assets/js`, set a new value on all of them (same value everywhere).
+
 ## Preview
 
 ```bash
