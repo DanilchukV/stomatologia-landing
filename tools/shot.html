@@ -24,11 +24,12 @@ f.onload = function () {
   st.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}html{scroll-behavior:auto!important}';
   d.head.appendChild(st);
   d.fonts.ready.then(function () {
-    var el = T ? d.querySelector(T) : null;
-    if (T && !el) { done('ERROR: selector not found: ' + T); return; }
     setTimeout(function () {
-      // -Do: an action before the shot (fill fields, click a button); scrolling happens after it
+      // -Do: an action before the shot (fill fields, click a button); the target is looked up after it,
+      // so it may be an element the action renders
       if (DO) { try { new w.Function('document', DO)(d); } catch (e) { done('ERROR in -Do: ' + e.message); return; } }
+      var el = T ? d.querySelector(T) : null;
+      if (T && !el) { done('ERROR: selector not found: ' + T); return; }
       if (el) w.scrollTo(0, el.getBoundingClientRect().top + w.scrollY - OFF);
       setTimeout(function () {
         if (!JS) { done('ok'); return; }
