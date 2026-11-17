@@ -116,6 +116,13 @@ about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with 
 
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
   categories. The list shows 6 services with "Показать ещё".
+- The panel body is a wizard, one step at a time (user's choice, 2026-11-17 — before it was services
+  and doctors side by side, which left an empty column when a category has one doctor):
+  1 Услуги (the list in two columns on desktop) → 2 Врач (horizontal doctor cards; a lone one spans
+  the width) → 3 Проверка (all ticked services, any category, with remove buttons, and the doctor) →
+  "Записаться на приём" goes to the booking form. `state.svcStep`; the step bar on top is clickable,
+  "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
+  scrolls back to the step bar only if it is above the screen.
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one
   (therapist / orthopedist / surgeon / orthodontist), only one at a time.
 - Expanding rows animate `grid-template-rows: 0fr → 1fr`; the collapsed content also gets
@@ -150,11 +157,10 @@ update the lead text in `index.html`.
   the first role in `roles` (`autoDoc`; so the order of `roles` sets the default, e.g. aesthetics →
   therapist); the visitor can switch to another one shown, but not unselect. With nothing picked (a plain
   check-up, diagnostics without a consultation) the booking summary says the therapist.
-- Doctor choice: in the services panel (column 2, doctors of `cats[].roles`; in diagnostics, of the
+- Doctor choice: in the services panel (step 2, doctors of `cats[].roles`; in diagnostics, of the
   ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
   cart and booking summary. Categories or symptoms whose role has nobody say "Врача
   подберём при записи".
-- On phones the doctor cards in the services panel go two per row.
 
 ## Contacts
 

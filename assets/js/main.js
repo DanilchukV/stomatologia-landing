@@ -39,6 +39,7 @@
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;
+  const STEPS = ['Услуги', 'Врач', 'Проверка'];
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
   const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
@@ -50,7 +51,7 @@
   const state = {
     tooth: null, scope: null, skipTooth: false, symptom: null, recAll: false,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
-    docPick: null, cart: [], cartOpen: false,
+    svcStep: 1, docPick: null, cart: [], cartOpen: false,
     docPage: 0,
     sent: false
   };
@@ -222,7 +223,7 @@
     $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
       : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
 
-    const opts = docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : '' }));
+    const opts = docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : 'Фото и имя скоро появятся' }));
     const picked = opts.findIndex((d) => d.id === state.docPick);
     const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
     const grid = $('#doc-pick-grid');
@@ -233,11 +234,30 @@
     moreDocs.setAttribute('aria-expanded', docsExpanded);
     moreDocs.firstChild.textContent = docsExpanded ? 'Свернуть' : 'Показать ещё ' + (opts.length - DOC_LIMIT);
 
+    // step 3: the whole booking, services of every category included
+    const items = state.cart.map((x) => `<li class="svc-sum__item"><span class="svc-sum__tick">${icon('i-check', 13, 3.2)}</span><span class="svc-sum__name">${esc(glue(x.n))}<span class="svc-sum__cat">${esc(glue(x.cat))}</span></span><button type="button" class="svc-sum__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></li>`).join('');
+    const doc = docById(state.docPick || 'ther');
+    mount($('#svc-sum'), state.cart.map((x) => x.n).join('|') + '#' + doc.id, () => `
+      <div class="svc-sum__box"><span class="caps">Услуги</span>${items ? `<ul class="svc-sum__list">${items}</ul>`
+        : `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>`}</div>
+      <div class="svc-sum__box"><span class="caps">Врач</span><div class="svc-sum__doc"><span class="av">${docAvatar(doc, 20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(docTitle(doc)))}</span>${doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : ''}</span></div>
+        <p class="svc-sum__note">${glue('Время подберём, когда администратор перезвонит.')}</p></div>`);
+
+    // which step is shown, and the buttons under it
+    const step = state.svcStep;
+    $$('.svc-step', svcOpenBox).forEach((el) => { el.hidden = +el.dataset.step !== step; });
+    $$('.wiz__btn', svcOpenBox).forEach((b) => {
+      const k = +b.dataset.step;
+      if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      b.parentElement.classList.toggle('is-done', k < step);
+    });
     const n = state.cart.filter((x) => x.cat === cat.name).length;
-    const parts = [];
-    if (n) parts.push('Выбрано ' + n + ' ' + servicesWord(n));
-    if (state.docPick) parts.push('врач: ' + docLabel());
-    $('#step3-sum').textContent = glue(parts.length ? parts.join(' · ') : 'Можно не выбирать — администратор поможет подобрать услугу и врача по телефону.');
+    $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
+      : step === 2 ? 'Врач: ' + docLabel() : '');
+    $('.svc-nav__back', svcOpenBox).hidden = step === 1;
+    $('.svc-nav__next', svcOpenBox).hidden = step === 3;
+    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Далее: врач' : 'Далее: проверка';
+    $('.svc-nav__book', svcOpenBox).hidden = step !== 3;
   }
 
   function panelShellHTML() {
@@ -249,21 +269,28 @@
       <div class="svc-panel" id="svc-panel">
         <div class="svc-panel__head" id="svc-head"></div>
         <div class="svc-panel__body">
-          <div class="svc-panel__cols">
-            <div class="svc-pick" id="pick-svc">
-              <div class="panel-label"><span class="num">1</span><h4 class="panel-h">Отметьте услуги</h4><span class="panel-hint">можно несколько</span></div>
-              <div class="svc-list" id="svc-list"></div>
-              <button type="button" class="btn btn--ghost more-wide" id="svc-all" data-act="svc-all" aria-expanded="false"><span></span>${icon('i-chev-row', 16, 2.4)}</button>
-            </div>
-            <div class="doc-pick" id="pick-doctor">
-              <div class="panel-label"><span class="num">2</span><h4 class="panel-h">Выберите врача</h4><span class="doc-pick__who" id="doc-pick-who"></span></div>
-              <div class="doc-pick__grid" id="doc-pick-grid"></div>
-              <button type="button" class="btn btn--ghost more-wide" id="docs-all" data-act="docs-all" aria-expanded="false"><span></span>${icon('i-chev', 16, 2.4)}</button>
-            </div>
+          <ol class="wiz" id="svc-steps">
+            ${STEPS.map((t, k) => `<li class="wiz__item"><button type="button" class="wiz__btn" data-act="svc-step" data-step="${k + 1}"><span class="num">${k + 1}</span><span class="wiz__t">${t}</span></button></li>`).join('')}
+          </ol>
+          <div class="svc-step" id="pick-svc" data-step="1">
+            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Отметьте услуги</h4><span class="panel-hint">можно несколько</span></div>
+            <div class="svc-list" id="svc-list"></div>
+            <button type="button" class="btn btn--ghost more-wide" id="svc-all" data-act="svc-all" aria-expanded="false"><span></span>${icon('i-chev-row', 16, 2.4)}</button>
           </div>
-          <div class="step3">
-            <div class="step3__main"><span class="num">3</span><div class="step3__text"><h4 class="step3__h">Записаться</h4><span class="step3__sum" id="step3-sum"></span></div></div>
-            <a href="#book" class="btn btn--dark step3__btn" data-act="cart-close">Записаться на приём${icon('i-arrow', 16, 2.4)}</a>
+          <div class="svc-step" id="pick-doctor" data-step="2">
+            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Выберите врача</h4><span class="doc-pick__who" id="doc-pick-who"></span></div>
+            <div class="doc-pick__grid" id="doc-pick-grid"></div>
+            <button type="button" class="btn btn--ghost more-wide" id="docs-all" data-act="docs-all" aria-expanded="false"><span></span>${icon('i-chev', 16, 2.4)}</button>
+          </div>
+          <div class="svc-step" id="svc-review" data-step="3">
+            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Проверьте запись</h4></div>
+            <div class="svc-sum" id="svc-sum"></div>
+          </div>
+          <div class="svc-nav">
+            <button type="button" class="btn btn--ghost svc-nav__back" data-act="svc-prev">${icon('i-back', 16, 2.4)}Назад</button>
+            <span class="svc-nav__info" id="svc-nav-info"></span>
+            <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next"><span></span>${icon('i-arrow', 16, 2.4)}</button>
+            <a href="#book" class="btn btn--accent svc-nav__book" data-act="cart-close">Записаться на приём${icon('i-arrow', 16, 2.4)}</a>
           </div>
         </div>
       </div>`;
@@ -479,8 +506,16 @@
     set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat }]) });
   }
   function openCat(id) {
-    set({ cat: id, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
+    set({ cat: id, svcStep: 1, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
     scrollToId('svc-panel');
+  }
+  // shows step k of the services panel; scrolls back up if the step bar is above the screen
+  function goStep(k) {
+    if (k < 1 || k > STEPS.length) return;
+    set({ svcStep: k });
+    const bar = $('#svc-steps');
+    if (bar.getBoundingClientRect().top < $('.svc-bar').getBoundingClientRect().bottom) scrollToId('svc-steps');
+    $(`.svc-step[data-step="${k}"] .panel-h`).focus({ preventScroll: true });
   }
   const actions = {
     tooth: (t) => {
@@ -509,13 +544,13 @@
     'go-cat': (t, e) => {
       e.preventDefault();
       const sym = currentSymptom();
-      if (sym) { set({ cat: sym.cat }); scrollToId('svc-panel'); }
+      if (sym) { set({ cat: sym.cat, svcStep: 1 }); scrollToId('svc-panel'); }
     },
 
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {
       if (t.dataset.cat === state.cat) return;
-      set({ cat: t.dataset.cat, docPick: autoDoc(catRoles(catById(t.dataset.cat), state.cart)), docsAll: false, svcAll: false, svcOpen: null });
+      set({ cat: t.dataset.cat, svcStep: 1, docPick: autoDoc(catRoles(catById(t.dataset.cat), state.cart)), docsAll: false, svcAll: false, svcOpen: null });
       scrollToId('svc-panel');
     },
     'cat-close': () => { set({ cat: null }); scrollToId('services'); },
@@ -548,6 +583,9 @@
       set({ docsAll: !collapsing });
       if (collapsing) scrollToId('pick-doctor');
     },
+    'svc-step': (t) => goStep(+t.dataset.step),
+    'svc-prev': () => goStep(state.svcStep - 1),
+    'svc-next': () => goStep(state.svcStep + 1),
 
     'cart-toggle': () => set({ cartOpen: !state.cartOpen }),
     'cart-close': () => set({ cartOpen: false }),
