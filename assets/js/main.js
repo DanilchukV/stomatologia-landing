@@ -68,12 +68,13 @@
   const docById = (id) => D.doctors.find((d) => d.id === id);
   const docsFor = (roles) => D.doctors.filter((d) => roles.includes(d.role));
   const docTitle = (d) => d.name || d.spec;
-  const docLabel = () => (state.docPick && state.docPick !== 'any' ? docTitle(docById(state.docPick)) : 'любой свободный');
+  // with nothing picked (a plain check-up) the booking goes to the therapist
+  const docLabel = () => docTitle(docById(state.docPick || 'ther'));
   const docAvatar = (d, size) => (d.name ? initials(d.name) : person(size));
   // who sees patients in a category; in diagnostics, whoever does the ticked consultation
   const catRoles = (cat, cart) => (cat.id === 'diag' ? cart.filter((x) => CONSULT_ROLE[x.n]).map((x) => CONSULT_ROLE[x.n]) : cat.roles);
-  // the doctor picked automatically: the only one with those roles, otherwise "любой свободный"
-  const autoDoc = (roles) => { const ds = docsFor(roles); return ds.length === 1 ? ds[0].id : null; };
+  // the doctor picked automatically: the first one found, in the order of the roles
+  const autoDoc = (roles) => { for (const r of roles) { const d = D.doctors.find((x) => x.role === r); if (d) return d.id; } return null; };
 
   // Rebuilds el only when its structure key changes; keeps keyboard focus on the same [data-focus] item.
   function mount(el, key, build) {
@@ -221,10 +222,8 @@
     $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
       : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
 
-    // a single doctor is picked already (autoDoc), so "any" makes no sense then
-    const opts = (docs.length === 1 ? [] : [{ id: 'any', title: 'Любой свободный врач', av: '★', sub: 'подберём по времени' }])
-      .concat(docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : '' })));
-    const picked = state.docPick && state.docPick !== 'any' ? opts.findIndex((d) => d.id === state.docPick) : -1;
+    const opts = docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : '' }));
+    const picked = opts.findIndex((d) => d.id === state.docPick);
     const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
     const grid = $('#doc-pick-grid');
     mount(grid, roles.join() + docsExpanded, () => opts.filter((d, k) => docsExpanded || k < DOC_LIMIT).map((d) => `<button type="button" class="doc-card" aria-pressed="false" data-act="panel-doc" data-id="${d.id}" data-focus="pdoc:${d.id}"><span class="doc-card__av">${d.av}</span><span class="doc-card__text"><span class="doc-card__name">${esc(d.title)}</span>${d.sub ? `<span class="doc-card__sub">${esc(d.sub)}</span>` : ''}</span><span class="doc-card__tick">${icon('i-check', 16, 2.8)}</span></button>`).join(''));
@@ -500,7 +499,7 @@
     'rec-svc': (t) => toggleCart(t.dataset.svc, catOfService(t.dataset.svc)),
     'rec-doc': (t) => {
       const id = t.dataset.id;
-      if (state.docPick === id) { set({ docPick: null }); return; }
+      if (state.docPick === id) return;
       const rec = D.recommend[state.symptom];
       const hiddenNow = state.recAll && docsFor(rec.roles).findIndex((d) => d.id === id) >= 3;
       set(hiddenNow ? { docPick: id, recAll: false } : { docPick: id });
@@ -543,10 +542,7 @@
         scrollToId('pick-svc');
       } else set({ svcAll: true });
     },
-    'panel-doc': (t) => {
-      const only = autoDoc(catRoles(catById(state.cat), state.cart));
-      set({ docPick: state.docPick === t.dataset.id && !only ? null : t.dataset.id });
-    },
+    'panel-doc': (t) => set({ docPick: t.dataset.id }),
     'docs-all': (t) => {
       const collapsing = t.getAttribute('aria-expanded') === 'true';
       set({ docsAll: !collapsing });

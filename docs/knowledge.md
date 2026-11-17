@@ -145,10 +145,11 @@ since names are empty), `name`, `spec`, `role` and `photo` (file in `assets/img/
 update the lead text in `index.html`.
 - Section: no tabs (the user wants one list: doctors, then nurses), 4 per page with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
   doctor (not the nurses) has "Записаться", which also picks that doctor for the booking summary.
-- Automatic choice: opening a category, ticking a consultation or picking a symptom selects the only
-  doctor with those roles (`autoDoc`); with none or several it stays "любой свободный". The visitor can
-  still change it. In the services panel a single doctor is shown alone, without the "Любой свободный
-  врач" card, and clicking it doesn't unselect it (user's request, 2026-11-17).
+- No "любой свободный врач" option (removed on the user's request, 2026-11-17): a concrete doctor is
+  always named. Opening a category, ticking a consultation or picking a symptom selects the doctor of
+  the first role in `roles` (`autoDoc`; so the order of `roles` sets the default, e.g. aesthetics →
+  therapist); the visitor can switch to another one shown, but not unselect. With nothing picked (a plain
+  check-up, diagnostics without a consultation) the booking summary says the therapist.
 - Doctor choice: in the services panel (column 2, doctors of `cats[].roles`; in diagnostics, of the
   ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
   cart and booking summary. Categories or symptoms whose role has nobody say "Врача
