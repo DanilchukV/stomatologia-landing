@@ -265,9 +265,14 @@
     $('.svc-nav__next', svcOpenBox).hidden = step === 3;
     $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Далее: врач' : 'Далее: запись';
     $('.svc-nav__book', svcOpenBox).hidden = step !== 3 || state.sent;
-    $('#svc-form').hidden = state.sent;
-    $('#svc-consent').hidden = state.sent;
-    $('#svc-done').hidden = !state.sent;
+    // once sent, step 3 shows only the confirmation: no entered data, heading, consent or buttons
+    const sent = state.sent;
+    $('#svc-sum').hidden = sent;
+    $('#svc-form').hidden = sent;
+    $('#svc-consent').hidden = sent;
+    $('#svc-done').hidden = !sent;
+    $('#svc-review .panel-label').hidden = sent;
+    $('.svc-nav', svcOpenBox).hidden = sent && step === 3;
   }
 
   // an input with its label and error box, as in the booking form (ids prefixed with svc-)
@@ -312,9 +317,9 @@
                   ${fieldHTML('email', 'Эл. почта (необязательно)', 'email', 'autocomplete="email" inputmode="email" maxlength="80" placeholder="name@mail.ru"')}
                 </div>
               </form>
-              <div class="svc-sum__row svc-done" id="svc-done" hidden>
+              <div class="svc-done" id="svc-done" hidden>
                 <span class="svc-done__ic">${icon('i-check', 22, 2.6)}</span>
-                <div class="svc-sum__v"><h5 class="svc-done__title">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
+                <div class="svc-done__text"><h5 class="svc-done__title">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
               </div>
             </div>
             <p class="svc-consent" id="svc-consent">${glue('Отправляя заявку, вы соглашаетесь на обработку персональных данных.')}</p>

@@ -125,7 +125,8 @@ about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with 
   contacts: name, phone, optional e-mail; "Отправить заявку" (a `form="svc-form"` button in the nav)
   sends from the panel itself, without going to the booking form (user's request, 2026-11-17). Same
   validation as the booking form (`SiteForm.bind`, which also checks an `email` field if the form has one);
-  both forms share `state.sent`. The step was called "Проверка", now "Запись". `state.svcStep`; the step bar on top is clickable,
+  both forms share `state.sent`; once sent, step 3 shows only the confirmation (no entered data,
+  heading, consent or buttons). The step was called "Проверка", now "Запись". `state.svcStep`; the step bar on top is clickable,
   "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
   scrolls back to the step bar only if it is above the screen.
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one
