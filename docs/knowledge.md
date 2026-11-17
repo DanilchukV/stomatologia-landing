@@ -147,7 +147,8 @@ update the lead text in `index.html`.
   doctor (not the nurses) has "Записаться", which also picks that doctor for the booking summary.
 - Automatic choice: opening a category, ticking a consultation or picking a symptom selects the only
   doctor with those roles (`autoDoc`); with none or several it stays "любой свободный". The visitor can
-  still change it.
+  still change it. In the services panel a single doctor is shown alone, without the "Любой свободный
+  врач" card, and clicking it doesn't unselect it (user's request, 2026-11-17).
 - Doctor choice: in the services panel (column 2, doctors of `cats[].roles`; in diagnostics, of the
   ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
   cart and booking summary. Categories or symptoms whose role has nobody (orthopedist) say "Врача

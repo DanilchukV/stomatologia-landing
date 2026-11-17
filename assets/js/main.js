@@ -221,7 +221,8 @@
     $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
       : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
 
-    const opts = [{ id: 'any', title: 'Любой свободный врач', av: '★', sub: 'подберём по времени' }]
+    // a single doctor is picked already (autoDoc), so "any" makes no sense then
+    const opts = (docs.length === 1 ? [] : [{ id: 'any', title: 'Любой свободный врач', av: '★', sub: 'подберём по времени' }])
       .concat(docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : '' })));
     const picked = state.docPick && state.docPick !== 'any' ? opts.findIndex((d) => d.id === state.docPick) : -1;
     const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
@@ -542,7 +543,10 @@
         scrollToId('pick-svc');
       } else set({ svcAll: true });
     },
-    'panel-doc': (t) => set({ docPick: state.docPick === t.dataset.id ? null : t.dataset.id }),
+    'panel-doc': (t) => {
+      const only = autoDoc(catRoles(catById(state.cat), state.cart));
+      set({ docPick: state.docPick === t.dataset.id && !only ? null : t.dataset.id });
+    },
     'docs-all': (t) => {
       const collapsing = t.getAttribute('aria-expanded') === 'true';
       set({ docsAll: !collapsing });
