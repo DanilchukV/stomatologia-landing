@@ -1,7 +1,7 @@
 'use strict';
 // Site content used by main.js: clinic address, service categories, symptom hints, tooth map.
 window.SITE_DATA = {
-  clinic: {"area":"Воровского, 27"},
+  clinic: {"area":"Липовая, 18"},
   // tab: short label in the services tab bar; roles: who sees patients in this category
   cats: [
     {"id":"diag","name":"Консультация и диагностика","tab":"Диагностика","roles":[],"desc":"Консультация специалиста и цифровая диагностика: снимки, 3D-томография, сканирование и фотопротокол.","items":["Консультация специалистов","Прицельная радиовизиография","Телерентгенография","3D-томография (КЛКТ)","Интраоральное сканирование","Фотопротокол"]},
@@ -80,12 +80,12 @@ window.SITE_DATA = {
   // staff: name and photo (file in assets/img/doctors/, without .webp) stay empty until the clinic sends them;
   // role: ther — терапевт, surg — хирург, ortd — ортодонт, orth — ортопед
   doctors: [
-    {"id":"ther","name":"","spec":"Стоматолог-терапевт","role":"ther","photo":""},
-    {"id":"surg","name":"","spec":"Стоматолог-хирург","role":"surg","photo":""},
-    {"id":"ortd","name":"","spec":"Стоматолог-ортодонт","role":"ortd","photo":""},
-    {"id":"orth","name":"","spec":"Стоматолог-ортопед","role":"orth","photo":""},
-    {"id":"nurse1","name":"","spec":"Медицинская сестра","role":"nurse","photo":""},
-    {"id":"nurse2","name":"","spec":"Медицинская сестра","role":"nurse","photo":""}
+    {"id":"ther","name":"Анна Ковалёва","spec":"Терапевт","role":"ther","photo":""},
+    {"id":"surg","name":"Дмитрий Савицкий","spec":"Хирург","role":"surg","photo":""},
+    {"id":"ortd","name":"Ольга Литвинович","spec":"Ортодонт","role":"ortd","photo":""},
+    {"id":"orth","name":"Сергей Журавский","spec":"Ортопед","role":"orth","photo":""},
+    {"id":"nurse1","name":"Екатерина Мельник","spec":"Медицинская сестра","role":"nurse","photo":""},
+    {"id":"nurse2","name":"Ирина Шевчук","spec":"Медицинская сестра","role":"nurse","photo":""}
   ],
   // cat: service category the hint points to
   symptoms: [

@@ -49,7 +49,7 @@ re-encoded as WebP). `og-image.jpg` was rebuilt from an HTML layout with the new
 Russian rules, applied on 2026-11-03 to every visible text: short words (prepositions, conjunctions,
 pronouns, «не», «что», «как»…) are glued to the next word with `&nbsp;`; «ли», «же», «бы» and a dash
 to the previous word; a number to the word after it («6&nbsp;месяцев», «от&nbsp;3 до&nbsp;6»);
-«г.&nbsp;Брест», «ул.&nbsp;Воровского,&nbsp;27», «офис&nbsp;150», «Шаг&nbsp;2». In `index.html` these
+«г.&nbsp;Брест», «ул.&nbsp;Липовая,&nbsp;18», «офис&nbsp;4», «Шаг&nbsp;2». In `index.html` these
 are literal `&nbsp;`; texts the script renders go through `glue()` in `main.js`, which applies the same
 rules (data.js stays plain). Phone numbers never break: `a[href^="tel:"]` and `.nowrap` are `nowrap`.
 CSS: headings and `summary` use `text-wrap: balance`, paragraphs `pretty`. When adding copy, write
@@ -152,8 +152,9 @@ moves up while the cart is visible.
 
 The VestMedServis staff was removed on 2026-11-03; the section came back the same day for Grevitident:
 4 dentists (therapist, surgeon, orthodontist, orthopedist — the 4th was a "Врач-стоматолог" of unknown speciality until 2026-11-17) and
-2 nurses; names and photos later. Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
-since names are empty), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
+2 nurses. Since 2026-11-17 they have invented names (user's request, placeholders until the real ones)
+and short specialities without «Стоматолог-» (`Терапевт`, `Хирург`…); photos later. Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
+since names may change), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
 `.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
 update the lead text in `index.html`.
 - Section: no tabs (the user wants one list: doctors, then nurses), 4 per page with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
