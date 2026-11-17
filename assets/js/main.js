@@ -40,6 +40,8 @@
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;
   const STEPS = ['Услуги', 'Врач', 'Проверка'];
+  // the same values as the booking form's time radios in index.html
+  const TIMES = [['утром', 'Утром'], ['днём', 'Днём'], ['вечером', 'Вечером'], ['любое', 'Любое']];
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
   const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
@@ -53,7 +55,7 @@
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
     svcStep: 1, docPick: null, cart: [], cartOpen: false,
     docPage: 0,
-    sent: false
+    time: 'любое', sent: false
   };
   function set(patch) {
     Object.assign(state, patch);
@@ -240,8 +242,13 @@
     mount($('#svc-sum'), state.cart.map((x) => x.n).join('|') + '#' + doc.id, () => `
       <div class="svc-sum__box"><span class="caps">Услуги</span>${items ? `<ul class="svc-sum__list">${items}</ul>`
         : `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>`}</div>
-      <div class="svc-sum__box"><span class="caps">Врач</span><div class="svc-sum__doc"><span class="av">${docAvatar(doc, 20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(docTitle(doc)))}</span>${doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : ''}</span></div>
-        <p class="svc-sum__note">${glue('Время подберём, когда администратор перезвонит.')}</p></div>`);
+      <div class="svc-sum__side">
+        <div class="svc-sum__box"><span class="caps">Врач</span><div class="svc-sum__doc"><span class="av">${docAvatar(doc, 20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(docTitle(doc)))}</span>${doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : ''}</span></div></div>
+        <div class="svc-sum__box"><span class="caps">Удобное время</span>
+          <div class="svc-time">${TIMES.map(([v, label]) => `<button type="button" class="chip svc-time__chip" aria-pressed="false" data-act="svc-time" data-time="${v}" data-focus="time:${v}">${label}</button>`).join('')}</div>
+          <p class="svc-sum__note">${glue('Точное время администратор согласует по телефону.')}</p></div>
+      </div>`);
+    $$('.svc-time__chip', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.time === state.time));
 
     // which step is shown, and the buttons under it
     const step = state.svcStep;
@@ -438,7 +445,7 @@
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
   window.SiteForm.bind(form, () => set({ sent: true }));
-  form.addEventListener('change', (e) => { if (e.target.name === 'time') renderBooking(); });
+  form.addEventListener('change', (e) => { if (e.target.name === 'time') set({ time: e.target.value }); });
 
   function renderBooking() {
     const sym = currentSymptom();
@@ -448,7 +455,8 @@
     if (state.cart.length) reason = 'Услуги: ' + state.cart.map((x) => x.n).join(', ');
     $('#book-reason').textContent = glue(reason);
     $('#book-doctor').textContent = docLabel();
-    $('#book-time').textContent = form.elements.time.value;
+    form.elements.time.value = state.time;
+    $('#book-time').textContent = state.time;
     form.hidden = state.sent;
     $('#book-done').hidden = !state.sent;
     $('#book-consent').hidden = state.sent;
@@ -586,6 +594,7 @@
     'svc-step': (t) => goStep(+t.dataset.step),
     'svc-prev': () => goStep(state.svcStep - 1),
     'svc-next': () => goStep(state.svcStep + 1),
+    'svc-time': (t) => set({ time: t.dataset.time }),
 
     'cart-toggle': () => set({ cartOpen: !state.cartOpen }),
     'cart-close': () => set({ cartOpen: false }),
