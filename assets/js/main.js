@@ -239,15 +239,14 @@
     // step 3: the whole booking, services of every category included
     const items = state.cart.map((x) => `<li class="svc-sum__item"><span class="svc-sum__tick">${icon('i-check', 13, 3.2)}</span><span class="svc-sum__name">${esc(glue(x.n))}<span class="svc-sum__cat">${esc(glue(x.cat))}</span></span><button type="button" class="svc-sum__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></li>`).join('');
     const doc = docById(state.docPick || 'ther');
+    // one card, a row per part: label on the left, value on the right
     mount($('#svc-sum'), state.cart.map((x) => x.n).join('|') + '#' + doc.id, () => `
-      <div class="svc-sum__box"><span class="caps">Услуги</span>${items ? `<ul class="svc-sum__list">${items}</ul>`
-        : `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>`}</div>
-      <div class="svc-sum__side">
-        <div class="svc-sum__box"><span class="caps">Врач</span><div class="svc-sum__doc"><span class="av">${docAvatar(doc, 20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(docTitle(doc)))}</span>${doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : ''}</span></div></div>
-        <div class="svc-sum__box"><span class="caps">Удобное время</span>
-          <div class="svc-time">${TIMES.map(([v, label]) => `<button type="button" class="chip svc-time__chip" aria-pressed="false" data-act="svc-time" data-time="${v}" data-focus="time:${v}">${label}</button>`).join('')}</div>
-          <p class="svc-sum__note">${glue('Точное время администратор согласует по телефону.')}</p></div>
-      </div>`);
+      <div class="svc-sum__row"><span class="svc-sum__k">Услуги</span><div class="svc-sum__v">${items ? `<ul class="svc-sum__list">${items}</ul>`
+        : `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>`}</div></div>
+      <div class="svc-sum__row"><span class="svc-sum__k">Врач</span><div class="svc-sum__v"><div class="svc-sum__doc"><span class="av">${docAvatar(doc, 20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(docTitle(doc)))}</span>${doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : ''}</span></div></div></div>
+      <div class="svc-sum__row"><span class="svc-sum__k">Удобное время</span><div class="svc-sum__v">
+        <div class="svc-time">${TIMES.map(([v, label]) => `<button type="button" class="chip svc-time__chip" aria-pressed="false" data-act="svc-time" data-time="${v}" data-focus="time:${v}">${label}</button>`).join('')}</div>
+        <p class="svc-sum__note">${glue('Точное время администратор согласует по телефону.')}</p></div></div>`);
     $$('.svc-time__chip', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.time === state.time));
 
     // which step is shown, and the buttons under it

@@ -119,7 +119,8 @@ about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with 
 - The panel body is a wizard, one step at a time (user's choice, 2026-11-17 — before it was services
   and doctors side by side, which left an empty column when a category has one doctor):
   1 Услуги (the list in two columns on desktop) → 2 Врач (horizontal doctor cards; a lone one spans
-  the width) → 3 Проверка (all ticked services, any category, with remove buttons, the doctor and the
+  the width) → 3 Проверка (one card with rows, label left / value right: all ticked services, any
+  category, with remove buttons; the doctor; the
   preferred time — the same `state.time` as the booking form's radios, so choosing in one updates the other) →
   "Записаться на приём" goes to the booking form. `state.svcStep`; the step bar on top is clickable,
   "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
