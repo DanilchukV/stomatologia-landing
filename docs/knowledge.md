@@ -198,7 +198,9 @@ so to check end states call `getAnimations()[0].finish()` in `-Do`.
 The summary shows the doctor and the reason (selected services, or tooth + symptom from the
 picker). Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
-375. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
+375 (also typed digit by digit). Another country (since 2026-11-17, user request): a number starting with
+"+" and a code other than 375 is kept as typed (digits and separators, max 15 digits) and needs at least 8
+digits; digits typed without "+" are still taken as a Belarusian number. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
 After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card,
 the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the floating cart
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle

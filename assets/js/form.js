@@ -12,6 +12,7 @@ window.SiteForm = (function () {
   function phoneError(v) {
     const d = v.replace(/\D/g, '');
     if (!d || d === '375') return 'Укажите номер телефона';
+    if (!d.startsWith('375')) return d.length < 8 ? 'Номер неполный: проверьте код страны и номер' : '';
     if (d.length < 12) return 'Номер неполный: нужно 9 цифр после +375';
     if (!/^375(25|29|33|44|1\d|2\d)/.test(d)) return 'Проверьте код оператора: 25, 29, 33 или 44';
     return '';
@@ -23,13 +24,22 @@ window.SiteForm = (function () {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s)) return 'Проверьте адрес почты';
     return '';
   }
-  // +375 (29) 123-45-67; a local 80… prefix becomes 375
+  // another country ("+" and a code other than 375): kept as typed, digits and separators only, max 15 digits (E.164)
+  function formatForeign(raw) {
+    let n = 0;
+    const s = raw.replace(/[^\d ()-]/g, '').replace(/^[ ()-]+/, '').replace(/ {2,}/g, ' ');
+    return '+' + Array.from(s).filter((c) => !/\d/.test(c) || ++n <= 15).join('');
+  }
+  // +375 (29) 123-45-67; a local 80… prefix becomes 375; digits without "+" are a Belarusian number
   function formatPhone(raw) {
+    const plus = raw.trim().startsWith('+');
     let d = raw.replace(/\D/g, '');
+    if (plus && d && !d.startsWith('375') && !'375'.startsWith(d)) return formatForeign(raw);
+    if (!plus && d === '8') return '8'; // may be the start of a local 80…
     if (d.startsWith('80')) d = '375' + d.slice(2);
     else if (d && !d.startsWith('375') && !'375'.startsWith(d)) d = '375' + d;
     d = d.slice(0, 12);
-    if (!d) return '';
+    if (!d) return plus ? '+' : '';
     let out = '+' + d.slice(0, 3);
     if (d.length > 3) out += ' (' + d.slice(3, 5);
     if (d.length >= 5) out += ')';
