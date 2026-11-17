@@ -195,6 +195,9 @@ The summary shows the doctor and the reason (selected services, or tooth + sympt
 picker). Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
 375. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
+After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card,
+the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the floating cart
+button disappears too.
 
 **Preferred time** (2026-11-17): radio pills `name="time"` — утром / днём / вечером / любое (default),
 shown in the summary as "Время". No date and no real slots on purpose: the administrator calls back and

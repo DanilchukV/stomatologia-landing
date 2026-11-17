@@ -766,8 +766,11 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .book__row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .book__row dt { color: var(--tint); }
 .book__row dd { margin: 0; font-weight: 600; text-align: right; }
-.book__side { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; }
-.book__form { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.book__side { flex: 1 1 380px; min-width: 0; display: grid; }
+/* form and confirmation sit in one cell; the hidden one keeps its space, so nothing jumps on send */
+.book__form, .book__done { grid-area: 1 / 1; }
+.book__card:not(.is-sent) .book__done, .book__card.is-sent .book__form, .book__card.is-sent .book__consent { visibility: hidden; }
+.book__form { display: flex; flex-direction: column; gap: 16px; }
 .field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; color: var(--tint); }
 .field__input { min-height: 52px; border-radius: 14px; border: 1.5px solid var(--accent); background: var(--white); color: var(--ink); padding: 0 16px; font-size: 16px; transition: border-color .15s, box-shadow .15s; }
 .field__input[aria-invalid="true"] { border-color: #E5484D; box-shadow: 0 0 0 3px rgba(229, 72, 77, .25); }
@@ -782,7 +785,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .when__opt input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--ink); }
 .when__opt input:focus-visible + span { outline: 2px solid var(--white); outline-offset: 2px; }
 .book__send { margin-top: auto; min-height: 56px; font-size: 17px; }
-.book__done { display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 24px; background: rgba(255, 255, 255, .08); }
+.book__done { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 28px; border-radius: 24px; background: rgba(255, 255, 255, .08); text-align: center; }
 .book__done-title { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 24px; }
 .book__done-text { margin: 0; color: var(--tint); }
 .book__consent { flex: 0 1 calc(50% - 18px); margin: -20px 0 0 auto; min-width: 0; }

@@ -396,8 +396,8 @@
   const cartBox = $('#cart');
   function renderCart() {
     const n = state.cart.length;
-    cartBox.hidden = !n;
-    if (!n) return;
+    cartBox.hidden = !n || state.sent;
+    if (cartBox.hidden) return;
     mount(cartBox, 'cart', () => `<div class="cart__pop" id="cart-pop" role="dialog" aria-label="Выбранные услуги" hidden>
         <div class="cart__head"><div class="cart__titles"><span class="cart__kicker">Запись на приём</span><span class="cart__title" id="cart-title"></span></div>
           <button type="button" class="cart__close" data-act="cart-toggle" aria-label="Свернуть">${icon('i-close', 16, 2.4)}</button></div>
@@ -488,9 +488,8 @@
     $('#book-doctor').textContent = docLabel();
     form.elements.time.value = state.time;
     $('#book-time').textContent = state.time;
-    form.hidden = state.sent;
-    $('#book-done').hidden = !state.sent;
-    $('#book-consent').hidden = state.sent;
+    // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
+    $('.book__card').classList.toggle('is-sent', state.sent);
   }
 
   /* ---------- scroll-driven bits ---------- */
@@ -512,7 +511,7 @@
     const y = window.scrollY;
     hdr.classList.toggle('is-scrolled', y > 8);
     toTop.hidden = y <= 900;
-    toTop.classList.toggle('is-raised', state.cart.length > 0);
+    toTop.classList.toggle('is-raised', !cartBox.hidden);
     if (!toTop.hidden) toTop.classList.toggle('on-dark', darkUnder(toTop));
     const pill = $('.cart__pill');
     if (pill && !cartBox.hidden) pill.classList.toggle('on-dark', darkUnder(pill));
