@@ -122,7 +122,10 @@ about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with 
   the width) → 3 Проверка (one card with rows, label left / value right: all ticked services, any
   category, with remove buttons; the doctor; the
   preferred time — the same `state.time` as the booking form's radios, so choosing in one updates the other) →
-  "Записаться на приём" goes to the booking form. `state.svcStep`; the step bar on top is clickable,
+  contacts: name, phone, optional e-mail; "Отправить заявку" (a `form="svc-form"` button in the nav)
+  sends from the panel itself, without going to the booking form (user's request, 2026-11-17). Same
+  validation as the booking form (`SiteForm.bind`, which also checks an `email` field if the form has one);
+  both forms share `state.sent`. The step was called "Проверка", now "Запись". `state.svcStep`; the step bar on top is clickable,
   "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
   scrolls back to the step bar only if it is above the screen.
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one

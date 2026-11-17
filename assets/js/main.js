@@ -39,7 +39,7 @@
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;
-  const STEPS = ['Услуги', 'Врач', 'Проверка'];
+  const STEPS = ['Услуги', 'Врач', 'Запись'];
   // the same values as the booking form's time radios in index.html
   const TIMES = [['утром', 'Утром'], ['днём', 'Днём'], ['вечером', 'Вечером'], ['любое', 'Любое']];
   const CONSULT = 'Консультация специалистов';
@@ -203,7 +203,8 @@
     $('#svc-grid').hidden = !!cat;
     svcOpenBox.hidden = !cat;
     if (!cat) { mount(svcOpenBox, '', () => ''); return; }
-    mount(svcOpenBox, 'open', panelShellHTML);
+    // the shell (and its form) is rebuilt each time the panel opens, so the form is bound again
+    if (mount(svcOpenBox, 'open', panelShellHTML)) window.SiteForm.bind($('#svc-form'), () => set({ sent: true }));
     $$('.svc-bar__tab', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === cat.id));
     mount($('#svc-head'), cat.id, () => panelHeadHTML(cat));
 
@@ -262,8 +263,19 @@
       : step === 2 ? 'Врач: ' + docLabel() : '');
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
     $('.svc-nav__next', svcOpenBox).hidden = step === 3;
-    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Далее: врач' : 'Далее: проверка';
-    $('.svc-nav__book', svcOpenBox).hidden = step !== 3;
+    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Далее: врач' : 'Далее: запись';
+    $('.svc-nav__book', svcOpenBox).hidden = step !== 3 || state.sent;
+    $('#svc-form').hidden = state.sent;
+    $('#svc-consent').hidden = state.sent;
+    $('#svc-done').hidden = !state.sent;
+  }
+
+  // an input with its label and error box, as in the booking form (ids prefixed with svc-)
+  function fieldHTML(name, label, type, attrs) {
+    return `<label class="field">${label}
+      <input class="field__input" type="${type}" name="${name}" ${attrs} aria-describedby="svc-err-${name}">
+      <span class="field__err" id="svc-err-${name}" role="alert" hidden>${icon('i-alert', 14, 2.4)}<span></span></span>
+    </label>`;
   }
 
   function panelShellHTML() {
@@ -289,14 +301,29 @@
             <button type="button" class="btn btn--ghost more-wide" id="docs-all" data-act="docs-all" aria-expanded="false"><span></span>${icon('i-chev', 16, 2.4)}</button>
           </div>
           <div class="svc-step" id="svc-review" data-step="3">
-            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Проверьте запись</h4></div>
-            <div class="svc-sum" id="svc-sum"></div>
+            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Проверьте и отправьте заявку</h4></div>
+            <div class="svc-sum">
+              <div class="svc-sum__rows" id="svc-sum"></div>
+              <form class="svc-sum__row svc-form" id="svc-form" novalidate>
+                <span class="svc-sum__k">Контакты</span>
+                <div class="svc-sum__v svc-form__fields">
+                  ${fieldHTML('name', 'Имя', 'text', 'autocomplete="name" maxlength="40" placeholder="Как к вам обращаться"')}
+                  ${fieldHTML('phone', 'Телефон', 'tel', 'autocomplete="tel" inputmode="tel" placeholder="+375 (29) 123-45-67"')}
+                  ${fieldHTML('email', 'Эл. почта (необязательно)', 'email', 'autocomplete="email" inputmode="email" maxlength="80" placeholder="name@mail.ru"')}
+                </div>
+              </form>
+              <div class="svc-sum__row svc-done" id="svc-done" hidden>
+                <span class="svc-done__ic">${icon('i-check', 22, 2.6)}</span>
+                <div class="svc-sum__v"><h5 class="svc-done__title">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
+              </div>
+            </div>
+            <p class="svc-consent" id="svc-consent">${glue('Отправляя заявку, вы соглашаетесь на обработку персональных данных.')}</p>
           </div>
           <div class="svc-nav">
             <button type="button" class="btn btn--ghost svc-nav__back" data-act="svc-prev">${icon('i-back', 16, 2.4)}Назад</button>
             <span class="svc-nav__info" id="svc-nav-info"></span>
             <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next"><span></span>${icon('i-arrow', 16, 2.4)}</button>
-            <a href="#book" class="btn btn--accent svc-nav__book" data-act="cart-close">Записаться на приём${icon('i-arrow', 16, 2.4)}</a>
+            <button type="submit" form="svc-form" class="btn btn--accent svc-nav__book">Отправить заявку${icon('i-arrow', 16, 2.4)}</button>
           </div>
         </div>
       </div>`;

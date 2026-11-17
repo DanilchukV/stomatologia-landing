@@ -16,6 +16,13 @@ window.SiteForm = (function () {
     if (!/^375(25|29|33|44|1\d|2\d)/.test(d)) return 'Проверьте код оператора: 25, 29, 33 или 44';
     return '';
   }
+  // optional: empty is fine
+  function emailError(v) {
+    const s = v.trim();
+    if (!s) return '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s)) return 'Проверьте адрес почты';
+    return '';
+  }
   // +375 (29) 123-45-67; a local 80… prefix becomes 375
   function formatPhone(raw) {
     let d = raw.replace(/\D/g, '');
@@ -32,12 +39,14 @@ window.SiteForm = (function () {
     return out;
   }
 
-  // Validates the form's "name" and "phone" inputs. An error shows once the field was left filled in,
-  // or after a submit attempt; its box is the element named by the input's aria-describedby.
+  // Validates the form's "name", "phone" and (if present) "email" inputs. An error shows once the field
+  // was left filled in, or after a submit attempt; its box is the element named by the input's aria-describedby.
   function bind(form, onSend) {
-    const fields = { name: form.elements.name, phone: form.elements.phone };
-    const check = { name: nameError, phone: phoneError };
-    const touched = { name: false, phone: false };
+    const all = { name: nameError, phone: phoneError, email: emailError };
+    const fields = {};
+    const check = {};
+    const touched = {};
+    Object.keys(all).forEach((k) => { if (form.elements[k]) { fields[k] = form.elements[k]; check[k] = all[k]; touched[k] = false; } });
     let tried = false;
     function show() {
       Object.keys(fields).forEach((k) => {
@@ -50,6 +59,7 @@ window.SiteForm = (function () {
       });
     }
     fields.name.addEventListener('input', show);
+    if (fields.email) fields.email.addEventListener('input', show);
     fields.phone.addEventListener('input', () => { fields.phone.value = formatPhone(fields.phone.value); show(); });
     Object.keys(fields).forEach((k) => fields[k].addEventListener('blur', () => { if (fields[k].value) touched[k] = true; show(); }));
     form.addEventListener('submit', (e) => {
