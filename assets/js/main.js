@@ -92,6 +92,11 @@
     }
     return true;
   }
+  // after sending: show the confirmation and bring it to the middle of the screen
+  function markSent(id) {
+    set({ sent: true });
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
   function scrollToId(id) {
     requestAnimationFrame(() => requestAnimationFrame(() => {
       const el = document.getElementById(id);
@@ -204,7 +209,7 @@
     svcOpenBox.hidden = !cat;
     if (!cat) { mount(svcOpenBox, '', () => ''); return; }
     // the shell (and its form) is rebuilt each time the panel opens, so the form is bound again
-    if (mount(svcOpenBox, 'open', panelShellHTML)) window.SiteForm.bind($('#svc-form'), () => set({ sent: true }));
+    if (mount(svcOpenBox, 'open', panelShellHTML)) window.SiteForm.bind($('#svc-form'), () => markSent('svc-done'));
     $$('.svc-bar__tab', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === cat.id));
     mount($('#svc-head'), cat.id, () => panelHeadHTML(cat));
 
@@ -475,7 +480,7 @@
   /* ---------- booking ---------- */
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
-  window.SiteForm.bind(form, () => set({ sent: true }));
+  window.SiteForm.bind(form, () => markSent('book-done'));
   form.addEventListener('change', (e) => { if (e.target.name === 'time') set({ time: e.target.value }); });
 
   function renderBooking() {
