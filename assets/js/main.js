@@ -325,6 +325,7 @@
               <div class="svc-done" id="svc-done" hidden>
                 <span class="svc-done__ic">${icon('i-check', 22, 2.6)}</span>
                 <div class="svc-done__text"><h5 class="svc-done__title">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
+                <button type="button" class="btn btn--dark svc-done__again" data-act="book-again" data-from="svc">Записаться ещё раз</button>
               </div>
             </div>
             <p class="svc-consent" id="svc-consent">${glue('Отправляя заявку, вы соглашаетесь на обработку персональных данных.')}</p>
@@ -630,6 +631,16 @@
     'svc-prev': () => goStep(state.svcStep - 1),
     'svc-next': () => goStep(state.svcStep + 1),
     'svc-time': (t) => set({ time: t.dataset.time }),
+    // a new booking: empty forms, no services, default doctor and time; back to where it was clicked
+    'book-again': (t) => {
+      form.reset();
+      const svcForm = $('#svc-form');
+      if (svcForm) svcForm.reset();
+      const cat = catById(state.cat);
+      set({ sent: false, cart: [], cartOpen: false, time: 'любое', svcStep: 1, svcOpen: null, docPick: cat ? autoDoc(catRoles(cat, [])) : null });
+      if (t.dataset.from === 'svc') scrollToId('svc-steps');
+      else form.elements.name.focus();
+    },
 
     'cart-toggle': () => set({ cartOpen: !state.cartOpen }),
     'cart-close': () => set({ cartOpen: false }),

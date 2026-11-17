@@ -201,6 +201,9 @@ the hidden part keeps its space via `visibility`), so the card doesn't shrink or
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle
 of the screen (`markSent`). Headless Chrome in `tools/shot` neither runs smooth scrolling nor fires
 `requestAnimationFrame` reliably — to check, patch `scrollIntoView` to `behavior: 'instant'` in `-Do`.
+Both confirmations have "Записаться ещё раз" (`book-again`): it resets both forms (`form.reset()`; `SiteForm`
+clears its errors on reset), the services, the time and the doctor, and returns to step 1 of the services
+panel or to the booking form's name field.
 
 **Preferred time** (2026-11-17): radio pills `name="time"` — утром / днём / вечером / любое (default),
 shown in the summary as "Время". No date and no real slots on purpose: the administrator calls back and

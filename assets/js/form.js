@@ -62,6 +62,12 @@ window.SiteForm = (function () {
     if (fields.email) fields.email.addEventListener('input', show);
     fields.phone.addEventListener('input', () => { fields.phone.value = formatPhone(fields.phone.value); show(); });
     Object.keys(fields).forEach((k) => fields[k].addEventListener('blur', () => { if (fields[k].value) touched[k] = true; show(); }));
+    // form.reset() (a new booking) starts the checks over: no errors until the fields are used again
+    form.addEventListener('reset', () => {
+      tried = false;
+      Object.keys(touched).forEach((k) => { touched[k] = false; });
+      show();
+    });
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const bad = Object.keys(fields).find((k) => check[k](fields[k].value));

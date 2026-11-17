@@ -11,7 +11,8 @@ Talk to the user in Russian.
 
 The clinic is **Grevitident** («Гревитидент»), a dental office in Brest (Belarus): ul. Vorovskogo 27,
 office 150 (since 2026-11-17 the site shows an invented address, ул. Липовая, 18, офис 4, and invented
-doctor names, at the user's request; the phones are still the real ones); its old site is stom-brest.com. The site is in Russian (`lang="ru"`). Until 2026-11-03 the
+doctor names, at the user's request; the phones are invented too, +375 (29) 012-34-56 and +375 (33) 098-76-54 — subscriber numbers
+starting with 0 are not issued in Belarus); its old site is stom-brest.com. The site is in Russian (`lang="ru"`). Until 2026-11-03 the
 site was made for another clinic, VestMedServis; its staff, reviews, blog, documents and vacancies were
 then removed (in git history) until the new clinic has its own. The original Claude Design export is commit `ffa5378`; on 2026-10-20 it was rewritten
 as plain HTML/CSS/JS (no React, no CDN) and made responsive — see `docs/knowledge.md`. Some content

@@ -635,6 +635,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .svc-done__ic { flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: var(--white); display: grid; place-items: center; }
 .svc-done__ic .ic { display: block; }
 .svc-done__title { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 20px; }
+.svc-done__again { flex: none; margin-left: auto; min-height: 48px; padding: 0 24px; font-size: 15px; }
 .svc-consent { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
 
 .svc-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-top: 22px; border-top: 1px solid var(--tint); }
@@ -658,6 +659,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
   .svc-row__content { padding: 0 16px 18px 20px; }
   .svc-form__fields { grid-template-columns: minmax(0, 1fr); }
   .svc-done { flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px 20px; }
+  .svc-done__again { margin-left: 0; align-self: stretch; }
   #pick-doctor .panel-label { flex-wrap: wrap; gap: 4px 12px; }
   .doc-pick__who { flex-basis: 100%; margin-left: 0; text-align: left; }
   .doc-card { gap: 14px; padding-right: 16px; }
@@ -788,6 +790,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .book__done { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 28px; border-radius: 24px; background: rgba(255, 255, 255, .08); text-align: center; }
 .book__done-title { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 24px; }
 .book__done-text { margin: 0; color: var(--tint); }
+.book__again { margin-top: 6px; min-height: 48px; padding: 0 24px; font-size: 15px; }
 .book__consent { flex: 0 1 calc(50% - 18px); margin: -20px 0 0 auto; min-width: 0; }
 .book__consent p { margin: 0; font-size: 13px; color: var(--tint); line-height: 1.5; text-wrap: pretty; }
 .book__consent a { color: var(--white); text-underline-offset: 3px; }
