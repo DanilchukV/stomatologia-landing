@@ -39,11 +39,12 @@ The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the
 apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
 accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
 user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant and icons were redone).
-On 2026-11-18 the user tried a warm neutral palette: Ivory `#F3F1EC` (`--bg`), Garden `#E0DED2` (`--tint`),
-Moss `#B8B8AB` (`--accent`, buttons — with Midnight text, white on it is too faint), Smoke `#9FA3AD` (`--faint`),
-Midnight `#3C3E4A` (`--ink`, dark booking card and footer); in-between tones (`--muted #63666F`, `--accent-ink #66675A`,
-lines) were derived from them. The logo and favicon kept their teal; the map mock and error reds were not touched.
-The previous blue palette is commit `332f29c`.
+On 2026-11-18 the user tried two palettes; the current one: White, Mauve `#D6C9C5` (`--line`), Navy `#0C2C47`
+(`--ink`: text, dark booking card, footer), Yellow `#DA9B2B` (`--accent`: buttons with Navy text, selected chips),
+Green `#2E5749` (`--accent-ink`: eyebrows; the selected tooth's outline), Mint `#ABC8C4` (the selected tooth; a light
+mint `#DDE9E7` is `--tint`), Orange `#BF512C` (list bullets and the quote mark only). `--bg` `#F6F2F0` is a light
+mauve; `--muted`, `--faint`, `--line-2` are derived. Staff photos sit on plain white (user's request). The logo and
+favicon kept their teal; the map mock and error reds were not touched. The original blue palette is commit `332f29c`.
 
 The hero photo (AI-generated, from the design) had the VestMedServis logo on the coat; it was painted
 out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
