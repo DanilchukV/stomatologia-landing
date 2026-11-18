@@ -39,12 +39,15 @@ The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the
 apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
 accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
 user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant and icons were redone).
-On 2026-11-18 the user tried two palettes; the current one: White, Mauve `#D6C9C5` (`--line`), Navy `#0C2C47`
-(`--ink`: text, dark booking card, footer), Yellow `#DA9B2B` (`--accent`: buttons with Navy text, selected chips),
-Green `#2E5749` (`--accent-ink`: eyebrows; the selected tooth's outline), Mint `#ABC8C4` (the selected tooth; a light
-mint `#DDE9E7` is `--tint`), Orange `#BF512C` (list bullets and the quote mark only). `--bg` `#F6F2F0` is a light
-mauve; `--muted`, `--faint`, `--line-2` are derived. Staff photos sit on plain white (user's request). The logo and
-favicon kept their teal; the map mock and error reds were not touched. The original blue palette is commit `332f29c`.
+**Palette (2026-11-18, user's rule): only these seven colours, no derived shades** — White, Mauve `#D6C9C5`
+(`--bg`, `--line`, `--line-2`: section bands, borders), Navy `#0C2C47` (`--ink`, `--ink-2`: text, dark booking card,
+footer), Yellow `#DA9B2B` (`--accent`: buttons with Navy text, selected chips, input borders), Green `#2E5749`
+(`--muted`, `--faint`, `--accent-ink`: secondary text, eyebrows; the booking summary box on Navy), Mint `#ABC8C4`
+(`--tint`: icon circles, hovers; the selected tooth; light text on Navy), Orange `#BF512C` (errors, the map pin, list
+bullets, the quote mark). Alpha only for shadows, masks, the tooth overlay and the sticky bar's frosted white. On Mauve,
+anything that used `--line` (dots, dashed placeholders) is White. The logo, `logo-light.svg`, favicon and its PNGs were
+recoloured too (PNGs re-rendered from `favicon.svg` in headless Chrome); `og-image.jpg` still has the old teal logo.
+Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`).
 
 The hero photo (AI-generated, from the design) had the VestMedServis logo on the coat; it was painted
 out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
