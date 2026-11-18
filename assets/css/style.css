@@ -42,7 +42,7 @@
   --ink-2: #0C2C47;
   --muted: #0C2C47;
   --faint: #0C2C47;
-  --accent: #DA9B2B;
+  --accent: #F0AA2F;
   --accent-ink: #BF512C;
   --tint: #ABC8C4;
   --line: #0C2C47;
@@ -302,7 +302,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .step.is-done .step__check { display: block; }
 .step.is-done .step__n { display: none; }
 .step.is-done .step__line > span { width: 100%; }
-.step[aria-current] .step__dot { background: var(--white); color: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 5px rgba(218, 155, 43, .3); }
+.step[aria-current] .step__dot { background: var(--white); color: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 5px rgba(240, 170, 47, .3); }
 .step.is-done .step__title, .step[aria-current] .step__title { color: var(--ink); }
 
 .pick__main { flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
@@ -490,7 +490,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .svc-card__photo { position: relative; align-self: stretch; margin: -31.5px -33.5px -10px; height: 176px; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0, 0, 0, .6) 74%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0, 0, 0, .6) 74%, transparent 100%); }
 .svc-card__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .svc-card__top { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-.svc-card__num { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(218, 155, 43, .45); box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: var(--f-head); font-weight: 700; font-size: 17px; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.svc-card__num { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(240, 170, 47, .45); box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-family: var(--f-head); font-weight: 700; font-size: 17px; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
 .svc-card__num span { display: block; text-box: trim-both cap alphabetic; transform: translateY(.5px); }
 .svc-card__arrow { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; line-height: 0; }
 .svc-card__arrow .ic { display: block; }
@@ -521,7 +521,7 @@ p, li, dd, figcaption { text-wrap: pretty; }
 .svc-panel__photo[data-cat="surgery"] img { object-position: 50% 62%; }
 .svc-panel__photo[data-cat="ortho"] img { object-position: 45% 55%; }
 .svc-panel__intro { position: relative; z-index: 1; flex: 0 1 420px; max-width: 420px; display: flex; flex-direction: column; gap: 12px; }
-.back-link { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px 0 10px; border-radius: 999px; border: 1px solid rgba(218, 155, 43, .35); background: transparent; color: var(--white); font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s; }
+.back-link { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px 0 10px; border-radius: 999px; border: 1px solid rgba(240, 170, 47, .35); background: transparent; color: var(--white); font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s; }
 .back-link:hover { background: var(--tint); color: var(--ink); }
 .back-link .ic { display: block; }
 .svc-panel__name { margin: 8px 0 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(32px, 3.6vw, 44px); line-height: 1.1; letter-spacing: -.02em; color: var(--white); text-wrap: balance; }

@@ -42,7 +42,7 @@ user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant an
 **Palette (2026-11-18, user's rule): only five colours, no derived shades** — White `#FFFFFF` (`--bg`, `--white`:
 every section and card), Navy `#0C2C47` (`--ink`, `--ink-2`, `--muted`, `--faint`: all text; `--line`, `--line-2`: 1 px
 card borders, which replace the old tinted section bands; the dark booking card, footer and the map mock), Yellow
-`#DA9B2B` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
+`#F0AA2F` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
 Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
 map pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
