@@ -13,4 +13,9 @@
     if (hdr.classList.contains('is-menu') && (!e.target.closest('.hdr') || e.target.closest('.hdr__menu a'))) setMenu(false);
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+
+  // computers: phone numbers are plain text (a tel: link opens Skype or a similar app there); phones and tablets keep the link
+  if (!window.matchMedia('(pointer: coarse)').matches) {
+    document.querySelectorAll('a[href^="tel:"]').forEach((a) => { a.removeAttribute('href'); a.classList.add('tel-text'); });
+  }
 })();

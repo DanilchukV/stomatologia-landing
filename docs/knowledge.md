@@ -62,7 +62,7 @@ pronouns, «не», «что», «как»…) are glued to the next word with `
 to the previous word; a number to the word after it («6&nbsp;месяцев», «от&nbsp;3 до&nbsp;6»);
 «г.&nbsp;Брест», «ул.&nbsp;Липовая,&nbsp;18», «офис&nbsp;4», «Шаг&nbsp;2». In `index.html` these
 are literal `&nbsp;`; texts the script renders go through `glue()` in `main.js`, which applies the same
-rules (data.js stays plain). Phone numbers never break: `a[href^="tel:"]` and `.nowrap` are `nowrap`.
+rules (data.js stays plain). Phone numbers never break: `a[href^="tel:"]`, `.tel-text` and `.nowrap` are `nowrap`.
 CSS: headings and `summary` use `text-wrap: balance`, paragraphs `pretty`. When adding copy, write
 `&nbsp;` the same way (or run it through `glue()` if it is rendered by script).
 
@@ -84,6 +84,13 @@ Breakpoints, from wide to narrow:
 
 `--hdr-h` is the header height at each breakpoint (82 / 74 / 70); sticky bars and
 `scroll-margin-top` use it. Scroll-spy marks the nav link of the section crossing 140 px from the top.
+A nav jump stops with the section title 28 px under the header (user's request, 2026-11-18): sections have
+`scroll-margin-top: calc(var(--hdr-h) - var(--sec-y) + 28px)`, a negative-ish margin that skips the top padding.
+
+Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
+`header.js` removes the `href` from every `a[href^="tel:"]` unless the pointer is coarse (phones, tablets)
+and adds `.tel-text`; such an `<a>` is styled as plain text, and `.hdr__call` (the round phone button of
+the burger header) is hidden without its link.
 
 ## Hero
 
@@ -126,7 +133,12 @@ about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with 
 ## Services
 
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
-  categories. The list shows 6 services with "Показать ещё".
+  categories. The list shows 6 services with "Показать ещё". The cards have no numbers or chevron
+  buttons since 2026-11-18 (user's request).
+- Every category head has the same height, so switching doesn't make the photo or "Все разделы" jump:
+  the title keeps 2 lines (`min-height: 2.2em`, text at the bottom) and the description 3 lines
+  (4 on ≤ 480 px) — the longest texts at each width; a longer text would grow the head again.
+  Switching fades the photo, text and list in (`fadeIn`); closing the panel slides the grid back in.
 - The panel body is a wizard, one step at a time (user's choice, 2026-11-17 — before it was services
   and doctors side by side, which left an empty column when a category has one doctor):
   1 Услуги (the list in two columns on desktop) → 2 Врач (horizontal doctor cards; a lone one spans
