@@ -269,7 +269,7 @@
       : step === 2 ? 'Врач: ' + docLabel() : '');
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
     $('.svc-nav__next', svcOpenBox).hidden = step === 3;
-    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Далее: врач' : 'Далее: запись';
+    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Выбрать врача' : 'Далее: запись';
     $('.svc-nav__book', svcOpenBox).hidden = step !== 3 || state.sent;
     // once sent, step 3 shows only the confirmation: no entered data, heading, consent or buttons
     const sent = state.sent;
