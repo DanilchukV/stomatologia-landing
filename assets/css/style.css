@@ -44,7 +44,7 @@
   --faint: #0C2C47;
   --accent: #DA9B2B;
   --accent-ink: #BF512C;
-  --tint: #DA9B2B;
+  --tint: #ABC8C4;
   --line: #0C2C47;
   --line-2: #0C2C47;
   --bg: #FFFFFF;
@@ -324,12 +324,12 @@ p, li, dd, figcaption { text-wrap: pretty; }
 /* only the tooth outline is clickable, not its bounding box */
 .tooth { position: absolute; background: transparent; border: none; padding: 0; margin: 0; cursor: pointer; pointer-events: none; }
 .tooth svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.tooth__shape { fill: rgba(218, 155, 43, 0); stroke: rgba(191, 81, 44, 0); stroke-width: 1.5px; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: all; cursor: pointer; transition: fill .15s, stroke .15s; }
-.jaw.is-jaw .tooth__shape { fill: rgba(218, 155, 43, .55); stroke: rgba(191, 81, 44, .55); }
-.tooth[aria-pressed="true"] .tooth__shape { fill: #DA9B2B; stroke: #BF512C; }
-.tooth:hover .tooth__shape { fill: rgba(218, 155, 43, .7); stroke: #BF512C; }
+.tooth__shape { fill: rgba(171, 200, 196, 0); stroke: rgba(12, 44, 71, 0); stroke-width: 1.5px; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: all; cursor: pointer; transition: fill .15s, stroke .15s; }
+.jaw.is-jaw .tooth__shape { fill: rgba(171, 200, 196, .55); stroke: rgba(12, 44, 71, .55); }
+.tooth[aria-pressed="true"] .tooth__shape { fill: #ABC8C4; stroke: #0C2C47; }
+.tooth:hover .tooth__shape { fill: rgba(171, 200, 196, .7); stroke: #0C2C47; }
 .tooth:focus-visible { outline: none; }
-.tooth:focus-visible .tooth__shape { stroke: var(--ink); fill: rgba(218, 155, 43, .7); }
+.tooth:focus-visible .tooth__shape { stroke: var(--ink); fill: rgba(171, 200, 196, .7); }
 .tooth__n { position: absolute; transform: translate(-50%, -50%); background: var(--ink); color: var(--white); border-radius: 50%; width: 17px; height: 17px; display: flex; align-items: center; justify-content: center; line-height: 1; font-size: 10px; font-weight: 700; pointer-events: none; }
 .tooth[aria-pressed="false"] .tooth__n { display: none; }
 .jaw__hint { font-size: 14px; color: var(--ink); font-weight: 600; text-align: center; }

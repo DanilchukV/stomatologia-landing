@@ -39,16 +39,17 @@ The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the
 apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
 accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
 user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant and icons were redone).
-**Palette (2026-11-18, user's rule): only four colours, no derived shades** — White `#FFFFFF` (`--bg`, `--white`:
+**Palette (2026-11-18, user's rule): only five colours, no derived shades** — White `#FFFFFF` (`--bg`, `--white`:
 every section and card), Navy `#0C2C47` (`--ink`, `--ink-2`, `--muted`, `--faint`: all text; `--line`, `--line-2`: 1 px
 card borders, which replace the old tinted section bands; the dark booking card, footer and the map mock), Yellow
-`#DA9B2B` (`--accent`, `--tint`: buttons with Navy text, selected chips, icon circles, hovers, input borders, the
-selected tooth fill, inactive carousel dots), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
-map pin, list bullets, the quote mark, the selected tooth outline). Text on Navy is White. Alpha only for shadows,
-masks, the tooth overlay and the sticky bar's frosted white. The logo (tooth: Navy → Yellow), `logo-light.svg`, favicon
+`#DA9B2B` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
+Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
+added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
+map pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
+masks, the tooth overlay and the sticky bar's frosted white. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
 and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
-seven colours with Mauve, Green and Mint (`4556e29`).
+seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
 
 The hero photo (AI-generated, from the design) had the VestMedServis logo on the coat; it was painted
 out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
