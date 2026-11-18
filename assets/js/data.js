@@ -1,7 +1,7 @@
 'use strict';
 // Site content used by main.js: clinic address, service categories, symptom hints, tooth map.
 window.SITE_DATA = {
-  clinic: {"area":"Липовая, 18"},
+  clinic: {"area":"Липовая 18"},
   // tab: short label in the services tab bar; roles: who sees patients in this category
   cats: [
     {"id":"diag","name":"Консультация и диагностика","tab":"Диагностика","roles":[],"desc":"Консультация специалиста и цифровая диагностика: снимки, 3D-томография, сканирование и фотопротокол.","items":["Консультация специалистов","Прицельная радиовизиография","Телерентгенография","3D-томография (КЛКТ)","Интраоральное сканирование","Фотопротокол"]},
