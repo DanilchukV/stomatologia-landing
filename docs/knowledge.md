@@ -98,7 +98,8 @@ wire with an orthodontic bracket before each label, in git history); the user th
 nav itself to stand out at once. Now the links sit in a soft capsule (Mint mixed 35 % into White) as pills; the
 current section is a White pill with a light shadow and Orange text, hover gives a half-white pill and Orange text.
 No movement (the user dislikes hover jumps). In the burger menu it is a plain list again. "Главная" (`#top`, the
-hero) is the first link and is in scroll-spy.
+hero) is the first link and is in scroll-spy; it and the logo go to the very top of the page (`#top` has
+`scroll-margin-top: 100vh`, which clamps to 0; the shared section margin had stopped it short of the top).
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
 `header.js` removes the `href` from every `a[href^="tel:"]` unless the pointer is coarse (phones, tablets)

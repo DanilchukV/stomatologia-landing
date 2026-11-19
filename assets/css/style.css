@@ -243,6 +243,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 
 /* ===== Hero ===== */
 .hero { background: var(--white); overflow-x: clip; padding-bottom: 0; }
+/* «Главная» and the logo (#top) go to the very top of the page: a margin bigger than the page offset clamps to 0 */
+#top { scroll-margin-top: 100vh; }
 .hero__in { max-width: 1320px; margin: 0 auto; padding: 0 var(--gutter); display: flex; flex-wrap: wrap; align-items: stretch; }
 .hero__text { flex: 1 1 520px; min-width: 0; padding: 48px 0 112px; display: flex; flex-direction: column; gap: 24px; position: relative; z-index: 1; }
 .hero__title { margin: 0; font-family: var(--f-head); font-size: clamp(44px, 5.6vw, 78px); line-height: 1.12; letter-spacing: -.015em; color: var(--ink); display: flex; flex-direction: column; gap: 14px; }
