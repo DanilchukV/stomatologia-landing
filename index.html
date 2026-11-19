@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119t">
-<script src="assets/js/header.js?v=20261119t" defer></script>
-<script src="assets/js/data.js?v=20261119t" defer></script>
-<script src="assets/js/form.js?v=20261119t" defer></script>
-<script src="assets/js/main.js?v=20261119t" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261119u">
+<script src="assets/js/header.js?v=20261119u" defer></script>
+<script src="assets/js/data.js?v=20261119u" defer></script>
+<script src="assets/js/form.js?v=20261119u" defer></script>
+<script src="assets/js/main.js?v=20261119u" defer></script>
 </head>
 <body>
 
@@ -427,9 +427,9 @@
       <h2 class="helper__title" id="helper-title" tabindex="-1" autofocus>К&nbsp;какому врачу обратиться?</h2>
     </div>
     <ol class="hsteps" aria-label="Шаги">
-      <li class="hstep"><button type="button" class="hstep__btn" data-act="helper-step" data-step="1"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">1</span></span><span class="hstep__text"><span class="hstep__t">Зуб</span><span class="hstep__v"></span></span></button></li>
-      <li class="hstep"><button type="button" class="hstep__btn" data-act="helper-step" data-step="2"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">2</span></span><span class="hstep__text"><span class="hstep__t">Что&nbsp;беспокоит</span><span class="hstep__v"></span></span></button></li>
-      <li class="hstep"><button type="button" class="hstep__btn" data-act="helper-step" data-step="3"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">3</span></span><span class="hstep__text"><span class="hstep__t">Какой врач нужен</span><span class="hstep__v"></span></span></button></li>
+      <li class="hstep"><span class="hstep__row" data-step="1"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">1</span></span><span class="hstep__text"><span class="hstep__t">Зуб</span><span class="hstep__v"></span></span></span></li>
+      <li class="hstep"><span class="hstep__row" data-step="2"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">2</span></span><span class="hstep__text"><span class="hstep__t">Что&nbsp;беспокоит</span><span class="hstep__v"></span></span></span></li>
+      <li class="hstep"><span class="hstep__row" data-step="3"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">3</span></span><span class="hstep__text"><span class="hstep__t">Какой врач нужен</span><span class="hstep__v"></span></span></span></li>
     </ol>
     <p class="helper__note">Это подсказка, а&nbsp;не&nbsp;диагноз. Точный план врач составит после осмотра.</p>
   </aside>
@@ -477,7 +477,7 @@
       <button type="button" class="btn btn--ghost helper__back" data-act="helper-back"><svg class="ic" width="16" height="16" stroke-width="2.4" aria-hidden="true"><use href="#i-back"/></svg>Назад</button>
       <span class="helper__info" id="helper-info"></span>
       <button type="button" class="btn btn--dark helper__next" data-act="helper-next"><span></span><svg class="ic" width="16" height="16" stroke-width="2.4" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-      <button type="button" class="btn btn--ghost helper__again" data-act="helper-restart">Начать заново</button>
+      <a class="btn btn--accent helper__book" href="#book" data-act="helper-book">Записаться<svg class="ic" width="16" height="16" stroke-width="2.4" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
   </div>
 </dialog>

@@ -129,25 +129,30 @@ and book. The user turned it into an optional helper with no booking: a native `
 (`showModal()`, Esc and a click on the backdrop close it) opened by the «Не знаете, к какому врачу?» call-out
 under the Services lead. It is deliberately not called AI: the answer comes from fixed rules in `data.js`.
 Booking stays only in the Services panel and the booking form; the helper's choices no longer reach the booking
-summary. Focus goes to the title on open (`autofocus`), not to the close button.
+summary (later the same day step 3 got «Записаться», which only leads to the booking form with the
+recommended doctor). Focus goes to the title on open (`autofocus`), not to the close button.
 
 The same day the user asked for it step by step, with nothing on screen that can't be chosen yet (before, the
 jaw, a locked symptom block and an empty hint column were all visible at once), and for the scrollbar not to run
 outside the dialog's rounded corners:
 
-- Layout: a mint column on the left with the title and the steps (Зуб → Что беспокоит → Какой врач нужен), each
+- Layout: a white column on the left (mint was dropped: the user disliked the coloured strip) with the title and
+  the steps (Зуб → Что беспокоит → Какой врач нужен), each
   showing the answer given; on the right only the current step (`state.hStep`), a fixed head («Шаг N из 3»,
-  heading, lead), a body that scrolls, and a fixed bar with Назад / Далее («Показать врача» on step 2, «Начать
-  заново» on step 3). Only the body scrolls, so the scrollbar sits between the head and the bar, clear of the
-  corners. The dialog has a fixed height (820 px or the screen), so it doesn't resize between steps.
+  heading, lead), a body that scrolls, and a fixed bar with Назад / Далее («Показать врача» on step 2,
+  «Записаться» on step 3). Only the body scrolls, so the scrollbar sits between the head and the bar, clear of the
+  corners. The dialog is as tall as the current step (`height: fit-content`, at most the screen): the user disliked
+  the empty space under the short step 3 when the height was fixed.
 - A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
-  in the left column are clickable to go back. Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
+  in the left column only show progress — moving is by Назад / Далее alone (user's request). Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
   какой зуб» are answers themselves and go straight to step 2. The doctor shows in the left column only once
   step 3 is open, so it isn't given away while choosing the symptom.
 - Step 3: the heading and lead are the symptom's title and text; then «Вам к врачу» — the roles of
   `recommend[symptom].roles` (the therapist when it has none) with those doctors' cards — and, beside it, the
   direction, `svcs` as a plain list and «Услуги и врачи направления», which closes the dialog and opens that
-  category in Services.
+  category in Services. «Записаться» closes the dialog, sets the booking form's doctor to the first recommended
+  one (`docPick`) and scrolls to the form. The site's scroll uses requestAnimationFrame, which never fires in the
+  headless shot harness — to check such a jump there, replace it with a timer in `-Do`.
 - The jaw is sized by the dialog's height (`.jaw__frame` max-width from `100dvh`), so step 1 fits without
   scrolling on a laptop; its min-width keeps the side labels inside.
 - Below 900 px the dialog is full-screen, the steps go in a row on top and only the current one keeps its title;

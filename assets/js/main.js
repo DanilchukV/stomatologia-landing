@@ -164,10 +164,10 @@
 
     // the doctor shows on the left only once step 3 has been opened, not while choosing the symptom
     const vals = [toothShort(), sym ? sym.label : '', sym && step !== 2 ? rolesText(sym) : ''];
-    $$('.hstep__btn', helper).forEach((b) => {
+    $$('.hstep__row', helper).forEach((b) => {
       const k = +b.dataset.step;
       if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
-      b.disabled = k !== step && !canStep(k);
+      b.classList.toggle('is-locked', k !== step && !canStep(k));
       b.parentElement.classList.toggle('is-done', k !== step && canStep(k + 1));
       $('.hstep__v', b).textContent = glue(vals[k - 1]);
     });
@@ -198,7 +198,7 @@
     next.disabled = !canStep(step + 1);
     next.firstChild.textContent = step === 1 ? 'Далее' : 'Показать врача';
     $('.helper__back', helper).hidden = step === 1;
-    $('.helper__again', helper).hidden = step !== 3;
+    $('.helper__book', helper).hidden = step !== 3;
     $('#helper-info').textContent = glue(step === 1 ? (toothShort() || 'Зуб можно не выбирать — есть варианты под схемой')
       : step === 2 ? (sym ? sym.label : 'Выберите один вариант') : '');
   }
@@ -557,10 +557,16 @@
       const id = state.symptom === t.dataset.id ? null : t.dataset.id;
       set({ symptom: id });
     },
-    'helper-step': (t) => hStep(+t.dataset.step),
     'helper-next': () => hStep(state.hStep + 1),
     'helper-back': () => hStep(state.hStep - 1),
-    'helper-restart': () => { set({ tooth: null, scope: null, skipTooth: false, symptom: null }); hStep(1); },
+    // to the booking form, with the recommended doctor chosen there
+    'helper-book': (t, e) => {
+      e.preventDefault();
+      const sym = currentSymptom();
+      helper.close();
+      if (sym) set({ docPick: autoDoc(recRoles(sym)) });
+      scrollToId('book');
+    },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
     'helper-close': () => helper.close(),
     // from the helper to the category's services, where booking is
