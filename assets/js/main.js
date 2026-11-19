@@ -203,18 +203,24 @@
       : step === 2 ? (sym ? sym.label : 'Выберите один вариант') : '');
   }
 
+  // beside a single doctor's card: what the first visit is like (the clinic's promises), so the box isn't half empty
+  const VISIT = `<div class="hint__visit"><span class="caps">Как пройдёт первый приём</span><ul class="bullets bullets--md">${
+    ['Осмотр и, если нужно, снимок', 'Врач объяснит, в чём причина и какие есть варианты', 'Письменный план и смета до начала лечения']
+      .map((t) => `<li><span>${glue(t)}</span></li>`).join('')}</ul></div>`;
+
   // the answer: which doctor to see (the therapist when the symptom names none); booking is the bar's button
   function hintHTML(sym) {
     const cat = catById(sym.cat);
     const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
     // the cards can be narrow: non-breaking spaces stay only after numbers ("12 лет"), so "сертификат CAD/CAM" can wrap
-    const docs = docsFor(recRoles(sym)).map((d) => `<div class="hint__doc">
+    const docList = docsFor(recRoles(sym));
+    const docs = docList.map((d) => `<div class="hint__doc">
         <span class="hint__doc-ph">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? initials(d.name) : person(40)}</span>
-        <span class="hint__doc-text"><span class="hint__doc-name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="hint__doc-spec">${esc(d.spec)}</span>` : ''}${d.exp ? `<span class="hint__doc-exp">${icon('i-award', 16, 1.8)}${esc(d.exp.replace(/(\D) /g, '$1 '))}</span>` : ''}</span>
+        <span class="hint__doc-text"><span class="hint__doc-name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="hint__doc-spec">${esc(d.spec)}</span>` : ''}${d.exp ? `<span class="hint__doc-exp">${icon('i-award', 16, 1.8)}${esc(d.exp.replace(/(\D)\s/g, '$1 '))}</span>` : ''}</span>
       </div>`).join('');
     const svcs = rec.svcs.length ? `<div class="hint__sec"><span class="caps">Вероятно понадобится</span><ul class="bullets bullets--md">${rec.svcs.map((n) => `<li><span>${esc(glue(n))}</span></li>`).join('')}</ul></div>` : '';
     return `${WISDOM.includes(state.tooth) && sym.id !== 'wisdom' ? `<p class="hint__note">${glue('Это зуб мудрости — возможно, понадобится консультация хирурга.')}</p>` : ''}
-      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(rolesText(sym))}</span><div class="hint__docs">${docs}</div></div>
+      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(rolesText(sym))}</span><div class="hint__docs">${docs}${docList.length === 1 ? VISIT : ''}</div></div>
       <div class="hint__more">
         <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
         ${svcs}

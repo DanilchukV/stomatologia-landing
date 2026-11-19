@@ -144,7 +144,8 @@ outside the dialog's rounded corners:
   step 3 is open, so it isn't given away while choosing the symptom.
 - Step 3: the heading and lead are the symptom's title and text; then «Вам к врачу» — the roles of
   `recommend[symptom].roles` (the therapist when it has none) with those doctors' cards — a 3:4 portrait, name,
-  specialty and experience, as in the team section (user's request: a bigger photo to fill the step) — and under it the
+  specialty and experience, as in the team section (user's request: a bigger photo to fill the step); with a single
+  doctor «Как пройдёт первый приём» (three points from the clinic's promises) fills the right half — and under it the
   direction and `svcs` as a plain list (a link to the category in Services was removed at the user's request).
   «Записаться» closes the dialog, sets the booking form's doctor to the first recommended
   one (`docPick`) and scrolls to the form. The site's scroll uses requestAnimationFrame, which never fires in the
