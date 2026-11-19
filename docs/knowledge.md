@@ -191,6 +191,11 @@ outside the dialog's rounded corners:
 - Below 900 px the dialog is full-screen, the steps go in a row on top and only the current one keeps its title;
   the disclaimer then moves from the left column into step 3.
 - The tooth map is `assets/img/teeth.webp` (1536 × 1024) with 32 buttons positioned in % of that
+  size. Its gums were recoloured on 2026-11-19 to the softer, warmer pink of the Finder's smile picture (user's
+  request): only pink and light pixels (the teeth are not pink, the tongue and mouth are dark) got lighter (HSL L
+  +28 % of the way to white), a little more saturated and ~5° warmer; same size and alpha, so the outlines still fit;
+  linked as `teeth.webp?v=2` to beat the cache. The original is in git history.
+  Positions are
   size. Each button has `pointer-events: none` and only its SVG outline path takes clicks, so
   neighbouring bounding boxes don't steal clicks.
 - Numbering: data uses 1–32 (upper right → upper left → lower left → lower right, as the doctor
