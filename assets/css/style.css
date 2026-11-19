@@ -178,7 +178,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 
 .addr__btn { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 0 0 14px; text-decoration: none; border: none; border-left: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font-size: 16px; white-space: nowrap; cursor: pointer; text-align: left; transition: color .15s; }
 .addr__btn:hover { color: var(--accent-ink); }
-.addr__pin { color: var(--accent); }
+.addr__pin { color: var(--accent-ink); }
 .addr__text { display: flex; flex-direction: column; line-height: 1.25; }
 .addr__city { font-size: 13px; color: var(--muted); }
 .addr__area { font-weight: 600; }

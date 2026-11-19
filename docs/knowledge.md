@@ -45,8 +45,8 @@ card borders, which replace the old tinted section bands; the dark booking card,
 `#F0AA2F` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
 Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
-map pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
-masks, the tooth overlay and the nav's archwire. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
+map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
+masks and the tooth overlay. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
 and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
