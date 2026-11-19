@@ -134,8 +134,9 @@ the jaws, and a «Начать →» circle following the pointer.
 Now: «Помощник», «Не знаете, к какому врачу?» and a lead on the left; on the right the helper's jaw photo
 cut down to the teeth only — no gums, tongue or mouth (user's wish): `main.js` builds an SVG whose `<image>` of
 `teeth.webp` is clipped by the helper's 32 tooth outlines — in black and white (`filter: grayscale(1)`), with the only button, a Yellow
-56 px «Выбрать зуб», in its top right corner, and under the button a pulsing Mint dot with a Navy rim on
-tooth 19 on the lower jaw (the upper teeth there sit under the button; its centre hard-coded in % of the viewBox;
+56 px «Выбрать зуб», in its top right corner, and a pulsing Mint dot with a Navy rim tied to the button, not to a
+tooth: 10 px under its right part, the same at every width (user: higher and further right, neatly under the button;
+it was on a lower tooth before;
 it grows a little while the photo is hovered). The whole photo
 and the button (`finder-open`) open the helper on its first step, the tooth map. Below 900 px the photo goes above
 the text. The section has no top padding: About's bottom padding is the gap.

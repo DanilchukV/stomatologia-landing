@@ -366,9 +366,9 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__teeth svg { display: block; width: 100%; height: auto; filter: grayscale(1); }
 /* the only button: Yellow, as the site's calls to action */
 .finder__pick { position: absolute; top: -10px; right: 0; gap: 10px; min-height: 56px; padding: 0 28px; font-size: 17px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); }
-/* a pulsing Mint dot on tooth 19 (lower jaw, right under the button; the upper teeth there sit under the button): its centre,
-   x (1317 − 50) / 1436, y (602 − 190) / 666 in the viewBox; it grows a little while the photo is hovered */
-.finder__dot { position: absolute; left: 88.3%; top: 62%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; border: 2px solid var(--ink); box-sizing: border-box; background: var(--tint); box-shadow: 0 0 0 4px rgba(255, 255, 255, .9); transition: scale .25s var(--ease-out); pointer-events: none; }
+/* a pulsing Mint dot tied to the button, not to a tooth: 10 px under its right part (button top −10 + 56 high),
+   so it sits in the same place at any width; it grows a little while the photo is hovered */
+.finder__dot { position: absolute; right: 44px; top: 56px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--ink); box-sizing: border-box; background: var(--tint); box-shadow: 0 0 0 4px rgba(255, 255, 255, .9); transition: scale .25s var(--ease-out); pointer-events: none; }
 .finder__dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--tint); animation: finderPulse 1.8s ease-out infinite; }
 @keyframes finderPulse { from { scale: 1; opacity: .9; } to { scale: 2.6; opacity: 0; } }
 .finder__jaw:hover .finder__dot { scale: 1.25; }
