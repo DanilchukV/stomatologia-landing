@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119zq">
-<script src="assets/js/header.js?v=20261119zq" defer></script>
-<script src="assets/js/data.js?v=20261119zq" defer></script>
-<script src="assets/js/form.js?v=20261119zq" defer></script>
-<script src="assets/js/main.js?v=20261119zq" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261119zr">
+<script src="assets/js/header.js?v=20261119zr" defer></script>
+<script src="assets/js/data.js?v=20261119zr" defer></script>
+<script src="assets/js/form.js?v=20261119zr" defer></script>
+<script src="assets/js/main.js?v=20261119zr" defer></script>
 </head>
 <body>
 
@@ -356,12 +356,21 @@
     <div class="book__body">
       <form class="book__form" id="book-form" novalidate>
         <div class="book__row">
-          <span class="book__k" id="book-k-doc">К&nbsp;кому</span>
-          <div class="book__docs" id="book-docs" role="group" aria-labelledby="book-k-doc"></div>
-        </div>
-        <div class="book__row">
           <span class="book__k">Услуги</span>
           <div class="book__v" id="book-svcs"></div>
+        </div>
+        <div class="book__row">
+          <span class="book__k" id="book-k-doc">Врач</span>
+          <div class="book__docs" id="book-docs" role="group" aria-labelledby="book-k-doc"></div>
+        </div>
+        <div class="book__row" role="radiogroup" aria-labelledby="book-k-time">
+          <span class="book__k" id="book-k-time">Удобное время</span>
+          <div class="when__opts">
+            <label class="when__opt"><input type="radio" name="time" value="утром"><span>Утром</span></label>
+            <label class="when__opt"><input type="radio" name="time" value="днём"><span>Днём</span></label>
+            <label class="when__opt"><input type="radio" name="time" value="вечером"><span>Вечером</span></label>
+            <label class="when__opt"><input type="radio" name="time" value="любое" checked><span>Любое</span></label>
+          </div>
         </div>
         <div class="book__row">
           <span class="book__k">Контакты</span>
@@ -376,15 +385,6 @@
             </label>
           </div>
         </div>
-        <fieldset class="book__row when">
-          <legend class="book__k when__label">Удобное время</legend>
-          <div class="when__opts">
-            <label class="when__opt"><input type="radio" name="time" value="утром"><span>Утром</span></label>
-            <label class="when__opt"><input type="radio" name="time" value="днём"><span>Днём</span></label>
-            <label class="when__opt"><input type="radio" name="time" value="вечером"><span>Вечером</span></label>
-            <label class="when__opt"><input type="radio" name="time" value="любое" checked><span>Любое</span></label>
-          </div>
-        </fieldset>
         <div class="book__foot">
           <p class="book__consent">Отправляя заявку, вы&nbsp;соглашаетесь на&nbsp;обработку персональных данных.</p>
           <button class="btn btn--accent book__send" type="submit">Отправить заявку<svg class="ic" width="18" height="18" stroke-width="2.2" aria-hidden="true"><use href="#i-arrow"/></svg></button>

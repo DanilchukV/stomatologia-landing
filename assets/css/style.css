@@ -718,11 +718,6 @@ html:has(.helper[open]) { overflow: hidden; }
 /* on wide screens the same words stand under the steps */
 .hint__disclaimer { display: none; margin: 0; font-size: 13px; color: var(--muted); }
 
-/* narrow screens: full screen; the steps go in a row on top, only the current one keeps its title */
-@media (max-width: 899px) {
-  .helper { width: 100%; height: 100%; max-height: none; border-radius: 0; }
-  .helper[open] { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
-  .helper__close { top: 12px; right: 12px; }
 /* laptops with a short screen: tighter head and bar, a smaller jaw and doctor photos, so no step needs to scroll */
 @media (min-width: 900px) and (max-height: 860px) {
   .helper__head { padding: 26px 88px 12px 40px; gap: 6px; }
@@ -753,6 +748,11 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__visit .bullets li { font-size: 14px; line-height: 1.4; }
   .hint__visit .bullets li::before { margin-top: 7px; }
 }
+/* narrow screens: full screen; the steps go in a row on top, only the current one keeps its title */
+@media (max-width: 899px) {
+  .helper { width: 100%; height: 100%; max-height: none; border-radius: 0; }
+  .helper[open] { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .helper__close { top: 12px; right: 12px; }
   .helper__side { overflow: visible; padding: 18px 20px 14px; gap: 14px; border-right: none; border-bottom: 1px solid rgba(12, 44, 71, .12); }
   .helper__titles { padding: 0 56px 0 0; gap: 4px; }
   .helper__titles .eyebrow { font-size: 12px; letter-spacing: .14em; }
@@ -904,6 +904,10 @@ html:has(.helper[open]) { overflow: hidden; }
 .book-doc:hover { border-color: var(--accent); }
 .book-doc[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--white); }
 .book-doc .av { width: 60px; height: 60px; }
+/* the whole head in the circle: the crop starts at the top of the portrait */
+.book-doc .av-img { object-position: 50% 0; }
+/* «Любой врач» chosen: its circle stays white, as the doctors' photo circles do */
+.book-doc[aria-pressed="true"] > .av { background: var(--white); color: var(--ink); }
 .book-doc__text { display: flex; flex-direction: column; align-items: center; gap: 2px; line-height: 1.25; }
 .book-doc__name { font-weight: 600; font-size: 15px; text-wrap: balance; }
 .book-doc__sub { font-size: 13px; opacity: .8; }
@@ -923,7 +927,6 @@ html:has(.helper[open]) { overflow: hidden; }
 .field__input[aria-invalid="true"] { border-color: #BF512C; box-shadow: 0 0 0 3px rgba(191, 81, 44, .25); }
 .field__err { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #BF512C; font-weight: 500; }
 .field__err .ic { color: #BF512C; }
-.when__label { float: left; }
 .when__opts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .when__opt { position: relative; display: flex; }
 .when__opt input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
