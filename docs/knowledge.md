@@ -115,6 +115,9 @@ bottom-right, square corners elsewhere — `border-radius: 44% 0 / 50% 0`, measu
 middle of the leaf. Under 1128 px text and photo no longer fit side by side; the photo then goes full
 width under the text (`object-position: 25%`; 12 % on phones centres the doctor), same leaf shape.
 
+Fact cards react on hover (2026-11-19, user's request; `@media (hover: hover)` only): the card stays put — the
+border turns Yellow and a soft shadow appears; the icon circle turns Yellow and the icon tilts −8° and grows 10 %.
+
 ## Picker (tooth → symptom → hint)
 
 - The tooth map is `assets/img/teeth.webp` (1536 × 1024) with 32 buttons positioned in % of that
@@ -145,6 +148,9 @@ promises; they were VestMedServis figures and the row was removed on 2026-11-03 
 styles. If the new clinic gives its own figures, the markup and CSS are in git history.
 The hero facts, the about lead, the promises and the FAQ were rewritten from what stom-brest.com says
 about the clinic (therapy and hygiene, prosthetics, implants, orthodontics with Damon braces).
+
+Gallery photos zoom to 105 % on hover (2026-11-19, user's request), inside their rounded frame; `isolation:
+isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the corners.
 
 ## Services
 
