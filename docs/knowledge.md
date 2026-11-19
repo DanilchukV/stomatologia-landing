@@ -125,12 +125,13 @@ the braces card wrapped to three lines), so all three texts take two lines at �
 ## Finder (the helper's mini section)
 
 The user calls the helper the site's signature feature, so on 2026-11-19 its call-out moved out of the Services
-head into a section of its own, right before Services: a bordered card with «Помощник», «Не знаете, к какому
-врачу?», a lead and «Подсказать врача». On the right, a quiet demo of what it does (the user found a big jaw
-picture there too eye-catching): three small cards joined by a line behind their numbers — «Зуб 5, нижняя челюсть
-слева», «Болит или ноет», and the answer «Вам к врачу: Терапевт · Анна Ковалёва» with her photo on a light Mint
-card. The button and the whole demo open the helper dialog. Below 900 px the demo goes under the text. The section
-has no top padding: About's bottom padding is the gap.
+head into a section of its own, right before Services. It went through a big card with the jaw picture (too
+eye-catching) and a card with a three-step demo (too tall); now it is a slim band (≈ 106 px on desktop): the four
+doctors' faces overlapping, «Не знаете, к какому врачу?» with one line under it, and a big Yellow «Подобрать врача»
+button with a Navy arrow circle — the user asked for "a button you want to press": a soft Yellow halo breathes
+around it (2.4 s), a light streak crosses it every 4 s and the arrow nudges on hover (all off with reduced motion,
+and in the shot harness). On phones the button runs the full width under the text. The section has no top padding:
+About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
 `--sec-y` (96 px, 64 on phones). Sections have only top padding (Services lost its bottom one, which made a double

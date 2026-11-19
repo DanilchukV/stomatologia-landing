@@ -351,35 +351,33 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 }
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
-/* sits between About and Services: no top padding of its own, About's bottom padding is the gap */
+/* a slim band (user, 2026-11-19): doctors' faces, one line of text and a button that asks to be pressed;
+   no top padding of its own, About's bottom padding is the gap */
 .finder { padding: 0 var(--gutter); }
-.finder__card { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 28px 56px; padding: clamp(24px, 4vw, 48px); border: 1px solid var(--line); border-radius: 32px; background: var(--white); }
-.finder__text { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-.finder__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
-.finder__lead { margin: 0; max-width: 480px; color: var(--muted); font-size: 17px; text-wrap: pretty; }
-.finder__btn { margin-top: 8px; gap: 10px; min-height: 56px; padding: 0 30px; font-size: 17px; }
-.finder__btn .ic { display: block; }
-/* a quiet demo of what the helper does: three small cards joined by a line, the last one the answer; a button too */
-.finder__demo { display: block; width: 100%; padding: 0; border: none; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.fd { position: relative; display: flex; flex-direction: column; gap: 14px; }
-/* the line behind the numbers, from the first to the last */
-.fd::before { content: ''; position: absolute; left: 13px; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; background: rgba(12, 44, 71, .18); }
-.fd__step { position: relative; display: flex; align-items: center; gap: 16px; }
-.fd__card { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 14px 20px; border: 1px solid rgba(12, 44, 71, .25); border-radius: 18px; background: var(--white); transition: border-color .2s, box-shadow .2s; }
-.finder__demo:hover .fd__card { border-color: var(--line); }
-.fd__card--doc { flex-direction: row; align-items: center; gap: 14px; padding: 10px 20px 10px 10px; border-color: var(--line); background: var(--tint); }
-.fd__av { flex: none; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; background: #FFFFFF; }
-.fd__av img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
-.fd__doc { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.fd__k { font-size: 13px; color: var(--muted); }
-.fd__v { font-size: 16px; font-weight: 600; }
+.finder__card { box-sizing: border-box; display: flex; align-items: center; gap: 20px 28px; padding: 20px 20px 20px 28px; border: 1px solid var(--line); border-radius: 28px; background: var(--white); }
+.finder__docs { flex: none; display: flex; padding-left: 12px; }
+.finder__docs img { width: 52px; height: 52px; margin-left: -12px; border-radius: 50%; border: 3px solid var(--white); background: #FFFFFF; object-fit: cover; object-position: 50% 0; box-shadow: 0 2px 8px rgba(12, 44, 71, .12); }
+.finder__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.finder__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(22px, 2.2vw, 28px); line-height: 1.15; letter-spacing: -.01em; }
+.finder__lead { margin: 0; color: var(--muted); font-size: 16px; }
+/* the button: a soft Yellow halo breathes around it, a light streak crosses it now and then, the arrow nudges on hover */
+.finder__btn { position: relative; flex: none; gap: 14px; min-height: 64px; padding: 0 10px 0 32px; font-size: 18px; box-shadow: 0 10px 24px rgba(240, 170, 47, .35); isolation: isolate; }
+.finder__btn::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; box-shadow: 0 0 0 0 rgba(240, 170, 47, .5); animation: finderHalo 2.4s ease-out infinite; }
+.finder__btn::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat; animation: finderShine 4s ease-in-out 1s infinite; pointer-events: none; }
+@keyframes finderHalo { 0% { box-shadow: 0 0 0 0 rgba(240, 170, 47, .5); } 70%, 100% { box-shadow: 0 0 0 16px rgba(240, 170, 47, 0); } }
+@keyframes finderShine { 0%, 60% { background-position: -150% 0; } 85%, 100% { background-position: 150% 0; } }
+.finder__btn-ic { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--white); display: grid; place-items: center; transition: transform .25s var(--ease-out); }
+.finder__btn-ic .ic { display: block; }
+.finder__btn:hover .finder__btn-ic { transform: translateX(4px); }
 
-@media (max-width: 900px) {
-  .finder__card { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 760px) {
+  .finder__card { flex-wrap: wrap; padding: 20px; }
+  .finder__text { flex-basis: calc(100% - 200px); }
+  .finder__btn { flex: 1 1 100%; justify-content: space-between; }
 }
 @media (max-width: 480px) {
-  .finder__btn { align-self: stretch; }
-  .fd__card { padding: 12px 16px; }
+  .finder__docs img { width: 44px; height: 44px; }
+  .finder__text { flex-basis: 100%; }
 }
 
 /* ===== Services ===== */
