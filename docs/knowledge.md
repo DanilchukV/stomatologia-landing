@@ -125,20 +125,18 @@ the braces card wrapped to three lines), so all three texts take two lines at �
 ## Finder (the helper's mini section)
 
 The user calls the helper the site's signature feature, so on 2026-11-19 its call-out moved out of the Services
-head into a section of its own, right before Services. Tried and dropped the same day: a big card with the jaw
-photo (too eye-catching), a three-step demo (too tall), a slim band with a breathing, shining Yellow button
-(«like a garage advert»), a calm slim band with a Navy button (wanted bigger, Yellow, hinting at the teeth), and
-clickable teeth in the drawing (the user wants no clicking there). Now: «Помощник», «Не знаете, к какому врачу?»,
-and a lead on the left; on the right a still line drawing of the 32 teeth — the helper's
-own outlines from `D.teeth` (absolute coordinates in `teeth.webp`, one SVG cropped to the teeth, no pointer events)
-— with the only button, a Yellow 56 px «Выбрать зуб», in its top right corner (a Mint version with a Yellow rim was
-swapped back: the user wanted the dot Mint and the button Yellow) (the «Подобрать
-врача» button on the left was dropped; the gap between the jaws looked too central). The whole drawing opens the
-helper too; on one tooth (29, lower left in the drawing) a Mint dot with a Navy rim pulses with a widening ring, as in the first
-version (user's choice over a «Начать →» circle that followed the pointer), and grows a little while the drawing is
-hovered. Both (`finder-open`) open the helper on its
-first step, the tooth
-map. Below 900 px the drawing goes above the text. The section has no top padding: About's bottom padding is the gap.
+head into a section of its own, right before Services. Tried and dropped the same day: a big card with the colour
+jaw photo (too eye-catching), a three-step demo (too tall), a slim band with a breathing, shining Yellow button
+(«like a garage advert»), a calm slim band with a Navy button, a line drawing of the teeth with clickable teeth
+(no clicking on single teeth, user's wish), a «Подобрать врача» button on the left, the button in the gap between
+the jaws, and a «Начать →» circle following the pointer.
+
+Now: «Помощник», «Не знаете, к какому врачу?» and a lead on the left; on the right the helper's jaw photo
+(`teeth.webp`, whole) in black and white (`filter: grayscale(1)`, user's choice), with the only button, a Yellow
+56 px «Выбрать зуб», in its top right corner, and right under the button a pulsing Mint dot with a Navy rim on
+tooth 12 (its centre hard-coded in % of the photo; it grows a little while the photo is hovered). The whole photo
+and the button (`finder-open`) open the helper on its first step, the tooth map. Below 900 px the photo goes above
+the text. The section has no top padding: About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
 `--sec-y` (96 px, 64 on phones). Sections have only top padding (Services lost its bottom one, which made a double

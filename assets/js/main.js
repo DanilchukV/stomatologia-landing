@@ -737,10 +737,6 @@
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
   });
 
-  /* ---------- finder: a line drawing of the helper's tooth map ---------- */
-  // a picture, no single teeth to click (the whole drawing opens the helper): the helper's own outlines, absolute
-  // coordinates in teeth.webp, in one SVG cropped to the 32 teeth, plus a pulsing dot on one tooth (style.css)
-  $('#finder-teeth').innerHTML = `<svg viewBox="50 190 1436 666">${D.teeth.map((t) => `<path class="ft" d="${t[7]}"/>`).join('')}</svg><span class="finder__dot"></span>`;
 
   /* ---------- back to top ---------- */
   // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;
