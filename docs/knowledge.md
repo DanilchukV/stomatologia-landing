@@ -33,17 +33,19 @@ Small behaviour addition over the export: footer service links open that categor
 ## Brand
 
 The logo is the user's `logo.svg` (tooth + «Гревитидент» + «стоматологическая клиника», text in outlines):
-`assets/img/logo.svg` in the header (48 px high, 38 px on phones) and `logo-light.svg` in the dark footer
-(the same file with the navy text white, the subtitle and the tooth's dark gradient stops light).
+`assets/img/logo.svg` in the header (48 px high, 38 px on phones) and `logo-ink.svg` in the Mint footer
+(the same file with the tooth's Mint gradient stops Navy, so the tooth does not fade into the background;
+the footer was Navy with `logo-light.svg`, white text, until 2026-11-19 — the user disliked two dark blocks in a
+row, booking card and footer; `logo-light.svg` is kept, unused, for a dark background).
 The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the 32 px and
 apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
 accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
 user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant and icons were redone).
 **Palette (2026-11-18, user's rule): only five colours, no derived shades** — White `#FFFFFF` (`--bg`, `--white`:
 every section and card), Navy `#0C2C47` (`--ink`, `--ink-2`, `--muted`, `--faint`: all text; `--line`, `--line-2`: 1 px
-card borders, which replace the old tinted section bands; the dark booking card, footer and the map mock), Yellow
+card borders, which replace the old tinted section bands; the dark booking card and the map mock), Yellow
 `#F0AA2F` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
-Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
+Mint `#ABC8C4` (`--tint`: the footer, icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
 masks and the tooth overlay. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
