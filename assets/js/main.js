@@ -658,6 +658,11 @@
       scrollToId('book');
     },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
+    'finder-tooth': (t) => {
+      set({ tooth: +t.dataset.tooth, scope: 'tooth', skipTooth: false, symptom: null, hStep: 2 });
+      helper.showModal();
+      $('#helper-body').scrollTop = 0;
+    },
     'helper-close': () => helper.close(),
 
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
@@ -731,17 +736,18 @@
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
   });
 
-  /* ---------- finder: the doctors' faces slide in once, when the band scrolls into view ---------- */
-  const finder = $('#finder');
-  if (finder && 'IntersectionObserver' in window && !reduceMotion.matches && finder.getBoundingClientRect().top > window.innerHeight) {
-    finder.classList.add('is-armed');
-    const io = new IntersectionObserver((entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      finder.classList.add('is-seen');
-      io.disconnect();
-    }, { threshold: .6 });
-    io.observe(finder);
-  }
+  /* ---------- finder: a line drawing of the helper's tooth map ---------- */
+  // the outlines are the helper's own (absolute coordinates in teeth.webp); the box is all 32 teeth with a margin.
+  // Hovering names the tooth; a click opens the helper with that tooth chosen, on the "what bothers you" step
+  const finderTeeth = $('#finder-teeth');
+  const finderTip = $('#finder-tip');
+  const TIP = finderTip.textContent;
+  finderTeeth.innerHTML = `<svg viewBox="50 190 1436 666">${D.teeth.map(([n, , , , , , , d]) => `<path class="ft" data-act="finder-tooth" data-tooth="${n}" d="${d}"/>`).join('')}</svg>`;
+  finderTeeth.addEventListener('mouseover', (e) => {
+    const n = +(e.target.dataset || {}).tooth;
+    finderTip.textContent = n ? glue(`Зуб ${qn(n)} — ${D.toothNames[n]}`) : TIP;
+  });
+  finderTeeth.addEventListener('mouseleave', () => { finderTip.textContent = TIP; });
 
   /* ---------- back to top ---------- */
   // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;
