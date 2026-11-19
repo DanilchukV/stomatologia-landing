@@ -54,7 +54,7 @@
     hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
     svcStep: 1, docPick: null, cart: [],
-    docPage: 0,
+    docPage: 0, docOpen: null,
     time: 'любое', sent: false
   };
   function set(patch) {
@@ -460,12 +460,29 @@
     const track = $('#doc-track');
     const shown = swipe ? list : list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE);
     // the photo; without it the initials, without a name too a silhouette (the photo is blended, so nothing may sit under it)
-    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc">
+    // «Подробнее» opens a card: it widens in its row with a bigger photo and the story; the others narrow (style.css)
+    const more = (d) => {
+      const rows = [['Образование', d.edu], ['Курсы', d.courses]].filter(([, v]) => v && v.length)
+        .map(([k, v]) => `<div class="doc__row"><dt>${k}</dt><dd>${v.map((x) => esc(glue(x))).join('<br>')}</dd></div>`).join('');
+      return `<div class="doc__more" id="doc-more-${d.id}">${rows ? `<dl class="doc__facts">${rows}</dl>` : ''}${d.about ? `<p class="doc__about">${esc(glue(d.about))}</p>` : ''}</div>`;
+    };
+    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}">
         <div class="doc__photo">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}</div>
-        <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</span></div>
-        <div class="doc__foot">${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
+        <div class="doc__main">
+          <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</span></div>
+          ${d.about ? more(d) : ''}
+          <div class="doc__foot">${d.about ? `<button type="button" class="doc__toggle" data-act="doc-more" data-id="${d.id}" aria-expanded="false" aria-controls="doc-more-${d.id}"><span>Подробнее</span>${icon('i-chev', 14, 2.6)}</button>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
+        </div>
       </article>`).join(''));
     if (rebuilt) track.scrollLeft = 0;
+    const open = shown.some((d) => d.id === state.docOpen) ? state.docOpen : null;
+    track.classList.toggle('has-open', !!open);
+    $$('.doc', track).forEach((el) => {
+      const on = el.dataset.id === open;
+      el.classList.toggle('is-open', on);
+      const b = $('.doc__toggle', el);
+      if (b) { b.setAttribute('aria-expanded', on); b.firstChild.textContent = on ? 'Свернуть' : 'Подробнее'; }
+    });
     const multi = pages > 1;
     $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
     $('#doc-dots-row').hidden = !multi;
@@ -725,9 +742,15 @@
     'cart-reset': () => set({ cart: [], docPick: null, svcOpen: null }),
     'book-pick': (t) => set({ docPick: t.dataset.id || null }),
 
-    'doc-page': (t) => set({ docPage: +t.dataset.page }),
-    'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p }); },
-    'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p }); },
+    'doc-more': (t) => {
+      const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
+      set({ docOpen: id });
+      // on phones the opened card is brought into view in the swipe row
+      if (id && swipeMedia.matches) t.closest('.doc').scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'nearest', inline: 'start' });
+    },
+    'doc-page': (t) => set({ docPage: +t.dataset.page, docOpen: null }),
+    'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
+    'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p, docOpen: null }); },
     'book-doc': (t) => set({ docPick: t.dataset.id }),
 
     top: () => scrollToTop(),

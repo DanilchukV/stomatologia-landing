@@ -332,6 +332,17 @@ check the lead text in `index.html`.
   cart and booking summary. Categories or symptoms whose role has nobody say "Врача
   подберём при записи".
 
+
+**«Подробнее»** (2026-11-19, user's request): every card has a «Подробнее» toggle (`doc-more`, `state.docOpen`). The
+opened card widens in its row (the row is a flex row, not a grid, so it animates through `flex-grow`: 3.4 against 1),
+turns into photo-left / story-right with a bigger photo, and shows the story: «Образование» and «Курсы» (`edu`,
+`courses` in `data.js`, labels above the text) and a short paragraph (`about`); the other cards narrow and drop the
+experience line. «Свернуть» closes it; paging closes it too. At 641–900 px (two per row) the opened card takes a row
+of its own; on phones it gets wider in the swipe row with the story under the photo, and the others narrower.
+Nurses and administrators have a paragraph (and the nurses their college). **All the stories are placeholders**
+written for the invented staff (universities and courses are plausible, not real facts) — replace them with the
+real ones together with the names and photos.
+
 ## Contacts
 
 One address (the export had two VestMedServis clinics with a switcher in the header, the menu, the

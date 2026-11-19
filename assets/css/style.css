@@ -797,8 +797,9 @@ html:has(.helper[open]) { overflow: hidden; }
 .doctors__lead { margin: 10px 0 0 auto; color: var(--muted); line-height: 1.6; }
 .doctors__lead .one-line { display: block; }
 .doc-carousel { position: relative; }
-.doc-grid { display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.doc { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease; animation: pageIn .3s ease both; }
+/* a flex row (not a grid), so an opened card can widen and the others narrow, animated through flex-grow */
+.doc-grid { display: flex; gap: 16px; align-items: stretch; }
+.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease, flex-grow .45s var(--ease-out); animation: pageIn .3s ease both; }
 .doc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12, 44, 71, .12); }
 .doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
 .doc__ini { font-family: var(--f-head); font-weight: 700; font-size: 56px; color: var(--ink); opacity: .55; }
@@ -811,8 +812,33 @@ html:has(.helper[open]) { overflow: hidden; }
 .doc__spec { font-size: 14px; line-height: 1.4; color: var(--muted); display: block; min-height: 4.6em; }
 .doc__exp { display: flex; gap: 6px; align-items: flex-start; margin-top: 8px; font-size: 13px; line-height: 1.4; }
 .doc__exp .ic { flex: none; margin-top: 1px; color: var(--accent-ink); }
-.doc__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; padding: 0 8px; min-height: 28px; }
+.doc__main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.doc__foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 10px; margin-top: auto; padding: 0 8px; min-height: 28px; }
 .doc__book { font-size: 14px; font-weight: 600; text-underline-offset: 3px; margin-left: auto; }
+.doc__toggle { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: none; background: none; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: color .15s; }
+.doc__toggle:hover { color: var(--accent-ink); }
+.doc__toggle .ic { display: block; transition: transform .25s var(--ease-out); }
+.doc__toggle[aria-expanded="true"] .ic { transform: rotate(180deg); }
+/* the story, shown only in an opened card */
+.doc__more { display: none; flex-direction: column; gap: 12px; margin: 0 8px; padding-top: 12px; border-top: 1px solid rgba(12, 44, 71, .15); }
+.doc__facts { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.doc__row { display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 1.45; }
+.doc__row dt { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.doc__row dd { margin: 0; font-weight: 500; }
+.doc__about { margin: 0; font-size: 15px; line-height: 1.55; text-wrap: pretty; }
+/* opened: three times as wide as the others, photo on the left (bigger than theirs), the story on the right */
+.doc-grid.has-open .doc:hover { transform: none; }
+.doc.is-open { flex-grow: 3.4; flex-direction: row; gap: 20px; padding: 10px 14px 18px 10px; }
+.doc.is-open .doc__photo { flex: none; width: 44%; align-self: flex-start; }
+.doc.is-open .doc__main { padding-top: 10px; }
+.doc.is-open .doc__name { min-height: 0; font-size: 22px; }
+.doc.is-open .doc__spec { min-height: 0; }
+.doc.is-open .doc__more { display: flex; animation: fadeIn .35s ease .2s both; }
+/* the others, narrowed: only the name, the specialty and the buttons */
+.doc-grid.has-open .doc:not(.is-open) .doc__exp { display: none; }
+.doc-grid.has-open .doc:not(.is-open) { align-self: flex-start; }
+.doc-grid.has-open .doc:not(.is-open) .doc__name { font-size: 16px; min-height: 0; }
+.doc-grid.has-open .doc:not(.is-open) .doc__spec { min-height: 0; }
 .side-arrow { position: absolute; top: 38%; transform: translateY(-50%); z-index: 3; box-shadow: 0 6px 16px rgba(12, 44, 71, .14); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; }
 .side-arrow .ic { display: block; }
 .side-arrow--prev { left: -22px; }
@@ -820,8 +846,11 @@ html:has(.helper[open]) { overflow: hidden; }
 .side-arrow:hover, .side-arrow:active { transform: translateY(-50%) scale(1.06); }
 .dots-row { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 4px; }
 
+/* two per row; an opened card takes a row of its own */
 @media (max-width: 900px) {
-  .doc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .doc-grid { flex-wrap: wrap; }
+  .doc { flex: 1 1 calc(50% - 8px); }
+  .doc.is-open { flex-basis: 100%; }
 }
 /* phone: all doctors of the tab in one swipeable row instead of pages */
 @media (max-width: 640px) {
@@ -829,6 +858,12 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc-grid::-webkit-scrollbar { display: none; }
   .doc { flex: 0 0 78%; max-width: 300px; scroll-snap-align: start; animation: none; }
   .doc:hover { transform: none; box-shadow: none; }
+  .doc-grid { flex-wrap: nowrap; align-items: flex-start; }
+  /* opened: wider, the story under the photo; the others narrower */
+  .doc.is-open { flex: 0 0 90%; max-width: none; flex-direction: column; gap: 14px; padding: 10px 10px 18px; }
+  .doc.is-open .doc__photo { width: auto; align-self: stretch; }
+  .doc.is-open .doc__main { padding-top: 0; }
+  .doc-grid.has-open .doc:not(.is-open) { flex-basis: 62%; }
   .side-arrow, .dots-row { display: none; }
 }
 
