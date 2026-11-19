@@ -352,7 +352,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
 /* text on the left; on the right a thin line drawing of the helper's tooth map (main.js), a still picture (no
-   clicking on the teeth, user's wish), with a Yellow «Выбрать зуб» set in the gap between the jaws: it opens the
+   single teeth to click, user's wish): the whole drawing and the Yellow «Выбрать зуб» in its top right corner open the
    helper on its first step, the tooth map.
    No top padding of its own: About's bottom padding is the gap */
 .finder { padding: 0 var(--gutter); }
@@ -364,8 +364,17 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__teeth { width: 100%; max-width: 460px; }
 .finder__teeth svg { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
 .ft { fill: var(--white); stroke: rgba(12, 44, 71, .45); stroke-width: 5; stroke-linejoin: round; }
-/* 52.9 %: halfway between the upper incisors' edge (y 418) and the lower ones' (y 667) in the drawing's viewBox */
-.finder__pick { position: absolute; left: 50%; top: 52.9%; transform: translate(-50%, -50%); gap: 8px; min-height: 48px; padding: 0 24px; font-size: 16px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); }
+.finder__jaw { cursor: pointer; }
+.finder__pick { position: absolute; top: -8px; right: 0; gap: 8px; min-height: 48px; padding: 0 24px; font-size: 16px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); }
+/* with a mouse: over the jaw a Yellow circle follows the pointer instead of the cursor (main.js moves it);
+   it hides over the button */
+.finder__cursor { position: absolute; left: 0; top: 0; z-index: 1; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: var(--accent); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 15px; font-weight: 600; line-height: 1.2; box-shadow: 0 10px 24px rgba(12, 44, 71, .16); pointer-events: none; opacity: 0; scale: .4; transition: opacity .2s ease, scale .25s var(--ease-out); }
+@media (hover: hover) {
+  .finder__jaw { cursor: none; }
+  .finder__jaw .finder__pick { cursor: pointer; }
+  .finder__jaw:hover .finder__cursor { opacity: 1; scale: 1; }
+  .finder__jaw.is-on-btn .finder__cursor { opacity: 0; scale: .4; }
+}
 .finder__pick .ic { display: block; transition: transform .25s var(--ease-out); }
 .finder__pick:hover .ic { transform: translateX(3px); }
 

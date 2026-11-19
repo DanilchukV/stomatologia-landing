@@ -131,8 +131,11 @@ photo (too eye-catching), a three-step demo (too tall), a slim band with a breat
 clickable teeth in the drawing (the user wants no clicking there). Now: «Помощник», «Не знаете, к какому врачу?»,
 and a lead on the left; on the right a still line drawing of the 32 teeth — the helper's
 own outlines from `D.teeth` (absolute coordinates in `teeth.webp`, one SVG cropped to the teeth, no pointer events)
-— and the only button, a Yellow «Выбрать зуб», set right in the gap between the jaws (user's idea; the «Подобрать
-врача» button on the left was dropped). It (`finder-open`) opens the helper on its first step, the tooth
+— with the only button, a Yellow «Выбрать зуб», in its top right corner (the «Подобрать
+врача» button on the left was dropped; the gap between the jaws looked too central). The whole drawing opens the
+helper too, and with a mouse a Yellow «Начать →» circle follows the pointer over it instead of the cursor (hidden
+over the button; `mousemove` in `main.js`, CSS `scale` for the pop-in). Both (`finder-open`) open the helper on its
+first step, the tooth
 map. Below 900 px the drawing goes above the text. The section has no top padding: About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
