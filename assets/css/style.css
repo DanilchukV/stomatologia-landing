@@ -352,8 +352,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
 /* text and a Yellow button on the left; on the right a thin line drawing of the helper's tooth map (main.js):
-   a tooth lights up Mint on hover and its name shows under the drawing; a click marks it Yellow, and the button
-   then opens the helper with it.
+   a still picture (no clicking on the teeth, user's wish); «Выбрать зуб на схеме» under it opens the helper on the
+   tooth map, as the Yellow button does.
    No top padding of its own: About's bottom padding is the gap */
 .finder { padding: 0 var(--gutter); }
 .finder__card { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px 48px; padding: clamp(24px, 3.4vw, 40px) clamp(24px, 4vw, 48px); border: 1px solid var(--line); border-radius: 32px; background: var(--white); }
@@ -363,13 +363,12 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__btn { margin-top: 8px; gap: 10px; min-height: 56px; padding: 0 30px; font-size: 17px; }
 .finder__btn .ic { display: block; transition: transform .25s var(--ease-out); }
 .finder__btn:hover .ic { transform: translateX(3px); }
-.finder__jaw { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.finder__jaw { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .finder__teeth { width: 100%; max-width: 460px; }
-.finder__teeth svg { display: block; width: 100%; height: auto; overflow: visible; }
-.ft { fill: var(--white); stroke: rgba(12, 44, 71, .45); stroke-width: 5; stroke-linejoin: round; cursor: pointer; transition: fill .15s, stroke .15s; }
-.ft:hover, .ft.is-on { fill: var(--tint); stroke: var(--ink); }
-.ft.is-on { fill: var(--accent); }
-.finder__tip { min-height: 1.5em; font-size: 14px; font-weight: 600; color: var(--muted); }
+.finder__teeth svg { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
+.ft { fill: var(--white); stroke: rgba(12, 44, 71, .45); stroke-width: 5; stroke-linejoin: round; }
+.finder__pick { gap: 8px; min-height: 44px; padding: 0 20px; font-size: 15px; }
+.finder__pick .ic { display: block; }
 
 @media (max-width: 900px) {
   .finder__card { grid-template-columns: minmax(0, 1fr); }

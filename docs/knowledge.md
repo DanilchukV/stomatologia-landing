@@ -127,16 +127,12 @@ the braces card wrapped to three lines), so all three texts take two lines at �
 The user calls the helper the site's signature feature, so on 2026-11-19 its call-out moved out of the Services
 head into a section of its own, right before Services. Tried and dropped the same day: a big card with the jaw
 photo (too eye-catching), a three-step demo (too tall), a slim band with a breathing, shining Yellow button
-(«like a garage advert») and a calm slim band with a Navy button (the user wanted it bigger, Yellow, and to hint
-at the teeth). Now: «Помощник», «Не знаете, к какому врачу?», a lead and a Yellow «Подобрать врача» (no effects
-but the arrow nudging on hover) on the left; on the right a thin line drawing of the 32 teeth — the helper's own
-outlines from `D.teeth` (absolute coordinates in `teeth.webp`, drawn in one SVG cropped to the teeth). A tooth
-fills Mint on hover and its name shows under the drawing («Зуб 5 — второй премоляр»). A click only marks it (Yellow,
-«Выбран зуб …»; again: unmarks; it is the helper's own `state.tooth`, so both always agree) — the user wanted the
-button to stay the way in: «Подобрать врача» (`finder-open`) opens the helper with the marked tooth on «Что беспокоит»,
-or from the start when none is marked.
-Below 900 px the drawing goes above
-the text. The section has no top padding: About's bottom padding is the gap.
+(«like a garage advert»), a calm slim band with a Navy button (wanted bigger, Yellow, hinting at the teeth), and
+clickable teeth in the drawing (the user wants no clicking there). Now: «Помощник», «Не знаете, к какому врачу?»,
+a lead and a Yellow «Подобрать врача» on the left; on the right a still line drawing of the 32 teeth — the helper's
+own outlines from `D.teeth` (absolute coordinates in `teeth.webp`, one SVG cropped to the teeth, no pointer events)
+— with «Выбрать зуб на схеме» under it. Both buttons (`finder-open`) open the helper on its first step, the tooth
+map. Below 900 px the drawing goes above the text. The section has no top padding: About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
 `--sec-y` (96 px, 64 on phones). Sections have only top padding (Services lost its bottom one, which made a double

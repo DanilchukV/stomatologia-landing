@@ -658,13 +658,9 @@
       scrollToId('book');
     },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
-    // a tooth in the finder only marks it (again: unmarks); the button then opens the helper with it
-    'finder-tooth': (t) => {
-      const n = +t.dataset.tooth;
-      set(state.tooth === n ? { tooth: null, hStep: 1 } : { tooth: n, scope: 'tooth', skipTooth: false, symptom: null, hStep: 1 });
-    },
+    // the finder's buttons: the helper on its first step, the tooth map
     'finder-open': () => {
-      if (state.tooth !== null && !state.symptom) set({ hStep: 2 });
+      set({ hStep: 1 });
       helper.showModal();
       $('#helper-body').scrollTop = 0;
     },
@@ -742,22 +738,9 @@
   });
 
   /* ---------- finder: a line drawing of the helper's tooth map ---------- */
-  // the outlines are the helper's own (absolute coordinates in teeth.webp); the box is all 32 teeth with a margin.
-  // Hovering names the tooth; a click marks it (the helper's own `state.tooth`, so the two always agree)
-  const finderTeeth = $('#finder-teeth');
-  const finderTip = $('#finder-tip');
-  const TIP = finderTip.textContent;
-  finderTeeth.innerHTML = `<svg viewBox="50 190 1436 666">${D.teeth.map(([n, , , , , , , d]) => `<path class="ft" data-act="finder-tooth" data-tooth="${n}" d="${d}"/>`).join('')}</svg>`;
-  const finderTipText = (n) => (n ? glue(`Зуб ${qn(n)} — ${D.toothNames[n]}`) : '');
-  function renderFinder() {
-    $$('.ft', finderTeeth).forEach((p) => p.classList.toggle('is-on', +p.dataset.tooth === state.tooth));
-    finderTip.textContent = state.tooth !== null ? 'Выбран ' + finderTipText(state.tooth).replace('Зуб', 'зуб') : TIP;
-  }
-  finderTeeth.addEventListener('mouseover', (e) => {
-    const n = +(e.target.dataset || {}).tooth;
-    if (n) finderTip.textContent = finderTipText(n);
-  });
-  finderTeeth.addEventListener('mouseleave', renderFinder);
+  // only a picture (the user wants no clicking on it): the helper's own outlines, absolute coordinates in
+  // teeth.webp, in one SVG cropped to the 32 teeth
+  $('#finder-teeth').innerHTML = `<svg viewBox="50 190 1436 666">${D.teeth.map((t) => `<path class="ft" d="${t[7]}"/>`).join('')}</svg>`;
 
   /* ---------- back to top ---------- */
   // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;
@@ -806,7 +789,6 @@
   /* ---------- start ---------- */
   function render() {
     renderPicker();
-    renderFinder();
     renderServices();
     renderDoctors();
     renderBooking();
