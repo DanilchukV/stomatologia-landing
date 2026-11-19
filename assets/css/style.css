@@ -829,7 +829,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 }
 
 /* ===== Footer ===== */
-.ftr { background: var(--tint); color: var(--ink); padding: 72px var(--gutter) calc(28px + env(safe-area-inset-bottom, 0px)); }
+.ftr { background: var(--white); border-top: 1px solid var(--line); color: var(--ink); padding: 72px var(--gutter) calc(28px + env(safe-area-inset-bottom, 0px)); }
 .ftr__in { display: flex; flex-direction: column; gap: 48px; }
 .ftr__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 40px 32px; }
 .ftr__brand { display: flex; flex-direction: column; gap: 18px; }
