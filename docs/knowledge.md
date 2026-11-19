@@ -126,11 +126,15 @@ the braces card wrapped to three lines), so all three texts take two lines at �
 
 The user calls the helper the site's signature feature, so on 2026-11-19 its call-out moved out of the Services
 head into a section of its own, right before Services: a bordered card with «Помощник», «Не знаете, к какому
-врачу?», a lead, three numbered steps (a vertical list: in a row the third step wrapped alone) and «Подсказать
-врача»; on the right the jaw picture with one tooth pulsing (tooth 20, its centre hard-coded in % of `teeth.webp`)
-and a sample answer chip («Зуб 5 · болит — Скорее всего, к терапевту», the therapist's photo). The button and the
-whole picture open the helper dialog. Below 900 px the picture goes above the text. The section has no top padding:
-About's bottom padding is the gap.
+врачу?», a lead and «Подсказать врача». On the right, a quiet demo of what it does (the user found a big jaw
+picture there too eye-catching): three small cards joined by a line behind their numbers — «Зуб 5, нижняя челюсть
+слева», «Болит или ноет», and the answer «Вам к врачу: Терапевт · Анна Ковалёва» with her photo on a light Mint
+card. The button and the whole demo open the helper dialog. Below 900 px the demo goes under the text. The section
+has no top padding: About's bottom padding is the gap.
+
+**Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
+`--sec-y` (96 px, 64 on phones). Sections have only top padding (Services lost its bottom one, which made a double
+gap before the team); the booking section keeps its bottom padding before the footer.
 
 ## Helper (tooth → symptom → which doctor)
 

@@ -353,36 +353,33 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
 /* sits between About and Services: no top padding of its own, About's bottom padding is the gap */
 .finder { padding: 0 var(--gutter); }
-.finder__card { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; gap: 24px 48px; padding: clamp(24px, 4vw, 48px); border: 1px solid var(--line); border-radius: 32px; background: var(--white); }
+.finder__card { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 28px 56px; padding: clamp(24px, 4vw, 48px); border: 1px solid var(--line); border-radius: 32px; background: var(--white); }
 .finder__text { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .finder__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
 .finder__lead { margin: 0; max-width: 480px; color: var(--muted); font-size: 17px; text-wrap: pretty; }
-.finder__steps { margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.finder__step { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 600; }
 .finder__btn { margin-top: 8px; gap: 10px; min-height: 56px; padding: 0 30px; font-size: 17px; }
 .finder__btn .ic { display: block; }
-/* the picture is a button too: the jaw with one tooth pulsing and the answer it leads to */
-.finder__media { position: relative; display: block; width: 100%; padding: 0; border: none; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.finder__img { display: block; width: 100%; aspect-ratio: 1536 / 1024; object-fit: contain; transition: transform .4s var(--ease-out); }
-.finder__media:hover .finder__img { transform: scale(1.02); }
-/* tooth 20 (lower jaw, "зуб 5" on the left side): its centre in % of the picture */
-.finder__pulse { position: absolute; left: 81.9%; top: 63.7%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 255, 255, .9); }
-.finder__pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--accent); animation: finderPulse 1.8s ease-out infinite; }
-@keyframes finderPulse { from { transform: scale(1); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
-.finder__answer { position: absolute; right: 2%; top: 4%; display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); box-shadow: 0 12px 30px rgba(12, 44, 71, .14); text-align: left; }
-.finder__av { flex: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #FFFFFF; }
-.finder__av img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
-.finder__answer-text { display: flex; flex-direction: column; line-height: 1.25; }
-.finder__answer-k { font-size: 12px; color: var(--muted); }
-.finder__answer-v { font-size: 14px; font-weight: 600; color: var(--ink); }
+/* a quiet demo of what the helper does: three small cards joined by a line, the last one the answer; a button too */
+.finder__demo { display: block; width: 100%; padding: 0; border: none; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.fd { position: relative; display: flex; flex-direction: column; gap: 14px; }
+/* the line behind the numbers, from the first to the last */
+.fd::before { content: ''; position: absolute; left: 13px; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; background: rgba(12, 44, 71, .18); }
+.fd__step { position: relative; display: flex; align-items: center; gap: 16px; }
+.fd__card { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 14px 20px; border: 1px solid rgba(12, 44, 71, .25); border-radius: 18px; background: var(--white); transition: border-color .2s, box-shadow .2s; }
+.finder__demo:hover .fd__card { border-color: var(--line); }
+.fd__card--doc { flex-direction: row; align-items: center; gap: 14px; padding: 10px 20px 10px 10px; border-color: var(--line); background: var(--tint); }
+.fd__av { flex: none; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; background: #FFFFFF; }
+.fd__av img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+.fd__doc { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.fd__k { font-size: 13px; color: var(--muted); }
+.fd__v { font-size: 16px; font-weight: 600; }
 
 @media (max-width: 900px) {
   .finder__card { grid-template-columns: minmax(0, 1fr); }
-  .finder__media { order: -1; }
 }
 @media (max-width: 480px) {
   .finder__btn { align-self: stretch; }
-  .finder__answer { right: 0; top: 0; }
+  .fd__card { padding: 12px 16px; }
 }
 
 /* ===== Services ===== */
