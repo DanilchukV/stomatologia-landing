@@ -775,7 +775,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .faq__ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; transition: transform .25s ease, background-color .2s; }
 .faq__ic .ic { display: block; }
 .faq summary:hover .faq__ic { background: var(--tint); }
-.faq[open]:not(.is-closing) summary .faq__ic { transform: rotate(45deg); background: var(--ink); color: var(--white); }
+.faq[open]:not(.is-closing) summary .faq__ic { transform: rotate(180deg); background: var(--ink); color: var(--white); }
 .faq__a { margin: 0; padding: 0 24px 26px 0; color: var(--ink-2); font-size: 17px; line-height: 1.65; max-width: 720px; text-wrap: pretty; }
 
 @media (max-width: 480px) {
