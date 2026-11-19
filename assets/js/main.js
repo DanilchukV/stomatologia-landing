@@ -542,8 +542,38 @@
     set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat }]) });
   }
   function openCat(id) {
+    // from the grid: every card flies up into its tab of the sticky bar, then the page scrolls to the panel
+    const from = !state.cat && !reduceMotion.matches
+      ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
     set({ cat: id, svcStep: 1, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
-    scrollToId('svc-panel');
+    if (!from) { scrollToId('svc-panel'); return; }
+    const end = flyToTabs(from, id);
+    setTimeout(() => scrollToId('svc-panel'), end);
+  }
+
+  // ghosts from the card rects to the tab rects; the real tabs stay invisible until their ghost lands
+  function flyToTabs(from, active) {
+    const tabs = $('.svc-bar__tabs');
+    tabs.classList.add('is-landing');
+    const DUR = 560, STEP = 45;
+    from.forEach((f, k) => {
+      const tab = $(`.svc-bar__tab[data-cat="${f.cat}"]`, tabs);
+      if (!tab) return;
+      const t = tab.getBoundingClientRect();
+      const g = document.createElement('div');
+      g.className = 'svc-fly' + (f.cat === active ? ' is-active' : '');
+      g.innerHTML = `${f.img ? `<img src="${f.img}" alt="">` : ''}<span>${tab.textContent}</span>`;
+      document.body.appendChild(g);
+      const box = (r, radius) => ({ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: radius });
+      const opt = { duration: DUR, delay: k * STEP, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'both' };
+      g.animate([box(f.r, '28px'), box(t, t.height / 2 + 'px')], opt);
+      if (f.img) $('img', g).animate([{ opacity: 1 }, { opacity: 0, offset: .55 }, { opacity: 0 }], opt);
+      $('span', g).animate([{ opacity: 0 }, { opacity: 0, offset: .45 }, { opacity: 1 }], opt)
+        .finished.then(() => { tab.classList.add('is-landed'); g.remove(); });
+    });
+    const end = DUR + (from.length - 1) * STEP;
+    setTimeout(() => { tabs.classList.remove('is-landing'); $$('.is-landed', tabs).forEach((b) => b.classList.remove('is-landed')); }, end + 50);
+    return end;
   }
   // shows step k of the services panel; scrolls back up if the step bar is above the screen
   function goStep(k) {
@@ -585,7 +615,8 @@
       set({ cat: t.dataset.cat, svcStep: 1, docPick: autoDoc(catRoles(catById(t.dataset.cat), state.cart)), docsAll: false, svcAll: false, svcOpen: null });
       scrollToId('svc-panel');
     },
-    'cat-close': () => { set({ cat: null }); scrollToId('services'); },
+    // back to the cards themselves, not the section top with its title and lead
+    'cat-close': () => { set({ cat: null }); scrollToId('svc-grid'); },
     'svc-check': (t) => {
       const n = t.closest('.svc-row').dataset.svc;
       if (n !== CONSULT) { toggleCart(n, catById(state.cat).name); return; }

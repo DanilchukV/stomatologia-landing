@@ -191,6 +191,12 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
   categories. The list shows 6 services with "Показать ещё". The cards have no numbers or chevron
   buttons since 2026-11-18 (user's request).
+- Opening a category from the grid (2026-11-19, user's request): every card flies up into its tab of the sticky
+  bar (`flyToTabs` in `main.js`): a fixed ghost per card animates from the card's rect to the tab's rect with the
+  Web Animations API, its photo fading out and the tab label fading in, staggered 45 ms; the real tabs stay hidden
+  (`.is-landing`) until their ghost lands, then the page scrolls to the panel. Skipped with reduced motion and when
+  switching tabs. "Все разделы" scrolls to the cards themselves (`#svc-grid`), not to the section title and lead.
+  In the shot harness Chrome speeds timers up, so a paused frame shows the tabs already visible — that's the harness.
 - Every category head has the same height, so switching doesn't make the photo or "Все разделы" jump:
   the title keeps 2 lines (`min-height: 2.2em`, text at the bottom) and the description 3 lines
   (4 on ≤ 480 px) — the longest texts at each width; a longer text would grow the head again.
