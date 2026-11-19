@@ -559,35 +559,35 @@
     set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat }]) });
   }
   function openCat(id) {
-    // from the grid: every card flies up into its tab of the sticky bar, then the page scrolls to the panel
+    // from the grid: every card flies up into its tab of the sticky bar
     const from = !state.cat && !reduceMotion.matches
       ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
     set({ cat: id, svcStep: 1, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
-    if (!from) { scrollToId('svc-panel'); return; }
-    const end = flyToTabs(from, id);
+    // the page lines the tab bar up under the header (where it sticks), scrolling while the cards fly
+    // (the ghosts measure the tabs first, so the scroll starts after that)
+    const shift = Math.max(0, $('.svc-bar').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 10);
+    const end = from ? flyToTabs(from, id, shift) : 0;
+    if (shift > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    if (!from) return;
     // the panel waits until the cards have landed, then fades in where it is, without moving
     // (a script animation, so it wins over the panel's own CSS entrance)
     const REVEAL = 380;
     const wait = end - 80;
-    const panel = $('#svc-panel');
-    panel.animate([{ opacity: 0, transform: 'none' }, { opacity: 0, transform: 'none', offset: wait / (wait + REVEAL) }, { opacity: 1, transform: 'none' }],
+    $('#svc-panel').animate([{ opacity: 0, transform: 'none' }, { opacity: 0, transform: 'none', offset: wait / (wait + REVEAL) }, { opacity: 1, transform: 'none' }],
       { duration: wait + REVEAL, easing: 'ease-out' });
-    // scroll only if the panel's top is hidden under the bar or far down the screen
-    setTimeout(() => {
-      const top = panel.getBoundingClientRect().top;
-      if (top < $('.svc-bar').getBoundingClientRect().bottom || top > window.innerHeight * .5) scrollToId('svc-panel');
-    }, wait);
   }
 
-  // ghosts from the card rects to the tab rects; the real tabs stay invisible until their ghost lands
-  function flyToTabs(from, active) {
+  // ghosts from the card rects to the tab rects (where the tabs will be once the page has scrolled by `shift`);
+  // the real tabs stay invisible until their ghost lands
+  function flyToTabs(from, active, shift) {
     const tabs = $('.svc-bar__tabs');
     tabs.classList.add('is-landing');
     const DUR = 680, STEP = 28;
     from.forEach((f, k) => {
       const tab = $(`.svc-bar__tab[data-cat="${f.cat}"]`, tabs);
       if (!tab) return;
-      const t = tab.getBoundingClientRect();
+      const r = tab.getBoundingClientRect();
+      const t = { left: r.left, top: r.top - shift, width: r.width, height: r.height };
       const g = document.createElement('div');
       g.className = 'svc-fly' + (f.cat === active ? ' is-active' : '');
       g.innerHTML = `${f.img ? `<img src="${f.img}" alt="">` : ''}<span>${tab.textContent}</span>`;

@@ -202,7 +202,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   Web Animations API (680 ms, staggered 28 ms), its photo fading out and the tab label fading in; the real tabs stay hidden
   (`.is-landing`) until their ghost lands. The panel is held invisible meanwhile (a script animation, which beats its
   CSS entrance) and then fades in where it is, without moving (the user disliked it rising and the page jumping up):
-  the page scrolls only if the panel's top is under the bar or below mid-screen.
+  the page lines the tab bar up under the header (user: align to the section's navigation), scrolling while the
+  cards fly; the ghosts measure the tabs before the scroll starts and aim at where they will be (`shift`).
   Skipped with reduced motion and when
   switching tabs. "Все разделы" scrolls to the helper call-out «Не знаете, к какому врачу?» (`#svc-help`) with all the
   cards under it, not to the section title and lead. The tab bar is a floating capsule (rounded, 1 px Navy border),
