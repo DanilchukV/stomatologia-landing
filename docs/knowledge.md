@@ -50,6 +50,8 @@ added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`:
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
 masks and the tooth overlay. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
 and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
+The header shows `logo-wordmark.svg` — the same file without the tooth and the divider (`logo.svg` cropped by its
+viewBox), user's request 2026-11-19 so the header isn't overloaded; the footer keeps the full `logo.svg`.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
 
