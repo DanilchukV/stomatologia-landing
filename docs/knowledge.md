@@ -247,6 +247,17 @@ the ticked services still show in step 3 of the Services panel and in the bookin
 after 900 px and switches to a white version over dark backgrounds: `darkUnder()` reads the background
 colour under the button's centre on scroll.
 
+On press (2026-11-19, user's request: "a nice animation") the arrow flies out of the top of the button and comes
+back in from below (`.is-launch`, CSS), while `scrollToTop()` glides the page up with an ease-in-out cubic, 500 ms
+plus 1 ms per 8 px of distance, at most 1.2 s; a wheel turn or a touch stops it. Reduced motion: an instant jump.
+
+## Cookie notice
+
+Added 2026-11-19 at the user's request: a white card bottom left (across the bottom on phones, where the
+back-to-top button moves up by its height via `--cookie-h`), «Мы используем файлы cookie…» and «Хорошо». It slides
+in 0.9 s after load and stays away once accepted (`localStorage` `cookie-ok`; if storage is blocked it shows on
+every visit). The site itself sets no cookies yet; the notice is there for when analytics or a chat widget arrive.
+
 ## Doctors
 
 The VestMedServis staff was removed on 2026-11-03; the section came back the same day for Grevitident:

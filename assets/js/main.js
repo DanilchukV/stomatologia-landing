@@ -521,7 +521,7 @@
   function renderBooking() {
     // the doctor: "any" (docPick null) or one of the bookable doctors; shared with Services and the helper
     const docsBox = $('#book-docs');
-    mount(docsBox, 'docs', () => [{ id: '', title: 'Любой врач', sub: 'подберём по услугам', av: person(20) }]
+    mount(docsBox, 'docs', () => [{ id: '', title: 'Любой врач', sub: 'подберём по услугам', av: person(26) }]
       .concat(D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => ({ id: d.id, title: docTitle(d), sub: d.spec, av: docAvatar(d, 20) })))
       .map((o) => `<button type="button" class="book-doc" aria-pressed="false" data-act="book-pick" data-id="${o.id}"><span class="av">${o.av}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(o.title))}</span><span class="book-doc__sub">${esc(o.sub)}</span></span></button>`).join(''));
     $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === (state.docPick || '')));
@@ -722,13 +722,58 @@
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p }); },
     'book-doc': (t) => set({ docPick: t.dataset.id }),
 
-    top: () => window.scrollTo(0, 0)
+    top: () => scrollToTop(),
+    'cookie-ok': () => closeCookie()
   };
 
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-act]');
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
   });
+
+  /* ---------- back to top ---------- */
+  // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;
+  // a wheel turn or a touch stops it
+  function scrollToTop() {
+    const from = window.scrollY;
+    if (!from) return;
+    if (reduceMotion.matches) { window.scrollTo(0, 0); return; }
+    toTop.classList.remove('is-launch');
+    void toTop.offsetWidth; // restarts the CSS animation
+    toTop.classList.add('is-launch');
+    const dur = Math.min(1200, 500 + from / 8);
+    const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    let stopped = false;
+    const stop = () => { stopped = true; };
+    window.addEventListener('wheel', stop, { passive: true });
+    window.addEventListener('touchstart', stop, { passive: true });
+    const t0 = performance.now();
+    (function step(now) {
+      const p = stopped ? 1 : Math.min(1, (now - t0) / dur);
+      if (!stopped) window.scrollTo(0, Math.round(from * (1 - ease(p))));
+      if (p < 1) { requestAnimationFrame(step); return; }
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchstart', stop);
+    })(t0);
+  }
+
+  /* ---------- cookie notice ---------- */
+  // shown until the visitor presses "Хорошо"; the answer is kept in localStorage (blocked storage: shown each visit)
+  const cookie = $('#cookie');
+  const COOKIE_KEY = 'cookie-ok';
+  let cookieSeen = false;
+  try { cookieSeen = localStorage.getItem(COOKIE_KEY) === '1'; } catch (e) { /* private mode */ }
+  // on phones the notice spans the bottom, so the back-to-top button moves up above it
+  const liftToTop = () => document.documentElement.style.setProperty('--cookie-h', cookie.hidden ? '0px' : cookie.offsetHeight + 'px');
+  if (!cookieSeen) {
+    setTimeout(() => { cookie.hidden = false; cookie.classList.add('is-in'); liftToTop(); }, 900);
+    window.addEventListener('resize', liftToTop);
+  }
+  function closeCookie() {
+    try { localStorage.setItem(COOKIE_KEY, '1'); } catch (e) { /* private mode */ }
+    cookie.classList.replace('is-in', 'is-out');
+    setTimeout(() => { cookie.hidden = true; liftToTop(); }, 280);
+  }
 
   /* ---------- start ---------- */
   function render() {

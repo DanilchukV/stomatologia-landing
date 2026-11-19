@@ -923,4 +923,34 @@ html:has(.helper[open]) { overflow: hidden; }
 .to-top.on-dark { background: var(--white); color: var(--ink); border-color: var(--white); }
 .to-top:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); }
 .to-top .ic { display: block; }
+/* on press the arrow flies out of the top and comes back in from below, while the page glides up (main.js scrollToTop) */
+.to-top { overflow: hidden; }
+.to-top.is-launch .ic { animation: arrowLaunch .7s cubic-bezier(.5, 0, .2, 1) both; }
+@keyframes arrowLaunch {
+  0% { transform: none; }
+  20% { transform: translateY(3px); }
+  50% { transform: translateY(-34px); opacity: 1; }
+  51% { transform: translateY(34px); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: none; }
+}
+@media (max-width: 640px) {
+  .to-top { bottom: calc(24px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px)); }
+}
+
+/* ===== Cookie notice ===== */
+.cookie { position: fixed; left: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 38; box-sizing: border-box; max-width: 460px; display: flex; align-items: center; gap: 14px; padding: 14px 14px 14px 16px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); color: var(--ink); box-shadow: 0 16px 40px rgba(12, 44, 71, .18); }
+.cookie.is-in { animation: cookieIn .45s var(--ease-out) both; }
+.cookie.is-out { animation: cookieOut .28s ease both; }
+@keyframes cookieIn { from { opacity: 0; transform: translateY(24px); } }
+@keyframes cookieOut { to { opacity: 0; transform: translateY(24px); } }
+.cookie__ic { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; }
+.cookie__ic svg { display: block; }
+.cookie__text { margin: 0; font-size: 14px; line-height: 1.45; text-wrap: pretty; }
+.cookie__ok { flex: none; min-height: 44px; padding: 0 20px; font-size: 15px; }
+/* phone: across the bottom, 12 px from the edges (the back-to-top button moves above it) */
+@media (max-width: 640px) {
+  .cookie { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: none; }
+  .cookie__ic { display: none; }
+}
 
