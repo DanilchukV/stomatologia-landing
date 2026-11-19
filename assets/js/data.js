@@ -79,7 +79,7 @@ window.SITE_DATA = {
   },
   // staff: name and photo (file in assets/img/doctors/, without .webp) stay empty until the clinic sends them;
   // role: ther — терапевт, surg — хирург, ortd — ортодонт, orth — ортопед, nurse, admin (not bookable)
-  // exp: one line on experience under the specialty (invented, like the names; doctors only)
+  // exp: one line on experience under the specialty (invented, like the names)
   doctors: [
     {"id":"ther","name":"Анна Ковалёва","spec":"Терапевт","exp":"Стаж 12 лет, сертификат по микроэндодонтии","role":"ther","photo":"ther"},
     {"id":"surg","name":"Дмитрий Савицкий","spec":"Хирург","exp":"Стаж 20 лет, диплом «Имплантолог года»","role":"surg","photo":"surg"},

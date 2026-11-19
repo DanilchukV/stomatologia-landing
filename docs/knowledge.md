@@ -250,6 +250,8 @@ Skipped with `prefers-reduced-motion`. Note: headless Chrome in `tools/shot` doe
 so to check end states call `getAnimations()[0].finish()` in `-Do`.
 The icon is a down chevron that turns 180° when open (a plus turning into a cross until 2026-11-19; the user
 wanted dropdown arrows).
+The item is `box-sizing: border-box`: the animation sets `height`, and with content-box the 2 px of borders made
+the card jump at both ends; the closed height is the summary plus the borders (fixed 2026-11-19).
 
 ## Booking
 

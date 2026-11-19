@@ -466,7 +466,8 @@
       const closing = el.open && !el.classList.contains('is-closing');
       el.classList.toggle('is-closing', closing);
       el.open = true;
-      const to = closing ? sum.offsetHeight : el.offsetHeight;
+      // the closed height is the summary plus the item's own borders (.faq is border-box)
+      const to = closing ? sum.offsetHeight + el.offsetHeight - el.clientHeight : el.offsetHeight;
       el.style.overflow = 'hidden';
       const anim = el.animate({ height: [from + 'px', to + 'px'] }, { duration: 320, easing: 'cubic-bezier(.22, .7, .2, 1)' });
       el.anim = anim;
