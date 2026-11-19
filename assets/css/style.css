@@ -190,11 +190,10 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .nav__link:hover { color: var(--accent-ink); }
 /* braces (user's Frame 7): ::before is the wire from the previous link with a bracket just before the text;
    the wire is 36 px, shorter at 1390-1500 px where the full header row is tight (vw counts the scrollbar, hence the margin). The SVG colours repeat --tint and --accent-ink */
-.nav__link::before { content: ''; flex: none; width: clamp(18px, 12vw - 140px, 36px); height: 10px; margin: 0 2px 0 3px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Crect x='.5' y='.5' width='6' height='6' rx='1.5' fill='none' stroke='%23ABC8C4'/%3E%3Cpath d='M2 2v1M2 4v1M5 2v1M5 4v1' stroke='%23ABC8C4'/%3E%3C/svg%3E") right 7px center / 10px 10px no-repeat, linear-gradient(var(--tint), var(--tint)) center / 100% 1.5px no-repeat; }
+.nav__link::before { --wire: color-mix(in srgb, var(--tint) 45%, transparent); content: ''; flex: none; width: clamp(18px, 12vw - 140px, 36px); height: 10px; margin: 0 2px 0 3px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Crect x='.5' y='.5' width='6' height='6' rx='1.5' fill='none' stroke='%23ABC8C4'/%3E%3Cpath d='M2 2v1M2 4v1M5 2v1M5 4v1' stroke='%23BF512C'/%3E%3C/svg%3E") right 7px center / 10px 10px no-repeat, linear-gradient(var(--wire), var(--wire)) center / 100% 1.5px no-repeat; }
 .nav__link:first-child::before { flex: none; width: 24px; margin-left: 0; }
-.nav__link:hover::before, .nav__link[aria-current]::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Crect x='.5' y='.5' width='6' height='6' rx='1.5' fill='none' stroke='%23ABC8C4'/%3E%3Cpath d='M2 2v1M2 4v1M5 2v1M5 4v1' stroke='%23BF512C'/%3E%3C/svg%3E"), linear-gradient(var(--accent-ink), var(--accent-ink)); }
+.nav__link:hover::before, .nav__link[aria-current]::before { --wire: var(--accent-ink); }
 
 .hdr__contact { display: flex; align-items: center; gap: 12px 16px; flex-wrap: nowrap; }
 .hdr__phone { display: flex; align-items: center; gap: 10px; text-decoration: none; }

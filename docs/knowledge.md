@@ -92,9 +92,10 @@ on the one-row header the links are chained by a wire at text height, with an or
 rounded square with four tie-wing dots, drawn at 10 px) just before each label. It is all the link's `::before`,
 36 px of wire (shortened 2026-11-19 at the user's request; the first link has a short fixed stub), centred in the
 nav. At 1390–1500 px the full header row is tight, so the wire shrinks with `clamp(18px, 12vw − 140px, 36px)`
-(the margin covers the scrollbar, which vw counts); without it the phone and CTA wrap to a second row. Mint for
-the other links; the current section and hover turn the wire and wing dots Orange (`--accent-ink`),
-the square stays Mint, as in the drawing. The bracket is an SVG data URI, so its colours repeat the tokens.
+(the margin covers the scrollbar, which vw counts); without it the phone and CTA wrap to a second row. Every
+bracket is drawn like the current one in the drawing — Mint square, Orange (`--accent-ink`) wing dots (user, 2026-11-19:
+Mint dots blurred into the wire); the wire is Mint at 45 % (`--wire`, `color-mix`) and turns Orange for the current
+section and on hover. The bracket is an SVG data URI, so its colours repeat the tokens.
 Hover also turns the label Orange. Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
 menu. "Главная" (`#top`, the hero) was added as the first link and to scroll-spy.
 
