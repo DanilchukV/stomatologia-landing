@@ -195,8 +195,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   level applies only between 641 and 1279 px, where some titles wrap.
 - Opening a category from the grid (2026-11-19, user's request): every card flies up into its tab of the sticky
   bar (`flyToTabs` in `main.js`): a fixed ghost per card animates from the card's rect to the tab's rect with the
-  Web Animations API, its photo fading out and the tab label fading in, staggered 45 ms; the real tabs stay hidden
-  (`.is-landing`) until their ghost lands, then the page scrolls to the panel. Skipped with reduced motion and when
+  Web Animations API (680 ms, staggered 28 ms), its photo fading out and the tab label fading in; the real tabs stay hidden
+  (`.is-landing`) until their ghost lands. The panel is held invisible meanwhile (a script animation, which beats its
+  CSS entrance) and rises in as the page scrolls to it — the user disliked the panel appearing mid-flight. Skipped with reduced motion and when
   switching tabs. "Все разделы" scrolls to the cards themselves (`#svc-grid`), not to the section title and lead.
   In the shot harness Chrome speeds timers up, so a paused frame shows the tabs already visible — that's the harness.
 - Every category head has the same height, so switching doesn't make the photo or "Все разделы" jump:

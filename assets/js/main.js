@@ -548,14 +548,21 @@
     set({ cat: id, svcStep: 1, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
     if (!from) { scrollToId('svc-panel'); return; }
     const end = flyToTabs(from, id);
-    setTimeout(() => scrollToId('svc-panel'), end);
+    // the panel waits until the cards have landed, then rises in while the page scrolls to it
+    // (a script animation, so it wins over the panel's own CSS entrance)
+    const REVEAL = 420;
+    const wait = end - 80;
+    const down = { opacity: 0, transform: 'translateY(28px)' };
+    $('#svc-panel').animate([{ ...down, offset: 0 }, { ...down, offset: wait / (wait + REVEAL) }, { opacity: 1, transform: 'none' }],
+      { duration: wait + REVEAL, easing: 'cubic-bezier(.2, 0, .2, 1)' });
+    setTimeout(() => scrollToId('svc-panel'), wait);
   }
 
   // ghosts from the card rects to the tab rects; the real tabs stay invisible until their ghost lands
   function flyToTabs(from, active) {
     const tabs = $('.svc-bar__tabs');
     tabs.classList.add('is-landing');
-    const DUR = 560, STEP = 45;
+    const DUR = 680, STEP = 28;
     from.forEach((f, k) => {
       const tab = $(`.svc-bar__tab[data-cat="${f.cat}"]`, tabs);
       if (!tab) return;
@@ -565,8 +572,8 @@
       g.innerHTML = `${f.img ? `<img src="${f.img}" alt="">` : ''}<span>${tab.textContent}</span>`;
       document.body.appendChild(g);
       const box = (r, radius) => ({ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: radius });
-      const opt = { duration: DUR, delay: k * STEP, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'both' };
-      g.animate([box(f.r, '28px'), box(t, t.height / 2 + 'px')], opt);
+      const opt = { duration: DUR, delay: k * STEP, easing: 'cubic-bezier(.4, 0, .2, 1)', fill: 'both' };
+      g.animate([box(f.r, '24px'), box(t, t.height / 2 + 'px')], opt);
       if (f.img) $('img', g).animate([{ opacity: 1 }, { opacity: 0, offset: .55 }, { opacity: 0 }], opt);
       $('span', g).animate([{ opacity: 0 }, { opacity: 0, offset: .45 }, { opacity: 1 }], opt)
         .finished.then(() => { tab.classList.add('is-landed'); g.remove(); });
