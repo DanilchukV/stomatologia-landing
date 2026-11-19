@@ -243,8 +243,13 @@ slide down instead of jumping. While closing, `.is-closing` turns the icon and s
 `open` is cleared when the animation ends; a click mid-way cancels and reverses from the current height.
 Skipped with `prefers-reduced-motion`. Note: headless Chrome in `tools/shot` does not advance animations,
 so to check end states call `getAnimations()[0].finish()` in `-Do`.
+The icon is a down chevron that turns 180° when open (a plus turning into a cross until 2026-11-19; the user
+wanted dropdown arrows).
 
 ## Booking
+
+The lead is only «Оставьте номер — перезвоним и подберём удобное время.»; the "Или позвоните сами" phones were
+dropped 2026-11-19 (user's request; the numbers are in the header, contacts and FAQ).
 
 The summary shows the doctor and the reason (selected services, or tooth + symptom from the
 picker). Validation as in the export: name — letters only, at least 2, rejects
