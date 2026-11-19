@@ -336,9 +336,16 @@ check the lead text in `index.html`.
 
 One address (the export had two VestMedServis clinics with a switcher in the header, the menu, the
 contacts and the booking summary; removed on 2026-11-03). The header address is a plain link to
-`#clinics`. The contacts card puts the map (a static picture that opens Google Maps) and the address
-side by side; under 760 px they stack. The "Открыть в Google Картах" pill on the map is White with Navy text
-and turns Orange with white text on hover (2026-11-19, user's request).
+`#clinics`.
+
+Redesigned 2026-11-19 (user: «скучный» — it was a dark Navy street picture with a column of text beside it): a
+light Mint street map fills the whole card — an inline SVG in `index.html` (blocks, a park, the clinic's block in
+White, a Yellow main street, a dotted Orange route whose dashes run towards the pin, a pulsing Orange pin). It is
+cropped from the left (`xMaxYMid slice`) so the pin and the route stay in view on narrow screens. The whole map
+links to Google Maps; the «Открыть в Google Картах» pill on it is White with Navy text and turns Orange on hover.
+Over its left part sits a white card: «Адрес», «ул. Липовая 18, офис 4», «г. Брест», rows with icon circles (the
+entrance, the two phones), and «Построить маршрут» (Yellow, Google Maps directions to the address) and «Записаться
+на приём». Under 760 px the map is a 260 px band above the card.
 
 ## Reviews
 

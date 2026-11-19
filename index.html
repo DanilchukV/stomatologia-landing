@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119zzc">
-<script src="assets/js/header.js?v=20261119zzc" defer></script>
-<script src="assets/js/data.js?v=20261119zzc" defer></script>
-<script src="assets/js/form.js?v=20261119zzc" defer></script>
-<script src="assets/js/main.js?v=20261119zzc" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261119zze">
+<script src="assets/js/header.js?v=20261119zze" defer></script>
+<script src="assets/js/data.js?v=20261119zze" defer></script>
+<script src="assets/js/form.js?v=20261119zze" defer></script>
+<script src="assets/js/main.js?v=20261119zze" defer></script>
 </head>
 <body>
 
@@ -46,19 +46,10 @@
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
   <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="5.5"/><path d="M8.6 12.8 7.5 21l4.5-2.6 4.5 2.6-1.1-8.2"/></symbol>
-  <symbol id="i-map" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice">
-    <rect width="400" height="180" fill="#0C2C47"/>
-    <path d="M250 0 C 236 40, 300 70, 290 110 S 330 160, 320 180 L 400 180 L 400 0 Z" fill="#0C2C47"/>
-    <path d="M-10 150 C 60 128, 120 176, 210 158 S 330 128, 420 146" stroke="#0C2C47" stroke-width="16" fill="none"/>
-    <g fill="#0C2C47"><rect x="138" y="10" width="54" height="38" rx="3"/><rect x="200" y="10" width="40" height="38" rx="3"/><rect x="16" y="70" width="88" height="24" rx="3"/><rect x="138" y="70" width="54" height="24" rx="3"/><rect x="16" y="10" width="88" height="40" rx="3"/><rect x="200" y="70" width="40" height="24" rx="3"/></g>
-    <g stroke="#FFFFFF" stroke-linecap="round" fill="none"><path d="M0 104 H400" stroke-width="6"/><path d="M270 0 V180" stroke-width="5"/><path d="M30 0 L190 180" stroke-width="4"/><path d="M196 0 V60" stroke-width="5"/></g>
-    <path d="M0 60 H400" stroke="#F0AA2F" stroke-width="9" stroke-linecap="round"/>
-    <path d="M120 0 V180" stroke="#F0AA2F" stroke-width="9" stroke-linecap="round"/>
-    <path d="M0 60 H400 M120 0 V180" stroke="#F0AA2F" stroke-width="1" fill="none" opacity=".6"/>
-  </symbol>
 </svg>
 
 <!-- Header -->
@@ -278,23 +269,41 @@
   <div class="wrap clinics__in">
     <h2 class="title">Как&nbsp;нас&nbsp;найти</h2>
     <article class="clinic">
+      <!-- the whole map opens Google Maps; the drawing is inline so the route and the pin can move -->
       <a class="clinic__map" href="https://www.google.com/maps/search/?api=1&amp;query=%D0%B3.%20%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB.%20%D0%9B%D0%B8%D0%BF%D0%BE%D0%B2%D0%B0%D1%8F%2C%2018" target="_blank" rel="noopener" aria-label="Клиника на карте Google">
-        <svg class="clinic__art" aria-hidden="true"><use href="#i-map"/></svg>
-        <span class="clinic__pulse" aria-hidden="true"></span>
-        <svg class="clinic__pin" width="34" height="44" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 0C5.4 0 0 5.2 0 11.6 0 20.3 12 32 12 32s12-11.7 12-20.4C24 5.2 18.6 0 12 0z" fill="#BF512C"/><circle cx="12" cy="11.5" r="4.3" fill="#FFFFFF"/></svg>
+        <svg class="clinic__art" viewBox="0 0 1200 460" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+          <rect width="1200" height="460" fill="#ABC8C4"/>
+          <g fill="#FFFFFF" opacity=".38">
+            <rect x="24" y="24" width="262" height="82" rx="14"/><rect x="314" y="24" width="212" height="82" rx="14"/><rect x="554" y="24" width="200" height="82" rx="14"/><rect x="782" y="24" width="204" height="82" rx="14"/><rect x="1014" y="24" width="162" height="82" rx="14"/>
+            <rect x="24" y="134" width="262" height="64" rx="14"/><rect x="314" y="134" width="212" height="64" rx="14"/><rect x="554" y="134" width="200" height="64" rx="14"/><rect x="1014" y="134" width="162" height="64" rx="14"/>
+            <rect x="24" y="226" width="262" height="90" rx="14"/><rect x="554" y="226" width="200" height="90" rx="14"/><rect x="782" y="226" width="204" height="90" rx="14"/><rect x="1014" y="226" width="162" height="90" rx="14"/>
+            <rect x="24" y="344" width="262" height="92" rx="14"/><rect x="314" y="344" width="212" height="92" rx="14"/><rect x="554" y="344" width="200" height="92" rx="14"/><rect x="1014" y="344" width="162" height="92" rx="14"/>
+          </g>
+          <!-- a park: a block of trees -->
+          <rect x="314" y="226" width="212" height="90" rx="14" fill="#FFFFFF" opacity=".55"/>
+          <g fill="#ABC8C4"><circle cx="350" cy="256" r="13"/><circle cx="392" cy="286" r="15"/><circle cx="440" cy="252" r="12"/><circle cx="486" cy="288" r="14"/><circle cx="352" cy="296" r="9"/><circle cx="470" cy="250" r="8"/></g>
+          <!-- the clinic's block -->
+          <rect x="782" y="134" width="204" height="64" rx="14" fill="#FFFFFF"/>
+          <g stroke="#FFFFFF" stroke-linecap="round" fill="none" stroke-width="14"><path d="M0 120 H1200"/><path d="M0 330 H1200"/><path d="M300 0 V460"/><path d="M540 0 V460"/><path d="M768 0 V460"/><path d="M1000 0 V460"/></g>
+          <path d="M0 212 H1200" stroke="#F0AA2F" stroke-width="20" stroke-linecap="round"/>
+          <path class="clinic__route" d="M1200 330 H1000 V212 H800" stroke="#BF512C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="1 16"/>
+          <circle class="clinic__pulse" cx="768" cy="212" r="22" fill="#BF512C" fill-opacity=".3"/>
+          <g transform="translate(750 160)"><path d="M18 0C8 0 0 7.8 0 17.4 0 30.5 18 48 18 48s18-17.5 18-30.6C36 7.8 28 0 18 0z" fill="#BF512C"/><circle cx="18" cy="17.3" r="6.5" fill="#FFFFFF"/></g>
+        </svg>
         <span class="clinic__cta">Открыть в&nbsp;Google Картах<svg class="ic" width="13" height="13" stroke-width="2.6" aria-hidden="true"><use href="#i-ext"/></svg></span>
       </a>
       <div class="clinic__body">
+        <span class="eyebrow">Адрес</span>
         <h3 class="clinic__name">ул.&nbsp;Липовая&nbsp;18, офис&nbsp;4</h3>
-        <div class="clinic__lines">
-          <span>г.&nbsp;Брест</span>
-          <span>Вход за&nbsp;вторым подъездом</span>
+        <p class="clinic__city">г.&nbsp;Брест</p>
+        <ul class="clinic__rows">
+          <li class="clinic__row"><span class="clinic__ic"><svg class="ic" width="18" height="18" stroke-width="2" aria-hidden="true"><use href="#i-door"/></svg></span><span>Вход за&nbsp;вторым подъездом</span></li>
+          <li class="clinic__row"><span class="clinic__ic"><svg class="ic" width="18" height="18" stroke-width="2" aria-hidden="true"><use href="#i-phone"/></svg></span><span class="clinic__tels"><a href="tel:+375290123456">+375 (29) 012-34-56</a><a href="tel:+375330987654">+375 (33) 098-76-54</a></span></li>
+        </ul>
+        <div class="clinic__actions">
+          <a class="btn btn--accent clinic__btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=%D0%B3.%20%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB.%20%D0%9B%D0%B8%D0%BF%D0%BE%D0%B2%D0%B0%D1%8F%2C%2018" target="_blank" rel="noopener">Построить маршрут<svg class="ic" width="16" height="16" stroke-width="2.4" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost-dark clinic__btn" href="#book">Записаться на&nbsp;приём</a>
         </div>
-        <div class="clinic__tels">
-          <a href="tel:+375290123456">+375 (29) 012-34-56</a>
-          <a href="tel:+375330987654">+375 (33) 098-76-54</a>
-        </div>
-        <a class="btn btn--dark clinic__btn" href="#book">Записаться на&nbsp;приём</a>
       </div>
     </article>
   </div>
