@@ -183,13 +183,14 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .addr__city { font-size: 13px; color: var(--muted); }
 .addr__area { font-weight: 600; }
 
-.nav { display: flex; flex-wrap: nowrap; padding: 0 20px; flex: 1 1 auto; font-weight: 500; font-size: 17px; }
-.nav__link { flex: 1 1 auto; text-decoration: none; padding: 10px 0; display: flex; align-items: center; color: var(--ink-2); font-weight: 600; transition: color .2s; }
+.nav { display: flex; flex-wrap: nowrap; justify-content: center; padding: 0 20px; flex: 1 1 auto; font-weight: 500; font-size: 17px; }
+.nav__link { flex: 0 1 auto; text-decoration: none; padding: 10px 0; display: flex; align-items: center; color: var(--ink-2); font-weight: 600; transition: color .2s; }
 .nav__link:first-child { flex: none; }
-.nav__link:hover, .nav__link[aria-current] { color: var(--ink); }
+.nav__link[aria-current] { color: var(--ink); }
+.nav__link:hover { color: var(--accent-ink); }
 /* braces (user's Frame 7): ::before is the wire from the previous link with a bracket just before the text;
-   the wire stretches, so the links fill the nav. The SVG colours repeat --tint and --accent-ink */
-.nav__link::before { content: ''; flex: 1 1 auto; min-width: 26px; height: 10px; margin: 0 2px 0 3px;
+   the wire is 36 px, shorter at 1390-1500 px where the full header row is tight (vw counts the scrollbar, hence the margin). The SVG colours repeat --tint and --accent-ink */
+.nav__link::before { content: ''; flex: none; width: clamp(18px, 12vw - 140px, 36px); height: 10px; margin: 0 2px 0 3px;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Crect x='.5' y='.5' width='6' height='6' rx='1.5' fill='none' stroke='%23ABC8C4'/%3E%3Cpath d='M2 2v1M2 4v1M5 2v1M5 4v1' stroke='%23ABC8C4'/%3E%3C/svg%3E") right 7px center / 10px 10px no-repeat, linear-gradient(var(--tint), var(--tint)) center / 100% 1.5px no-repeat; }
 .nav__link:first-child::before { flex: none; width: 24px; margin-left: 0; }
 .nav__link:hover::before, .nav__link[aria-current]::before {
@@ -205,7 +206,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 
 /* below ~1390 px the full header no longer fits one row: phone collapses to its icon */
 @media (max-width: 1389px) {
-  .nav { gap: 4px 12px; }
+  .nav__link::before { width: 36px; }
   .hdr__phone-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 }
 

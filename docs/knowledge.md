@@ -89,11 +89,14 @@ A nav jump stops with the section title 28 px under the header (user's request, 
 
 Nav "braces" (2026-11-19, user's idea and drawing, `Frame 7.svg` — the links looked like they hung in the air):
 on the one-row header the links are chained by a wire at text height, with an orthodontic bracket (a 7-unit
-rounded square with four tie-wing dots, drawn at 10 px) just before each label. It is all the link's `::before`:
-a flex item that stretches, so the wires take the nav's free width (min 26 px; the first link has a short fixed
-stub). Mint for the other links; the current section and hover turn the wire and wing dots Orange (`--accent-ink`),
+rounded square with four tie-wing dots, drawn at 10 px) just before each label. It is all the link's `::before`,
+36 px of wire (shortened 2026-11-19 at the user's request; the first link has a short fixed stub), centred in the
+nav. At 1390–1500 px the full header row is tight, so the wire shrinks with `clamp(18px, 12vw − 140px, 36px)`
+(the margin covers the scrollbar, which vw counts); without it the phone and CTA wrap to a second row. Mint for
+the other links; the current section and hover turn the wire and wing dots Orange (`--accent-ink`),
 the square stays Mint, as in the drawing. The bracket is an SVG data URI, so its colours repeat the tokens.
-Colour only, no movement (the user dislikes hover jumps). Hidden in the burger menu. "Главная" (`#top`, the hero)
+hover also turns the label Orange. Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
+menu. "Главная" (`#top`, the hero)
 was added as the first link and to scroll-spy.
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
