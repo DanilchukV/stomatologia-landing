@@ -151,7 +151,9 @@ outside the dialog's rounded corners:
   specialty and experience, as in the team section (user's request: a bigger photo to fill the step); with a single
   doctor «Как пройдёт первый приём» (three points from the clinic's promises) fills the right half — and under it the
   direction and `svcs` as a plain list (a link to the category in Services was removed at the user's request).
-  «Записаться» closes the dialog, sets the booking form's doctor to the first recommended
+  With two or more doctors the cards are a choice (user's request): a tick and a Navy outline on the chosen one
+  (`state.hDoc`, `helperDoc()`); «Записаться» stays disabled until then, a lone doctor counts as chosen.
+  «Записаться» closes the dialog, sets the booking form's doctor to the chosen
   one (`docPick`) and scrolls to the form. The site's scroll uses requestAnimationFrame, which never fires in the
   headless shot harness — to check such a jump there, replace it with a timer in `-Do`.
 - The jaw is sized by the dialog's height (`.jaw__frame` max-width from `100dvh`), so step 1 fits without

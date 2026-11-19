@@ -51,7 +51,7 @@
 
   /* ---------- state ---------- */
   const state = {
-    hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null,
+    hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
     svcStep: 1, docPick: null, cart: [],
     docPage: 0,
@@ -192,15 +192,29 @@
 
     const html = sym ? hintHTML(sym) : '';
     mount($('#hint'), html, () => html);
+    const chosen = helperDoc();
+    $$('.hint__doc.is-pick', helper).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === chosen));
 
     const next = $('.helper__next', helper);
     next.hidden = step === 3;
     next.disabled = !canStep(step + 1);
     next.firstChild.textContent = step === 1 ? 'Далее' : 'Показать врача';
     $('.helper__back', helper).hidden = step === 1;
-    $('.helper__book', helper).hidden = step !== 3;
+    const book = $('.helper__book', helper);
+    book.hidden = step !== 3;
+    book.disabled = !chosen;
     $('#helper-info').textContent = glue(step === 1 ? (toothShort() || 'Зуб можно не выбирать — есть варианты под схемой')
-      : step === 2 ? (sym ? sym.label : 'Выберите один вариант') : '');
+      : step === 2 ? (sym ? sym.label : 'Выберите один вариант')
+        : chosen ? 'Врач: ' + docTitle(docById(chosen)) : 'Выберите врача, чтобы записаться');
+  }
+
+  // the doctor booking from the helper goes to: the only one, or the one the visitor picked
+  function helperDoc() {
+    const sym = currentSymptom();
+    if (!sym) return null;
+    const list = docsFor(recRoles(sym));
+    if (list.length === 1) return list[0].id;
+    return list.some((d) => d.id === state.hDoc) ? state.hDoc : null;
   }
 
   // beside a single doctor's card: what the first visit is like (the clinic's promises), so the box isn't half empty
@@ -214,13 +228,16 @@
     const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
     // the cards can be narrow: non-breaking spaces stay only after numbers ("12 лет"), so "сертификат CAD/CAM" can wrap
     const docList = docsFor(recRoles(sym));
-    const docs = docList.map((d) => `<div class="hint__doc">
+    // two or more doctors: the cards are a choice, and booking waits for it
+    const pick = docList.length > 1;
+    const docs = docList.map((d) => `<${pick ? `button type="button" class="hint__doc is-pick" data-act="helper-doc" data-id="${d.id}" aria-pressed="false"` : 'div class="hint__doc"'}>
         <span class="hint__doc-ph">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? initials(d.name) : person(40)}</span>
         <span class="hint__doc-text"><span class="hint__doc-name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="hint__doc-spec">${esc(d.spec)}</span>` : ''}${d.exp ? `<span class="hint__doc-exp">${icon('i-award', 16, 1.8)}${esc(d.exp.replace(/(\D)\s/g, '$1 '))}</span>` : ''}</span>
-      </div>`).join('');
+        ${pick ? `<span class="hint__doc-tick">${icon('i-check', 14, 3)}</span>` : ''}
+      </${pick ? 'button' : 'div'}>`).join('');
     const svcs = rec.svcs.length ? `<div class="hint__sec"><span class="caps">Вероятно понадобится</span><ul class="bullets bullets--md">${rec.svcs.map((n) => `<li><span>${esc(glue(n))}</span></li>`).join('')}</ul></div>` : '';
     return `${WISDOM.includes(state.tooth) && sym.id !== 'wisdom' ? `<p class="hint__note">${glue('Это зуб мудрости — возможно, понадобится консультация хирурга.')}</p>` : ''}
-      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(rolesText(sym))}</span><div class="hint__docs">${docs}${docList.length === 1 ? VISIT : ''}</div></div>
+      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(rolesText(sym))}</span>${pick ? '<span class="hint__pick-note">Выберите, к&nbsp;кому записаться</span>' : ''}<div class="hint__docs">${docs}${docList.length === 1 ? VISIT : ''}</div></div>
       <div class="hint__more">
         <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
         ${svcs}
@@ -605,12 +622,13 @@
     },
     'helper-next': () => hStep(state.hStep + 1),
     'helper-back': () => hStep(state.hStep - 1),
-    // to the booking form, with the recommended doctor chosen there
-    'helper-book': (t, e) => {
-      e.preventDefault();
-      const sym = currentSymptom();
+    'helper-doc': (t) => set({ hDoc: t.dataset.id }),
+    // to the booking form, with the helper's doctor chosen there
+    'helper-book': () => {
+      const id = helperDoc();
+      if (!id) return;
       helper.close();
-      if (sym) set({ docPick: autoDoc(recRoles(sym)) });
+      set({ docPick: id });
       scrollToId('book');
     },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
