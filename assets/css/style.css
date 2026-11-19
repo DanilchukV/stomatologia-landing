@@ -261,17 +261,15 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; margin-right: calc(min(660px, 50cqw - var(--gutter)) - min(720px, 50cqw - var(--gutter))); }
 /* leaf shape: big rounding top-left and bottom-right; the doctor stands at 31 % of the picture, 0 % keeps her nearest the middle */
 .hero__img { position: absolute; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); object-fit: cover; object-position: 0% 50%; border-radius: 44% 0 / 50% 0; }
-.hero__facts { max-width: 1320px; margin: -64px auto 0; padding: 0 var(--gutter); position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
-.fact { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 30px 26px; display: flex; gap: 20px; align-items: flex-start; transition: border-color .25s ease, box-shadow .25s ease; }
-.fact__ic { flex: none; width: 64px; height: 64px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; transition: background-color .25s ease; }
-.fact__ic svg { transition: transform .35s var(--ease-out); }
+/* the cards span from the text column to the photo's right edge (the header CTA), as .hero__media */
+.hero__facts { margin: -64px calc(50cqw - min(720px, 50cqw - var(--gutter))) 0 calc(50cqw - min(660px, 50cqw - var(--gutter))); position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
+.fact { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 30px 26px; display: flex; gap: 20px; align-items: flex-start; transition: box-shadow .3s ease; }
+.fact__ic { flex: none; width: 64px; height: 64px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; }
 .fact__body { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding-top: 6px; }
 .fact__title { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 19px; line-height: 1.3; }
 .fact__text { margin: 0; color: var(--muted); font-size: 15px; }
 @media (hover: hover) {
-  .fact:hover { border-color: var(--accent); box-shadow: 0 10px 24px rgba(12, 44, 71, .08); }
-  .fact:hover .fact__ic { background: var(--accent); }
-  .fact:hover .fact__ic svg { transform: rotate(-8deg) scale(1.1); }
+  .fact:hover { box-shadow: 0 14px 34px rgba(12, 44, 71, .14); }
 }
 
 /* narrower than text + photo side by side: the photo goes under the text, full width */
