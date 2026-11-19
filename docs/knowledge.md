@@ -131,15 +131,17 @@ jaw photo (too eye-catching), a three-step demo (too tall), a slim band with a b
 (no clicking on single teeth, user's wish), a «Подобрать врача» button on the left, the button in the gap between
 the jaws, and a «Начать →» circle following the pointer.
 
-Now: «Помощник», «Не знаете, к какому врачу?» and a lead on the left; on the right the helper's jaw photo
-cut down to the teeth only — no gums, tongue or mouth (user's wish): `main.js` builds an SVG whose `<image>` of
-`teeth.webp` is clipped by the helper's 32 tooth outlines — in black and white (`filter: grayscale(1)`), with the only button, a Yellow
-56 px «Выбрать зуб», in its top right corner, and a pulsing Mint dot with a Navy rim tied to the button, not to a
-tooth: 10 px under its right part, the same at every width (user: higher and further right, neatly under the button;
-it was on a lower tooth before;
-it grows a little while the photo is hovered). The whole photo
-and the button (`finder-open`) open the helper on its first step, the tooth map. Below 900 px the photo goes above
-the text. The section has no top padding: About's bottom padding is the gap.
+Now: «Помощник», «Не знаете, к какому врачу?» and a lead on the left; on the right the user's own picture
+(«Elegancki uśmiech z naturalnym różem dziąseł», 2026-11-19; before it was the helper's jaw photo clipped to the
+teeth in black and white): gums and teeth only, in colour, background cut out to transparency — `assets/img/smile.webp`
+(960 px wide, ~40 KB). The cut was a flood fill from the picture's edges over light, unsaturated pixels (the grey
+background and the shadow under the jaw); the teeth are white too but sit inside the pink gums, so the fill never
+reaches them; the gums' soft edge keeps a partial alpha and the mask got a 2 px blur. It was made once with a
+throwaway C# snippet in PowerShell (System.Drawing), then cwebp. On top: the only button, a Yellow 56 px «Выбрать
+зуб», in the top right corner, and a pulsing Mint dot with a Navy rim 10 px under its right part (tied to the button,
+not a tooth, so it is in the same place at every width). The whole picture and the button (`finder-open`) open the
+helper on its first step, the tooth map. Below 900 px the picture goes above the text. The section has no top
+padding: About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
 `--sec-y` (96 px, 64 on phones). Sections have only top padding (Services lost its bottom one, which made a double

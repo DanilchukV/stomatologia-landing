@@ -351,7 +351,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 }
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
-/* text on the left; on the right the helper's jaw photo cut down to the teeth, in black and white, a still picture (no single teeth to
+/* text on the left; on the right the user's smile picture (gums and teeth, background cut out to transparency), a still picture (no single teeth to
    click, user's wish): the whole photo and the Yellow «Выбрать зуб» in its top right corner open the
    helper on its first step, the tooth map.
    No top padding of its own: About's bottom padding is the gap */
@@ -361,9 +361,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(28px, 3vw, 40px); line-height: 1.1; letter-spacing: -.02em; }
 .finder__lead { margin: 0; max-width: 460px; color: var(--muted); font-size: 17px; text-wrap: pretty; }
 .finder__jaw { position: relative; display: flex; justify-content: center; cursor: pointer; }
-.finder__teeth { position: relative; width: 100%; max-width: 460px; }
-/* the photo clipped to the teeth (main.js), in black and white */
-.finder__teeth svg { display: block; width: 100%; height: auto; filter: grayscale(1); }
+/* the user's smile picture with its background cut out (smile.webp, transparent) */
+.finder__img { display: block; width: 100%; max-width: 460px; height: auto; aspect-ratio: 1104 / 534; }
 /* the only button: Yellow, as the site's calls to action */
 .finder__pick { position: absolute; top: -10px; right: 0; gap: 10px; min-height: 56px; padding: 0 28px; font-size: 17px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); }
 /* a pulsing Mint dot tied to the button, not to a tooth: 10 px under its right part (button top −10 + 56 high),
@@ -378,7 +377,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 @media (max-width: 900px) {
   .finder__card { grid-template-columns: minmax(0, 1fr); }
   .finder__jaw { order: -1; }
-  .finder__teeth { max-width: 380px; }
+  .finder__img { max-width: 380px; }
 }
 
 /* ===== Services ===== */
