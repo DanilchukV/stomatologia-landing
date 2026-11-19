@@ -186,8 +186,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .nav { display: flex; flex-wrap: nowrap; justify-content: center; padding: 0 20px; flex: 1 1 auto; font-weight: 500; font-size: 17px; }
 .nav__link { flex: 0 1 auto; text-decoration: none; padding: 10px 0; display: flex; align-items: center; color: var(--ink-2); font-weight: 600; transition: color .2s; }
 .nav__link:first-child { flex: none; }
-.nav__link[aria-current] { color: var(--ink); }
-.nav__link:hover { color: var(--accent-ink); }
+.nav__link:hover, .nav__link[aria-current] { color: var(--accent-ink); }
 /* braces (user's Frame 7): ::before is the wire from the previous link with a bracket just before the text;
    the wire is 36 px, shorter at 1390-1500 px where the full header row is tight (vw counts the scrollbar, hence the margin). The SVG colours repeat --tint and --accent-ink */
 .nav__link::before { --wire: color-mix(in srgb, var(--tint) 45%, transparent); content: ''; flex: none; width: clamp(18px, 12vw - 140px, 36px); height: 10px; margin: 0 2px 0 3px;

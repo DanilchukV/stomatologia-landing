@@ -98,7 +98,7 @@ nav. At 1390–1500 px the full header row is tight, so the wire shrinks with `c
 bracket is drawn like the current one in the drawing — Mint square, Orange (`--accent-ink`) wing dots (user, 2026-11-19:
 Mint dots blurred into the wire); the wire is Mint at 45 % (`--wire`, `color-mix`) and turns Orange for the current
 section and on hover. The bracket is an SVG data URI, so its colours repeat the tokens.
-Hover also turns the label Orange. Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
+Hover and the current section also turn the label Orange (current since 2026-11-19, user's request). Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
 menu. "Главная" (`#top`, the hero) was added as the first link and to scroll-spy.
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
