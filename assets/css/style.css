@@ -797,22 +797,18 @@ html:has(.helper[open]) { overflow: hidden; }
 .doctors__lead { margin: 10px 0 0 auto; color: var(--muted); line-height: 1.6; }
 .doctors__lead .one-line { display: block; }
 .doc-carousel { position: relative; }
-/* a flex row (not a grid), so an opened card widens and the others narrow, all through transitions: the cards never
-   change layout. While a card is open (and until the closing has finished) main.js pins every photo's height in
-   --doc-ph, so a photo only gets wider or narrower, never taller; the story slides down under the name (grid rows
-   0fr → 1fr). One easing and duration for everything, so it moves as one */
-.doc-grid { --doc-t: .55s cubic-bezier(.22, .8, .24, 1); display: flex; gap: 16px; align-items: flex-start; }
-.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease, flex-grow var(--doc-t), flex-basis var(--doc-t), max-width var(--doc-t); animation: pageIn .3s ease both; }
+.doc-grid { display: flex; gap: 16px; align-items: stretch; }
+.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease, opacity .3s ease; animation: pageIn .3s ease both; }
 .doc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12, 44, 71, .12); }
-.doc-grid.is-pinned .doc:hover { transform: none; }
+/* «Подробнее»: the chosen card gets a Navy outline, the others step back a little; sizes never change */
+.doc.is-open { box-shadow: 0 0 0 1.5px var(--ink); }
+.doc-grid.has-open .doc:not(.is-open) { opacity: .55; }
+.doc-grid.has-open .doc:not(.is-open):hover { opacity: 1; }
 .doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
-.doc-grid.is-pinned .doc__photo { aspect-ratio: auto; height: var(--doc-ph); }
 .doc__ini { font-family: var(--f-head); font-weight: 700; font-size: 56px; color: var(--ink); opacity: .55; }
 .doc__ph { display: block; color: var(--accent-ink); opacity: .55; }
-.doc__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; mix-blend-mode: multiply; transition: object-position var(--doc-t); }
-/* the opened card's photo is wide and crops a lot: keep the top of the head in the frame */
-.doc.is-open .doc__photo img { object-position: 50% 6%; }
-.doc__photo:has(img) { background: #FFFFFF; }
+.doc__photo img, .doc-panel__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; mix-blend-mode: multiply; }
+.doc__photo:has(img), .doc-panel__photo:has(img) { background: #FFFFFF; }
 .doc__info { display: flex; flex-direction: column; gap: 4px; padding: 0 8px; }
 .doc__name { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 18px; line-height: 1.25; text-wrap: balance; min-height: 2.5em; }
 /* room for a two-line .doc__exp, so pages without one (nurses, admins) keep the height when paging */
@@ -826,18 +822,29 @@ html:has(.helper[open]) { overflow: hidden; }
 .doc__toggle:hover { color: var(--accent-ink); }
 .doc__toggle .ic { display: block; transition: transform .25s var(--ease-out); }
 .doc__toggle[aria-expanded="true"] .ic { transform: rotate(180deg); }
-/* the story: collapsed to nothing in every card, slides open in the opened one */
-.doc__more { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--doc-t), opacity .25s ease; }
-.doc__more-in { min-height: 0; overflow: hidden; }
-.doc.is-open .doc__more { grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows var(--doc-t), opacity .35s ease .2s; }
-.doc__facts { margin: 0 8px; padding-top: 12px; border-top: 1px solid rgba(12, 44, 71, .15); display: flex; flex-direction: column; gap: 10px; }
-.doc__row { display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 1.45; }
-.doc__row dt { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.doc__row dd { margin: 0; font-weight: 500; }
-.doc__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
-.doc__list li { text-wrap: pretty; }
-/* opened: about half of the row */
-.doc.is-open { flex-grow: 3.4; }
+/* the panel under the row: folded to nothing (grid rows 0fr, and a negative margin cancels the flex gap), it slides
+   open under the chosen card; its content stays while it folds away. A caret on top points at the card */
+.doc-panel { display: grid; grid-template-rows: 0fr; margin-top: -28px; opacity: 0; transition: grid-template-rows .5s var(--ease-out), margin-top .5s var(--ease-out), opacity .3s ease; }
+.doc-panel.is-open { grid-template-rows: 1fr; margin-top: 0; opacity: 1; }
+.doc-panel__in { min-height: 0; overflow: hidden; }
+.doc-panel__card { position: relative; display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 32px; margin-top: 10px; padding: 24px; border: 1.5px solid var(--ink); border-radius: 28px; background: var(--white); animation: fadeIn .35s ease both; }
+.doc-panel__card::before { content: ''; position: absolute; top: -9px; left: var(--caret-x, 50%); width: 16px; height: 16px; margin-left: -8px; background: var(--white); border-left: 1.5px solid var(--ink); border-top: 1.5px solid var(--ink); border-top-left-radius: 4px; transform: rotate(45deg); transition: left .4s var(--ease-out); }
+.doc-panel__photo { position: relative; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; background: var(--tint); display: grid; place-items: center; align-self: start; }
+.doc-panel__body { min-width: 0; display: flex; flex-direction: column; gap: 18px; padding: 8px 40px 0 0; }
+.doc-panel__head { display: flex; flex-direction: column; gap: 4px; }
+.doc-panel__name { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: 28px; line-height: 1.15; letter-spacing: -.01em; }
+.doc-panel__spec { font-size: 16px; color: var(--muted); }
+.doc-panel__facts { margin: 0; padding-top: 18px; border-top: 1px solid rgba(12, 44, 71, .15); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 32px; }
+.doc-panel__row { display: flex; flex-direction: column; gap: 6px; }
+.doc-panel__row dt { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); }
+.doc-panel__row dd { margin: 0; }
+.doc-panel__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 15px; line-height: 1.45; }
+.doc-panel__list li { text-wrap: pretty; }
+.doc-panel__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 6px; }
+.doc-panel__btn { min-height: 48px; padding: 0 24px; font-size: 15px; }
+.doc-panel__x { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; padding: 0; border: none; border-radius: 50%; background: var(--tint); color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background-color .15s; }
+.doc-panel__x:hover { background: var(--accent); }
+.doc-panel__x .ic { display: block; }
 .side-arrow { position: absolute; top: 38%; transform: translateY(-50%); z-index: 3; box-shadow: 0 6px 16px rgba(12, 44, 71, .14); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; }
 .side-arrow .ic { display: block; }
 .side-arrow--prev { left: -22px; }
@@ -845,11 +852,12 @@ html:has(.helper[open]) { overflow: hidden; }
 .side-arrow:hover, .side-arrow:active { transform: translateY(-50%) scale(1.06); }
 .dots-row { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 4px; }
 
-/* two per row; an opened card widens against its row neighbour */
+/* two per row; the panel's photo goes smaller */
 @media (max-width: 900px) {
   .doc-grid { flex-wrap: wrap; }
   .doc { flex: 1 1 calc(50% - 8px); }
-  .doc.is-open { flex-grow: 2.4; }
+  .doc-panel__card { grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 24px; }
+  .doc-panel__facts { grid-template-columns: minmax(0, 1fr); }
 }
 /* phone: all doctors of the tab in one swipeable row instead of pages */
 @media (max-width: 640px) {
@@ -857,10 +865,16 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc-grid::-webkit-scrollbar { display: none; }
   .doc { flex: 0 0 78%; max-width: 300px; scroll-snap-align: start; animation: none; }
   .doc:hover { transform: none; box-shadow: none; }
-  .doc-grid { flex-wrap: nowrap; align-items: flex-start; }
-  /* opened: wider (the photo too, same height); the others narrower */
-  .doc.is-open { flex-basis: 90%; max-width: 420px; }
-  .doc-grid.has-open .doc:not(.is-open) { flex-basis: 62%; }
+  .doc.is-open { box-shadow: 0 0 0 1.5px var(--ink); }
+  .doc-grid { flex-wrap: nowrap; }
+  /* the panel: the photo as a band on top, the story under it */
+  .doc-panel__card { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 12px 12px 20px; border-radius: 24px; }
+  .doc-panel__photo { aspect-ratio: 4 / 3; }
+  .doc-panel__photo img { object-position: 50% 12%; }
+  .doc-panel__body { padding: 0 8px; }
+  .doc-panel__name { font-size: 24px; }
+  .doc-panel__x { top: 20px; right: 20px; background: var(--white); }
+  .doc-panel__btn { flex: 1 1 auto; }
   .side-arrow, .dots-row { display: none; }
 }
 

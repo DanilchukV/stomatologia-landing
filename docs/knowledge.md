@@ -334,23 +334,19 @@ check the lead text in `index.html`.
 
 
 **«Подробнее»** (2026-11-19, user's request): every card has a «Подробнее» toggle (`doc-more`, `state.docOpen`). The
-opened card widens in its row to about half of it (a flex row, not a grid: `flex-grow` 3.4 against 1; on phones its
-`flex-basis` grows in the swipe row) and the others narrow; its story slides down under the name; «Свернуть» runs it
-all back; paging closes it. The story is four lists from `data.js`, user's wish («больше про опыт, диплом, курсы,
-универ»): «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with years),
-«Дипломы и сертификаты» (`certs`); an empty list is skipped.
-How it stays smooth (two earlier versions jumped, the user saw it «скачет» and «не красиво»): the cards never change
-layout — no switch to photo-beside-text. Only transitions run, all with one duration and easing (`--doc-t`): the
-card widths (`flex-grow` / `flex-basis`), the story (`grid-template-rows` 0fr → 1fr) and the photo crop
-(`object-position`, the wide photo keeps the top of the head). Before the widths change, `main.js` pins every photo's
-height in `--doc-ph` (`.is-pinned`), so a photo only gets wider or narrower, never taller; it is released 600 ms after
-closing, when the widths are back and the aspect ratio gives the same height. Cards sit at the top of the row
-(`align-items: flex-start`), so the neighbours don't stretch with the opened one. Closing while the row is above the
-header glides back to it. A View Transition version was tried and dropped (snapshots stretched, unsupported in
-Firefox). To check the motion in the shot harness, re-enable `transition` in `-Do`, then pause
+cards never change size: the chosen one gets a 1.5 px Navy outline, the others fade to 55 %, and a panel slides open
+under the row (`#doc-panel`, grid rows 0fr → 1fr; a −28 px margin cancels the section's flex gap while it is folded,
+so it takes no room then). The panel: a big photo on the left, the name, specialty and experience line, and the
+story in two columns — «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with
+years), «Дипломы и сертификаты» (`certs`) from `data.js`; «Записаться к врачу», «Свернуть» and a ✕. A caret on top
+points at the chosen card (`docCaret()`, `--caret-x`, kept in place on resize and on swiping the phone row). The
+panel keeps its content while it folds away; another doctor swaps it with a fade. Opening from a row low on the
+screen glides the row up under the header; closing while scrolled into the panel glides back to the row; paging
+closes it. Under 900 px the story is one column and the photo smaller; on phones the photo is a 4:3 band on top.
+History (same day): the opened card first widened in its row with photo-beside-text (the layout snapped mid-motion),
+then via a View Transition, then with pinned photo heights; the user disliked all three («скачет», «не красиво»)
+and chose the panel under the row. To check the motion in the shot harness, re-enable `transition` in `-Do`, pause
 `document.getAnimations()` at set `currentTime`s and measure.
-**All the stories are placeholders** written for the invented staff (universities are real, places of work are
-generic, courses, years and awards are invented) — replace them with the real ones with the names and photos.
 
 ## Contacts
 

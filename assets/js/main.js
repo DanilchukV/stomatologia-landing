@@ -452,7 +452,28 @@
   // on a phone all cards are one swipeable row (CSS), so no pages
   const swipeMedia = window.matchMedia('(max-width: 640px)');
   const PERSON = '<svg class="doc__ph" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5"/></svg>';
-  let docUnpin = 0;
+  // «Подробнее»: the chosen card is outlined, the others fade a little, and a panel slides open under the row with a
+  // big photo and the story (style.css .doc-panel); the cards themselves never change size
+  const BIO = [['Образование', 'edu'], ['Опыт работы', 'work'], ['Повышение квалификации', 'courses'], ['Дипломы и сертификаты', 'certs']];
+  const hasBio = (d) => BIO.some(([, k]) => d[k] && d[k].length);
+  const docPhoto = (d) => (d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON);
+  const docPanelHTML = (d) => `<div class="doc-panel__card">
+      <div class="doc-panel__photo">${docPhoto(d)}</div>
+      <div class="doc-panel__body">
+        <div class="doc-panel__head"><h3 class="doc-panel__name">${esc(d.name || d.spec)}</h3><span class="doc-panel__spec">${esc(d.spec)}</span>${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</div>
+        <dl class="doc-panel__facts">${BIO.filter(([, k]) => d[k] && d[k].length).map(([label, k]) => `<div class="doc-panel__row"><dt>${label}</dt><dd><ul class="doc-panel__list">${d[k].map((x) => `<li>${esc(glue(x))}</li>`).join('')}</ul></dd></div>`).join('')}</dl>
+        <div class="doc-panel__actions">${BOOKABLE.includes(d.role) ? `<a href="#book" class="btn btn--dark doc-panel__btn" data-act="book-doc" data-id="${d.id}">Записаться к&nbsp;врачу</a>` : ''}<button type="button" class="btn btn--ghost doc-panel__btn" data-act="doc-more" data-id="${d.id}">Свернуть</button></div>
+      </div>
+      <button type="button" class="doc-panel__x" data-act="doc-more" data-id="${d.id}" aria-label="Закрыть">${icon('i-close', 18, 2.4)}</button>
+    </div>`;
+  // the little caret on top of the panel points at the chosen card
+  function docCaret() {
+    const panel = $('#doc-panel');
+    const card = $('.doc.is-open', $('#doc-track'));
+    if (!card) return;
+    const c = card.getBoundingClientRect(), p = panel.getBoundingClientRect();
+    panel.style.setProperty('--caret-x', Math.max(32, Math.min(p.width - 32, c.left + c.width / 2 - p.left)) + 'px');
+  }
   function renderDoctors() {
     const list = D.doctors;
     const pages = Math.max(1, Math.ceil(list.length / DOCS_PER_PAGE));
@@ -461,29 +482,28 @@
     const track = $('#doc-track');
     const shown = swipe ? list : list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE);
     // the photo; without it the initials, without a name too a silhouette (the photo is blended, so nothing may sit under it)
-    // «Подробнее» opens a card: it widens in its row with a bigger photo and the story; the others narrow (style.css)
-    const BIO = [['Образование', 'edu'], ['Опыт работы', 'work'], ['Повышение квалификации', 'courses'], ['Дипломы и сертификаты', 'certs']];
-    const hasBio = (d) => BIO.some(([, k]) => d[k] && d[k].length);
-    const more = (d) => `<div class="doc__more" id="doc-more-${d.id}"><div class="doc__more-in"><dl class="doc__facts">${BIO.filter(([, k]) => d[k] && d[k].length)
-      .map(([label, k]) => `<div class="doc__row"><dt>${label}</dt><dd><ul class="doc__list">${d[k].map((x) => `<li>${esc(glue(x))}</li>`).join('')}</ul></dd></div>`).join('')}</dl></div></div>`;
     const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}">
-        <div class="doc__photo">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}</div>
+        <div class="doc__photo">${docPhoto(d)}</div>
         <div class="doc__main">
           <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</span></div>
-          ${hasBio(d) ? more(d) : ''}
-          <div class="doc__foot">${hasBio(d) ? `<button type="button" class="doc__toggle" data-act="doc-more" data-id="${d.id}" aria-expanded="false" aria-controls="doc-more-${d.id}"><span>Подробнее</span>${icon('i-chev', 14, 2.6)}</button>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
+          <div class="doc__foot">${hasBio(d) ? `<button type="button" class="doc__toggle" data-act="doc-more" data-id="${d.id}" aria-expanded="false" aria-controls="doc-panel"><span>Подробнее</span>${icon('i-chev', 14, 2.6)}</button>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
         </div>
       </article>`).join(''));
-    // a new page (or the phone/desktop switch): fresh cards, nothing open, photos back to their own height
-    if (rebuilt) { track.scrollLeft = 0; clearTimeout(docUnpin); track.classList.remove('is-pinned'); }
-    const open = shown.some((d) => d.id === state.docOpen) ? state.docOpen : null;
+    if (rebuilt) track.scrollLeft = 0;
+    const open = shown.find((d) => d.id === state.docOpen) || null;
     track.classList.toggle('has-open', !!open);
     $$('.doc', track).forEach((el) => {
-      const on = el.dataset.id === open;
+      const on = !!open && el.dataset.id === open.id;
       el.classList.toggle('is-open', on);
       const b = $('.doc__toggle', el);
       if (b) { b.setAttribute('aria-expanded', on); b.firstChild.textContent = on ? 'Свернуть' : 'Подробнее'; }
     });
+    // the panel keeps its last content while it folds away, so closing doesn't empty it mid-motion
+    const panel = $('#doc-panel');
+    if (open) mount($('#doc-panel-in'), open.id, () => docPanelHTML(open));
+    panel.classList.toggle('is-open', !!open);
+    panel.setAttribute('aria-hidden', !open);
+    if (open) docCaret();
     const multi = pages > 1;
     $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
     $('#doc-dots-row').hidden = !multi;
@@ -746,21 +766,14 @@
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
       const track = $('#doc-track');
-      // pin every photo's height before the widths start to change (CSS .is-pinned), so photos only get wider or
-      // narrower; it is released once the closing transition is over, when the widths are back to where they were
-      clearTimeout(docUnpin);
-      if (!track.classList.contains('is-pinned')) {
-        track.style.setProperty('--doc-ph', $('.doc__photo', track).getBoundingClientRect().height + 'px');
-        track.classList.add('is-pinned');
-      }
+      const wasOpen = !!state.docOpen;
       set({ docOpen: id });
-      if (!id) docUnpin = setTimeout(() => track.classList.remove('is-pinned'), 600);
       const smooth = reduceMotion.matches ? 'auto' : 'smooth';
-      // closing a tall card while scrolled into it: glide back to the row, as the story folds
+      // the row and the panel under it should both fit: opening from a row low on the screen glides it up under the
+      // header; closing while scrolled down into the panel glides back to the row
       const row = track.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 16;
+      if (id && !wasOpen && track.getBoundingClientRect().bottom > window.innerHeight * .55) window.scrollBy({ top: row, behavior: smooth });
       if (!id && row < 0) window.scrollBy({ top: row, behavior: smooth });
-      // on phones the opened card is brought into view in the swipe row
-      if (id && swipeMedia.matches) t.closest('.doc').scrollIntoView({ behavior: smooth, block: 'nearest', inline: 'start' });
     },
     'doc-page': (t) => set({ docPage: +t.dataset.page, docOpen: null }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
@@ -834,6 +847,9 @@
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   swipeMedia.addEventListener('change', render);
+  // the panel's caret follows its card when the page is resized or the phone row is swiped
+  window.addEventListener('resize', docCaret);
+  $('#doc-track').addEventListener('scroll', docCaret, { passive: true });
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
