@@ -125,13 +125,16 @@ the braces card wrapped to three lines), so all three texts take two lines at �
 ## Finder (the helper's mini section)
 
 The user calls the helper the site's signature feature, so on 2026-11-19 its call-out moved out of the Services
-head into a section of its own, right before Services. It went through a big card with the jaw picture (too
-eye-catching) and a card with a three-step demo (too tall); now it is a slim band (≈ 106 px on desktop): the four
-doctors' faces overlapping, «Не знаете, к какому врачу?» with one line under it, and a big Yellow «Подобрать врача»
-button with a Navy arrow circle — the user asked for "a button you want to press": a soft Yellow halo breathes
-around it (2.4 s), a light streak crosses it every 4 s and the arrow nudges on hover (all off with reduced motion,
-and in the shot harness). On phones the button runs the full width under the text. The section has no top padding:
-About's bottom padding is the gap.
+head into a section of its own, right before Services. Tried and dropped the same day: a big card with the jaw
+picture (too eye-catching), a card with a three-step demo (too tall), and a Yellow button with a breathing halo
+and a passing shine («like a garage advert»). Now a slim, calm band (≈ 104 px on desktop): the four doctors' faces
+overlapping, «Не знаете, к какому врачу?» with one line under it, and a Navy «Подобрать врача» button with the
+arrow in a white circle. The whole band opens the helper. The small touches: on hover the faces fan out and the
+arrow nudges; the faces slide in one by one once, when the band scrolls into view (`IntersectionObserver` in
+`main.js`: `.is-armed` hides them only if the band starts below the screen, `.is-seen` plays it; skipped with
+reduced motion). The shot harness fires no `IntersectionObserver`, so add `.is-seen` by hand in `-Do` there.
+On phones the button runs the full width under the text. The section has no top padding: About's bottom padding
+is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
 `--sec-y` (96 px, 64 on phones). Sections have only top padding (Services lost its bottom one, which made a double

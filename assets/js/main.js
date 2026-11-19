@@ -731,6 +731,18 @@
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
   });
 
+  /* ---------- finder: the doctors' faces slide in once, when the band scrolls into view ---------- */
+  const finder = $('#finder');
+  if (finder && 'IntersectionObserver' in window && !reduceMotion.matches && finder.getBoundingClientRect().top > window.innerHeight) {
+    finder.classList.add('is-armed');
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      finder.classList.add('is-seen');
+      io.disconnect();
+    }, { threshold: .6 });
+    io.observe(finder);
+  }
+
   /* ---------- back to top ---------- */
   // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;
   // a wheel turn or a touch stops it

@@ -351,24 +351,28 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 }
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
-/* a slim band (user, 2026-11-19): doctors' faces, one line of text and a button that asks to be pressed;
-   no top padding of its own, About's bottom padding is the gap */
+/* a slim, calm band (user, 2026-11-19): doctors' faces, one line of text, a Navy button. The whole band opens the
+   helper; on hover the faces fan out and the arrow nudges; the faces slide in one by one when the band scrolls into
+   view (main.js adds .is-armed, then .is-seen). No top padding of its own: About's bottom padding is the gap */
 .finder { padding: 0 var(--gutter); }
-.finder__card { box-sizing: border-box; display: flex; align-items: center; gap: 20px 28px; padding: 20px 20px 20px 28px; border: 1px solid var(--line); border-radius: 28px; background: var(--white); }
+.finder__card { box-sizing: border-box; display: flex; align-items: center; gap: 20px 28px; padding: 20px 20px 20px 28px; border: 1px solid var(--line); border-radius: 28px; background: var(--white); cursor: pointer; transition: box-shadow .3s ease; }
+.finder__card:hover { box-shadow: 0 14px 34px rgba(12, 44, 71, .12); }
 .finder__docs { flex: none; display: flex; padding-left: 12px; }
-.finder__docs img { width: 52px; height: 52px; margin-left: -12px; border-radius: 50%; border: 3px solid var(--white); background: #FFFFFF; object-fit: cover; object-position: 50% 0; box-shadow: 0 2px 8px rgba(12, 44, 71, .12); }
+.finder__docs img { width: 52px; height: 52px; margin-left: -12px; border-radius: 50%; border: 3px solid var(--white); background: #FFFFFF; object-fit: cover; object-position: 50% 0; box-shadow: 0 2px 8px rgba(12, 44, 71, .12); transition: margin-left .35s var(--ease-out); }
+.finder__card:hover .finder__docs img { margin-left: -2px; }
+.finder.is-armed .finder__docs img { opacity: 0; }
+.finder.is-seen .finder__docs img { opacity: 1; animation: finderFace .5s var(--ease-out) both; }
+.finder.is-seen .finder__docs img:nth-child(2) { animation-delay: .09s; }
+.finder.is-seen .finder__docs img:nth-child(3) { animation-delay: .18s; }
+.finder.is-seen .finder__docs img:nth-child(4) { animation-delay: .27s; }
+@keyframes finderFace { from { opacity: 0; transform: translateX(-14px) scale(.9); } }
 .finder__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .finder__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(22px, 2.2vw, 28px); line-height: 1.15; letter-spacing: -.01em; }
 .finder__lead { margin: 0; color: var(--muted); font-size: 16px; }
-/* the button: a soft Yellow halo breathes around it, a light streak crosses it now and then, the arrow nudges on hover */
-.finder__btn { position: relative; flex: none; gap: 14px; min-height: 64px; padding: 0 10px 0 32px; font-size: 18px; box-shadow: 0 10px 24px rgba(240, 170, 47, .35); isolation: isolate; }
-.finder__btn::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; box-shadow: 0 0 0 0 rgba(240, 170, 47, .5); animation: finderHalo 2.4s ease-out infinite; }
-.finder__btn::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat; animation: finderShine 4s ease-in-out 1s infinite; pointer-events: none; }
-@keyframes finderHalo { 0% { box-shadow: 0 0 0 0 rgba(240, 170, 47, .5); } 70%, 100% { box-shadow: 0 0 0 16px rgba(240, 170, 47, 0); } }
-@keyframes finderShine { 0%, 60% { background-position: -150% 0; } 85%, 100% { background-position: 150% 0; } }
-.finder__btn-ic { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--white); display: grid; place-items: center; transition: transform .25s var(--ease-out); }
+.finder__btn { flex: none; gap: 14px; min-height: 56px; padding: 0 8px 0 26px; font-size: 16px; }
+.finder__btn-ic { width: 40px; height: 40px; border-radius: 50%; background: var(--white); color: var(--ink); display: grid; place-items: center; transition: transform .3s var(--ease-out); }
 .finder__btn-ic .ic { display: block; }
-.finder__btn:hover .finder__btn-ic { transform: translateX(4px); }
+.finder__card:hover .finder__btn-ic { transform: translateX(4px); }
 
 @media (max-width: 760px) {
   .finder__card { flex-wrap: wrap; padding: 20px; }
