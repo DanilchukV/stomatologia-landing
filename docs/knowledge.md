@@ -347,6 +347,8 @@ History (same day): the opened card first widened in its row with photo-beside-t
 then via a View Transition, then with pinned photo heights; the user disliked all three («скачет», «не красиво»)
 and chose the panel under the row. To check the motion in the shot harness, re-enable `transition` in `-Do`, pause
 `document.getAnimations()` at set `currentTime`s and measure.
+**All the stories are placeholders** written for the invented staff (universities are real, places of work are
+generic, courses, years and awards are invented) — replace them with the real ones with the names and photos.
 
 ## Contacts
 
