@@ -364,7 +364,9 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__teeth { position: relative; width: 100%; max-width: 460px; }
 .finder__teeth svg { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
 .ft { fill: var(--white); stroke: rgba(12, 44, 71, .45); stroke-width: 5; stroke-linejoin: round; }
-.finder__pick { position: absolute; top: -8px; right: 0; gap: 8px; min-height: 48px; padding: 0 24px; font-size: 16px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); }
+/* Mint with a Yellow rim (the pulsing dot's colour); the rim turns Orange on hover */
+.finder__pick { position: absolute; top: -10px; right: 0; gap: 10px; min-height: 56px; padding: 0 28px; border: 2px solid var(--accent); background: var(--tint); color: var(--ink); font-size: 17px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); transition: border-color .15s ease; }
+.finder__pick:hover { border-color: var(--accent-ink); }
 /* a pulsing Yellow dot on tooth 29 (lower jaw, left in the drawing): its centre in % of the viewBox,
    x (279 − 50) / 1436, y (654 − 190) / 666; it grows a little while the drawing is hovered */
 .finder__dot { position: absolute; left: 15.9%; top: 69.7%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 255, 255, .9); transition: scale .25s var(--ease-out); pointer-events: none; }
