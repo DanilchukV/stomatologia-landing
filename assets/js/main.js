@@ -35,7 +35,7 @@
 
   /* ---------- constants ---------- */
   const WISDOM = [1, 16, 17, 32];
-  const SPY = ['calm', 'services', 'doctors', 'clinics'];
+  const SPY = ['top', 'calm', 'services', 'doctors', 'clinics'];
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;

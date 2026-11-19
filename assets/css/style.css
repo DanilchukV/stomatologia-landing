@@ -183,16 +183,17 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .addr__city { font-size: 13px; color: var(--muted); }
 .addr__area { font-weight: 600; }
 
-.nav { display: flex; flex-wrap: nowrap; justify-content: space-evenly; gap: 4px 16px; padding: 0 16px; flex: 1 1 auto; font-weight: 500; font-size: 17px; }
-.nav__link { position: relative; text-decoration: none; padding: 10px 0; display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); font-weight: 600; transition: color .2s; }
+.nav { display: flex; flex-wrap: nowrap; padding: 0 20px; flex: 1 1 auto; font-weight: 500; font-size: 17px; }
+.nav__link { flex: 1 1 auto; text-decoration: none; padding: 10px 0; display: flex; align-items: center; color: var(--ink-2); font-weight: 600; transition: color .2s; }
+.nav__link:first-child { flex: none; }
 .nav__link:hover, .nav__link[aria-current] { color: var(--ink); }
-/* braces: an archwire under the nav (.nav::before) and a bracket under each link (::after);
-   both sit 2 px below the link box, so their `bottom` values must change together */
-.nav { position: relative; }
-.nav::before { content: ''; position: absolute; left: 16px; right: 16px; bottom: -3px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(12, 44, 71, 0), rgba(12, 44, 71, .4) 14%, rgba(12, 44, 71, .4) 86%, rgba(12, 44, 71, 0)); pointer-events: none; }
-.nav__link::after { content: ''; position: absolute; left: 50%; bottom: -9px; width: 20px; height: 14px; margin-left: -10px; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 4px; background: linear-gradient(var(--ink), var(--ink)) center / 100% 2px no-repeat, var(--white); transition: background-color .2s; }
-.nav__link:hover::after { background-color: var(--tint); }
-.nav__link[aria-current]::after { background-color: var(--accent); }
+/* braces (user's Frame 7): ::before is the wire from the previous link with a bracket just before the text;
+   the wire stretches, so the links fill the nav. The SVG colours repeat --tint and --accent-ink */
+.nav__link::before { content: ''; flex: 1 1 auto; min-width: 26px; height: 10px; margin: 0 2px 0 3px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Crect x='.5' y='.5' width='6' height='6' rx='1.5' fill='none' stroke='%23ABC8C4'/%3E%3Cpath d='M2 2v1M2 4v1M5 2v1M5 4v1' stroke='%23ABC8C4'/%3E%3C/svg%3E") right 7px center / 10px 10px no-repeat, linear-gradient(var(--tint), var(--tint)) center / 100% 1.5px no-repeat; }
+.nav__link:first-child::before { flex: none; width: 24px; margin-left: 0; }
+.nav__link:hover::before, .nav__link[aria-current]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 7'%3E%3Crect x='.5' y='.5' width='6' height='6' rx='1.5' fill='none' stroke='%23ABC8C4'/%3E%3Cpath d='M2 2v1M2 4v1M5 2v1M5 4v1' stroke='%23BF512C'/%3E%3C/svg%3E"), linear-gradient(var(--accent-ink), var(--accent-ink)); }
 
 .hdr__contact { display: flex; align-items: center; gap: 12px 16px; flex-wrap: nowrap; }
 .hdr__phone { display: flex; align-items: center; gap: 10px; text-decoration: none; }
@@ -229,7 +230,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
   .hdr.is-menu .hdr__menu { display: flex; flex-direction: column; gap: 20px; animation: dropIn .18s ease both; }
   .nav { flex-direction: column; gap: 0; padding: 0; font-size: 18px; }
   .nav__link { padding: 14px 0; border-bottom: 1px solid var(--line-2); }
-  .nav::before, .nav__link::after { display: none; }
+  .nav__link { flex: none; }
+  .nav__link::before { display: none; }
   .hdr__contact { flex-wrap: wrap; justify-content: space-between; gap: 16px; }
   .hdr__phone-text { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
 }

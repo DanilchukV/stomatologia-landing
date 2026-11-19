@@ -87,11 +87,14 @@ Breakpoints, from wide to narrow:
 A nav jump stops with the section title 28 px under the header (user's request, 2026-11-18): sections have
 `scroll-margin-top: calc(var(--hdr-h) - var(--sec-y) + 28px)`, a negative-ish margin that skips the top padding.
 
-Nav "braces" (2026-11-19, user's idea — the links looked like they hung in the air): on the one-row header a
-faded archwire (`.nav::before`, 2 px, Navy at 40 %) runs under the links, and each link has a bracket on it
-(`.nav__link::after`, 20 × 14, Navy border, the wire drawn through it). The current section's bracket is
-Yellow, like a coloured elastic; hover fills it Mint. Colour only, no movement (the user dislikes hover jumps).
-Hidden in the burger menu.
+Nav "braces" (2026-11-19, user's idea and drawing, `Frame 7.svg` — the links looked like they hung in the air):
+on the one-row header the links are chained by a wire at text height, with an orthodontic bracket (a 7-unit
+rounded square with four tie-wing dots, drawn at 10 px) just before each label. It is all the link's `::before`:
+a flex item that stretches, so the wires take the nav's free width (min 26 px; the first link has a short fixed
+stub). Mint for the other links; the current section and hover turn the wire and wing dots Orange (`--accent-ink`),
+the square stays Mint, as in the drawing. The bracket is an SVG data URI, so its colours repeat the tokens.
+Colour only, no movement (the user dislikes hover jumps). Hidden in the burger menu. "Главная" (`#top`, the hero)
+was added as the first link and to scroll-spy.
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
 `header.js` removes the `href` from every `a[href^="tel:"]` unless the pointer is coarse (phones, tablets)
