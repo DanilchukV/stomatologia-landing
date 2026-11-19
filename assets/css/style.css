@@ -797,15 +797,21 @@ html:has(.helper[open]) { overflow: hidden; }
 .doctors__lead { margin: 10px 0 0 auto; color: var(--muted); line-height: 1.6; }
 .doctors__lead .one-line { display: block; }
 .doc-carousel { position: relative; }
-/* a flex row (not a grid), so an opened card can widen and the others narrow; the change is animated by a view
-   transition (main.js), every card and photo has its own view-transition-name */
-.doc-grid { display: flex; gap: 16px; align-items: stretch; }
-.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease; animation: pageIn .3s ease both; }
+/* a flex row (not a grid), so an opened card widens and the others narrow, all through transitions: the cards never
+   change layout. While a card is open (and until the closing has finished) main.js pins every photo's height in
+   --doc-ph, so a photo only gets wider or narrower, never taller; the story slides down under the name (grid rows
+   0fr → 1fr). One easing and duration for everything, so it moves as one */
+.doc-grid { --doc-t: .55s cubic-bezier(.22, .8, .24, 1); display: flex; gap: 16px; align-items: flex-start; }
+.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease, flex-grow var(--doc-t), flex-basis var(--doc-t), max-width var(--doc-t); animation: pageIn .3s ease both; }
 .doc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12, 44, 71, .12); }
+.doc-grid.is-pinned .doc:hover { transform: none; }
 .doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
+.doc-grid.is-pinned .doc__photo { aspect-ratio: auto; height: var(--doc-ph); }
 .doc__ini { font-family: var(--f-head); font-weight: 700; font-size: 56px; color: var(--ink); opacity: .55; }
 .doc__ph { display: block; color: var(--accent-ink); opacity: .55; }
-.doc__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; mix-blend-mode: multiply; }
+.doc__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; mix-blend-mode: multiply; transition: object-position var(--doc-t); }
+/* the opened card's photo is wide and crops a lot: keep the top of the head in the frame */
+.doc.is-open .doc__photo img { object-position: 50% 6%; }
 .doc__photo:has(img) { background: #FFFFFF; }
 .doc__info { display: flex; flex-direction: column; gap: 4px; padding: 0 8px; }
 .doc__name { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 18px; line-height: 1.25; text-wrap: balance; min-height: 2.5em; }
@@ -820,33 +826,18 @@ html:has(.helper[open]) { overflow: hidden; }
 .doc__toggle:hover { color: var(--accent-ink); }
 .doc__toggle .ic { display: block; transition: transform .25s var(--ease-out); }
 .doc__toggle[aria-expanded="true"] .ic { transform: rotate(180deg); }
-/* the story, shown only in an opened card */
-.doc__more { display: none; flex-direction: column; gap: 12px; margin: 0 8px; padding-top: 12px; border-top: 1px solid rgba(12, 44, 71, .15); }
-.doc__facts { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+/* the story: collapsed to nothing in every card, slides open in the opened one */
+.doc__more { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--doc-t), opacity .25s ease; }
+.doc__more-in { min-height: 0; overflow: hidden; }
+.doc.is-open .doc__more { grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows var(--doc-t), opacity .35s ease .2s; }
+.doc__facts { margin: 0 8px; padding-top: 12px; border-top: 1px solid rgba(12, 44, 71, .15); display: flex; flex-direction: column; gap: 10px; }
 .doc__row { display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 1.45; }
 .doc__row dt { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .doc__row dd { margin: 0; font-weight: 500; }
 .doc__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
 .doc__list li { text-wrap: pretty; }
-::view-transition-group(*) { animation-duration: .42s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
-/* the rest of the page just switches; only the cards move */
-::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-/* what sits under the cards slides along with them, instead of snapping to its new place */
-.doctors .dots-row { view-transition-name: doc-dots; }
-#clinics { view-transition-name: after-team; }
-/* opened: three times as wide as the others, photo on the left (bigger than theirs), the story on the right */
-.doc-grid.has-open .doc:hover { transform: none; }
-.doc.is-open { flex-grow: 3.4; flex-direction: row; gap: 20px; padding: 10px 14px 18px 10px; }
-.doc.is-open .doc__photo { flex: none; width: 44%; align-self: flex-start; }
-.doc.is-open .doc__main { padding-top: 10px; }
-.doc.is-open .doc__name { min-height: 0; font-size: 22px; }
-.doc.is-open .doc__spec { min-height: 0; }
-.doc.is-open .doc__more { display: flex; animation: fadeIn .35s ease .2s both; }
-/* the others, narrowed: only the name, the specialty and the buttons */
-.doc-grid.has-open .doc:not(.is-open) .doc__exp { display: none; }
-.doc-grid.has-open .doc:not(.is-open) { align-self: flex-start; }
-.doc-grid.has-open .doc:not(.is-open) .doc__name { font-size: 16px; min-height: 0; }
-.doc-grid.has-open .doc:not(.is-open) .doc__spec { min-height: 0; }
+/* opened: about half of the row */
+.doc.is-open { flex-grow: 3.4; }
 .side-arrow { position: absolute; top: 38%; transform: translateY(-50%); z-index: 3; box-shadow: 0 6px 16px rgba(12, 44, 71, .14); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; }
 .side-arrow .ic { display: block; }
 .side-arrow--prev { left: -22px; }
@@ -854,11 +845,11 @@ html:has(.helper[open]) { overflow: hidden; }
 .side-arrow:hover, .side-arrow:active { transform: translateY(-50%) scale(1.06); }
 .dots-row { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 4px; }
 
-/* two per row; an opened card takes a row of its own */
+/* two per row; an opened card widens against its row neighbour */
 @media (max-width: 900px) {
   .doc-grid { flex-wrap: wrap; }
   .doc { flex: 1 1 calc(50% - 8px); }
-  .doc.is-open { flex-basis: 100%; }
+  .doc.is-open { flex-grow: 2.4; }
 }
 /* phone: all doctors of the tab in one swipeable row instead of pages */
 @media (max-width: 640px) {
@@ -867,10 +858,8 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc { flex: 0 0 78%; max-width: 300px; scroll-snap-align: start; animation: none; }
   .doc:hover { transform: none; box-shadow: none; }
   .doc-grid { flex-wrap: nowrap; align-items: flex-start; }
-  /* opened: wider, the story under the photo; the others narrower */
-  .doc.is-open { flex: 0 0 90%; max-width: none; flex-direction: column; gap: 14px; padding: 10px 10px 18px; }
-  .doc.is-open .doc__photo { width: auto; align-self: stretch; }
-  .doc.is-open .doc__main { padding-top: 0; }
+  /* opened: wider (the photo too, same height); the others narrower */
+  .doc.is-open { flex-basis: 90%; max-width: 420px; }
   .doc-grid.has-open .doc:not(.is-open) { flex-basis: 62%; }
   .side-arrow, .dots-row { display: none; }
 }

@@ -452,6 +452,7 @@
   // on a phone all cards are one swipeable row (CSS), so no pages
   const swipeMedia = window.matchMedia('(max-width: 640px)');
   const PERSON = '<svg class="doc__ph" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5"/></svg>';
+  let docUnpin = 0;
   function renderDoctors() {
     const list = D.doctors;
     const pages = Math.max(1, Math.ceil(list.length / DOCS_PER_PAGE));
@@ -463,17 +464,18 @@
     // «Подробнее» opens a card: it widens in its row with a bigger photo and the story; the others narrow (style.css)
     const BIO = [['Образование', 'edu'], ['Опыт работы', 'work'], ['Повышение квалификации', 'courses'], ['Дипломы и сертификаты', 'certs']];
     const hasBio = (d) => BIO.some(([, k]) => d[k] && d[k].length);
-    const more = (d) => `<div class="doc__more" id="doc-more-${d.id}"><dl class="doc__facts">${BIO.filter(([, k]) => d[k] && d[k].length)
-      .map(([label, k]) => `<div class="doc__row"><dt>${label}</dt><dd><ul class="doc__list">${d[k].map((x) => `<li>${esc(glue(x))}</li>`).join('')}</ul></dd></div>`).join('')}</dl></div>`;
-    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}" style="view-transition-name: doc-${d.id}">
-        <div class="doc__photo" style="view-transition-name: doc-ph-${d.id}">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}</div>
+    const more = (d) => `<div class="doc__more" id="doc-more-${d.id}"><div class="doc__more-in"><dl class="doc__facts">${BIO.filter(([, k]) => d[k] && d[k].length)
+      .map(([label, k]) => `<div class="doc__row"><dt>${label}</dt><dd><ul class="doc__list">${d[k].map((x) => `<li>${esc(glue(x))}</li>`).join('')}</ul></dd></div>`).join('')}</dl></div></div>`;
+    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}">
+        <div class="doc__photo">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}</div>
         <div class="doc__main">
           <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</span></div>
           ${hasBio(d) ? more(d) : ''}
           <div class="doc__foot">${hasBio(d) ? `<button type="button" class="doc__toggle" data-act="doc-more" data-id="${d.id}" aria-expanded="false" aria-controls="doc-more-${d.id}"><span>Подробнее</span>${icon('i-chev', 14, 2.6)}</button>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
         </div>
       </article>`).join(''));
-    if (rebuilt) track.scrollLeft = 0;
+    // a new page (or the phone/desktop switch): fresh cards, nothing open, photos back to their own height
+    if (rebuilt) { track.scrollLeft = 0; clearTimeout(docUnpin); track.classList.remove('is-pinned'); }
     const open = shown.some((d) => d.id === state.docOpen) ? state.docOpen : null;
     track.classList.toggle('has-open', !!open);
     $$('.doc', track).forEach((el) => {
@@ -743,18 +745,22 @@
 
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
-      // the card changes layout (column ↔ photo beside the story): a view transition morphs every card and photo from
-      // the old box to the new one, instead of the layout snapping halfway through a width animation
-      const update = () => {
-        set({ docOpen: id });
-        // closing a tall card while scrolled into it: bring the row back under the header, inside the same transition
-        const row = $('#doc-track').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 16;
-        if (!id && row < 0) window.scrollBy(0, row);
-      };
-      if (document.startViewTransition && !reduceMotion.matches) document.startViewTransition(update);
-      else update();
+      const track = $('#doc-track');
+      // pin every photo's height before the widths start to change (CSS .is-pinned), so photos only get wider or
+      // narrower; it is released once the closing transition is over, when the widths are back to where they were
+      clearTimeout(docUnpin);
+      if (!track.classList.contains('is-pinned')) {
+        track.style.setProperty('--doc-ph', $('.doc__photo', track).getBoundingClientRect().height + 'px');
+        track.classList.add('is-pinned');
+      }
+      set({ docOpen: id });
+      if (!id) docUnpin = setTimeout(() => track.classList.remove('is-pinned'), 600);
+      const smooth = reduceMotion.matches ? 'auto' : 'smooth';
+      // closing a tall card while scrolled into it: glide back to the row, as the story folds
+      const row = track.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 16;
+      if (!id && row < 0) window.scrollBy({ top: row, behavior: smooth });
       // on phones the opened card is brought into view in the swipe row
-      if (id && swipeMedia.matches) t.closest('.doc').scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'nearest', inline: 'start' });
+      if (id && swipeMedia.matches) t.closest('.doc').scrollIntoView({ behavior: smooth, block: 'nearest', inline: 'start' });
     },
     'doc-page': (t) => set({ docPage: +t.dataset.page, docOpen: null }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },

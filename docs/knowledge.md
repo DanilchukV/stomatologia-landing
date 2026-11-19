@@ -334,18 +334,21 @@ check the lead text in `index.html`.
 
 
 **«Подробнее»** (2026-11-19, user's request): every card has a «Подробнее» toggle (`doc-more`, `state.docOpen`). The
-opened card widens in its row (a flex row, not a grid: `flex-grow` 3.4 against 1), turns into photo-left /
-story-right with a bigger photo, and the other cards narrow and drop the experience line. «Свернуть» closes it;
-paging closes it too. At 641–900 px (two per row) it takes a row of its own; on phones it gets wider in the swipe
-row with the story under the photo. The story is four lists from `data.js`, user's wish («больше про опыт, диплом,
-курсы, универ»): «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with years),
-«Дипломы и сертификаты» (`certs`); a list with nothing is skipped (administrators have no certificates).
-The change is animated by a View Transition (`document.startViewTransition`): every card and photo has its own
-`view-transition-name`, so they morph from the old box to the new one (the first version animated `flex-grow`, and
-the layout snapped halfway — the user saw it «скачет» on closing); the page dots and `#clinics` are named too, so
-what is below slides instead of snapping; closing while the row is above the header scrolls it back under the
-header inside the same transition. Without View Transitions (or with reduced motion) it simply switches. The shot
-harness never finishes a view transition: set `document.startViewTransition = undefined` in `-Do` to check a state.
+opened card widens in its row to about half of it (a flex row, not a grid: `flex-grow` 3.4 against 1; on phones its
+`flex-basis` grows in the swipe row) and the others narrow; its story slides down under the name; «Свернуть» runs it
+all back; paging closes it. The story is four lists from `data.js`, user's wish («больше про опыт, диплом, курсы,
+универ»): «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with years),
+«Дипломы и сертификаты» (`certs`); an empty list is skipped.
+How it stays smooth (two earlier versions jumped, the user saw it «скачет» and «не красиво»): the cards never change
+layout — no switch to photo-beside-text. Only transitions run, all with one duration and easing (`--doc-t`): the
+card widths (`flex-grow` / `flex-basis`), the story (`grid-template-rows` 0fr → 1fr) and the photo crop
+(`object-position`, the wide photo keeps the top of the head). Before the widths change, `main.js` pins every photo's
+height in `--doc-ph` (`.is-pinned`), so a photo only gets wider or narrower, never taller; it is released 600 ms after
+closing, when the widths are back and the aspect ratio gives the same height. Cards sit at the top of the row
+(`align-items: flex-start`), so the neighbours don't stretch with the opened one. Closing while the row is above the
+header glides back to it. A View Transition version was tried and dropped (snapshots stretched, unsupported in
+Firefox). To check the motion in the shot harness, re-enable `transition` in `-Do`, then pause
+`document.getAnimations()` at set `currentTime`s and measure.
 **All the stories are placeholders** written for the invented staff (universities are real, places of work are
 generic, courses, years and awards are invented) — replace them with the real ones with the names and photos.
 
