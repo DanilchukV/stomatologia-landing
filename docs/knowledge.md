@@ -50,8 +50,10 @@ added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`:
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
 masks and the tooth overlay. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
 and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
-The header shows `logo-wordmark.svg` — the same file without the tooth and the divider (`logo.svg` cropped by its
-viewBox), user's request 2026-11-19 so the header isn't overloaded; the footer keeps the full `logo.svg`.
+The name is set in Arsenal (the user's `Arsenal_vector_text.svg`, outlined paths, 2026-11-19): «Гревитидент» Navy,
+«стоматологическая клиника» Orange. The header shows `logo-wordmark.svg` — the name only (no tooth, no divider;
+user's request so the header isn't overloaded); the footer's `logo.svg` is the tooth and divider of the old logo
+with the Arsenal text beside them (a scaled `<g>`). `logo-light.svg` and `og-image.jpg` still have the old lettering.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
 
