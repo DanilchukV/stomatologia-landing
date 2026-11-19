@@ -95,9 +95,8 @@ nav. At 1390–1500 px the full header row is tight, so the wire shrinks with `c
 (the margin covers the scrollbar, which vw counts); without it the phone and CTA wrap to a second row. Mint for
 the other links; the current section and hover turn the wire and wing dots Orange (`--accent-ink`),
 the square stays Mint, as in the drawing. The bracket is an SVG data URI, so its colours repeat the tokens.
-hover also turns the label Orange. Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
-menu. "Главная" (`#top`, the hero)
-was added as the first link and to scroll-spy.
+Hover also turns the label Orange. Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
+menu. "Главная" (`#top`, the hero) was added as the first link and to scroll-spy.
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
 `header.js` removes the `href` from every `a[href^="tel:"]` unless the pointer is coarse (phones, tablets)
