@@ -738,6 +738,12 @@
   });
 
 
+  /* ---------- finder: the jaw photo cut down to the teeth ---------- */
+  // the helper's tooth outlines (absolute coordinates in teeth.webp) clip the photo, so gums, tongue and mouth are gone;
+  // the viewBox is all 32 teeth with a margin
+  $('#finder-teeth').insertAdjacentHTML('afterbegin', `<svg viewBox="50 190 1436 666"><defs><clipPath id="finder-clip">${
+    D.teeth.map((t) => `<path d="${t[7]}"/>`).join('')}</clipPath></defs><image href="assets/img/teeth.webp" width="1536" height="1024" clip-path="url(#finder-clip)"/></svg>`);
+
   /* ---------- back to top ---------- */
   // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;
   // a wheel turn or a touch stops it
