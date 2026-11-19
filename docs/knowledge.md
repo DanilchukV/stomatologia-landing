@@ -195,8 +195,7 @@ outside the dialog's rounded corners:
   request): only pink and light pixels (the teeth are not pink, the tongue and mouth are dark) got lighter (HSL L
   +28 % of the way to white), a little more saturated and ~5° warmer; same size and alpha, so the outlines still fit;
   linked as `teeth.webp?v=2` to beat the cache. The original is in git history.
-  Positions are
-  size. Each button has `pointer-events: none` and only its SVG outline path takes clicks, so
+  Each button has `pointer-events: none` and only its SVG outline path takes clicks, so
   neighbouring bounding boxes don't steal clicks.
 - Numbering: data uses 1–32 (upper right → upper left → lower left → lower right, as the doctor
   sees the patient); labels show the number within the quadrant (`qn()`, 1–8). Wisdom teeth are
