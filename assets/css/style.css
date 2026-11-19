@@ -797,9 +797,10 @@ html:has(.helper[open]) { overflow: hidden; }
 .doctors__lead { margin: 10px 0 0 auto; color: var(--muted); line-height: 1.6; }
 .doctors__lead .one-line { display: block; }
 .doc-carousel { position: relative; }
-/* a flex row (not a grid), so an opened card can widen and the others narrow, animated through flex-grow */
+/* a flex row (not a grid), so an opened card can widen and the others narrow; the change is animated by a view
+   transition (main.js), every card and photo has its own view-transition-name */
 .doc-grid { display: flex; gap: 16px; align-items: stretch; }
-.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease, flex-grow .45s var(--ease-out); animation: pageIn .3s ease both; }
+.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .2s ease; animation: pageIn .3s ease both; }
 .doc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12, 44, 71, .12); }
 .doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
 .doc__ini { font-family: var(--f-head); font-weight: 700; font-size: 56px; color: var(--ink); opacity: .55; }
@@ -825,7 +826,14 @@ html:has(.helper[open]) { overflow: hidden; }
 .doc__row { display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 1.45; }
 .doc__row dt { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .doc__row dd { margin: 0; font-weight: 500; }
-.doc__about { margin: 0; font-size: 15px; line-height: 1.55; text-wrap: pretty; }
+.doc__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.doc__list li { text-wrap: pretty; }
+::view-transition-group(*) { animation-duration: .42s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+/* the rest of the page just switches; only the cards move */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+/* what sits under the cards slides along with them, instead of snapping to its new place */
+.doctors .dots-row { view-transition-name: doc-dots; }
+#clinics { view-transition-name: after-team; }
 /* opened: three times as wide as the others, photo on the left (bigger than theirs), the story on the right */
 .doc-grid.has-open .doc:hover { transform: none; }
 .doc.is-open { flex-grow: 3.4; flex-direction: row; gap: 20px; padding: 10px 14px 18px 10px; }

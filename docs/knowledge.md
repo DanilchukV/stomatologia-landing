@@ -334,14 +334,20 @@ check the lead text in `index.html`.
 
 
 **«Подробнее»** (2026-11-19, user's request): every card has a «Подробнее» toggle (`doc-more`, `state.docOpen`). The
-opened card widens in its row (the row is a flex row, not a grid, so it animates through `flex-grow`: 3.4 against 1),
-turns into photo-left / story-right with a bigger photo, and shows the story: «Образование» and «Курсы» (`edu`,
-`courses` in `data.js`, labels above the text) and a short paragraph (`about`); the other cards narrow and drop the
-experience line. «Свернуть» closes it; paging closes it too. At 641–900 px (two per row) the opened card takes a row
-of its own; on phones it gets wider in the swipe row with the story under the photo, and the others narrower.
-Nurses and administrators have a paragraph (and the nurses their college). **All the stories are placeholders**
-written for the invented staff (universities and courses are plausible, not real facts) — replace them with the
-real ones together with the names and photos.
+opened card widens in its row (a flex row, not a grid: `flex-grow` 3.4 against 1), turns into photo-left /
+story-right with a bigger photo, and the other cards narrow and drop the experience line. «Свернуть» closes it;
+paging closes it too. At 641–900 px (two per row) it takes a row of its own; on phones it gets wider in the swipe
+row with the story under the photo. The story is four lists from `data.js`, user's wish («больше про опыт, диплом,
+курсы, универ»): «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with years),
+«Дипломы и сертификаты» (`certs`); a list with nothing is skipped (administrators have no certificates).
+The change is animated by a View Transition (`document.startViewTransition`): every card and photo has its own
+`view-transition-name`, so they morph from the old box to the new one (the first version animated `flex-grow`, and
+the layout snapped halfway — the user saw it «скачет» on closing); the page dots and `#clinics` are named too, so
+what is below slides instead of snapping; closing while the row is above the header scrolls it back under the
+header inside the same transition. Without View Transitions (or with reduced motion) it simply switches. The shot
+harness never finishes a view transition: set `document.startViewTransition = undefined` in `-Do` to check a state.
+**All the stories are placeholders** written for the invented staff (universities are real, places of work are
+generic, courses, years and awards are invented) — replace them with the real ones with the names and photos.
 
 ## Contacts
 

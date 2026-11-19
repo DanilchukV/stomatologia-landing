@@ -461,17 +461,16 @@
     const shown = swipe ? list : list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE);
     // the photo; without it the initials, without a name too a silhouette (the photo is blended, so nothing may sit under it)
     // «Подробнее» opens a card: it widens in its row with a bigger photo and the story; the others narrow (style.css)
-    const more = (d) => {
-      const rows = [['Образование', d.edu], ['Курсы', d.courses]].filter(([, v]) => v && v.length)
-        .map(([k, v]) => `<div class="doc__row"><dt>${k}</dt><dd>${v.map((x) => esc(glue(x))).join('<br>')}</dd></div>`).join('');
-      return `<div class="doc__more" id="doc-more-${d.id}">${rows ? `<dl class="doc__facts">${rows}</dl>` : ''}${d.about ? `<p class="doc__about">${esc(glue(d.about))}</p>` : ''}</div>`;
-    };
-    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}">
-        <div class="doc__photo">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}</div>
+    const BIO = [['Образование', 'edu'], ['Опыт работы', 'work'], ['Повышение квалификации', 'courses'], ['Дипломы и сертификаты', 'certs']];
+    const hasBio = (d) => BIO.some(([, k]) => d[k] && d[k].length);
+    const more = (d) => `<div class="doc__more" id="doc-more-${d.id}"><dl class="doc__facts">${BIO.filter(([, k]) => d[k] && d[k].length)
+      .map(([label, k]) => `<div class="doc__row"><dt>${label}</dt><dd><ul class="doc__list">${d[k].map((x) => `<li>${esc(glue(x))}</li>`).join('')}</ul></dd></div>`).join('')}</dl></div>`;
+    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}" style="view-transition-name: doc-${d.id}">
+        <div class="doc__photo" style="view-transition-name: doc-ph-${d.id}">${d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON}</div>
         <div class="doc__main">
           <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</span></div>
-          ${d.about ? more(d) : ''}
-          <div class="doc__foot">${d.about ? `<button type="button" class="doc__toggle" data-act="doc-more" data-id="${d.id}" aria-expanded="false" aria-controls="doc-more-${d.id}"><span>Подробнее</span>${icon('i-chev', 14, 2.6)}</button>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
+          ${hasBio(d) ? more(d) : ''}
+          <div class="doc__foot">${hasBio(d) ? `<button type="button" class="doc__toggle" data-act="doc-more" data-id="${d.id}" aria-expanded="false" aria-controls="doc-more-${d.id}"><span>Подробнее</span>${icon('i-chev', 14, 2.6)}</button>` : ''}${BOOKABLE.includes(d.role) ? `<a href="#book" class="doc__book" data-act="book-doc" data-id="${d.id}">Записаться</a>` : ''}</div>
         </div>
       </article>`).join(''));
     if (rebuilt) track.scrollLeft = 0;
@@ -744,7 +743,16 @@
 
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
-      set({ docOpen: id });
+      // the card changes layout (column ↔ photo beside the story): a view transition morphs every card and photo from
+      // the old box to the new one, instead of the layout snapping halfway through a width animation
+      const update = () => {
+        set({ docOpen: id });
+        // closing a tall card while scrolled into it: bring the row back under the header, inside the same transition
+        const row = $('#doc-track').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 16;
+        if (!id && row < 0) window.scrollBy(0, row);
+      };
+      if (document.startViewTransition && !reduceMotion.matches) document.startViewTransition(update);
+      else update();
       // on phones the opened card is brought into view in the swipe row
       if (id && swipeMedia.matches) t.closest('.doc').scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'nearest', inline: 'start' });
     },
