@@ -516,7 +516,11 @@
   }
   function updateFloating() {
     const y = window.scrollY;
-    hdr.classList.toggle('is-scrolled', y > 8);
+    // a stuck services bar takes over the header's shadow, which would otherwise darken its chips
+    const bar = $('.svc-bar');
+    const stuck = !!bar && bar.getBoundingClientRect().top <= hdr.getBoundingClientRect().bottom + 1;
+    if (bar) bar.classList.toggle('is-stuck', stuck);
+    hdr.classList.toggle('is-scrolled', y > 8 && !stuck);
     toTop.hidden = y <= 900;
     toTop.classList.toggle('is-raised', !cartBox.hidden);
     if (!toTop.hidden) toTop.classList.toggle('on-dark', darkUnder(toTop));

@@ -497,7 +497,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .svc-card__desc { font-size: 16px; line-height: 1.55; color: var(--muted); text-wrap: balance; display: block; width: 100%; min-height: 4.65em; }
 
 .svc-open { display: contents; }
-.svc-bar { position: sticky; top: var(--hdr-h); z-index: 20; margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter); background: rgba(255, 255, 255, .92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-2); }
+.svc-bar { position: sticky; top: var(--hdr-h); z-index: 20; margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter); background: var(--white); border-bottom: 1px solid var(--line-2); }
+.svc-bar.is-stuck { box-shadow: 0 6px 24px rgba(12, 44, 71, .10); }
 .svc-bar__tabs { display: flex; align-items: center; gap: 8px; overflow-x: auto; }
 .svc-bar__all { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px 0 12px; border-color: var(--ink); font-size: 14px; white-space: nowrap; }
 .svc-bar__all .ic { display: block; }
