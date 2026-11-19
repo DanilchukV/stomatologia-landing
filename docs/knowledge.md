@@ -138,8 +138,8 @@ teeth in black and white): gums and teeth only, in colour, background cut out to
 background and the shadow under the jaw); the teeth are white too but sit inside the pink gums, so the fill never
 reaches them; the gums' soft edge keeps a partial alpha and the mask got a 2 px blur. It was made once with a
 throwaway C# snippet in PowerShell (System.Drawing), then cwebp. On top: the only button, a Yellow 56 px «Выбрать
-зуб», in the top right corner, and a pulsing Mint dot with a Navy rim 10 px under its right part (tied to the button,
-not a tooth, so it is in the same place at every width). The whole picture and the button (`finder-open`) open the
+зуб», in the top right corner, and a pulsing Mint dot with a Navy rim 10 px under its middle (tied to the button,
+not a tooth, so it is in the same place at every width; centred under it since the user asked). The whole picture and the button (`finder-open`) open the
 helper on its first step, the tooth map. Below 900 px the picture goes above the text. The section has no top
 padding: About's bottom padding is the gap.
 
