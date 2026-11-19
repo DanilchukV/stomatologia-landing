@@ -70,7 +70,7 @@
   const docsFor = (roles) => D.doctors.filter((d) => roles.includes(d.role));
   const docTitle = (d) => d.name || d.spec;
   // with nothing picked (a plain check-up) the booking goes to the therapist
-  const docLabel = () => docTitle(docById(state.docPick || 'ther'));
+  const docLabel = () => (state.docPick ? docTitle(docById(state.docPick)) : 'любой, подберём');
   // photo if there is one, else initials, else a silhouette; the box around it crops it (object-fit)
   const docAvatar = (d, size) => (d.photo ? `<img class="av-img" src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? initials(d.name) : person(size));
   // who sees patients in a category; in diagnostics, whoever does the ticked consultation
@@ -288,12 +288,13 @@
 
     // step 3: the whole booking, services of every category included
     const items = state.cart.map((x) => `<li class="svc-sum__item"><span class="svc-sum__tick">${icon('i-check', 13, 3.2)}</span><span class="svc-sum__name">${esc(glue(x.n))}<span class="svc-sum__cat">${esc(glue(x.cat))}</span></span><button type="button" class="svc-sum__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></li>`).join('');
-    const doc = docById(state.docPick || 'ther');
+    // no doctor picked (after "Сбросить всё"): any doctor, chosen by the services
+    const doc = state.docPick ? docById(state.docPick) : null;
     // one card, a row per part: label on the left, value on the right
-    mount($('#svc-sum'), state.cart.map((x) => x.n).join('|') + '#' + doc.id, () => `
+    mount($('#svc-sum'), state.cart.map((x) => x.n).join('|') + '#' + (doc ? doc.id : ''), () => `
       <div class="svc-sum__row"><span class="svc-sum__k">Услуги</span><div class="svc-sum__v">${items ? `<ul class="svc-sum__list">${items}</ul>`
         : `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>`}</div></div>
-      <div class="svc-sum__row"><span class="svc-sum__k">Врач</span><div class="svc-sum__v"><div class="svc-sum__doc"><span class="av">${docAvatar(doc, 20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(docTitle(doc)))}</span>${doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : ''}</span></div></div></div>
+      <div class="svc-sum__row"><span class="svc-sum__k">Врач</span><div class="svc-sum__v"><div class="svc-sum__doc"><span class="av">${doc ? docAvatar(doc, 20) : person(20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(doc ? docTitle(doc) : 'Любой врач'))}</span>${doc ? (doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : '') : `<span class="svc-sum__cat">подберём по услугам</span>`}</span></div></div></div>
       <div class="svc-sum__row"><span class="svc-sum__k">Удобное время</span><div class="svc-sum__v">
         <div class="svc-time">${TIMES.map(([v, label]) => `<button type="button" class="chip svc-time__chip" aria-pressed="false" data-act="svc-time" data-time="${v}" data-focus="time:${v}">${label}</button>`).join('')}</div>
         <p class="svc-sum__note">${glue('Точное время администратор согласует по телефону.')}</p></div></div>`);
@@ -377,6 +378,7 @@
           <div class="svc-nav">
             <button type="button" class="btn btn--ghost svc-nav__back" data-act="svc-prev">${icon('i-back', 16, 2.4)}Назад</button>
             <span class="svc-nav__info" id="svc-nav-info"></span>
+            <button type="button" class="svc-nav__reset" data-act="cart-reset" hidden>${icon('i-reset', 15, 2.2)}Сбросить всё</button>
             <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next"><span></span>${icon('i-arrow', 16, 2.4)}</button>
             <button type="submit" form="svc-form" class="btn btn--accent svc-nav__book">Отправить заявку${icon('i-arrow', 16, 2.4)}</button>
           </div>
@@ -503,12 +505,18 @@
   form.addEventListener('change', (e) => { if (e.target.name === 'time') set({ time: e.target.value }); });
 
   function renderBooking() {
-    let reason = 'Осмотр и консультация';
-    if (state.cart.length) reason = 'Услуги: ' + state.cart.map((x) => x.n).join(', ');
-    $('#book-reason').textContent = glue(reason);
-    $('#book-doctor').textContent = docLabel();
+    // the doctor: "any" (docPick null) or one of the bookable doctors; shared with Services and the helper
+    const docsBox = $('#book-docs');
+    mount(docsBox, 'docs', () => [{ id: '', title: 'Любой врач', sub: 'подберём по услугам', av: person(20) }]
+      .concat(D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => ({ id: d.id, title: docTitle(d), sub: d.spec, av: docAvatar(d, 20) })))
+      .map((o) => `<button type="button" class="book-doc" aria-pressed="false" data-act="book-pick" data-id="${o.id}"><span class="av">${o.av}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(o.title))}</span><span class="book-doc__sub">${esc(o.sub)}</span></span></button>`).join(''));
+    $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === (state.docPick || '')));
+    // the services picked in Services, each removable
+    mount($('#book-svcs'), state.cart.map((x) => x.n).join('|'), () => (state.cart.length
+      ? `<ul class="book__svcs">${state.cart.map((x) => `<li class="book-svc">${esc(glue(x.n))}<button type="button" class="book-svc__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>`
+      : `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')} <a href="#services">${glue('Выбрать в «Услугах»')}</a></p>`));
+    $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = !state.cart.length && !state.docPick; });
     form.elements.time.value = state.time;
-    $('#book-time').textContent = state.time;
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
   }
@@ -691,6 +699,9 @@
     },
 
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => x.n !== t.dataset.svc) }),
+    // "Сбросить всё": the picked services and doctor, in Services and the booking form alike (name and phone stay)
+    'cart-reset': () => set({ cart: [], docPick: null, svcOpen: null }),
+    'book-pick': (t) => set({ docPick: t.dataset.id || null }),
 
     'doc-page': (t) => set({ docPage: +t.dataset.page }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p }); },

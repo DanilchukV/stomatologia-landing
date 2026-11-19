@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119zg">
-<script src="assets/js/header.js?v=20261119zg" defer></script>
-<script src="assets/js/data.js?v=20261119zg" defer></script>
-<script src="assets/js/form.js?v=20261119zg" defer></script>
-<script src="assets/js/main.js?v=20261119zg" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261119zh">
+<script src="assets/js/header.js?v=20261119zh" defer></script>
+<script src="assets/js/data.js?v=20261119zh" defer></script>
+<script src="assets/js/form.js?v=20261119zh" defer></script>
+<script src="assets/js/main.js?v=20261119zh" defer></script>
 </head>
 <body>
 
@@ -41,6 +41,7 @@
   <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
@@ -331,27 +332,38 @@
 <!-- Booking -->
 <section class="book" id="book">
   <div class="book__card">
-    <div class="book__intro">
-      <h2 class="title">Запись на&nbsp;осмотр</h2>
-      <p class="book__lead">Оставьте номер&nbsp;— перезвоним и&nbsp;подберём удобное время.</p>
-      <dl class="book__sum">
-        <div class="book__row"><dt>Повод</dt><dd id="book-reason">Осмотр и&nbsp;консультация</dd></div>
-        <div class="book__row"><dt>Врач</dt><dd id="book-doctor">Анна Ковалёва</dd></div>
-        <div class="book__row"><dt>Время</dt><dd id="book-time">любое</dd></div>
-      </dl>
+    <div class="book__head">
+      <div class="book__titles">
+        <h2 class="title">Запись на&nbsp;приём</h2>
+        <p class="book__lead">Оставьте номер&nbsp;— перезвоним и&nbsp;подберём удобное время.</p>
+      </div>
+      <button type="button" class="book__reset" data-act="cart-reset" hidden><svg class="ic" width="16" height="16" stroke-width="2.2" aria-hidden="true"><use href="#i-reset"/></svg>Сбросить всё</button>
     </div>
-    <div class="book__side">
+    <div class="book__body">
       <form class="book__form" id="book-form" novalidate>
-        <label class="field">Имя
-          <input class="field__input" type="text" name="name" autocomplete="name" maxlength="40" placeholder="Как к вам обращаться" aria-describedby="err-name">
-          <span class="field__err" id="err-name" role="alert" hidden><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-alert"/></svg><span></span></span>
-        </label>
-        <label class="field">Телефон
-          <input class="field__input" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+375 (29) 123-45-67" aria-describedby="err-phone">
-          <span class="field__err" id="err-phone" role="alert" hidden><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-alert"/></svg><span></span></span>
-        </label>
-        <fieldset class="when">
-          <legend class="when__label">Удобное время приёма</legend>
+        <div class="book__row">
+          <span class="book__k" id="book-k-doc">К&nbsp;кому</span>
+          <div class="book__docs" id="book-docs" role="group" aria-labelledby="book-k-doc"></div>
+        </div>
+        <div class="book__row">
+          <span class="book__k">Услуги</span>
+          <div class="book__v" id="book-svcs"></div>
+        </div>
+        <div class="book__row">
+          <span class="book__k">Контакты</span>
+          <div class="book__fields">
+            <label class="field">Имя
+              <input class="field__input" type="text" name="name" autocomplete="name" maxlength="40" placeholder="Как к вам обращаться" aria-describedby="err-name">
+              <span class="field__err" id="err-name" role="alert" hidden><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-alert"/></svg><span></span></span>
+            </label>
+            <label class="field">Телефон
+              <input class="field__input" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+375 (29) 123-45-67" aria-describedby="err-phone">
+              <span class="field__err" id="err-phone" role="alert" hidden><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-alert"/></svg><span></span></span>
+            </label>
+          </div>
+        </div>
+        <fieldset class="book__row when">
+          <legend class="book__k when__label">Удобное время</legend>
           <div class="when__opts">
             <label class="when__opt"><input type="radio" name="time" value="утром"><span>Утром</span></label>
             <label class="when__opt"><input type="radio" name="time" value="днём"><span>Днём</span></label>
@@ -359,16 +371,18 @@
             <label class="when__opt"><input type="radio" name="time" value="любое" checked><span>Любое</span></label>
           </div>
         </fieldset>
-        <button class="btn btn--accent book__send" type="submit">Отправить заявку</button>
+        <div class="book__foot">
+          <p class="book__consent">Отправляя заявку, вы&nbsp;соглашаетесь на&nbsp;обработку персональных данных.</p>
+          <button class="btn btn--accent book__send" type="submit">Отправить заявку<svg class="ic" width="18" height="18" stroke-width="2.2" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </div>
       </form>
       <div class="book__done" id="book-done">
-        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#F0AA2F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+        <span class="book__done-ic"><svg class="ic" width="26" height="26" stroke-width="2.6" aria-hidden="true"><use href="#i-check"/></svg></span>
         <h3 class="book__done-title">Заявка отправлена</h3>
         <p class="book__done-text">Перезвоним и&nbsp;подберём удобное время.</p>
-        <button type="button" class="btn btn--accent book__again" data-act="book-again" data-from="book">Записаться ещё раз</button>
+        <button type="button" class="btn btn--dark book__again" data-act="book-again" data-from="book">Записаться ещё раз</button>
       </div>
     </div>
-    <div class="book__consent" id="book-consent"><p>Отправляя заявку, вы&nbsp;соглашаетесь на&nbsp;обработку персональных данных.</p></div>
   </div>
 </section>
 

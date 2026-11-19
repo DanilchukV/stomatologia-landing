@@ -305,11 +305,19 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 
 ## Booking
 
+Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
+выбором врача»): a white card with rows, label on the left, and «Отправить заявку» at the bottom right:
+- «К кому» — chips with photos: «Любой врач» (`docPick` null) and the four bookable doctors. The choice is the
+  same `docPick` as in Services and the helper, so a doctor picked there shows here and the other way round.
+- «Услуги» — the services ticked in Services as removable chips; none: a line and a link to «Услуги».
+- «Контакты» (name, phone) and «Удобное время».
+- «Сбросить всё» (top right, and next to «Выбрано N услуг» in the services panel) clears the services and the doctor
+  (`cart-reset`; user's choice: name and phone stay); hidden when there is nothing to clear.
+
 The lead is only «Оставьте номер — перезвоним и подберём удобное время.»; the "Или позвоните сами" phones were
 dropped 2026-11-19 (user's request; the numbers are in the header, contacts and FAQ).
 
-The summary shows the doctor and the reason (selected services, or tooth + symptom from the
-picker). Validation as in the export: name — letters only, at least 2, rejects
+Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
 375 (also typed digit by digit). Another country (since 2026-11-17, user request): a number starting with
 "+" and a code other than 375 is kept as typed (digits and separators, max 15 digits) and needs at least 8
