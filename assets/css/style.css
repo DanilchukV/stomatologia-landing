@@ -250,9 +250,9 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .hero__lead { margin: 0; max-width: 520px; color: var(--muted); font-size: 19px; line-height: 1.6; }
 .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
 .btn--hero { gap: 14px; min-height: 60px; padding: 0 36px; font-size: 17px; }
-/* the photo bleeds to the right edge of the window */
-.hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; width: 761px; margin-right: calc(min(0px, (1320px - 100vw) / 2) - var(--gutter)); }
-.hero__img { position: absolute; top: 48px; left: 0; width: 873px; height: calc(100% - 48px); object-fit: cover; object-position: 0% 50%; border-top-left-radius: 334px; }
+.hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; }
+/* leaf shape: big rounding top-left and bottom-right */
+.hero__img { position: absolute; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); object-fit: cover; object-position: 50% 50%; border-radius: 44% 0 / 50% 0; }
 .hero__facts { max-width: 1320px; margin: -64px auto 0; padding: 0 var(--gutter); position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
 .fact { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 30px 26px; display: flex; gap: 20px; align-items: flex-start; }
 .fact__ic { flex: none; width: 64px; height: 64px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; }
@@ -271,7 +271,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
   .hero .eyebrow { font-size: 12px; letter-spacing: .14em; }
   .hero__lead { font-size: 17px; }
   .hero__media { min-height: 400px; }
-  .hero__img { top: 0; width: 100%; height: 100%; object-position: 18% 50%; border-top-left-radius: 160px; }
+  .hero__img { top: 0; width: 100%; height: 100%; object-position: 18% 50%; }
   .hero__facts { margin-top: -48px; gap: 12px; }
   .fact { padding: 22px 20px; }
 }

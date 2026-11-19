@@ -94,10 +94,11 @@ the burger header) is hidden without its link.
 
 ## Hero
 
-The photo bleeds to the right window edge: `.hero__media` has a negative right margin of
-`(1320px − 100vw) / 2 − gutter`, and the image is a fixed 873 px wide, left-aligned, with a 334 px
-top-left radius. Under 1128 px text and photo no longer fit side by side; the photo then goes full
-width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on phones).
+The photo stays inside the content column (2026-11-19, user's request: it used to bleed to the right window
+edge, which the user disliked). Its shape is a "leaf" from the user's `Rectangle 1.png`: big rounding top-left and
+bottom-right, square corners elsewhere — `border-radius: 44% 0 / 50% 0`, measured from that picture
+(1907 × 1697). Under 1128 px text and photo no longer fit side by side; the photo then goes full
+width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on phones), same leaf shape.
 
 ## Picker (tooth → symptom → hint)
 
