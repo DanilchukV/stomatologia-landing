@@ -236,6 +236,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
 - The panel body is a wizard, one step at a time (user's choice, 2026-11-17 — before it was services
   and doctors side by side, which left an empty column when a category has one doctor):
   1 Услуги (the list in two columns on desktop) → 2 Врач (horizontal doctor cards; a lone one spans
+  [the step numbers use the helper's colours since 2026-11-19: current Navy with a Yellow halo, done Navy with a
+  tick, ahead an outline; the line between done steps Navy]
   the width) → 3 Проверка (one card with rows, label left / value right: all ticked services, any
   category, with remove buttons; the doctor; the
   preferred time — the same `state.time` as the booking form's radios, so choosing in one updates the other) →

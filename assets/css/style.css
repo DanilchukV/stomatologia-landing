@@ -450,15 +450,20 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .wiz { margin: 0; padding: 14px 20px; list-style: none; display: flex; align-items: center; gap: 12px; background: var(--white); border-radius: 20px; }
 .wiz__item { display: flex; align-items: center; gap: 12px; flex: 1 1 0; min-width: 0; }
 .wiz__item:last-child { flex: none; }
-.wiz__item:not(:last-child)::after { content: ""; flex: 1; min-width: 16px; height: 2px; border-radius: 2px; background: var(--line); }
-.wiz__item.is-done:not(:last-child)::after { background: var(--accent); }
+/* the same colours as the helper's steps: current Navy with a Yellow halo, done Navy with a tick, ahead an outline */
+.wiz__item:not(:last-child)::after { content: ""; flex: 1; min-width: 16px; height: 2px; border-radius: 2px; background: rgba(12, 44, 71, .2); }
+.wiz__item.is-done:not(:last-child)::after { background: var(--ink); }
 .wiz__btn { display: inline-flex; align-items: center; gap: 10px; padding: 4px 6px 4px 4px; border: none; border-radius: 999px; background: none; color: var(--muted); font-size: 16px; font-weight: 600; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .15s; }
-.wiz__btn .num { color: var(--ink); background: var(--white); box-shadow: inset 0 0 0 1.5px var(--line); transition: background-color .15s, color .15s, box-shadow .15s; }
+.wiz__btn .num { width: 32px; height: 32px; color: var(--ink); background: var(--white); box-shadow: inset 0 0 0 2px rgba(12, 44, 71, .35); transition: background-color .15s, color .15s, box-shadow .15s; }
+.wiz__btn .num .ic { display: none; }
 .wiz__btn:hover { color: var(--ink); }
-.wiz__btn:hover .num { box-shadow: inset 0 0 0 1.5px var(--accent); }
-.wiz__item.is-done .num { background: var(--tint); box-shadow: none; }
+.wiz__btn:hover .num { box-shadow: inset 0 0 0 2px var(--accent); }
+.wiz__item.is-done .wiz__btn { color: var(--ink); }
+.wiz__item.is-done .num { background: var(--ink); color: var(--white); box-shadow: none; }
+.wiz__item.is-done .num .ic { display: block; }
+.wiz__item.is-done .wiz__n { display: none; }
 .wiz__btn[aria-current="step"] { color: var(--ink); }
-.wiz__btn[aria-current="step"] .num { background: var(--ink); color: var(--white); box-shadow: none; }
+.wiz__btn[aria-current="step"] .num { background: var(--ink); color: var(--white); box-shadow: 0 0 0 5px rgba(240, 170, 47, .35); }
 
 .svc-step { display: flex; flex-direction: column; gap: 14px; animation: stepIn .3s var(--ease-out) both; }
 @keyframes stepIn { from { opacity: 0; transform: translateY(8px); } }
@@ -571,7 +576,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
   .svc-panel__photo { width: 100%; bottom: auto; height: 220px; -webkit-mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .5) 75%, transparent 100%); mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .5) 75%, transparent 100%); }
   .wiz__btn { flex-direction: column; gap: 6px; padding: 0; font-size: 13px; }
   .wiz__item { align-items: flex-start; }
-  .wiz__item:not(:last-child)::after { margin-top: 13px; }
+  .wiz__item:not(:last-child)::after { margin-top: 15px; }
 }
 @media (max-width: 480px) {
   .svc-row__content { padding: 0 16px 18px 20px; }

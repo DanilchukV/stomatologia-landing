@@ -347,7 +347,7 @@
         <div class="svc-panel__head" id="svc-head"></div>
         <div class="svc-panel__body">
           <ol class="wiz" id="svc-steps">
-            ${STEPS.map((t, k) => `<li class="wiz__item"><button type="button" class="wiz__btn" data-act="svc-step" data-step="${k + 1}"><span class="num">${k + 1}</span><span class="wiz__t">${t}</span></button></li>`).join('')}
+            ${STEPS.map((t, k) => `<li class="wiz__item"><button type="button" class="wiz__btn" data-act="svc-step" data-step="${k + 1}"><span class="num"><span class="wiz__n">${k + 1}</span>${icon('i-check', 14, 3)}</span><span class="wiz__t">${t}</span></button></li>`).join('')}
           </ol>
           <div class="svc-step" id="pick-svc" data-step="1">
             <div class="panel-label"><h4 class="panel-h" tabindex="-1">Отметьте услуги</h4><span class="panel-hint">можно несколько</span></div>
