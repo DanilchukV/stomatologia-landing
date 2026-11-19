@@ -361,7 +361,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .helper-cta__sub { font-size: 14px; color: var(--muted); line-height: 1.45; }
 .helper-cta__btn { flex: none; gap: 8px; min-height: 48px; padding: 0 22px; font-size: 15px; }
 .svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(296px, 100%), 1fr)); gap: 16px; animation: stepIn .35s var(--ease-out) both; }
-#svc-grid { scroll-margin-top: calc(var(--hdr-h) + 24px); }
+#svc-help { scroll-margin-top: calc(var(--hdr-h) + 20px); }
 .svc-card { text-align: left; padding: 22px 26px; border-radius: 24px; overflow: hidden; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 .svc-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(12, 44, 71, .12); border-color: var(--accent); }
 /* photo strip bleeds to the card edges and fades into the card */
