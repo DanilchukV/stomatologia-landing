@@ -386,7 +386,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 }
 
 /* ===== Services ===== */
-.services { background: var(--white); padding: var(--sec-y) var(--gutter); }
+.services { background: var(--white); padding: var(--sec-y) var(--gutter) 0; }
 .services__in { display: flex; flex-direction: column; gap: 32px; }
 .services__head { display: flex; flex-direction: column; gap: 12px; }
 .services__lead { margin: 0; color: var(--muted); max-width: 640px; font-size: 17px; }
