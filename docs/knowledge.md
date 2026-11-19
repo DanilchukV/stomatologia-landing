@@ -202,9 +202,14 @@ and short specialities without «Стоматолог-» (`Терапевт`, `�
 600×800 (3:4 crop of the source, cwebp -q 80); `mix-blend-mode: multiply` on a light tint box turns the white
 background into the box colour, so nothing may be drawn under a photo. Clinic photos in the About collage:
 `assets/img/clinic/` (building 1400 px wide with the address chip, reception and cabinet 900 px). Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
-since names may change), `name`, `spec`, `role` and `photo` (file in `assets/img/doctors/`, without
-`.webp`). While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
-update the lead text in `index.html`.
+since names may change), `name`, `spec`, `role`, `photo` (file in `assets/img/doctors/`, without
+`.webp`) and, for the 4 doctors, `exp`. While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
+check the lead text in `index.html`.
+- The lead says only «Опытные специалисты по всем направлениям.» (the staff count was dropped 2026-11-19, user's
+  request). Each doctor has one invented line on experience under the speciality (`exp`: years plus a
+  certificate or award, with an award icon), kept short enough for two lines on the narrow 1024 px cards; key
+  word pairs are glued with no-break spaces. `.doc__spec` reserves room for those two lines, so the page of
+  nurses and administrators (no `exp`) keeps the same height when paging.
 - Section: no tabs (the user wants one list: doctors, then nurses, then administrators), 4 per page (2 pages) with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
   doctor (not the nurses or administrators) has "Записаться", which also picks that doctor for the booking summary.
 - No "любой свободный врач" option (removed on the user's request, 2026-11-17): a concrete doctor is

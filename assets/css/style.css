@@ -711,7 +711,10 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .doc__photo:has(img) { background: #FFFFFF; }
 .doc__info { display: flex; flex-direction: column; gap: 4px; padding: 0 8px; }
 .doc__name { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 18px; line-height: 1.25; text-wrap: balance; min-height: 2.5em; }
-.doc__spec { font-size: 14px; line-height: 1.4; color: var(--muted); display: block; min-height: 2.8em; }
+/* room for a two-line .doc__exp, so pages without one (nurses, admins) keep the height when paging */
+.doc__spec { font-size: 14px; line-height: 1.4; color: var(--muted); display: block; min-height: 4.6em; }
+.doc__exp { display: flex; gap: 6px; align-items: flex-start; margin-top: 8px; font-size: 13px; line-height: 1.4; }
+.doc__exp .ic { flex: none; margin-top: 1px; color: var(--accent-ink); }
 .doc__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; padding: 0 8px; min-height: 28px; }
 .doc__book { font-size: 14px; font-weight: 600; text-underline-offset: 3px; margin-left: auto; }
 .side-arrow { position: absolute; top: 38%; transform: translateY(-50%); z-index: 3; box-shadow: 0 6px 16px rgba(12, 44, 71, .14); width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; }
