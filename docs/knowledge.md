@@ -190,7 +190,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
 
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
   categories. The list shows 6 services with "Показать ещё". The cards have no numbers or chevron
-  buttons since 2026-11-18 (user's request).
+  buttons since 2026-11-18 (user's request). Compact since 2026-11-19 (user: all six should fit one screen):
+  a 124 px photo strip, 23 px titles, three columns from ~1000 px; the 2-line title reserve that keeps descriptions
+  level applies only between 641 and 1279 px, where some titles wrap.
 - Opening a category from the grid (2026-11-19, user's request): every card flies up into its tab of the sticky
   bar (`flyToTabs` in `main.js`): a fixed ghost per card animates from the card's rect to the tab's rect with the
   Web Animations API, its photo fading out and the tab label fading in, staggered 45 ms; the real tabs stay hidden
