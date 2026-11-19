@@ -743,8 +743,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .clinic__art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .clinic__pulse { position: absolute; left: 50%; top: 46%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: rgba(191, 81, 44, .25); animation: mapPulse 1.8s ease-out infinite; }
 .clinic__pin { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -100%); display: block; filter: drop-shadow(0 4px 6px rgba(12, 44, 71, .3)); }
-.clinic__cta { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: var(--accent-ink); color: var(--white); font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(12, 44, 71, .15); transition: background-color .15s, color .15s; }
-.clinic__map:hover .clinic__cta { background: var(--ink); color: var(--white); }
+.clinic__cta { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: var(--white); color: var(--ink); font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(12, 44, 71, .15); transition: background-color .15s, color .15s; }
+.clinic__map:hover .clinic__cta { background: var(--accent-ink); color: var(--white); }
 .clinic__body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .clinic__name { margin: 0; font-family: var(--f-head); font-weight: 600; font-size: 24px; line-height: 1.3; }
 .clinic__lines { display: flex; flex-direction: column; gap: 4px; font-size: 16px; color: var(--ink-2); }

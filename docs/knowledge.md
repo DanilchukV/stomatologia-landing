@@ -232,8 +232,8 @@ check the lead text in `index.html`.
 One address (the export had two VestMedServis clinics with a switcher in the header, the menu, the
 contacts and the booking summary; removed on 2026-11-03). The header address is a plain link to
 `#clinics`. The contacts card puts the map (a static picture that opens Google Maps) and the address
-side by side; under 760 px they stack. The "Открыть в Google Картах" pill on the map is Orange with white text
-(2026-11-19, user's request: white blended with the light map lines); Navy on hover.
+side by side; under 760 px they stack. The "Открыть в Google Картах" pill on the map is White with Navy text
+and turns Orange with white text on hover (2026-11-19, user's request).
 
 ## Reviews
 
