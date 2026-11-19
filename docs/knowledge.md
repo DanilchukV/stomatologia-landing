@@ -137,6 +137,8 @@ and no movement.
 
 ## About
 
+The title is three fixed lines, «Лечим так, / чтобы вы понимали / каждый шаг» (2026-11-19, user's request:
+it used to break between «чтобы» and «вы»; two lines do not fit the column at the title size).
 Two columns from 1000 px: text (title, lead, the three promises in a column, the motto pinned to the
 bottom) and a photo collage that stretches to the text's height: one large tile (with the address
 chip) and two small ones. Below 1000 px one column: the collage goes between the lead and the
