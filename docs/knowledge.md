@@ -131,8 +131,11 @@ photo (too eye-catching), a three-step demo (too tall), a slim band with a breat
 at the teeth). Now: «Помощник», «Не знаете, к какому врачу?», a lead and a Yellow «Подобрать врача» (no effects
 but the arrow nudging on hover) on the left; on the right a thin line drawing of the 32 teeth — the helper's own
 outlines from `D.teeth` (absolute coordinates in `teeth.webp`, drawn in one SVG cropped to the teeth). A tooth
-fills Mint on hover and its name shows under the drawing («Зуб 5 — второй премоляр»); a click opens the helper
-with that tooth chosen, straight on the «Что беспокоит» step (`finder-tooth`). Below 900 px the drawing goes above
+fills Mint on hover and its name shows under the drawing («Зуб 5 — второй премоляр»). A click only marks it (Yellow,
+«Выбран зуб …»; again: unmarks; it is the helper's own `state.tooth`, so both always agree) — the user wanted the
+button to stay the way in: «Подобрать врача» (`finder-open`) opens the helper with the marked tooth on «Что беспокоит»,
+or from the start when none is marked.
+Below 900 px the drawing goes above
 the text. The section has no top padding: About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —

@@ -352,7 +352,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */
 /* text and a Yellow button on the left; on the right a thin line drawing of the helper's tooth map (main.js):
-   a tooth lights up Mint on hover, its name shows under the drawing, a click opens the helper with it chosen.
+   a tooth lights up Mint on hover and its name shows under the drawing; a click marks it Yellow, and the button
+   then opens the helper with it.
    No top padding of its own: About's bottom padding is the gap */
 .finder { padding: 0 var(--gutter); }
 .finder__card { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 24px 48px; padding: clamp(24px, 3.4vw, 40px) clamp(24px, 4vw, 48px); border: 1px solid var(--line); border-radius: 32px; background: var(--white); }
@@ -366,7 +367,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__teeth { width: 100%; max-width: 460px; }
 .finder__teeth svg { display: block; width: 100%; height: auto; overflow: visible; }
 .ft { fill: var(--white); stroke: rgba(12, 44, 71, .45); stroke-width: 5; stroke-linejoin: round; cursor: pointer; transition: fill .15s, stroke .15s; }
-.ft:hover { fill: var(--tint); stroke: var(--ink); }
+.ft:hover, .ft.is-on { fill: var(--tint); stroke: var(--ink); }
+.ft.is-on { fill: var(--accent); }
 .finder__tip { min-height: 1.5em; font-size: 14px; font-weight: 600; color: var(--muted); }
 
 @media (max-width: 900px) {
