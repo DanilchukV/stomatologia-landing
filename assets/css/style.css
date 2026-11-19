@@ -403,7 +403,9 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 /* a floating capsule, like the header nav; it sticks 10 px under the header */
 .svc-bar { position: sticky; top: calc(var(--hdr-h) + 10px); z-index: 20; overflow: hidden; padding: 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); }
 .svc-bar.is-stuck { box-shadow: 0 6px 24px rgba(12, 44, 71, .10); }
-.svc-bar__tabs { display: flex; align-items: center; gap: 8px; overflow-x: auto; }
+/* a scrolling row clips on all sides: 2 px of room (padding, offset by the margin) keeps the chips' 1 px borders whole
+   on scaled screens (Windows 125 %), where they sat a fraction of a pixel outside and were cut */
+.svc-bar__tabs { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 2px; margin: -2px; }
 .svc-bar__all { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px 0 12px; border-color: var(--ink); font-size: 14px; white-space: nowrap; }
 .svc-bar__all .ic { display: block; }
 .svc-bar__sep { flex: none; width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
