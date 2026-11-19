@@ -34,7 +34,7 @@ Small behaviour addition over the export: footer service links open that categor
 
 The logo is the user's `logo.svg` (tooth + «Гревитидент» + «стоматологическая клиника», text in outlines):
 `assets/img/logo.svg` in the header (48 px high, 38 px on phones) and in the footer. The footer is White with a
-1 px Navy line on top (2026-11-19, user's choice): it was Navy with `logo-light.svg` and white text, then briefly
+1 px Navy line on top (2026-11-19, user's choice); links underline in Orange on hover: it was Navy with `logo-light.svg` and white text, then briefly
 Mint; the user disliked two dark blocks in a row (booking card and footer) and then the Mint. `logo-light.svg`
 (navy text white, the tooth's dark stops light) is kept, unused, for a dark background.
 The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the 32 px and
