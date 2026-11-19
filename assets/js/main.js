@@ -666,8 +666,8 @@
       set({ cat: t.dataset.cat, svcStep: 1, docPick: autoDoc(catRoles(catById(t.dataset.cat), state.cart)), docsAll: false, svcAll: false, svcOpen: null });
       scrollToId('svc-panel');
     },
-    // back to the helper call-out with the cards right under it, not the section top with its title and lead
-    'cat-close': () => { set({ cat: null }); scrollToId('svc-help'); },
+    // back to the section's title with all the cards under it
+    'cat-close': () => { set({ cat: null }); scrollToId('services'); },
     'svc-check': (t) => {
       const n = t.closest('.svc-row').dataset.svc;
       if (n !== CONSULT) { toggleCart(n, catById(state.cat).name); return; }

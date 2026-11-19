@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119zj">
-<script src="assets/js/header.js?v=20261119zj" defer></script>
-<script src="assets/js/data.js?v=20261119zj" defer></script>
-<script src="assets/js/form.js?v=20261119zj" defer></script>
-<script src="assets/js/main.js?v=20261119zj" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261119zk">
+<script src="assets/js/header.js?v=20261119zk" defer></script>
+<script src="assets/js/data.js?v=20261119zk" defer></script>
+<script src="assets/js/form.js?v=20261119zk" defer></script>
+<script src="assets/js/main.js?v=20261119zk" defer></script>
 </head>
 <body>
 
@@ -196,17 +196,37 @@
   </div>
 </section>
 
+<!-- Finder: the helper's own mini section, the site's signature feature (opens the helper dialog) -->
+<section class="finder" id="finder" aria-labelledby="finder-title">
+  <div class="wrap finder__card">
+    <div class="finder__text">
+      <span class="eyebrow">Помощник</span>
+      <h2 class="finder__title" id="finder-title">Не&nbsp;знаете, к&nbsp;какому врачу?</h2>
+      <p class="finder__lead">Покажите на&nbsp;схеме, какой зуб беспокоит, и&nbsp;выберите, что&nbsp;чувствуете&nbsp;— подскажем, что&nbsp;это может быть и&nbsp;какой врач нужен. Займёт минуту.</p>
+      <ol class="finder__steps">
+        <li class="finder__step"><span class="num">1</span>Отметьте зуб</li>
+        <li class="finder__step"><span class="num">2</span>Что&nbsp;беспокоит</li>
+        <li class="finder__step"><span class="num">3</span>Подскажем врача</li>
+      </ol>
+      <button type="button" class="btn btn--accent finder__btn" data-act="helper-open">Подсказать врача<svg class="ic" width="18" height="18" stroke-width="2.2" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+    <button type="button" class="finder__media" data-act="helper-open" aria-label="Открыть помощник">
+      <img class="finder__img" src="assets/img/teeth.webp" alt="" loading="lazy">
+      <span class="finder__pulse" aria-hidden="true"></span>
+      <span class="finder__answer" aria-hidden="true">
+        <span class="finder__av"><img src="assets/img/doctors/ther.webp" alt=""></span>
+        <span class="finder__answer-text"><span class="finder__answer-k">Зуб&nbsp;5 · болит</span><span class="finder__answer-v">Скорее всего, к&nbsp;терапевту</span></span>
+      </span>
+    </button>
+  </div>
+</section>
+
 <!-- Services -->
 <section class="services" id="services">
   <div class="wrap services__in">
     <div class="services__head">
       <h2 class="title">Услуги</h2>
       <p class="services__lead">Точный план и&nbsp;стоимость врач назовёт после осмотра&nbsp;— до&nbsp;начала лечения. Узнать ориентировочную цену можно по&nbsp;телефону <a href="tel:+375290123456" class="tel">+375 (29) 012-34-56</a>.</p>
-      <div class="helper-cta" id="svc-help">
-        <span class="helper-cta__ic" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7.4 4C5 4 3.5 5.8 3.5 8.3c0 2.1.7 3.6 1.3 5.2.6 1.7.8 3.3 1.2 5 .4 1.6 1 2.7 1.9 2.7 1.4 0 1.5-2.4 2-4.2.3-1.1.9-1.8 2.1-1.8s1.8.7 2.1 1.8c.5 1.8.6 4.2 2 4.2.9 0 1.5-1.1 1.9-2.7.4-1.7.6-3.3 1.2-5 .6-1.6 1.3-3.1 1.3-5.2C20.5 5.8 19 4 16.6 4c-1.8 0-2.8 1.1-4.6 1.1S9.2 4 7.4 4z"/></svg></span>
-        <span class="helper-cta__text"><span class="helper-cta__title">Не&nbsp;знаете, к&nbsp;какому врачу?</span><span class="helper-cta__sub">Отметьте зуб и&nbsp;что&nbsp;беспокоит&nbsp;— подскажем направление и&nbsp;врача.</span></span>
-        <button type="button" class="btn btn--dark helper-cta__btn" data-act="helper-open">Подсказать врача<svg class="ic" width="18" height="18" stroke-width="2.2" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-      </div>
     </div>
     <div class="svc-grid grid-in" id="svc-grid">
       <button type="button" class="svc-card" data-act="cat" data-cat="diag">

@@ -121,12 +121,23 @@ right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026
 (`@media (hover: hover)` only) only a deeper shadow appears — no colour, which the user reads as an active button,
 and no movement.
 
+## Finder (the helper's mini section)
+
+The user calls the helper the site's signature feature, so on 2026-11-19 its call-out moved out of the Services
+head into a section of its own, right before Services: a bordered card with «Помощник», «Не знаете, к какому
+врачу?», a lead, three numbered steps (a vertical list: in a row the third step wrapped alone) and «Подсказать
+врача»; on the right the jaw picture with one tooth pulsing (tooth 20, its centre hard-coded in % of `teeth.webp`)
+and a sample answer chip («Зуб 5 · болит — Скорее всего, к терапевту», the therapist's photo). The button and the
+whole picture open the helper dialog. Below 900 px the picture goes above the text. The section has no top padding:
+About's bottom padding is the gap.
+
 ## Helper (tooth → symptom → which doctor)
 
 Until 2026-11-19 this was a page section, «Подбор врача за минуту», whose hint could tick services into the cart
 and book. The user turned it into an optional helper with no booking: a native `<dialog id="helper">`
 (`showModal()`, Esc and a click on the backdrop close it) opened by the «Не знаете, к какому врачу?» call-out
-under the Services lead. It is deliberately not called AI: the answer comes from fixed rules in `data.js`.
+in its own mini section, «Finder» (`#finder`, between About and Services; see below). It is deliberately not called
+AI: the answer comes from fixed rules in `data.js`.
 Booking stays only in the Services panel and the booking form; the helper's choices no longer reach the booking
 summary (later the same day step 3 got «Записаться», which only leads to the booking form with the
 recommended doctor). Focus goes to the title on open (`autofocus`), not to the close button.
@@ -205,8 +216,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   the page lines the tab bar up under the header (user: align to the section's navigation), scrolling while the
   cards fly; the ghosts measure the tabs before the scroll starts and aim at where they will be (`shift`).
   Skipped with reduced motion and when
-  switching tabs. "Все разделы" scrolls to the helper call-out «Не знаете, к какому врачу?» (`#svc-help`) with all the
-  cards under it, not to the section title and lead. The tab bar is a floating capsule (rounded, 1 px Navy border),
+  switching tabs. "Все разделы" scrolls to the Services title (`#services`) with all the
+  cards under it. The tab bar is a floating capsule (rounded, 1 px Navy border),
   sticky 10 px under the header (user: the straight full-width bar looked out of place).
   In the shot harness Chrome speeds timers up, so a paused frame shows the tabs already visible — that's the harness.
 - Every category head has the same height, so switching doesn't make the photo or "Все разделы" jump:
