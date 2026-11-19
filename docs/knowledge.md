@@ -201,8 +201,12 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   bar (`flyToTabs` in `main.js`): a fixed ghost per card animates from the card's rect to the tab's rect with the
   Web Animations API (680 ms, staggered 28 ms), its photo fading out and the tab label fading in; the real tabs stay hidden
   (`.is-landing`) until their ghost lands. The panel is held invisible meanwhile (a script animation, which beats its
-  CSS entrance) and rises in as the page scrolls to it — the user disliked the panel appearing mid-flight. Skipped with reduced motion and when
-  switching tabs. "Все разделы" scrolls to the cards themselves (`#svc-grid`), not to the section title and lead.
+  CSS entrance) and then fades in where it is, without moving (the user disliked it rising and the page jumping up):
+  the page scrolls only if the panel's top is under the bar or below mid-screen.
+  Skipped with reduced motion and when
+  switching tabs. "Все разделы" scrolls to the helper call-out «Не знаете, к какому врачу?» (`#svc-help`) with all the
+  cards under it, not to the section title and lead. The tab bar is a floating capsule (rounded, 1 px Navy border),
+  sticky 10 px under the header (user: the straight full-width bar looked out of place).
   In the shot harness Chrome speeds timers up, so a paused frame shows the tabs already visible — that's the harness.
 - Every category head has the same height, so switching doesn't make the photo or "Все разделы" jump:
   the title keeps 2 lines (`min-height: 2.2em`, text at the bottom) and the description 3 lines

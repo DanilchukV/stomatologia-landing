@@ -565,14 +565,18 @@
     set({ cat: id, svcStep: 1, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
     if (!from) { scrollToId('svc-panel'); return; }
     const end = flyToTabs(from, id);
-    // the panel waits until the cards have landed, then rises in while the page scrolls to it
+    // the panel waits until the cards have landed, then fades in where it is, without moving
     // (a script animation, so it wins over the panel's own CSS entrance)
-    const REVEAL = 420;
+    const REVEAL = 380;
     const wait = end - 80;
-    const down = { opacity: 0, transform: 'translateY(28px)' };
-    $('#svc-panel').animate([{ ...down, offset: 0 }, { ...down, offset: wait / (wait + REVEAL) }, { opacity: 1, transform: 'none' }],
-      { duration: wait + REVEAL, easing: 'cubic-bezier(.2, 0, .2, 1)' });
-    setTimeout(() => scrollToId('svc-panel'), wait);
+    const panel = $('#svc-panel');
+    panel.animate([{ opacity: 0, transform: 'none' }, { opacity: 0, transform: 'none', offset: wait / (wait + REVEAL) }, { opacity: 1, transform: 'none' }],
+      { duration: wait + REVEAL, easing: 'ease-out' });
+    // scroll only if the panel's top is hidden under the bar or far down the screen
+    setTimeout(() => {
+      const top = panel.getBoundingClientRect().top;
+      if (top < $('.svc-bar').getBoundingClientRect().bottom || top > window.innerHeight * .5) scrollToId('svc-panel');
+    }, wait);
   }
 
   // ghosts from the card rects to the tab rects; the real tabs stay invisible until their ghost lands
