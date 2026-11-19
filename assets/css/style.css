@@ -360,21 +360,17 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .finder__text { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 .finder__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(28px, 3vw, 40px); line-height: 1.1; letter-spacing: -.02em; }
 .finder__lead { margin: 0; max-width: 460px; color: var(--muted); font-size: 17px; text-wrap: pretty; }
-.finder__jaw { position: relative; display: flex; justify-content: center; }
-.finder__teeth { width: 100%; max-width: 460px; }
+.finder__jaw { position: relative; display: flex; justify-content: center; cursor: pointer; }
+.finder__teeth { position: relative; width: 100%; max-width: 460px; }
 .finder__teeth svg { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
 .ft { fill: var(--white); stroke: rgba(12, 44, 71, .45); stroke-width: 5; stroke-linejoin: round; }
-.finder__jaw { cursor: pointer; }
 .finder__pick { position: absolute; top: -8px; right: 0; gap: 8px; min-height: 48px; padding: 0 24px; font-size: 16px; white-space: nowrap; box-shadow: 0 8px 20px rgba(12, 44, 71, .14); }
-/* with a mouse: over the jaw a Yellow circle follows the pointer instead of the cursor (main.js moves it);
-   it hides over the button */
-.finder__cursor { position: absolute; left: 0; top: 0; z-index: 1; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: var(--accent); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 15px; font-weight: 600; line-height: 1.2; box-shadow: 0 10px 24px rgba(12, 44, 71, .16); pointer-events: none; opacity: 0; scale: .4; transition: opacity .2s ease, scale .25s var(--ease-out); }
-@media (hover: hover) {
-  .finder__jaw { cursor: none; }
-  .finder__jaw .finder__pick { cursor: pointer; }
-  .finder__jaw:hover .finder__cursor { opacity: 1; scale: 1; }
-  .finder__jaw.is-on-btn .finder__cursor { opacity: 0; scale: .4; }
-}
+/* a pulsing Yellow dot on tooth 29 (lower jaw, left in the drawing): its centre in % of the viewBox,
+   x (279 − 50) / 1436, y (654 − 190) / 666; it grows a little while the drawing is hovered */
+.finder__dot { position: absolute; left: 15.9%; top: 69.7%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 255, 255, .9); transition: scale .25s var(--ease-out); pointer-events: none; }
+.finder__dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--accent); animation: finderPulse 1.8s ease-out infinite; }
+@keyframes finderPulse { from { scale: 1; opacity: .9; } to { scale: 2.6; opacity: 0; } }
+.finder__jaw:hover .finder__dot { scale: 1.25; }
 .finder__pick .ic { display: block; transition: transform .25s var(--ease-out); }
 .finder__pick:hover .ic { transform: translateX(3px); }
 

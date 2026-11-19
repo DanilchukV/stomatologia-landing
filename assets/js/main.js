@@ -738,17 +738,9 @@
   });
 
   /* ---------- finder: a line drawing of the helper's tooth map ---------- */
-  // only a picture (the user wants no clicking on it): the helper's own outlines, absolute coordinates in
-  // teeth.webp, in one SVG cropped to the 32 teeth
-  $('#finder-teeth').innerHTML = `<svg viewBox="50 190 1436 666">${D.teeth.map((t) => `<path class="ft" d="${t[7]}"/>`).join('')}</svg>`;
-  // the whole drawing opens the helper; with a mouse, a Yellow circle follows the pointer over it
-  const finderJaw = $('.finder__jaw');
-  const finderCursor = $('.finder__cursor');
-  finderJaw.addEventListener('mousemove', (e) => {
-    const r = finderJaw.getBoundingClientRect();
-    finderCursor.style.transform = `translate(${e.clientX - r.left}px, ${e.clientY - r.top}px)`;
-    finderJaw.classList.toggle('is-on-btn', !!e.target.closest('.finder__pick'));
-  });
+  // a picture, no single teeth to click (the whole drawing opens the helper): the helper's own outlines, absolute
+  // coordinates in teeth.webp, in one SVG cropped to the 32 teeth, plus a pulsing dot on one tooth (style.css)
+  $('#finder-teeth').innerHTML = `<svg viewBox="50 190 1436 666">${D.teeth.map((t) => `<path class="ft" d="${t[7]}"/>`).join('')}</svg><span class="finder__dot"></span>`;
 
   /* ---------- back to top ---------- */
   // the arrow lifts off, then the page glides up: a slow start and a soft landing, longer for a longer way;

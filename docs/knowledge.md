@@ -133,8 +133,9 @@ and a lead on the left; on the right a still line drawing of the 32 teeth — th
 own outlines from `D.teeth` (absolute coordinates in `teeth.webp`, one SVG cropped to the teeth, no pointer events)
 — with the only button, a Yellow «Выбрать зуб», in its top right corner (the «Подобрать
 врача» button on the left was dropped; the gap between the jaws looked too central). The whole drawing opens the
-helper too, and with a mouse a Yellow «Начать →» circle follows the pointer over it instead of the cursor (hidden
-over the button; `mousemove` in `main.js`, CSS `scale` for the pop-in). Both (`finder-open`) open the helper on its
+helper too; on one tooth (29, lower left in the drawing) a Yellow dot pulses with a widening ring, as in the first
+version (user's choice over a «Начать →» circle that followed the pointer), and grows a little while the drawing is
+hovered. Both (`finder-open`) open the helper on its
 first step, the tooth
 map. Below 900 px the drawing goes above the text. The section has no top padding: About's bottom padding is the gap.
 
