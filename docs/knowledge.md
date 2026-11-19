@@ -119,7 +119,8 @@ width under the text (`object-position: 25%`; 12 % on phones centres the doctor)
 The fact cards span the same width as the text column plus the photo: from the text's left edge to the photo's
 right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026-11-19, user's request). On hover
 (`@media (hover: hover)` only) only a deeper shadow appears — no colour, which the user reads as an active button,
-and no movement.
+and no movement. The icon sits beside the title and the text runs the full card width below it (2026-11-19, user:
+the braces card wrapped to three lines), so all three texts take two lines at ≥ 1280 px and the cards are level.
 
 ## Finder (the helper's mini section)
 
