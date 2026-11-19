@@ -552,7 +552,9 @@
     const y = window.scrollY;
     // a stuck services bar takes over the header's shadow, which would otherwise darken its chips
     const bar = $('.svc-bar');
-    const stuck = !!bar && bar.getBoundingClientRect().top <= hdr.getBoundingClientRect().bottom + 11; // it sticks 10 px under the header
+    // stuck = sitting exactly at its CSS sticky `top`; once Services scrolls away the bar goes up under the header
+    // and is no longer stuck, so the header gets its shadow back
+    const stuck = !!bar && Math.abs(bar.getBoundingClientRect().top - parseFloat(getComputedStyle(bar).top)) < 1.5;
     if (bar) bar.classList.toggle('is-stuck', stuck);
     hdr.classList.toggle('is-scrolled', y > 8 && !stuck);
     toTop.hidden = y <= 900;
