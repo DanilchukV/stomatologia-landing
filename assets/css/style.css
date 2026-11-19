@@ -411,7 +411,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .svc-bar__all { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px 0 12px; border-color: var(--ink); font-size: 14px; white-space: nowrap; }
 .svc-bar__all .ic { display: block; }
 .svc-bar__sep { flex: none; width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
-.svc-bar__tab { flex: none; min-height: 40px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+/* the tabs grow to fill the capsule and never shrink, so narrow screens scroll them */
+.svc-bar__tab { flex: 1 0 auto; min-height: 40px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
 /* opening a section from the grid: ghosts of the cards fly into the tabs (main.js flyToTabs); a tab shows when its ghost lands */
 .svc-bar__tabs.is-landing .svc-bar__tab:not(.is-landed) { visibility: hidden; }
 .svc-fly { position: fixed; z-index: 25; overflow: hidden; box-sizing: border-box; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); display: grid; place-items: center; pointer-events: none; }

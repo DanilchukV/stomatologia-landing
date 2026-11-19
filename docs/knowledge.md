@@ -219,7 +219,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   Skipped with reduced motion and when
   switching tabs. "Все разделы" scrolls to the Services title (`#services`) with all the
   cards under it. The tab bar is a floating capsule (rounded, 1 px Navy border),
-  sticky 10 px under the header (user: the straight full-width bar looked out of place).
+  sticky 10 px under the header (user: the straight full-width bar looked out of place). The tabs grow to fill it
+  (`flex: 1 0 auto`), so there is no empty end on the right; where they don't fit they scroll.
   In the shot harness Chrome speeds timers up, so a paused frame shows the tabs already visible — that's the harness.
 - Every category head has the same height, so switching doesn't make the photo or "Все разделы" jump:
   the title keeps 2 lines (`min-height: 2.2em`, text at the bottom) and the description 3 lines
