@@ -131,10 +131,10 @@ photo (too eye-catching), a three-step demo (too tall), a slim band with a breat
 clickable teeth in the drawing (the user wants no clicking there). Now: «Помощник», «Не знаете, к какому врачу?»,
 and a lead on the left; on the right a still line drawing of the 32 teeth — the helper's
 own outlines from `D.teeth` (absolute coordinates in `teeth.webp`, one SVG cropped to the teeth, no pointer events)
-— with the only button, «Выбрать зуб», in its top right corner: 56 px, Mint with a 2 px Yellow rim that turns
-Orange on hover (user, 2026-11-19; it was plain Yellow before) (the «Подобрать
+— with the only button, a Yellow 56 px «Выбрать зуб», in its top right corner (a Mint version with a Yellow rim was
+swapped back: the user wanted the dot Mint and the button Yellow) (the «Подобрать
 врача» button on the left was dropped; the gap between the jaws looked too central). The whole drawing opens the
-helper too; on one tooth (29, lower left in the drawing) a Yellow dot pulses with a widening ring, as in the first
+helper too; on one tooth (29, lower left in the drawing) a Mint dot with a Navy rim pulses with a widening ring, as in the first
 version (user's choice over a «Начать →» circle that followed the pointer), and grows a little while the drawing is
 hovered. Both (`finder-open`) open the helper on its
 first step, the tooth
