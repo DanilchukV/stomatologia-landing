@@ -184,11 +184,13 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   (therapist / orthopedist / surgeon / orthodontist), only one at a time.
 - Expanding rows animate `grid-template-rows: 0fr → 1fr`; the collapsed content also gets
   `visibility: hidden`, so links and buttons inside it are out of the tab order.
-- Photos: `assets/img/services/<category>.webp` (1600 px) and `-800.webp`, from the images the user
-  supplied on 2026-10-21 (same pictures and crops as the design). Cards: a 176 px strip that bleeds to the
+- Photos: `assets/img/services/<category>.webp` (1600 px) and `-800.webp`. Since 2026-11-19 they are the user's
+  new pictures (folder «врачи и клиника» on the user's desktop, 1672 × 941 PNG → cwebp -q 80 -m 6 -sharp_yuv, resized;
+  the 2026-10-21 ones were the design's). Cards: a 176 px strip that bleeds to the
   card edges and fades into the card; the `<img>` is lazy, so the six photos don't load with the page.
   The open category's dark head: the photo covers its right 66 % and fades in from its left edge
-  (`--fade`, 24 % for "treat", 48 % for the rest); the per-category crops are in CSS
+  (`--fade`, 24 % for "treat", 48 % for the rest); the per-category crops (set for the new pictures so faces
+  stay in frame) are in CSS
   (`.svc-panel__photo[data-cat=…]`). On phones the photo becomes a band above the text, which would
   otherwise sit on a bright part of the picture.
 
