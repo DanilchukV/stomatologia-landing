@@ -658,7 +658,7 @@
       scrollToId('book');
     },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
-    // the finder's buttons: the helper on its first step, the tooth map
+    // the finder's «Выбрать зуб»: the helper on its first step, the tooth map
     'finder-open': () => {
       set({ hStep: 1 });
       helper.showModal();

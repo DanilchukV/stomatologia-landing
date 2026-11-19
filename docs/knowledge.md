@@ -129,9 +129,10 @@ head into a section of its own, right before Services. Tried and dropped the sam
 photo (too eye-catching), a three-step demo (too tall), a slim band with a breathing, shining Yellow button
 («like a garage advert»), a calm slim band with a Navy button (wanted bigger, Yellow, hinting at the teeth), and
 clickable teeth in the drawing (the user wants no clicking there). Now: «Помощник», «Не знаете, к какому врачу?»,
-a lead and a Yellow «Подобрать врача» on the left; on the right a still line drawing of the 32 teeth — the helper's
+and a lead on the left; on the right a still line drawing of the 32 teeth — the helper's
 own outlines from `D.teeth` (absolute coordinates in `teeth.webp`, one SVG cropped to the teeth, no pointer events)
-— with «Выбрать зуб на схеме» under it. Both buttons (`finder-open`) open the helper on its first step, the tooth
+— and the only button, a Yellow «Выбрать зуб», set right in the gap between the jaws (user's idea; the «Подобрать
+врача» button on the left was dropped). It (`finder-open`) opens the helper on its first step, the tooth
 map. Below 900 px the drawing goes above the text. The section has no top padding: About's bottom padding is the gap.
 
 **Spacing between sections** (user, 2026-11-19): every gap is the one between the hero's fact cards and About —
