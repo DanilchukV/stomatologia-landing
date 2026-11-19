@@ -89,17 +89,12 @@ Breakpoints, from wide to narrow:
 A nav jump stops with the section title 28 px under the header (user's request, 2026-11-18): sections have
 `scroll-margin-top: calc(var(--hdr-h) - var(--sec-y) + 28px)`, a negative-ish margin that skips the top padding.
 
-Nav "braces" (2026-11-19, user's idea and drawing, `Frame 7.svg` — the links looked like they hung in the air):
-on the one-row header the links are chained by a wire at text height, with an orthodontic bracket (a 7-unit
-rounded square with four tie-wing dots, drawn at 10 px) just before each label. It is all the link's `::before`,
-36 px of wire (shortened 2026-11-19 at the user's request; the first link has a short fixed stub), centred in the
-nav. At 1390–1500 px the full header row is tight, so the wire shrinks with `clamp(18px, 12vw − 140px, 36px)`
-(the margin covers the scrollbar, which vw counts); without it the phone and CTA wrap to a second row. Every
-bracket is drawn like the current one in the drawing — Mint square, Orange (`--accent-ink`) wing dots (user, 2026-11-19:
-Mint dots blurred into the wire); the wire is Mint at 45 % (`--wire`, `color-mix`) and turns Orange for the current
-section and on hover. The bracket is an SVG data URI, so its colours repeat the tokens.
-Hover and the current section also turn the label Orange (current since 2026-11-19, user's request). Colour only, no movement (the user dislikes hover jumps). Hidden in the burger
-menu. "Главная" (`#top`, the hero) was added as the first link and to scroll-spy.
+Nav capsule (2026-11-19). Earlier the same day the links were chained by "braces" (the user's `Frame 7.svg`: a
+wire with an orthodontic bracket before each label, in git history); the user then dropped them and asked for the
+nav itself to stand out at once. Now the links sit in a soft capsule (Mint mixed 35 % into White) as pills; the
+current section is a White pill with a light shadow and Orange text, hover gives a half-white pill and Orange text.
+No movement (the user dislikes hover jumps). In the burger menu it is a plain list again. "Главная" (`#top`, the
+hero) is the first link and is in scroll-spy.
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
 `header.js` removes the `href` from every `a[href^="tel:"]` unless the pointer is coarse (phones, tablets)
