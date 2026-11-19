@@ -100,11 +100,14 @@ the burger header) is hidden without its link.
 
 ## Hero
 
-The photo stays inside the content column (2026-11-19, user's request: it used to bleed to the right window
-edge, which the user disliked). Its shape is a "leaf" from the user's `Rectangle 1.png`: big rounding top-left and
+The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that
+it bled to the window edge, which the user disliked): `.hero` is an inline-size container and `.hero__media` gets a
+negative right margin of `min(660px, 50cqw − gutter) − min(720px, 50cqw − gutter)` — the header content is
+1440 px max, the hero's 1320. Its shape is a "leaf" from the user's `Rectangle 1.png`: big rounding top-left and
 bottom-right, square corners elsewhere — `border-radius: 44% 0 / 50% 0`, measured from that picture
-(1907 × 1697). Under 1128 px text and photo no longer fit side by side; the photo then goes full
-width under the text (`object-position: 25%` keeps the doctor in frame; 18 % on phones), same leaf shape.
+(1907 × 1697). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
+middle of the leaf. Under 1128 px text and photo no longer fit side by side; the photo then goes full
+width under the text (`object-position: 25%`; 12 % on phones centres the doctor), same leaf shape.
 
 ## Picker (tooth → symptom → hint)
 
