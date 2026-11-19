@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119s">
-<script src="assets/js/header.js?v=20261119s" defer></script>
-<script src="assets/js/data.js?v=20261119s" defer></script>
-<script src="assets/js/form.js?v=20261119s" defer></script>
-<script src="assets/js/main.js?v=20261119s" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261119t">
+<script src="assets/js/header.js?v=20261119t" defer></script>
+<script src="assets/js/data.js?v=20261119t" defer></script>
+<script src="assets/js/form.js?v=20261119t" defer></script>
+<script src="assets/js/main.js?v=20261119t" defer></script>
 </head>
 <body>
 
@@ -421,99 +421,63 @@
 <!-- Helper: tooth → symptom → which doctor; a dialog opened from Services, no booking in it -->
 <dialog class="helper" id="helper" aria-labelledby="helper-title">
   <button type="button" class="helper__close" data-act="helper-close" aria-label="Закрыть"><svg class="ic" width="20" height="20" stroke-width="2.4" aria-hidden="true"><use href="#i-close"/></svg></button>
-  <div class="helper__in">
+  <aside class="helper__side">
+    <div class="helper__titles">
+      <span class="eyebrow">Помощник</span>
+      <h2 class="helper__title" id="helper-title" tabindex="-1" autofocus>К&nbsp;какому врачу обратиться?</h2>
+    </div>
+    <ol class="hsteps" aria-label="Шаги">
+      <li class="hstep"><button type="button" class="hstep__btn" data-act="helper-step" data-step="1"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">1</span></span><span class="hstep__text"><span class="hstep__t">Зуб</span><span class="hstep__v"></span></span></button></li>
+      <li class="hstep"><button type="button" class="hstep__btn" data-act="helper-step" data-step="2"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">2</span></span><span class="hstep__text"><span class="hstep__t">Что&nbsp;беспокоит</span><span class="hstep__v"></span></span></button></li>
+      <li class="hstep"><button type="button" class="hstep__btn" data-act="helper-step" data-step="3"><span class="hstep__dot"><svg class="ic hstep__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="hstep__n">3</span></span><span class="hstep__text"><span class="hstep__t">Какой врач нужен</span><span class="hstep__v"></span></span></button></li>
+    </ol>
+    <p class="helper__note">Это подсказка, а&nbsp;не&nbsp;диагноз. Точный план врач составит после осмотра.</p>
+  </aside>
+
+  <div class="helper__main">
     <div class="helper__head">
-      <div class="helper__titles">
-        <span class="eyebrow">Помощник</span>
-        <h2 class="helper__title" id="helper-title" tabindex="-1" autofocus>К&nbsp;какому врачу обратиться?</h2>
-        <p class="helper__lead">Отметьте зуб или&nbsp;всю челюсть и&nbsp;выберите, что&nbsp;беспокоит&nbsp;— подскажем, что&nbsp;это может быть и&nbsp;какой врач нужен.</p>
+      <span class="helper__k" id="helper-k"></span>
+      <h3 class="helper__h" id="helper-h" tabindex="-1"></h3>
+      <p class="helper__lead" id="helper-lead"></p>
+    </div>
+
+    <div class="helper__body" id="helper-body">
+      <div class="hpane" data-step="1">
+        <div class="jaw" id="jaw">
+          <div class="jaw__frame">
+            <div class="jaw__sides">
+              <span class="jaw__side"><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-back"/></svg>Правая сторона</span>
+              <span class="jaw__mid">Вид спереди</span>
+              <span class="jaw__side">Левая сторона<svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-fwd"/></svg></span>
+            </div>
+            <div class="jaw__map" id="jaw-map">
+              <img class="jaw__img" src="assets/img/teeth.webp" alt="Схема зубов: верхняя и нижняя челюсть" loading="lazy">
+            </div>
+          </div>
+          <span class="jaw__hint" id="tooth-hint" aria-live="polite"></span>
+          <span class="jaw__note">Схема показана так, как&nbsp;вас&nbsp;видит врач: ваша правая сторона&nbsp;— слева, левая&nbsp;— справа.</span>
+        </div>
+        <div class="jaw__btns">
+          <span class="jaw__or">Вопрос не&nbsp;про один зуб?</span>
+          <button class="btn btn--ghost jaw__btn" type="button" data-act="pick-jaw"><svg class="ic" width="18" height="18" stroke-width="2" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9c0-3 3.6-5 8-5s8 2 8 5"/><path d="M4 15c0 3 3.6 5 8 5s8-2 8-5"/><path d="M7 9.5v1M10.3 10v1M13.7 10v1M17 9.5v1M7 14.5v-1M10.3 14v-1M13.7 14v-1M17 14.5v-1"/></svg>По&nbsp;всей челюсти</button>
+          <button class="btn btn--ghost jaw__btn" type="button" data-act="skip-tooth">Не&nbsp;знаю, какой зуб</button>
+        </div>
+      </div>
+
+      <div class="hpane" data-step="2" hidden>
+        <div class="sym-wrap" id="sym-wrap" role="group" aria-label="Что беспокоит"></div>
+      </div>
+
+      <div class="hpane" data-step="3" hidden>
+        <div class="hint" id="hint"></div>
       </div>
     </div>
-    <div class="pick__box">
-      <ol class="steps" aria-label="Шаги подбора">
-        <li class="step" data-step="1">
-          <span class="step__head">
-            <span class="step__dot"><svg class="ic step__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="step__n">1</span></span>
-            <span class="step__text"><span class="step__k">Шаг&nbsp;1</span><span class="step__title">Выберите зуб</span></span>
-          </span>
-          <span class="step__line" aria-hidden="true"><span></span></span>
-        </li>
-        <li class="step" data-step="2">
-          <span class="step__head">
-            <span class="step__dot"><svg class="ic step__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="step__n">2</span></span>
-            <span class="step__text"><span class="step__k">Шаг&nbsp;2</span><span class="step__title">Что&nbsp;беспокоит</span></span>
-          </span>
-          <span class="step__line" aria-hidden="true"><span></span></span>
-        </li>
-        <li class="step" data-step="3">
-          <span class="step__head">
-            <span class="step__dot"><svg class="ic step__check" width="16" height="16" stroke-width="3" aria-hidden="true"><use href="#i-check"/></svg><span class="step__n">3</span></span>
-            <span class="step__text"><span class="step__k">Шаг&nbsp;3</span><span class="step__title">Подсказка</span></span>
-          </span>
-        </li>
-      </ol>
 
-      <div class="pick__main">
-        <div class="pick__block">
-          <div class="pick__label">
-            <span class="num">1</span>
-            <h3 class="pick__h">Выберите зуб</h3>
-            <span class="pick__opt">необязательно</span>
-          </div>
-          <div class="jaw" id="jaw">
-            <div class="jaw__frame">
-              <div class="jaw__sides">
-                <span class="jaw__side"><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-back"/></svg>Правая сторона</span>
-                <span class="jaw__mid">Вид спереди</span>
-                <span class="jaw__side">Левая сторона<svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-fwd"/></svg></span>
-              </div>
-              <div class="jaw__map" id="jaw-map">
-                <img class="jaw__img" src="assets/img/teeth.webp" alt="Схема зубов: верхняя и нижняя челюсть" loading="lazy">
-              </div>
-            </div>
-            <span class="jaw__hint" id="tooth-hint" aria-live="polite">Нажмите на&nbsp;зуб&nbsp;— он&nbsp;подсветится</span>
-            <div class="jaw__start" data-stage="1">
-              <span class="jaw__note one-line">Схема показана так, как&nbsp;вас&nbsp;видит врач: ваша правая сторона&nbsp;— слева, левая&nbsp;— справа.</span>
-              <div class="jaw__btns">
-                <button class="btn btn--ghost-dark jaw__btn" type="button" data-act="pick-jaw"><svg class="ic" width="18" height="18" stroke-width="2" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9c0-3 3.6-5 8-5s8 2 8 5"/><path d="M4 15c0 3 3.6 5 8 5s8-2 8-5"/><path d="M7 9.5v1M10.3 10v1M13.7 10v1M17 9.5v1M7 14.5v-1M10.3 14v-1M13.7 14v-1M17 14.5v-1"/></svg>Вопрос по&nbsp;всей челюсти</button>
-                <button class="btn btn--ghost jaw__btn" type="button" data-act="skip-tooth">Не&nbsp;знаю, какой зуб</button>
-              </div>
-            </div>
-            <button class="btn btn--ghost jaw__reset" type="button" data-stage="2" data-act="reset-tooth" hidden>← Выбрать зуб заново</button>
-          </div>
-        </div>
-
-        <div class="pick__block step-in" data-stage="2" hidden>
-          <div class="pick__label">
-            <span class="num">2</span>
-            <h3 class="pick__h">Что&nbsp;беспокоит?</h3>
-            <span class="pick__opt pick__opt--sm">выберите один вариант</span>
-          </div>
-          <div class="sym-wrap" id="sym-wrap" role="group" aria-label="Что беспокоит"></div>
-        </div>
-        <div class="pick__locked" data-stage="1">
-          <span class="num num--soft">2</span>
-          <span class="pick__locked-text">
-            <span class="pick__locked-title">Что&nbsp;беспокоит?</span>
-            <span class="pick__locked-sub">Откроется после выбора зуба&nbsp;— или&nbsp;нажмите «Не&nbsp;знаю, какой зуб»</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="hint-col">
-        <div class="pick__label">
-          <span class="num">3</span>
-          <h3 class="pick__h">Подсказка</h3>
-        </div>
-        <div class="hint-card">
-          <div class="hint" id="hint" hidden></div>
-          <div class="hint-empty" id="hint-empty">
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><circle cx="28" cy="28" r="28" fill="#ABC8C4"/><path d="M18 22c0-3.3 2.7-5.2 5.4-4.6 2 .4 3.2 1.4 4.6 1.4s2.6-1 4.6-1.4c2.7-.6 5.4 1.3 5.4 4.6 0 4.4-1.4 6.8-2.3 10.8-.7 3.6-1.2 9.7-3.6 9.7-2.5 0-1.9-7.3-4.1-7.3s-1.6 7.3-4.1 7.3c-2.4 0-2.9-6.1-3.6-9.7-.9-4-2.3-6.4-2.3-10.8z" stroke="#0C2C47" stroke-width="2" stroke-linejoin="round"/></svg>
-            <h4 class="hint-empty__title">Выберите симптом&nbsp;—<br>здесь появится подсказка</h4>
-            <p class="hint-empty__text">Расскажем, что&nbsp;это может быть и&nbsp;к&nbsp;какому врачу обратиться.</p>
-          </div>
-        </div>
-      </div>
+    <div class="helper__nav">
+      <button type="button" class="btn btn--ghost helper__back" data-act="helper-back"><svg class="ic" width="16" height="16" stroke-width="2.4" aria-hidden="true"><use href="#i-back"/></svg>Назад</button>
+      <span class="helper__info" id="helper-info"></span>
+      <button type="button" class="btn btn--dark helper__next" data-act="helper-next"><span></span><svg class="ic" width="16" height="16" stroke-width="2.4" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="btn btn--ghost helper__again" data-act="helper-restart">Начать заново</button>
     </div>
   </div>
 </dialog>

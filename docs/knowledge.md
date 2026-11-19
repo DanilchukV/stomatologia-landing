@@ -129,9 +129,29 @@ and book. The user turned it into an optional helper with no booking: a native `
 (`showModal()`, Esc and a click on the backdrop close it) opened by the «Не знаете, к какому врачу?» call-out
 under the Services lead. It is deliberately not called AI: the answer comes from fixed rules in `data.js`.
 Booking stays only in the Services panel and the booking form; the helper's choices no longer reach the booking
-summary. The dialog does not scroll, `.helper__in` does, so the close button stays in its corner; on phones the
-dialog is full-screen. Focus goes to the title on open (`autofocus`), not to the close button.
+summary. Focus goes to the title on open (`autofocus`), not to the close button.
 
+The same day the user asked for it step by step, with nothing on screen that can't be chosen yet (before, the
+jaw, a locked symptom block and an empty hint column were all visible at once), and for the scrollbar not to run
+outside the dialog's rounded corners:
+
+- Layout: a mint column on the left with the title and the steps (Зуб → Что беспокоит → Какой врач нужен), each
+  showing the answer given; on the right only the current step (`state.hStep`), a fixed head («Шаг N из 3»,
+  heading, lead), a body that scrolls, and a fixed bar with Назад / Далее («Показать врача» on step 2, «Начать
+  заново» on step 3). Only the body scrolls, so the scrollbar sits between the head and the bar, clear of the
+  corners. The dialog has a fixed height (820 px or the screen), so it doesn't resize between steps.
+- A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
+  in the left column are clickable to go back. Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
+  какой зуб» are answers themselves and go straight to step 2. The doctor shows in the left column only once
+  step 3 is open, so it isn't given away while choosing the symptom.
+- Step 3: the heading and lead are the symptom's title and text; then «Вам к врачу» — the roles of
+  `recommend[symptom].roles` (the therapist when it has none) with those doctors' cards — and, beside it, the
+  direction, `svcs` as a plain list and «Услуги и врачи направления», which closes the dialog and opens that
+  category in Services.
+- The jaw is sized by the dialog's height (`.jaw__frame` max-width from `100dvh`), so step 1 fits without
+  scrolling on a laptop; its min-width keeps the side labels inside.
+- Below 900 px the dialog is full-screen, the steps go in a row on top and only the current one keeps its title;
+  the disclaimer then moves from the left column into step 3.
 - The tooth map is `assets/img/teeth.webp` (1536 × 1024) with 32 buttons positioned in % of that
   size. Each button has `pointer-events: none` and only its SVG outline path takes clicks, so
   neighbouring bounding boxes don't steal clicks.
@@ -139,12 +159,7 @@ dialog is full-screen. Focus goes to the title on open (`autofocus`), not to the
   sees the patient); labels show the number within the quadrant (`qn()`, 1–8). Wisdom teeth are
   1, 16, 17, 32 — only for them the "Мешает зуб мудрости" chip appears, and another symptom on a
   wisdom tooth adds a note about the surgeon.
-- "Вопрос по всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
-- The hint: tags, title and text of the symptom, then «Вам к врачу» — the roles of `recommend[symptom].roles`
-  (the therapist when it has none) with those doctors' cards, the direction, `svcs` as a plain list, and
-  «Услуги и врачи направления», which closes the dialog and opens that category in Services.
-- On a phone the steps bar shows only the current step's title.
-- ≥ 1000 px the hint column is sticky inside the dialog and its card scrolls inside itself.
+- "По всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
 
 ## About
 

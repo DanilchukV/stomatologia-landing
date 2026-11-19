@@ -51,7 +51,7 @@
 
   /* ---------- state ---------- */
   const state = {
-    tooth: null, scope: null, skipTooth: false, symptom: null,
+    hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
     svcStep: 1, docPick: null, cart: [],
     docPage: 0,
@@ -133,29 +133,50 @@
     });
   }
 
+  // one step at a time; a step opens once the one before it has an answer
+  const HSTEPS = [
+    ['Выберите зуб', 'Нажмите на зуб, который беспокоит, — он подсветится. Если вопрос не про один зуб, выберите вариант под схемой.'],
+    ['Что беспокоит?', 'Выберите один вариант — тот, что ближе всего к вашей ситуации.']
+  ];
+  const canStep = (k) => k === 1 || (k === 2 ? state.tooth !== null || state.skipTooth : k === 3 && !!currentSymptom());
+  const toothShort = () => (state.tooth !== null ? `Зуб ${qn(state.tooth)} · ${D.toothNames[state.tooth]}`
+    : state.scope === 'jaw' ? 'Вся челюсть' : state.skipTooth ? 'Не знаю, какой зуб' : '');
+  const recRoles = (sym) => { const r = (D.recommend[sym.id] || {}).roles || []; return r.length ? r : ['ther']; };
+  const rolesText = (sym) => { const t = recRoles(sym).map((r) => ROLE_NAME[r]).join(' и '); return t[0].toUpperCase() + t.slice(1); };
+
+  function hStep(k) {
+    if (!canStep(k)) return;
+    set({ hStep: k });
+    $('#helper-body').scrollTop = 0;
+    $('#helper-h').focus({ preventScroll: true });
+  }
+
   function renderPicker() {
     const s = state;
-    const stage2 = s.tooth !== null || s.skipTooth;
     const sym = currentSymptom();
     const tooth = s.tooth;
-    $$('[data-stage="1"]').forEach((el) => { el.hidden = stage2; });
-    $$('[data-stage="2"]').forEach((el) => { el.hidden = !stage2; });
-    jaw.classList.toggle('is-compact', stage2);
+    const step = s.hStep;
+
+    $$('.hpane', helper).forEach((el) => { el.hidden = +el.dataset.step !== step; });
+    $('#helper-k').textContent = `Шаг ${step} из 3`;
+    $('#helper-h').textContent = glue(step === 3 ? sym.title : HSTEPS[step - 1][0]);
+    $('#helper-lead').textContent = glue(step === 3 ? sym.text : HSTEPS[step - 1][1]);
+
+    // the doctor shows on the left only once step 3 has been opened, not while choosing the symptom
+    const vals = [toothShort(), sym ? sym.label : '', sym && step !== 2 ? rolesText(sym) : ''];
+    $$('.hstep__btn', helper).forEach((b) => {
+      const k = +b.dataset.step;
+      if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      b.disabled = k !== step && !canStep(k);
+      b.parentElement.classList.toggle('is-done', k !== step && canStep(k + 1));
+      $('.hstep__v', b).textContent = glue(vals[k - 1]);
+    });
+
     jaw.classList.toggle('is-jaw', s.scope === 'jaw');
     $$('.tooth', jaw).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.tooth === tooth));
-
     $('#tooth-hint').textContent = glue(tooth !== null
       ? `Выбран зуб ${qn(tooth)} — ${D.toothNames[tooth]}, ${tooth <= 16 ? 'верхняя' : 'нижняя'} челюсть, ${sideOf(tooth) === 'справа' ? 'правая' : 'левая'} сторона`
-      : s.scope === 'jaw' ? 'Вопрос по всей челюсти — выберите, что беспокоит'
-        : s.skipTooth ? 'Зуб не выбран — подскажем по симптому' : 'Нажмите на зуб — он подсветится');
-    $('.jaw__reset').textContent = s.scope === 'jaw' ? '← Выбрать один зуб' : '← Выбрать зуб заново';
-
-    const cur = sym ? 3 : stage2 ? 2 : 1;
-    $$('.step').forEach((li) => {
-      const n = +li.dataset.step;
-      li.classList.toggle('is-done', n < cur);
-      if (n === cur) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
-    });
+      : s.scope === 'jaw' ? 'Выбран вопрос по всей челюсти' : 'Нажмите на зуб на схеме');
 
     // symptom chips: the set depends on scope, and "wisdom tooth" only shows for a wisdom tooth
     const wrap = $('#sym-wrap');
@@ -169,33 +190,32 @@
     $$('.sym-chip', wrap).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === s.symptom));
     wrap.classList.toggle('has-sel', !!sym);
 
-    const hint = $('#hint');
-    $('#hint-empty').hidden = !!sym;
-    hint.hidden = !sym;
     const html = sym ? hintHTML(sym) : '';
-    mount(hint, html, () => html);
+    mount($('#hint'), html, () => html);
+
+    const next = $('.helper__next', helper);
+    next.hidden = step === 3;
+    next.disabled = !canStep(step + 1);
+    next.firstChild.textContent = step === 1 ? 'Далее' : 'Показать врача';
+    $('.helper__back', helper).hidden = step === 1;
+    $('.helper__again', helper).hidden = step !== 3;
+    $('#helper-info').textContent = glue(step === 1 ? (toothShort() || 'Зуб можно не выбирать — есть варианты под схемой')
+      : step === 2 ? (sym ? sym.label : 'Выберите один вариант') : '');
   }
 
-  // the answer: what it may be and which doctor to see; information only, no booking from here
+  // the answer: which doctor to see (the therapist when the symptom names none); no booking from here
   function hintHTML(sym) {
-    const tooth = state.tooth;
     const cat = catById(sym.cat);
     const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
-    // no roles (e.g. an X-ray only): the therapist, as for a plain check-up
-    const roleList = rec.roles.length ? rec.roles : ['ther'];
-    const recDocs = docsFor(roleList);
-    const toothLabel = tooth !== null ? `Зуб ${qn(tooth)} · ${D.toothNames[tooth]}, ${sideOf(tooth)} ${jawOf(tooth)}` : 'Зуб не выбран';
-    const roles = roleList.map((r) => ROLE_NAME[r]).join(' и ');
-    const docs = recDocs.map((d) => `<div class="hint__doc"><span class="av">${docAvatar(d, 20)}</span><span class="hint__doc-text"><span class="hint__doc-name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="hint__doc-spec">${esc(d.spec)}</span>` : ''}</span></div>`).join('');
-    const svcs = rec.svcs.length ? `<div class="hint__sec"><span class="caps">Вероятно понадобится</span><ul class="bullets">${rec.svcs.map((n) => `<li><span>${esc(glue(n))}</span></li>`).join('')}</ul></div>` : '';
-    return `<div class="hint__tags"><span class="tag">${toothLabel}</span><span class="tag">${esc(glue(sym.label))}</span></div>
-      <h4 class="hint__title">${esc(glue(sym.title))}</h4>
-      <p class="hint__text">${esc(glue(sym.text))}</p>
-      ${WISDOM.includes(tooth) && sym.id !== 'wisdom' ? `<p class="hint__note">${glue('Это зуб мудрости — возможно, понадобится консультация хирурга.')}</p>` : ''}
-      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(roles[0].toUpperCase() + roles.slice(1))}</span>${docs}</div>
-      <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
-      ${svcs}
-      <div class="hint__actions"><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и&nbsp;врачи направления</a></div>
+    const docs = docsFor(recRoles(sym)).map((d) => `<div class="hint__doc"><span class="av">${docAvatar(d, 20)}</span><span class="hint__doc-text"><span class="hint__doc-name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="hint__doc-spec">${esc(d.spec)}</span>` : ''}</span></div>`).join('');
+    const svcs = rec.svcs.length ? `<div class="hint__sec"><span class="caps">Вероятно понадобится</span><ul class="bullets bullets--md">${rec.svcs.map((n) => `<li><span>${esc(glue(n))}</span></li>`).join('')}</ul></div>` : '';
+    return `${WISDOM.includes(state.tooth) && sym.id !== 'wisdom' ? `<p class="hint__note">${glue('Это зуб мудрости — возможно, понадобится консультация хирурга.')}</p>` : ''}
+      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(rolesText(sym))}</span><div class="hint__docs">${docs}</div></div>
+      <div class="hint__more">
+        <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
+        ${svcs}
+        <a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и&nbsp;врачи направления${icon('i-arrow', 16, 2.4)}</a>
+      </div>
       <p class="hint__disclaimer">${glue('Это подсказка, а не диагноз. Точный план врач составит после осмотра.')}</p>`;
   }
 
@@ -531,14 +551,17 @@
       const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
       set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null });
     },
-    'pick-jaw': () => set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null }),
-    'skip-tooth': () => set({ skipTooth: true, scope: 'tooth', symptom: null }),
-    'reset-tooth': () => set({ tooth: null, skipTooth: false, scope: null, symptom: null }),
+    'pick-jaw': () => { if (state.scope !== 'jaw') set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null }); hStep(2); },
+    'skip-tooth': () => { if (state.tooth !== null || !state.skipTooth || state.scope === 'jaw') set({ skipTooth: true, scope: 'tooth', tooth: null, symptom: null }); hStep(2); },
     symptom: (t) => {
       const id = state.symptom === t.dataset.id ? null : t.dataset.id;
       set({ symptom: id });
     },
-    'helper-open': () => helper.showModal(),
+    'helper-step': (t) => hStep(+t.dataset.step),
+    'helper-next': () => hStep(state.hStep + 1),
+    'helper-back': () => hStep(state.hStep - 1),
+    'helper-restart': () => { set({ tooth: null, scope: null, skipTooth: false, symptom: null }); hStep(1); },
+    'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
     'helper-close': () => helper.close(),
     // from the helper to the category's services, where booking is
     'go-cat': (t, e) => {
