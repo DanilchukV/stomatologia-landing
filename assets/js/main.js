@@ -203,7 +203,7 @@
       : step === 2 ? (sym ? sym.label : 'Выберите один вариант') : '');
   }
 
-  // the answer: which doctor to see (the therapist when the symptom names none); no booking from here
+  // the answer: which doctor to see (the therapist when the symptom names none); booking is the bar's button
   function hintHTML(sym) {
     const cat = catById(sym.cat);
     const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
@@ -214,7 +214,6 @@
       <div class="hint__more">
         <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
         ${svcs}
-        <a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и&nbsp;врачи направления${icon('i-arrow', 16, 2.4)}</a>
       </div>
       <p class="hint__disclaimer">${glue('Это подсказка, а не диагноз. Точный план врач составит после осмотра.')}</p>`;
   }
@@ -569,12 +568,6 @@
     },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
     'helper-close': () => helper.close(),
-    // from the helper to the category's services, where booking is
-    'go-cat': (t, e) => {
-      e.preventDefault();
-      const sym = currentSymptom();
-      if (sym) { helper.close(); openCat(sym.cat); }
-    },
 
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {

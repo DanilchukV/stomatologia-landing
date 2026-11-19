@@ -136,16 +136,16 @@ outside the dialog's rounded corners:
   showing the answer given; on the right only the current step (`state.hStep`), a fixed head («Шаг N из 3»,
   heading, lead), a body that scrolls, and a fixed bar with Назад / Далее («Показать врача» on step 2,
   «Записаться» on step 3). Only the body scrolls, so the scrollbar sits between the head and the bar, clear of the
-  corners. The dialog is as tall as the current step (`height: fit-content`, at most the screen): the user disliked
-  the empty space under the short step 3 when the height was fixed.
+  corners. Every step has the same size (user's request, after a version whose height followed the step):
+  780 px or the screen. Step 3 is one column (doctor, then direction and services), so it fills that height.
 - A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
   in the left column only show progress — moving is by Назад / Далее alone (user's request). Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
   какой зуб» are answers themselves and go straight to step 2. The doctor shows in the left column only once
   step 3 is open, so it isn't given away while choosing the symptom.
 - Step 3: the heading and lead are the symptom's title and text; then «Вам к врачу» — the roles of
-  `recommend[symptom].roles` (the therapist when it has none) with those doctors' cards — and, beside it, the
-  direction, `svcs` as a plain list and «Услуги и врачи направления», which closes the dialog and opens that
-  category in Services. «Записаться» closes the dialog, sets the booking form's doctor to the first recommended
+  `recommend[symptom].roles` (the therapist when it has none) with those doctors' cards — and under it the
+  direction and `svcs` as a plain list (a link to the category in Services was removed at the user's request).
+  «Записаться» closes the dialog, sets the booking form's doctor to the first recommended
   one (`docPick`) and scrolls to the form. The site's scroll uses requestAnimationFrame, which never fires in the
   headless shot harness — to check such a jump there, replace it with a timer in `-Do`.
 - The jaw is sized by the dialog's height (`.jaw__frame` max-width from `100dvh`), so step 1 fits without
