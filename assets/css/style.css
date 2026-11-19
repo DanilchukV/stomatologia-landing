@@ -837,13 +837,14 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__k { padding: 10px 0 0; font-family: var(--f-head); font-weight: 600; font-size: 17px; }
 .book__v { min-width: 0; padding-top: 4px; }
 
-.book__docs { display: flex; flex-wrap: wrap; gap: 8px; }
-.book-doc { display: inline-flex; align-items: center; gap: 10px; padding: 5px 18px 5px 5px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color .15s, border-color .15s, color .15s; }
+/* the doctors: one row of equal tiles (photo above the name), so none is left alone on a second line */
+.book__docs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.book-doc { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 10px 14px; border: 1.5px solid var(--line); border-radius: 20px; background: var(--white); color: var(--ink); font: inherit; text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color .15s, border-color .15s, color .15s; }
 .book-doc:hover { border-color: var(--accent); }
 .book-doc[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--white); }
-.book-doc .av { width: 40px; height: 40px; }
-.book-doc__text { display: flex; flex-direction: column; line-height: 1.25; }
-.book-doc__name { font-weight: 600; font-size: 15px; }
+.book-doc .av { width: 60px; height: 60px; }
+.book-doc__text { display: flex; flex-direction: column; align-items: center; gap: 2px; line-height: 1.25; }
+.book-doc__name { font-weight: 600; font-size: 15px; text-wrap: balance; }
 .book-doc__sub { font-size: 13px; opacity: .8; }
 
 .book__svcs { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -887,11 +888,15 @@ html:has(.helper[open]) { overflow: hidden; }
   .book__fields { grid-template-columns: minmax(0, 1fr); }
   .book__foot { flex-direction: column-reverse; align-items: stretch; }
   .book__consent { max-width: none; }
+  /* five tiles don't fit: a list of rows instead */
+  .book__docs { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .book-doc { flex-direction: row; gap: 12px; padding: 6px 18px 6px 6px; border-radius: 999px; text-align: left; }
+  .book-doc .av { width: 44px; height: 44px; }
+  .book-doc__text { align-items: flex-start; }
 }
 @media (max-width: 480px) {
   .book__head { flex-direction: column; }
   .when__opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .book-doc { width: 100%; }
 }
 
 /* ===== Footer ===== */

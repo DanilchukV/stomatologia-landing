@@ -253,7 +253,11 @@
     svcOpenBox.hidden = !cat;
     if (!cat) { mount(svcOpenBox, '', () => ''); return; }
     // the shell (and its form) is rebuilt each time the panel opens, so the form is bound again
-    if (mount(svcOpenBox, 'open', panelShellHTML)) window.SiteForm.bind($('#svc-form'), () => markSent('svc-done'));
+    if (mount(svcOpenBox, 'open', panelShellHTML)) {
+      const svcForm = $('#svc-form');
+      window.SiteForm.bind(svcForm, () => markSent('svc-done'));
+      copyContacts(form, svcForm);
+    }
     $$('.svc-bar__tab', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === cat.id));
     mount($('#svc-head'), cat.id, () => panelHeadHTML(cat));
 
@@ -503,6 +507,16 @@
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
   window.SiteForm.bind(form, () => markSent('book-done'));
   form.addEventListener('change', (e) => { if (e.target.name === 'time') set({ time: e.target.value }); });
+  // Services' step 3 and this form are one booking: the name and phone typed in either show in the other
+  const CONTACTS = ['name', 'phone'];
+  function copyContacts(from, to) {
+    if (from && to) CONTACTS.forEach((k) => { if (from.elements[k] && to.elements[k]) to.elements[k].value = from.elements[k].value; });
+  }
+  document.addEventListener('input', (e) => {
+    const f = e.target.form;
+    if (!f || !CONTACTS.includes(e.target.name) || (f.id !== 'book-form' && f.id !== 'svc-form')) return;
+    copyContacts(f, f.id === 'book-form' ? $('#svc-form') : form);
+  });
 
   function renderBooking() {
     // the doctor: "any" (docPick null) or one of the bookable doctors; shared with Services and the helper

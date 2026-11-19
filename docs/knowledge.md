@@ -307,10 +307,12 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 
 Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
 выбором врача»): a white card with rows, label on the left, and «Отправить заявку» at the bottom right:
-- «К кому» — chips with photos: «Любой врач» (`docPick` null) and the four bookable doctors. The choice is the
+- «К кому» — five equal tiles in one row (photo above the name; a list of rows on phones; user disliked one chip
+  wrapping alone): «Любой врач» (`docPick` null) and the four bookable doctors. The choice is the
   same `docPick` as in Services and the helper, so a doctor picked there shows here and the other way round.
 - «Услуги» — the services ticked in Services as removable chips; none: a line and a link to «Услуги».
-- «Контакты» (name, phone) and «Удобное время».
+- «Контакты» (name, phone) and «Удобное время». Services' step 3 and this form are one booking: doctor, services
+  and time share the state, and the name and phone are mirrored as they are typed (`copyContacts`).
 - «Сбросить всё» (top right, and next to «Выбрано N услуг» in the services panel) clears the services and the doctor
   (`cart-reset`; user's choice: name and phone stay); hidden when there is nothing to clear.
 
