@@ -210,10 +210,11 @@ since names may change), `name`, `spec`, `role`, `photo` (file in `assets/img/do
 `.webp`) and, for the 4 doctors, `exp`. While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
 check the lead text in `index.html`.
 - The lead says only «Опытные специалисты по всем направлениям.» (the staff count was dropped 2026-11-19, user's
-  request). Each doctor has one invented line on experience under the speciality (`exp`: years plus a
-  certificate or award, with an award icon), kept short enough for two lines on the narrow 1024 px cards; key
-  word pairs are glued with no-break spaces. `.doc__spec` reserves room for those two lines, so the page of
-  nurses and administrators (no `exp`) keeps the same height when paging.
+  request). Everyone has one invented line under the speciality (`exp`, with an award icon): doctors — years plus
+  a certificate or award; nurses — «Первая категория» and years; administrators — years and what they help with.
+  The lines are kept short enough for two lines on the narrow 1024 px cards; numbers and «лет», and other key
+  word pairs, are glued with no-break spaces. `.doc__spec` reserves room for those two lines, so both pages keep
+  the same height when paging.
 - Section: no tabs (the user wants one list: doctors, then nurses, then administrators), 4 per page (2 pages) with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
   doctor (not the nurses or administrators) has "Записаться", which also picks that doctor for the booking summary.
 - No "любой свободный врач" option (removed on the user's request, 2026-11-17): a concrete doctor is

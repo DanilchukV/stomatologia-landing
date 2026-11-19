@@ -81,14 +81,14 @@ window.SITE_DATA = {
   // role: ther — терапевт, surg — хирург, ortd — ортодонт, orth — ортопед, nurse, admin (not bookable)
   // exp: one line on experience under the specialty (invented, like the names; doctors only)
   doctors: [
-    {"id":"ther","name":"Анна Ковалёва","spec":"Терапевт","exp":"Стаж 12 лет, сертификат по микроэндодонтии","role":"ther","photo":"ther"},
-    {"id":"surg","name":"Дмитрий Савицкий","spec":"Хирург","exp":"Стаж 20 лет, диплом «Имплантолог года»","role":"surg","photo":"surg"},
-    {"id":"ortd","name":"Ольга Литвинович","spec":"Ортодонт","exp":"Стаж 9 лет, сертификат Damon System","role":"ortd","photo":"ortd"},
-    {"id":"orth","name":"Сергей Журавский","spec":"Ортопед","exp":"Стаж 11 лет, сертификат CAD/CAM","role":"orth","photo":"orth"},
-    {"id":"nurse1","name":"Екатерина Мельник","spec":"Медицинская сестра","role":"nurse","photo":"nurse1"},
-    {"id":"nurse2","name":"Ирина Шевчук","spec":"Медицинская сестра","role":"nurse","photo":"nurse2"},
-    {"id":"admin1","name":"Наталья Громыко","spec":"Администратор","role":"admin","photo":"admin1"},
-    {"id":"admin2","name":"Алина Ковальчук","spec":"Администратор","role":"admin","photo":"admin2"}
+    {"id":"ther","name":"Анна Ковалёва","spec":"Терапевт","exp":"Стаж 12 лет, сертификат по микроэндодонтии","role":"ther","photo":"ther"},
+    {"id":"surg","name":"Дмитрий Савицкий","spec":"Хирург","exp":"Стаж 20 лет, диплом «Имплантолог года»","role":"surg","photo":"surg"},
+    {"id":"ortd","name":"Ольга Литвинович","spec":"Ортодонт","exp":"Стаж 9 лет, сертификат Damon System","role":"ortd","photo":"ortd"},
+    {"id":"orth","name":"Сергей Журавский","spec":"Ортопед","exp":"Стаж 11 лет, сертификат CAD/CAM","role":"orth","photo":"orth"},
+    {"id":"nurse1","name":"Екатерина Мельник","spec":"Медицинская сестра","exp":"Первая категория, стаж 8 лет","role":"nurse","photo":"nurse1"},
+    {"id":"nurse2","name":"Ирина Шевчук","spec":"Медицинская сестра","exp":"Первая категория, стаж 6 лет","role":"nurse","photo":"nurse2"},
+    {"id":"admin1","name":"Наталья Громыко","spec":"Администратор","exp":"Стаж 7 лет, подберёт удобное время визита","role":"admin","photo":"admin1"},
+    {"id":"admin2","name":"Алина Ковальчук","spec":"Администратор","exp":"Стаж 4 года, ответит на вопросы о лечении","role":"admin","photo":"admin2"}
   ],
   // cat: service category the hint points to
   symptoms: [
