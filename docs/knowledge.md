@@ -174,6 +174,9 @@ outside the dialog's rounded corners:
   headless shot harness — to check such a jump there, replace it with a timer in `-Do`.
 - The jaw is sized by the dialog's height (`.jaw__frame` max-width from `100dvh`), so step 1 fits without
   scrolling on a laptop; its min-width keeps the side labels inside.
+- No step scrolls on a laptop (user, 2026-11-19): below 860 px of height the head, the bar, the jaw and the
+  doctor photos get tighter, and below 720 px tighter still (no experience line, a smaller first-visit list);
+  checked down to 680 px in all steps. Only shorter screens still scroll the step body.
 - Below 900 px the dialog is full-screen, the steps go in a row on top and only the current one keeps its title;
   the disclaimer then moves from the left column into step 3.
 - The tooth map is `assets/img/teeth.webp` (1536 × 1024) with 32 buttons positioned in % of that
