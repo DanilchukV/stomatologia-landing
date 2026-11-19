@@ -1,5 +1,5 @@
 'use strict';
-// Page behaviour: header, tooth picker, services panel, selected-services cart,
+// Page behaviour: header, the helper dialog (tooth → symptom → which doctor), services panel,
 // doctors carousel, booking form. Content comes from data.js.
 (function () {
   const D = window.SITE_DATA;
@@ -51,21 +51,19 @@
 
   /* ---------- state ---------- */
   const state = {
-    tooth: null, scope: null, skipTooth: false, symptom: null, recAll: false,
+    tooth: null, scope: null, skipTooth: false, symptom: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
-    svcStep: 1, docPick: null, cart: [], cartOpen: false,
+    svcStep: 1, docPick: null, cart: [],
     docPage: 0,
     time: 'любое', sent: false
   };
   function set(patch) {
     Object.assign(state, patch);
-    if (!state.cart.length) state.cartOpen = false;
     render();
   }
 
   const inCart = (n) => state.cart.some((x) => x.n === n);
   const catById = (id) => D.cats.find((c) => c.id === id);
-  const catOfService = (n) => (D.cats.find((c) => c.items.includes(n)) || { name: '' }).name;
   const currentSymptom = () => D.symptoms.find((x) => x.id === state.symptom) || null;
   // doctors are picked by id: names are empty until the clinic sends them, so the speciality stands in
   const docById = (id) => D.doctors.find((d) => d.id === id);
@@ -108,7 +106,10 @@
   /* ---------- header ---------- */
   const hdr = $('#hdr');
 
-  /* ---------- tooth picker ---------- */
+  /* ---------- helper dialog: tooth picker ---------- */
+  const helper = $('#helper');
+  // a click on the dimmed backdrop lands on the <dialog> itself
+  helper.addEventListener('click', (e) => { if (e.target === helper) helper.close(); });
   const jaw = $('#jaw');
   const qn = (n) => (n <= 8 ? 9 - n : n <= 16 ? n - 8 : n <= 24 ? 25 - n : n - 24); // number within the quadrant
   const sideOf = (n) => (n <= 8 || n >= 25 ? 'справа' : 'слева');
@@ -175,30 +176,26 @@
     mount(hint, html, () => html);
   }
 
+  // the answer: what it may be and which doctor to see; information only, no booking from here
   function hintHTML(sym) {
-    const s = state;
-    const tooth = s.tooth;
+    const tooth = state.tooth;
     const cat = catById(sym.cat);
     const rec = D.recommend[sym.id] || { svcs: [], roles: [] };
-    const recDocs = docsFor(rec.roles);
+    // no roles (e.g. an X-ray only): the therapist, as for a plain check-up
+    const roleList = rec.roles.length ? rec.roles : ['ther'];
+    const recDocs = docsFor(roleList);
     const toothLabel = tooth !== null ? `Зуб ${qn(tooth)} · ${D.toothNames[tooth]}, ${sideOf(tooth)} ${jawOf(tooth)}` : 'Зуб не выбран';
-    const svcs = rec.svcs.map((n) => `<button type="button" class="check-row" aria-pressed="${inCart(n)}" data-act="rec-svc" data-svc="${esc(n)}" data-focus="rsvc:${esc(n)}"><span class="box">${icon('i-check', 13, 3.2)}</span><span class="check-row__label">${esc(glue(n))}</span></button>`).join('');
-    const docs = recDocs.slice().sort((a, b) => (b.id === s.docPick) - (a.id === s.docPick))
-      .filter((d, k) => s.recAll || k < 3)
-      .map((d) => {
-        const sel = s.docPick === d.id;
-        return `<button type="button" class="opt-row" aria-pressed="${sel}" data-act="rec-doc" data-id="${d.id}" data-focus="rdoc:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="opt-row__text"><span class="opt-row__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="opt-row__sub">${esc(d.spec)}</span>` : ''}</span>${sel ? icon('i-check', 18, 2.8) : ''}</button>`;
-      }).join('');
-    const more = recDocs.length > 3 ? `<button type="button" class="link-btn" data-act="rec-more" data-focus="rmore">${s.recAll ? 'Свернуть' : `Показать всех (${recDocs.length})`}</button>` : '';
-    const who = recDocs.length ? docs + more : '<span class="hint__small">Врача подберём при записи.</span>';
+    const roles = roleList.map((r) => ROLE_NAME[r]).join(' и ');
+    const docs = recDocs.map((d) => `<div class="hint__doc"><span class="av">${docAvatar(d, 20)}</span><span class="hint__doc-text"><span class="hint__doc-name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="hint__doc-spec">${esc(d.spec)}</span>` : ''}</span></div>`).join('');
+    const svcs = rec.svcs.length ? `<div class="hint__sec"><span class="caps">Вероятно понадобится</span><ul class="bullets">${rec.svcs.map((n) => `<li><span>${esc(glue(n))}</span></li>`).join('')}</ul></div>` : '';
     return `<div class="hint__tags"><span class="tag">${toothLabel}</span><span class="tag">${esc(glue(sym.label))}</span></div>
       <h4 class="hint__title">${esc(glue(sym.title))}</h4>
       <p class="hint__text">${esc(glue(sym.text))}</p>
       ${WISDOM.includes(tooth) && sym.id !== 'wisdom' ? `<p class="hint__note">${glue('Это зуб мудрости — возможно, понадобится консультация хирурга.')}</p>` : ''}
+      <div class="hint__answer"><span class="caps">Вам к&nbsp;врачу</span><span class="hint__answer-v">${esc(roles[0].toUpperCase() + roles.slice(1))}</span>${docs}</div>
       <div class="hint__row"><span class="hint__k">Направление</span><span class="hint__v">${esc(glue(cat.name))}</span></div>
-      <div class="hint__sec"><span class="caps">Вероятно понадобится</span>${svcs}<span class="hint__small">Отметьте — услуги попадут в запись на приём.</span></div>
-      <div class="hint__sec" id="rec-who"><div class="hint__who-head"><span class="caps">Кто примет</span><span class="hint__small">${rec.roles.map((r) => ROLE_NAME[r]).join(' и ')}</span></div>${who}</div>
-      <div class="hint__actions"><a class="btn btn--dark hint__cta" href="#book"><span>Записаться</span><span class="hint__dot" aria-hidden="true"></span><span>${esc(D.clinic.area)}</span></a><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и врачи направления</a></div>
+      ${svcs}
+      <div class="hint__actions"><a class="btn btn--ghost-dark hint__cat" href="#services" data-act="go-cat">Услуги и&nbsp;врачи направления</a></div>
       <p class="hint__disclaimer">${glue('Это подсказка, а не диагноз. Точный план врач составит после осмотра.')}</p>`;
   }
 
@@ -399,33 +396,6 @@
     }
   }
 
-  /* ---------- selected services (floating cart) ---------- */
-  const cartBox = $('#cart');
-  function renderCart() {
-    const n = state.cart.length;
-    cartBox.hidden = !n || state.sent;
-    if (cartBox.hidden) return;
-    mount(cartBox, 'cart', () => `<div class="cart__pop" id="cart-pop" role="dialog" aria-label="Выбранные услуги" hidden>
-        <div class="cart__head"><div class="cart__titles"><span class="cart__kicker">Запись на приём</span><span class="cart__title" id="cart-title"></span></div>
-          <button type="button" class="cart__close" data-act="cart-toggle" aria-label="Свернуть">${icon('i-close', 16, 2.4)}</button></div>
-        <div class="cart__list" id="cart-list"></div>
-        <div class="cart__foot">
-          <span class="cart__doc">Врач: <b id="cart-doc"></b></span>
-          <span class="cart__note">Администратор перезвонит, подберёт удобное время и подтвердит запись.</span>
-          <div class="cart__actions"><button type="button" class="btn btn--ghost cart__clear" data-act="cart-clear">Очистить</button><a href="#book" class="btn btn--dark cart__book" data-act="cart-close">Записаться${icon('i-arrow', 16, 2.4)}</a></div>
-        </div>
-      </div>
-      <button type="button" class="cart__pill" data-act="cart-toggle" aria-expanded="false" aria-controls="cart-pop"><span class="cart__count" id="cart-count"></span><span id="cart-label"></span>${icon('i-chev-up', 16, 2.4)}</button>`);
-    $('#cart-pop').hidden = !state.cartOpen;
-    $('#cart-title').textContent = 'Выбрано ' + n + ' ' + servicesWord(n);
-    const items = state.cart.map((x) => `<div class="cart__item"><span class="cart__tick">${icon('i-check', 13, 3.2)}</span><span class="cart__info"><span class="cart__name">${esc(glue(x.n))}</span><span class="cart__cat">${esc(glue(x.cat))}</span></span><button type="button" class="cart__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></div>`).join('');
-    mount($('#cart-list'), items, () => items);
-    $('#cart-doc').textContent = docLabel();
-    $('#cart-count').textContent = n;
-    $('#cart-label').textContent = state.cartOpen ? 'Свернуть' : 'Записаться';
-    $('.cart__pill').setAttribute('aria-expanded', state.cartOpen);
-  }
-
   /* ---------- doctors carousel ---------- */
   // on a phone all cards are one swipeable row (CSS), so no pages
   const swipeMedia = window.matchMedia('(max-width: 640px)');
@@ -487,10 +457,7 @@
   form.addEventListener('change', (e) => { if (e.target.name === 'time') set({ time: e.target.value }); });
 
   function renderBooking() {
-    const sym = currentSymptom();
-    const tooth = state.tooth;
     let reason = 'Осмотр и консультация';
-    if (sym) reason = (state.scope === 'jaw' && tooth === null ? 'Вся челюсть · ' : '') + (tooth !== null ? `Зуб ${qn(tooth)} (${D.toothNames[tooth]}) · ` : '') + sym.label.toLowerCase();
     if (state.cart.length) reason = 'Услуги: ' + state.cart.map((x) => x.n).join(', ');
     $('#book-reason').textContent = glue(reason);
     $('#book-doctor').textContent = docLabel();
@@ -502,12 +469,10 @@
 
   /* ---------- scroll-driven bits ---------- */
   const toTop = $('#to-top');
-  const pick = $('#pick');
-  let inPick = false;
   // true when the page under a floating button is dark, so the button switches to its light version
   function darkUnder(node) {
     const r = node.getBoundingClientRect();
-    let el = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find((n) => !n.closest('.cart, .to-top'));
+    let el = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find((n) => !n.closest('.to-top'));
     while (el && el !== document.documentElement) {
       const m = getComputedStyle(el).backgroundColor.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/);
       if (m && (m[4] === undefined || +m[4] > 0.5)) return (0.2126 * m[1] + 0.7152 * m[2] + 0.0722 * m[3]) / 255 < 0.4;
@@ -523,10 +488,7 @@
     if (bar) bar.classList.toggle('is-stuck', stuck);
     hdr.classList.toggle('is-scrolled', y > 8 && !stuck);
     toTop.hidden = y <= 900;
-    toTop.classList.toggle('is-raised', !cartBox.hidden);
     if (!toTop.hidden) toTop.classList.toggle('on-dark', darkUnder(toTop));
-    const pill = $('.cart__pill');
-    if (pill && !cartBox.hidden) pill.classList.toggle('on-dark', darkUnder(pill));
   }
   function onScroll() {
     let active = null;
@@ -537,11 +499,6 @@
     $$('.nav__link').forEach((a) => {
       if (a.getAttribute('href') === '#' + active) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
     });
-    const pr = pick.getBoundingClientRect();
-    const half = window.innerHeight / 2;
-    const now = pr.top < half && pr.bottom > half;
-    if (now && !inPick && state.cartOpen) set({ cartOpen: false });
-    inPick = now;
     updateFloating();
   }
   let ticking = false;
@@ -579,22 +536,15 @@
     'reset-tooth': () => set({ tooth: null, skipTooth: false, scope: null, symptom: null }),
     symptom: (t) => {
       const id = state.symptom === t.dataset.id ? null : t.dataset.id;
-      set({ symptom: id, docPick: id ? autoDoc((D.recommend[id] || { roles: [] }).roles) : null });
+      set({ symptom: id });
     },
-    'rec-svc': (t) => toggleCart(t.dataset.svc, catOfService(t.dataset.svc)),
-    'rec-doc': (t) => {
-      const id = t.dataset.id;
-      if (state.docPick === id) return;
-      const rec = D.recommend[state.symptom];
-      const hiddenNow = state.recAll && docsFor(rec.roles).findIndex((d) => d.id === id) >= 3;
-      set(hiddenNow ? { docPick: id, recAll: false } : { docPick: id });
-      if (hiddenNow) scrollToId('rec-who');
-    },
-    'rec-more': () => { const was = state.recAll; set({ recAll: !was }); if (was) scrollToId('rec-who'); },
+    'helper-open': () => helper.showModal(),
+    'helper-close': () => helper.close(),
+    // from the helper to the category's services, where booking is
     'go-cat': (t, e) => {
       e.preventDefault();
       const sym = currentSymptom();
-      if (sym) { set({ cat: sym.cat, svcStep: 1 }); scrollToId('svc-panel'); }
+      if (sym) { helper.close(); openCat(sym.cat); }
     },
 
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
@@ -643,15 +593,12 @@
       const svcForm = $('#svc-form');
       if (svcForm) svcForm.reset();
       const cat = catById(state.cat);
-      set({ sent: false, cart: [], cartOpen: false, time: 'любое', svcStep: 1, svcOpen: null, docPick: cat ? autoDoc(catRoles(cat, [])) : null });
+      set({ sent: false, cart: [], time: 'любое', svcStep: 1, svcOpen: null, docPick: cat ? autoDoc(catRoles(cat, [])) : null });
       if (t.dataset.from === 'svc') scrollToId('svc-steps');
       else form.elements.name.focus();
     },
 
-    'cart-toggle': () => set({ cartOpen: !state.cartOpen }),
-    'cart-close': () => set({ cartOpen: false }),
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => x.n !== t.dataset.svc) }),
-    'cart-clear': () => set({ cart: [], cartOpen: false }),
 
     'doc-page': (t) => set({ docPage: +t.dataset.page }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p }); },
@@ -670,7 +617,6 @@
   function render() {
     renderPicker();
     renderServices();
-    renderCart();
     renderDoctors();
     renderBooking();
     updateFloating();

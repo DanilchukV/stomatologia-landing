@@ -122,7 +122,15 @@ right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026
 (`@media (hover: hover)` only) only a deeper shadow appears — no colour, which the user reads as an active button,
 and no movement.
 
-## Picker (tooth → symptom → hint)
+## Helper (tooth → symptom → which doctor)
+
+Until 2026-11-19 this was a page section, «Подбор врача за минуту», whose hint could tick services into the cart
+and book. The user turned it into an optional helper with no booking: a native `<dialog id="helper">`
+(`showModal()`, Esc and a click on the backdrop close it) opened by the «Не знаете, к какому врачу?» call-out
+under the Services lead. It is deliberately not called AI: the answer comes from fixed rules in `data.js`.
+Booking stays only in the Services panel and the booking form; the helper's choices no longer reach the booking
+summary. The dialog does not scroll, `.helper__in` does, so the close button stays in its corner; on phones the
+dialog is full-screen. Focus goes to the title on open (`autofocus`), not to the close button.
 
 - The tooth map is `assets/img/teeth.webp` (1536 × 1024) with 32 buttons positioned in % of that
   size. Each button has `pointer-events: none` and only its SVG outline path takes clicks, so
@@ -132,10 +140,11 @@ and no movement.
   1, 16, 17, 32 — only for them the "Мешает зуб мудрости" chip appears, and another symptom on a
   wisdom tooth adds a note about the surgeon.
 - "Вопрос по всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
-- The hint lists `recommend[symptom].svcs` (ticking adds them to the cart) and the doctors of
-  `recommend[symptom].roles`; the picked doctor is moved to the top of the list.
+- The hint: tags, title and text of the symptom, then «Вам к врачу» — the roles of `recommend[symptom].roles`
+  (the therapist when it has none) with those doctors' cards, the direction, `svcs` as a plain list, and
+  «Услуги и врачи направления», which closes the dialog and opens that category in Services.
 - On a phone the steps bar shows only the current step's title.
-- ≥ 1000 px the hint column is sticky and its card scrolls inside itself.
+- ≥ 1000 px the hint column is sticky inside the dialog and its card scrolls inside itself.
 
 ## About
 
@@ -194,12 +203,12 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   (`.svc-panel__photo[data-cat=…]`). On phones the photo becomes a band above the text, which would
   otherwise sit on a bright part of the picture.
 
-## Selected services (cart) and back-to-top
+## Back-to-top
 
-The cart pill appears once something is ticked; it closes its pop-up when the picker section reaches
-mid-screen. Both floating buttons switch to a white version over dark backgrounds: `darkUnder()`
-reads the background colour under the button's centre on scroll. Back-to-top shows after 900 px and
-moves up while the cart is visible.
+The floating cart pill (selected services, with «Записаться») was removed on 2026-11-19 at the user's request;
+the ticked services still show in step 3 of the Services panel and in the booking card. Back-to-top shows
+after 900 px and switches to a white version over dark backgrounds: `darkUnder()` reads the background
+colour under the button's centre on scroll.
 
 ## Doctors
 
