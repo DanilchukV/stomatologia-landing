@@ -46,7 +46,7 @@ card borders, which replace the old tinted section bands; the dark booking card,
 Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
 map pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
-masks, the tooth overlay and the sticky bar's frosted white. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
+masks, the tooth overlay and the nav's archwire. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
 and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
@@ -86,6 +86,12 @@ Breakpoints, from wide to narrow:
 `scroll-margin-top` use it. Scroll-spy marks the nav link of the section crossing 140 px from the top.
 A nav jump stops with the section title 28 px under the header (user's request, 2026-11-18): sections have
 `scroll-margin-top: calc(var(--hdr-h) - var(--sec-y) + 28px)`, a negative-ish margin that skips the top padding.
+
+Nav "braces" (2026-11-19, user's idea — the links looked like they hung in the air): on the one-row header a
+faded archwire (`.nav::before`, 2 px, Navy at 40 %) runs under the links, and each link has a bracket on it
+(`.nav__link::after`, 20 × 14, Navy border, the wire drawn through it). The current section's bracket is
+Yellow, like a coloured elastic; hover fills it Mint. Colour only, no movement (the user dislikes hover jumps).
+Hidden in the burger menu.
 
 Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Skype or a similar app, so
 `header.js` removes the `href` from every `a[href^="tel:"]` unless the pointer is coarse (phones, tablets)
