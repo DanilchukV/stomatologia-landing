@@ -155,7 +155,8 @@ the first screen looked empty — now it is the doctor, the title, the lead and 
 wide so the next one peeks in, no scrollbar) to shorten the page. The same day, so the buttons fit on the first
 screen (user: «текст наложим на фото чуть»), the photo's lower part fades to white (a mask: opaque to 45 %, 15 % at
 78 %, gone at 92 %) and the text starts 96 px up on it — the eyebrow and title sit on the faded part; buttons end
-at ~630 px on a 390 px phone.
+at ~630 px on a 390 px phone. There only the top-left corner of the leaf stays round: the bottom-right curve showed
+through the fade as a faint line (user: «вижу границу заливки снизу»).
 
 The fact cards span the same width as the text column plus the photo: from the text's left edge to the photo's
 right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026-11-19, user's request). On hover
