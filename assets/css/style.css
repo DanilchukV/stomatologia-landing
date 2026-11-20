@@ -174,7 +174,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .btn:active, .chip:active, .sym-chip:active, .svc-card:active, .doc-card:not(.doc-card--none):active, .book-doc:active,
   .hint__doc.is-pick:active, .bk__pill:active, .add-svc:active, .to-top:active { scale: .97; }
   .svc-row__check:active .box, .visit__x:active, .visit__drop:active, .wiz__btn:active .num { scale: .9; }
-  .when__opt:active span, .faq summary:active .faq__ic, .doc__toggle:active, .nav__link:active { opacity: .7; }
+  .when__opt:active span, .faq summary:active .faq__ic, .doc__toggle:active, .nav__link:active, .promise__btn:active { opacity: .7; }
 }
 
 /* ===== Header ===== */
@@ -355,7 +355,12 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 /* the heading and its icon share the first row, centred in it; the text sits under the heading */
 .promise__body { display: contents; }
 .promise__h { margin: 0; display: flex; align-items: center; font-family: var(--f-head); font-weight: 700; font-size: 19px; line-height: 1.3; color: var(--ink); }
-.promise__text { grid-column: 2; margin: 0; color: var(--ink-2); font-size: 15px; }
+/* the heading is a button that opens the text on phones; wider, it is plain text (disabled in main.js) and the
+   text always shows */
+.promise__btn { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; line-height: inherit; text-align: left; cursor: default; }
+.promise__chev { display: none; }
+.promise__more { grid-column: 2; }
+.promise__text { margin: 0; color: var(--ink-2); font-size: 15px; }
 .motto { margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; grid-area: motto; align-self: end; }
 .motto__ic { display: block; flex: none; color: #BF512C; }
 .motto__text { margin: 0; font-family: var(--f-quote); font-weight: 400; font-style: italic; font-size: 17px; line-height: 1.4; letter-spacing: .005em; color: var(--ink); }
@@ -377,8 +382,17 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .about__ph-name { font-size: 15px; }
   .about__ph:not(.about__ph--main) .about__ph-note { display: none; }
   .about__chip { left: 10px; bottom: 10px; padding: 6px 12px; font-size: 13px; }
-  .promise__grid { gap: 20px; }
+  /* only the headings show; a tap opens the text under one (the FAQ's chevron, the drawer of the service rows) */
+  .promise__grid { gap: 4px; }
+  .promise__item { row-gap: 0; }
   .promise__h { min-height: 0; }
+  .promise__btn { min-height: 48px; cursor: pointer; }
+  .promise__chev { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; transition: transform .25s ease; }
+  .promise__item.is-open .promise__chev { transform: rotate(180deg); }
+  .promise__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s var(--ease-out); }
+  .promise__more > .promise__text { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility .3s; }
+  .promise__item.is-open .promise__more { grid-template-rows: 1fr; }
+  .promise__item.is-open .promise__text { visibility: visible; padding-bottom: 10px; }
 }
 
 /* ===== Finder (the helper's mini section: the site's signature feature) ===== */

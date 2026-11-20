@@ -252,7 +252,10 @@ it used to break between «чтобы» and «вы»; two lines do not fit the c
 Two columns from 1000 px: text (title, lead, the three promises in a column, the motto pinned to the
 bottom) and a photo collage that stretches to the text's height: one large tile (with the address
 chip) and two small ones. Below 1000 px one column: the collage goes between the lead and the
-promises, which line up in a row again. The tiles are placeholders («Кабинет», «Холл», «Оборудование»,
+promises, which line up in a row again. On phones (≤ 640, 2026-11-20, user: «сокращаем либо делаем кнопки,
+чтобы можно было развернуть») only the three headings show, each a button with the FAQ's Mint chevron that opens
+its text (grid rows 0fr → 1fr): 450 → 285 px. Wider, `syncPromises()` disables those buttons, so they are plain text
+and the texts always show. The tiles are placeholders («Кабинет», «Холл», «Оборудование»,
 "фото скоро появится") until the clinic sends photos: replace a tile's `.about__ph-in` with
 `<img src="assets/img/…" alt="…" loading="lazy">`, which covers the tile (WebP, about 1600 px wide for
 the large one).

@@ -568,6 +568,17 @@
   }
   const docPages = () => Math.max(1, Math.ceil(D.doctors.length / DOCS_PER_PAGE));
 
+  /* ---------- «Что мы гарантируем» ---------- */
+  // on phones each promise opens with its heading (style.css); wider, the texts always show and the headings are
+  // disabled buttons, so they are plain text to keyboards and screen readers
+  function syncPromises() {
+    $$('.promise__btn').forEach((b) => {
+      b.disabled = !swipeMedia.matches;
+      if (swipeMedia.matches) b.setAttribute('aria-expanded', b.closest('.promise__item').classList.contains('is-open'));
+      else b.removeAttribute('aria-expanded');
+    });
+  }
+
   /* ---------- FAQ ---------- */
   // <details> opens instantly; animating its height lets the questions below slide instead of jumping
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -901,6 +912,8 @@
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p, docOpen: null }); },
     'book-doc': (t) => set({ extra: withDoc(t.dataset.id) }),
 
+    promise: (t) => { t.closest('.promise__item').classList.toggle('is-open'); syncPromises(); },
+
     top: () => scrollToTop(),
     'cookie-ok': () => closeCookie()
   };
@@ -985,6 +998,8 @@
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('resize', schedule);
   swipeMedia.addEventListener('change', render);
+  swipeMedia.addEventListener('change', syncPromises);
+  syncPromises();
   // the panel's caret follows its card when the page is resized or the phone row is swiped
   window.addEventListener('resize', docCaret);
   $('#doc-track').addEventListener('scroll', docCaret, { passive: true });
