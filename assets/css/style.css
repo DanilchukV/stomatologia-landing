@@ -611,10 +611,22 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-sum__row { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; }
   .svc-sum__row:has(.visits) .svc-sum__k { padding-top: 0; }
 }
-/* phone: the photo is a band above the text, fading down into the dark head */
+/* phone (user, 2026-11-20: pick a section at once, without scrolling): the sections are a list of rows — a small
+   photo at the side, the name, a chevron — with the descriptions hidden; the open section's head is a short photo
+   band with the name and the count (the bar above has «Все разделы») */
 @media (max-width: 640px) {
-  .svc-panel__head { padding-top: 168px; }
-  .svc-panel__photo { width: 100%; bottom: auto; height: 220px; -webkit-mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .5) 75%, transparent 100%); mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .5) 75%, transparent 100%); }
+  .svc-grid { gap: 8px; }
+  .svc-card { flex-direction: row; align-items: center; gap: 14px; padding: 8px 18px 8px 8px; border-radius: 20px; }
+  .svc-card__photo { flex: none; align-self: auto; width: 76px; height: 64px; margin: 0; border-radius: 14px; overflow: hidden; -webkit-mask-image: none; mask-image: none; }
+  .svc-card__name { flex: 1; min-width: 0; width: auto; font-size: 18px; line-height: 1.2; }
+  .svc-card__desc { display: none; }
+  .svc-card::after { content: ''; flex: none; width: 9px; height: 9px; margin-right: 4px; border-top: 2px solid var(--ink); border-right: 2px solid var(--ink); transform: rotate(45deg); }
+  .svc-panel__head { min-height: 0; padding: 96px 20px 18px; gap: 10px 16px; align-items: center; }
+  .svc-panel__photo { width: 100%; bottom: auto; height: 150px; -webkit-mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, .45) 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, .45) 70%, transparent 100%); }
+  .svc-panel__intro { gap: 0; }
+  .svc-panel__intro .back-link, .svc-panel__desc { display: none; }
+  .svc-panel__name { margin: 0; font-size: 28px; }
+  .svc-panel__meta { padding: 6px 12px; font-size: 13px; }
   .wiz__btn { flex-direction: column; gap: 6px; padding: 0; font-size: 13px; }
   .wiz__item { align-items: flex-start; }
   .wiz__item:not(:last-child)::after { margin-top: 15px; }
@@ -624,14 +636,15 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-form__fields { grid-template-columns: minmax(0, 1fr); }
   .svc-done { flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px 20px; }
   .svc-done__again { margin-left: 0; align-self: stretch; }
-  .svc-panel__desc { min-height: 6.2em; }
   #pick-doctor .panel-label { flex-wrap: wrap; gap: 4px 12px; }
   .doc-pick__who { flex-basis: 100%; margin-left: 0; text-align: left; }
   .doc-card { gap: 14px; padding-right: 16px; }
   .doc-card__av { width: 72px; }
   .svc-time { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .svc-time__chip { min-width: 0; }
-  .svc-nav__info { flex-basis: 100%; order: -1; }
+  /* the count and «Сбросить всё» share the first row, the buttons the second */
+  .svc-nav__info { flex: 1 1 calc(100% - 160px); order: -2; }
+  .svc-nav__reset { order: -1; }
   .svc-nav__info:empty { display: none; }
   .svc-nav__next, .svc-nav__book { flex: 1 1 auto; }
 }

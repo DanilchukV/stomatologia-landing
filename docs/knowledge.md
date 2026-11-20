@@ -335,6 +335,13 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   stay in frame) are in CSS
   (`.svc-panel__photo[data-cat=…]`). On phones the photo becomes a band above the text, which would
   otherwise sit on a bright part of the picture.
+- Phones (≤ 640, 2026-11-20, user: «разделы нужно как-то уменьшить, чтобы было удобно выбрать сразу, без скрола»,
+  «тексты скрываем»): the six sections are rows — a 76 × 64 photo at the side, the name, a chevron — with the
+  descriptions hidden (1660 → 532 px, about one screen). The open section's head is a 150 px photo band with the
+  name and the count over its faded part (493 → 218 px); its «Все разделы» and description are hidden (the bar
+  above has «Все разделы»). The panel nav puts «Выбрано N» and «Сбросить всё» in one row, the buttons under it.
+  While the open panel fills the bottom of the screen the corner «Ваша запись» and back-to-top buttons hide
+  (`panelAtBottom()`): on phones they covered «Выбрать врача» / «Далее».
 
 ## Booking by doctor (2026-11-20)
 
