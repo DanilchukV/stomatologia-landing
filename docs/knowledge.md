@@ -36,10 +36,7 @@ The logo was first the user's `logo.svg` (tooth + «Гревитидент» + �
 since 2026-11-20 it is text, see below. The footer is White with a
 1 px Navy line on top (2026-11-19, user's choice); links underline in Orange on hover: it was Navy with a light logo and white text, then briefly
 Mint; the user disliked two dark blocks in a row (booking card and footer) and then the Mint.
-The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the 32 px and
-apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
-accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
-user changed the logo's navy `#01375E` to it on 2026-11-03; the light variant and icons were redone).
+Until 2026-11-20 the favicon was that tooth alone (see "Icons and the link preview" below for the current one).
 **Palette (2026-11-18, user's rule): only five colours, no derived shades** — White `#FFFFFF` (`--bg`, `--white`:
 every section and card), Navy `#0C2C47` (`--ink`, `--ink-2`, `--muted`, `--faint`: all text; `--line`, `--line-2`: 1 px
 card borders, which replace the old tinted section bands; the dark booking card and the map mock), Yellow
@@ -47,8 +44,7 @@ card borders, which replace the old tinted section bands; the dark booking card 
 Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
-masks and the tooth overlay. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
-and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
+masks and the tooth overlay.
 **The logo is text** (2026-11-20, user's pick «прописными, с жёлтой точкой» from a comparison of six variants,
 after the switch to Nunito made the Arsenal lettering look foreign): `<a class="logo">` with «Гревитидент» in Nunito
 900, capitals, letter-spacing .1em, and a Yellow dot after it (`::after`), and «стоматологическая клиника» under it in
@@ -57,8 +53,14 @@ nine dot variants the same day; first the line was Orange, which with Yellow and
 header's 25 px; everything scales with `--s`: 25 px header, 21 px on phones, footer `min(28px, 11cqi)` so it shrinks
 to its grid column, which is 220 px around 1024). No tooth in the header (the user's earlier wish not to overload it).
 Before: Arsenal outlined in `logo-wordmark.svg` (header) and `logo.svg` (tooth + name, footer), with `logo-light.svg`
-unused — all removed, in git history before this date. `og-image.jpg` still has the old lettering; the favicon is
-still the tooth.
+unused — all removed, in git history before this date.
+**Icons and the link preview follow the logo** (same day): `favicon.svg` is a Navy circle with a White «Г» (a round-
+capped stroke, so no font is needed) and the Yellow dot on its baseline; `favicon-32.png` (round, transparent) and
+`apple-touch-icon.png` (180 px, full Navy square — iOS rounds it) were rendered from it at 512 px in headless Chrome
+and downscaled with System.Drawing. `og-image.jpg` (1200×630) was rebuilt from an HTML layout: the text logo,
+«Стоматология в Бресте», the hero title, the hero photo with a 200 px rounded corner, and the address the site shows
+(«Брест, ул. Липовая 18, офис 4»; the old preview still had ул. Воровского). Their URLs carry `?v=2`: messengers and
+browsers cache icons and previews for a long time — bump it when they change again.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
 
