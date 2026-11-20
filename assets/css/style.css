@@ -612,6 +612,10 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .visit__svc { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 36px; padding: 4px 5px 4px 14px; box-sizing: border-box; border-radius: 18px; background: var(--white); font-size: 14px; font-weight: 500; line-height: 1.3; }
 .visit__svc-n { min-width: 0; -webkit-hyphens: auto; hyphens: auto; overflow-wrap: break-word; }
 .visit__none { margin: 0; font-size: 14px; color: var(--muted); }
+/* the reason from the helper: a white strip like the service chips */
+.visit__note { display: flex; align-items: center; gap: 10px; margin: 0; padding: 6px 5px 6px 14px; border-radius: 18px; background: var(--white); font-size: 14px; line-height: 1.4; }
+.visit__note-t { flex: 1; min-width: 0; text-wrap: pretty; }
+.visit__note b { font-weight: 600; color: var(--accent-ink); }
 .add-svc { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px 0 14px; border: 1.5px dashed var(--line); border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color .15s, color .15s; }
 .add-svc:hover { border-color: var(--accent-ink); color: var(--accent-ink); }
 .add-svc .ic { display: block; }
