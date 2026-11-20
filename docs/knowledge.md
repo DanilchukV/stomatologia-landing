@@ -296,6 +296,9 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   Step 2 of «Диагностика» says the same while no consultation is ticked (user, 2026-11-20): the title «Врач не
   нужен», a dashed card «Диагностика · без записи к врачу» in place of the doctors (not a choice), and a note that a
   doctor is needed only with a consultation.
+- A service is one per booking (user, 2026-11-20): `inCart` goes by the name only, so «Консультация терапевта»
+  ticked in «Лечение зубов» shows ticked in «Диагностика» (as «Консультация специалистов · терапевт») and the other way
+  round, unticking it in either takes it out, and «Выбрано N» counts it in both. Before, it could be booked twice.
 - `state.extra` — doctors booked without services: a doctor card's «Записаться», the helper's «Записаться», a tile
   of the booking form, or going from step 2 to step 3 with none of the section's services ticked (then `cid` marks the
   section, and picking another doctor there replaces it instead of adding a second one).

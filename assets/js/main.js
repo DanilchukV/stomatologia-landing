@@ -66,7 +66,9 @@
     render();
   }
 
-  const inCart = (n, cid) => state.cart.some((x) => x.n === n && x.cid === (cid || state.cat));
+  // a service is one per booking, whichever section it was ticked in («Консультация терапевта» is both in
+  // treatment and, as a consultation, in diagnostics)
+  const inCart = (n) => state.cart.some((x) => x.n === n);
   const catById = (id) => D.cats.find((c) => c.id === id);
   const currentSymptom = () => D.symptoms.find((x) => x.id === state.symptom) || null;
   // doctors are picked by id: names are empty until the clinic sends them, so the speciality stands in
@@ -360,7 +362,8 @@
       if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       b.parentElement.classList.toggle('is-done', k < step);
     });
-    const n = state.cart.filter((x) => x.cid === cat.id).length;
+    // the section's ticked rows, counting a service ticked in another section that is also listed here
+    const n = cat.items.filter((x) => (x === CONSULT ? CONSULT_SUBS.some(([, cn]) => inCart(cn)) : inCart(x))).length;
     $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
       : step === 2 ? (noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи')) : '');
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
@@ -702,7 +705,7 @@
 
   /* ---------- actions ---------- */
   function toggleCart(n, cat) {
-    set({ cart: inCart(n, cat.id) ? state.cart.filter((x) => !(x.n === n && x.cid === cat.id)) : state.cart.concat([{ n, cat: cat.name, cid: cat.id }]) });
+    set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat: cat.name, cid: cat.id }]) });
   }
   function openCat(id) {
     // from the grid: every card flies up into its tab of the sticky bar
@@ -810,15 +813,16 @@
     'svc-check': (t) => {
       const n = t.closest('.svc-row').dataset.svc;
       if (n !== CONSULT) { toggleCart(n, catById(state.cat)); return; }
-      // a consultation needs a specialist: open the row to pick one, or clear the chosen one
-      if (CONSULT_SUBS.some(([, cn]) => inCart(cn))) set({ cart: state.cart.filter((x) => !(x.cid === state.cat && isConsult(x.n))), picks: { ...state.picks, [state.cat]: null } });
+      // a consultation needs a specialist: open the row to pick one, or clear the chosen ones (wherever ticked)
+      if (CONSULT_SUBS.some(([, cn]) => inCart(cn))) set({ cart: state.cart.filter((x) => !isConsult(x.n)), picks: { ...state.picks, [state.cat]: null } });
       else set({ svcOpen: n });
     },
-    // diagnostics: one consultation at a time; its specialist becomes the section's doctor
+    // diagnostics: one consultation at a time here (one ticked in another section stays); pressing a chosen one
+    // takes it out, wherever it was ticked; the specialist becomes the section's doctor
     'svc-sub': (t) => {
       const cn = t.dataset.sub;
       const cat = catById(state.cat);
-      const rest = state.cart.filter((x) => !(x.cid === cat.id && isConsult(x.n)));
+      const rest = state.cart.filter((x) => !(isConsult(x.n) && (x.cid === cat.id || x.n === cn)));
       const cart = inCart(cn) ? rest : rest.concat([{ n: cn, cat: cat.name, cid: cat.id }]);
       set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(catRoles(cat, cart)) }, docsAll: false });
     },
