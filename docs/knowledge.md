@@ -144,21 +144,22 @@ the burger header) is hidden without its link.
 The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that
 it bled to the window edge, which the user disliked): `.hero` is an inline-size container and `.hero__media` gets a
 negative right margin of `min(660px, 50cqw − gutter) − min(720px, 50cqw − gutter)` — the header content is
-1440 px max, the hero's 1320. Its shape is a "leaf" from the user's `Rectangle 1.png`: big rounding top-left and
-bottom-right, measured from that picture — `border-radius: 44% 32px / 50% 32px`; the other two corners were square
-until 2026-11-20 (user: «не нравится, что оно заостренное»), now 32 px (28 px on phones, where the bottom fades);
-that picture is 1907 × 1697. The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
-middle of the leaf. Under 1128 px text and photo no longer fit side by side; the photo then goes full
-width under the text (`object-position: 25%`), same leaf shape. **On phones (≤ 640) the photo comes first** (`order: -1`,
-310 px high, `object-position: 12% 18%` keeps the face in the leaf; 2026-11-20, user: the photo had «улетела вниз» and
+1440 px max, the hero's 1320. Its shape is an **arch** since 2026-11-20 (user: «сделай просто аркой», after
+«не нравится, что оно заостренное»): `border-radius: 50% 50% 32px 32px / 42% 42% 32px 32px` — a dome across the
+whole width and 42 % of the height down, soft bottom corners; on phones only the dome (`/ 46%`), the bottom fades.
+Before, a "leaf" from the user's `Rectangle 1.png` (1907 × 1697): big rounding top-left and bottom-right, square
+elsewhere (`44% 0 / 50% 0`). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
+middle of the arch. Under 1128 px text and photo no longer fit side by side; the photo then goes full
+width under the text (`object-position: 25%`), same arch. **On phones (≤ 640) the photo comes first** (`order: -1`,
+310 px high, `object-position: 0% 18%` keeps the doctor nearest the middle of the dome; 2026-11-20, user: the photo had «улетела вниз» and
 the first screen looked empty — now it is the doctor, the title, the lead and both buttons, which share one row
 ≤ 480 px without the arrow, 15 px text ≤ 374). The three fact cards are one swipeable row there (scroll-snap, 82 %
 wide so the next one peeks in, no scrollbar, and no hover shadow: the row clips it into a hard line, seen in the
 desktop preview with a mouse) to shorten the page. The same day, so the buttons fit on the first
 screen (user: «текст наложим на фото чуть»), the photo's lower part fades to white (a mask: opaque to 45 %, 15 % at
 78 %, gone at 92 %) and the text starts 96 px up on it — the eyebrow and title sit on the faded part; buttons end
-at ~630 px on a 390 px phone. There only the top-left corner of the leaf stays round: the bottom-right curve showed
-through the fade as a faint line (user: «вижу границу заливки снизу»).
+at ~630 px on a 390 px phone. There the arch keeps only its dome: rounded bottom corners would show through the fade
+as a faint line, as the leaf's bottom-right curve did.
 
 The fact cards span the same width as the text column plus the photo: from the text's left edge to the photo's
 right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026-11-19, user's request). On hover

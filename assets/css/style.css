@@ -274,8 +274,9 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 /* the photo reaches the right edge of the header's CTA: header content is 1440 px max, hero content 1320 */
 .hero { container-type: inline-size; }
 .hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; margin-right: calc(min(660px, 50cqw - var(--gutter)) - min(720px, 50cqw - var(--gutter))); }
-/* leaf shape: big rounding top-left and bottom-right; the doctor stands at 31 % of the picture, 0 % keeps her nearest the middle */
-.hero__img { position: absolute; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); object-fit: cover; object-position: 0% 50%; border-radius: 44% 32px / 50% 32px; }
+/* an arch: a dome on top (half the width across, part of the height down), soft bottom corners; the doctor stands at
+   31 % of the picture, 0 % keeps her nearest the middle */
+.hero__img { position: absolute; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); object-fit: cover; object-position: 0% 50%; border-radius: 50% 50% 32px 32px / 42% 42% 32px 32px; }
 /* the cards span from the text column to the photo's right edge (the header CTA), as .hero__media */
 .hero__facts { margin: -64px calc(50cqw - min(720px, 50cqw - var(--gutter))) 0 calc(50cqw - min(660px, 50cqw - var(--gutter))); position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
 /* the icon sits beside the title and the text runs the card's full width below, so every text fits two lines at ≥1280 px */
@@ -298,10 +299,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 /* phone: the photo comes first, so the first screen is the doctor and the title, not a column of text; the three
    cards are one swipeable row (the next one peeks in) */
 @media (max-width: 640px) {
-  /* the photo's lower part fades to white and the text starts on it, so the buttons fit on the first screen; only
-     the top-left corner stays round (the bottom-right curve showed through the fade) */
+  /* the photo's lower part fades to white and the text starts on it, so the buttons fit on the first screen; the arch
+     keeps only its dome (rounded bottom corners would show through the fade) */
   .hero__media { order: -1; min-height: 310px; margin-top: 8px; }
-  .hero__img { top: 0; width: 100%; height: 100%; object-position: 12% 18%; border-radius: 44% 28px 0 0 / 50% 28px 0 0; -webkit-mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .15) 78%, transparent 92%); mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .15) 78%, transparent 92%); }
+  .hero__img { top: 0; width: 100%; height: 100%; object-position: 0% 18%; border-radius: 50% 50% 0 0 / 46% 46% 0 0; -webkit-mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .15) 78%, transparent 92%); mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .15) 78%, transparent 92%); }
   .hero__text { margin-top: -96px; padding: 0 0 28px; gap: 16px; }
   .hero .eyebrow { font-size: 12px; letter-spacing: .14em; }
   .hero__lead { font-size: 17px; }
