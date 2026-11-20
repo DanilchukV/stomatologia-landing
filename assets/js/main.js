@@ -647,9 +647,17 @@
     const r = $('.book__card').getBoundingClientRect();
     return r.top < window.innerHeight - 120 && r.bottom > 120;
   }
+  // the open services panel has its own booking step and its buttons at the bottom, which the corner and
+  // back-to-top buttons covered on phones
+  function panelAtBottom() {
+    const p = $('#svc-panel');
+    if (!p) return false;
+    const r = p.getBoundingClientRect();
+    return r.top < window.innerHeight && r.bottom > window.innerHeight - 140;
+  }
   function renderCorner() {
     const n = bookCount();
-    const hide = !n || state.sent || bookOnScreen();
+    const hide = !n || state.sent || bookOnScreen() || panelAtBottom();
     if (hide && state.bkOpen) state.bkOpen = false;
     bk.hidden = hide;
     toTop.classList.toggle('is-raised', !hide);
@@ -695,7 +703,7 @@
     if (bar) bar.classList.toggle('is-stuck', stuck);
     hdr.classList.toggle('is-scrolled', y > 8 && !stuck);
     renderCorner();
-    toTop.hidden = y <= 900;
+    toTop.hidden = y <= 900 || panelAtBottom();
     if (!toTop.hidden) toTop.classList.toggle('on-dark', darkUnder(toTop));
   }
   function onScroll() {
