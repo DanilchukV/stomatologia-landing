@@ -345,8 +345,9 @@ plus 1 ms per 8 px of distance, at most 1.2 s; a wheel turn or a touch stops it.
 
 ## Cookie notice
 
-Added 2026-11-19 at the user's request: a white card bottom left (across the bottom on phones, where the
-back-to-top button moves up by its height via `--cookie-h`), «Мы используем файлы cookie…» and «Хорошо». It slides
+Added 2026-11-19 at the user's request: a white card bottom left (across the bottom up to 760 px — since 2026-11-20, as at 641–708 px the 460 px card ran
+into the «Ваша запись» button — where the
+back-to-top and corner buttons move up by its height via `--cookie-h`), «Мы используем файлы cookie…» and «Хорошо». It slides
 in 0.9 s after load and stays away once accepted (`localStorage` `cookie-ok`; if storage is blocked it shows on
 every visit). The site itself sets no cookies yet; the notice is there for when analytics or a chat widget arrive.
 

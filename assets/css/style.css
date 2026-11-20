@@ -1088,8 +1088,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .bk__pill .ic { transition: transform .25s; }
 .bk__pill[aria-expanded="true"] .ic { transform: rotate(180deg); }
 .bk__count { min-width: 36px; height: 36px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: var(--accent); color: var(--ink); display: grid; place-items: center; font-family: var(--f-head); font-weight: 700; font-size: 16px; }
-/* phone: the list spans the width, above the cookie notice while it shows */
-@media (max-width: 640px) {
+/* phone and narrow tablet (≤ 760): the list spans the width, above the cookie notice while it shows */
+@media (max-width: 760px) {
   .bk { left: 12px; right: 12px; bottom: calc(24px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px)); max-width: none; }
   .bk__pop { width: 100%; max-height: 72vh; }
   /* in line with the back-to-top button, 24 px from the edge */
@@ -1113,7 +1113,7 @@ html:has(.helper[open]) { overflow: hidden; }
   60% { opacity: 1; }
   100% { transform: none; }
 }
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .to-top { bottom: calc(24px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px)); }
   .to-top.is-raised { bottom: calc(96px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px)); }
 }
@@ -1128,8 +1128,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .cookie__ic svg { display: block; }
 .cookie__text { margin: 0; font-size: 14px; line-height: 1.45; text-wrap: pretty; }
 .cookie__ok { flex: none; min-height: 44px; padding: 0 20px; font-size: 15px; }
-/* phone: across the bottom, 12 px from the edges (the back-to-top button moves above it) */
-@media (max-width: 640px) {
+/* phone and narrow tablet (≤ 760, where the corner button would run into it): across the bottom, 12 px from the edges (the buttons move above it) */
+@media (max-width: 760px) {
   .cookie { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: none; }
   .cookie__ic { display: none; }
 }
