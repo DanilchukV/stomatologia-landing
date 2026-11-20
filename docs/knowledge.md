@@ -52,7 +52,8 @@ and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-
 **The logo is text** (2026-11-20, user's pick «прописными, с жёлтой точкой» from a comparison of six variants,
 after the switch to Nunito made the Arsenal lettering look foreign): `<a class="logo">` with «Гревитидент» in Nunito
 900, capitals, letter-spacing .1em, and a Yellow dot after it (`::after`), and «стоматологическая клиника» under it in
-Nunito Sans 700 Orange, capitals. The two letter-spacings are tuned so both lines are the same width (225 px at the
+Nunito Sans 600 Navy, capitals (the dot is the only colour: the user chose «Спокойный» from a second set of
+nine dot variants the same day; first the line was Orange, which with Yellow and Navy looked busy). The two letter-spacings are tuned so both lines are the same width (225 px at the
 header's 25 px; everything scales with `--s`: 25 px header, 21 px on phones, footer `min(28px, 11cqi)` so it shrinks
 to its grid column, which is 220 px around 1024). No tooth in the header (the user's earlier wish not to overload it).
 Before: Arsenal outlined in `logo-wordmark.svg` (header) and `logo.svg` (tooth + name, footer), with `logo-light.svg`

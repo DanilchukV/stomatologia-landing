@@ -173,12 +173,12 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .hdr__menu { display: contents; }
 .hdr__call, .hdr__burger { display: none; }
 
-/* the name is text in the heading font: capitals and a Yellow dot, the specialty under it in Orange; the
+/* the name is text in the heading font: capitals and a Yellow dot (the only colour), the specialty under it; the
    letter-spacings make both lines the same width (the negative margins take off the spacing after the last letter) */
 .logo { --s: 25px; display: flex; flex-direction: column; align-items: flex-start; flex: none; color: var(--ink); text-decoration: none; text-transform: uppercase; white-space: nowrap; }
 .logo__name { font-family: var(--f-head); font-weight: 900; font-size: var(--s); line-height: 1; letter-spacing: .1em; margin-right: -.1em; }
 .logo__name::after { content: ''; display: inline-block; width: .26em; height: .26em; margin-left: .04em; border-radius: 50%; background: var(--accent); }
-.logo__sub { margin-top: .2em; font-family: var(--f-body); font-weight: 700; font-size: calc(var(--s) * .44); line-height: 1; letter-spacing: .13em; margin-right: -.13em; color: var(--accent-ink); }
+.logo__sub { margin-top: .2em; font-family: var(--f-body); font-weight: 600; font-size: calc(var(--s) * .44); line-height: 1; letter-spacing: .145em; margin-right: -.145em; }
 /* the footer logo: 28 px, smaller when its grid column is narrow (the name is ~8.9 times --s wide) */
 .logo--lg { --s: min(28px, 11cqi); }
 
