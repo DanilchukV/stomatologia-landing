@@ -54,12 +54,15 @@ header's 25 px; everything scales with `--s`: 25 px header, 21 px on phones, foo
 to its grid column, which is 220 px around 1024). No tooth in the header (the user's earlier wish not to overload it).
 Before: Arsenal outlined in `logo-wordmark.svg` (header) and `logo.svg` (tooth + name, footer), with `logo-light.svg`
 unused — all removed, in git history before this date.
-**Icons and the link preview follow the logo** (same day): `favicon.svg` is a Navy circle with a White «Г» (a round-
-capped stroke, so no font is needed) and the Yellow dot on its baseline; `favicon-32.png` (round, transparent) and
-`apple-touch-icon.png` (180 px, full Navy square — iOS rounds it) were rendered from it at 512 px in headless Chrome
+**Icons and the link preview follow the logo** (same day): `favicon.svg` is the logo's dot made big — a Yellow
+circle with the old logo's tooth in Navy (its four paths, with a 5-unit Navy stroke so it still reads at 16 px).
+The user picked it from six variants; a White «Г» with the dot came first, dropped the same day because «Г.» reads
+as an abbreviation («г.» = город, and a rude word). `favicon-32.png` (round, transparent) and
+`apple-touch-icon.png` (180 px, full Yellow square — iOS rounds it) were rendered from it at 512 px in headless Chrome
 and downscaled with System.Drawing. `og-image.jpg` (1200×630) was rebuilt from an HTML layout: the text logo,
 «Стоматология в Бресте», the hero title, the hero photo with a 200 px rounded corner, and the address the site shows
-(«Брест, ул. Липовая 18, офис 4»; the old preview still had ул. Воровского). Their URLs carry `?v=2`: messengers and
+(«Брест, ул. Липовая 18, офис 4»; the old preview still had ул. Воровского). Their URLs carry `?v=N` (icons 3,
+preview 2): messengers and
 browsers cache icons and previews for a long time — bump it when they change again.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
