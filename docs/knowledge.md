@@ -117,7 +117,9 @@ Breakpoints, from wide to narrow:
   gutters on phones and 420 px at the right on tablets; the links in the desktop nav's soft capsule, the current one
   a white pill with Orange text. On desktop it is
   `display: contents`, so its children stay flex items of the header row.
-- < 640 — the address leaves the header (the menu's "Контакты" leads to it).
+- < 640 — the address leaves the header (the menu's "Контакты" leads to it). The burger is 44 px there and the
+  logo `--s: 22px` (2026-11-20, user: «выровняй лого и значок бургера» — both were centred, but the 48 px circle
+  outweighed the 29 px logo); header padding 13 px keeps `--hdr-h` at 70.
 
 `--hdr-h` is the header height at each breakpoint (82 / 74 / 70); sticky bars and
 `scroll-margin-top` use it. Scroll-spy marks the nav link of the section crossing 140 px from the top.

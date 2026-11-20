@@ -251,8 +251,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 }
 @media (max-width: 639px) {
   :root { --hdr-h: 70px; }
-  .hdr__in { padding-top: 11px; padding-bottom: 11px; }
-  .logo:not(.logo--lg) { --s: 21px; }
+  .hdr__in { padding-top: 13px; padding-bottom: 13px; }
+  /* the burger a little smaller and the logo a little bigger, so neither outweighs the other */
+  .hdr__call, .hdr__burger { width: 44px; height: 44px; }
+  .logo:not(.logo--lg) { --s: 22px; }
   .addr { display: none; }
   .hdr__cta { flex: 1 1 100%; }
 }
