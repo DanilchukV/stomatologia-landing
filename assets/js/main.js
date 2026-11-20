@@ -911,6 +911,8 @@
     const t = e.target.closest('[data-act]');
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
   });
+  // iOS Safari applies :active (the press-in in style.css) only when the page listens for touches
+  document.addEventListener('touchstart', () => {}, { passive: true });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape' || !state.bkOpen) return;
     set({ bkOpen: false });

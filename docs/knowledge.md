@@ -95,6 +95,17 @@ subsets (checked: the only arrow is in code comments). Nunito is lighter than Ma
 heading-font rules that were 600 are 700. For a softer look everywhere, set `--f-body` to Nunito too.
 Licences: `assets/fonts/OFL.txt`.
 
+## Touch screens
+
+Phones have no hover — only taps, long presses and swipes (user, 2026-11-20). Every `:hover` rule sits in
+`@media (hover: hover)` (on the same line, in its component's place), otherwise a tapped card stays lifted and
+outlined until the next tap. Instead, `@media (hover: none)` at the end of "Shared" gives a press-in on `:active`
+(`scale: .97`, or `.9` for small round buttons, `opacity .7` for text links; `scale` and not `transform`, because
+entrance animations with `fill: both` on `transform` would win), turns off the grey tap flash and keeps a long press
+from selecting button text or opening the iOS callout. iOS applies `:active` only when the page has a `touchstart`
+listener — `main.js` adds an empty passive one. New hover effects go into `@media (hover: hover)` too; nothing may
+be reachable by hover only.
+
 ## Header
 
 Breakpoints, from wide to narrow:
