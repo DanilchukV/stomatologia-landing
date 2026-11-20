@@ -517,6 +517,10 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .doc-card[aria-pressed="true"] { border-color: var(--accent); }
 .doc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(12, 44, 71, .12); }
 .doc-card[aria-pressed="false"]:hover { border-color: var(--accent); }
+/* diagnostics without a consultation: a note in the card's shape, not a choice */
+.doc-card--none { box-sizing: border-box; border-style: dashed; cursor: default; -webkit-user-select: text; user-select: text; }
+.doc-card--none:hover { transform: none; box-shadow: none; }
+.doc-card--none .doc-card__av { color: var(--ink); }
 .doc-card__av { overflow: hidden; flex: none; width: 96px; aspect-ratio: 3 / 4; border-radius: 14px; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--f-head); font-weight: 700; font-size: 30px; transition: background-color .2s, color .2s; }
 .doc-card[aria-pressed="true"] .doc-card__av { background: var(--ink); color: var(--white); }
 .doc-card__av:has(.av-img), .doc-card[aria-pressed="true"] .doc-card__av:has(.av-img) { background: #FFFFFF; }

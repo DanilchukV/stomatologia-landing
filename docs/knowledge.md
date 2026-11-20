@@ -293,6 +293,9 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   service (`cart` item `{n, cat, cid}`) goes to its section's doctor (`itemDoc`), so changing the doctor in step 2
   moves the section's services with it. Two sections with the same doctor (treatment and aesthetics → therapist)
   make one group. Diagnostics without a consultation have no doctor: a «Диагностика · без записи к врачу» group, last.
+  Step 2 of «Диагностика» says the same while no consultation is ticked (user, 2026-11-20): the title «Врач не
+  нужен», a dashed card «Диагностика · без записи к врачу» in place of the doctors (not a choice), and a note that a
+  doctor is needed only with a consultation.
 - `state.extra` — doctors booked without services: a doctor card's «Записаться», the helper's «Записаться», a tile
   of the booking form, or going from step 2 to step 3 with none of the section's services ticked (then `cid` marks the
   section, and picking another doctor there replaces it instead of adding a second one).

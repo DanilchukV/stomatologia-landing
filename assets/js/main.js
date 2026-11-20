@@ -319,14 +319,19 @@
     const roles = catRoles(cat, state.cart);
     const pick = state.picks[cat.id] || null;
     const docs = docsFor(roles);
+    // diagnostics without a consultation: no doctor to choose, said the same way as in step 3
+    const noDoc = cat.id === 'diag' && !roles.length;
+    $('#pick-doctor .panel-h').textContent = noDoc ? 'Врач не нужен' : 'Выберите врача';
     $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
-      : cat.id === 'diag' && !roles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
+      : noDoc ? 'Врач понадобится, только если отметить консультацию' : 'Врача подберём при записи');
 
     const opts = docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : 'Фото и имя скоро появятся' }));
     const picked = opts.findIndex((d) => d.id === pick);
     const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
     const grid = $('#doc-pick-grid');
-    mount(grid, roles.join() + docsExpanded, () => opts.filter((d, k) => docsExpanded || k < DOC_LIMIT).map((d) => `<button type="button" class="doc-card" aria-pressed="false" data-act="panel-doc" data-id="${d.id}" data-focus="pdoc:${d.id}"><span class="doc-card__av">${d.av}</span><span class="doc-card__text"><span class="doc-card__name">${esc(d.title)}</span>${d.sub ? `<span class="doc-card__sub">${esc(d.sub)}</span>` : ''}</span><span class="doc-card__tick">${icon('i-check', 16, 2.8)}</span></button>`).join(''));
+    mount(grid, roles.join() + docsExpanded + noDoc, () => (noDoc
+      ? `<div class="doc-card doc-card--none"><span class="doc-card__av">${icon('i-grid', 32, 1.8)}</span><span class="doc-card__text"><span class="doc-card__name">Диагностика</span><span class="doc-card__sub">${glue('Без записи к врачу — снимки и сканирование делают сразу')}</span></span></div>`
+      : '') + opts.filter((d, k) => docsExpanded || k < DOC_LIMIT).map((d) => `<button type="button" class="doc-card" aria-pressed="false" data-act="panel-doc" data-id="${d.id}" data-focus="pdoc:${d.id}"><span class="doc-card__av">${d.av}</span><span class="doc-card__text"><span class="doc-card__name">${esc(d.title)}</span>${d.sub ? `<span class="doc-card__sub">${esc(d.sub)}</span>` : ''}</span><span class="doc-card__tick">${icon('i-check', 16, 2.8)}</span></button>`).join(''));
     $$('.doc-card', grid).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === pick));
     const moreDocs = $('#docs-all');
     moreDocs.hidden = opts.length <= DOC_LIMIT;
@@ -354,7 +359,7 @@
     });
     const n = state.cart.filter((x) => x.cid === cat.id).length;
     $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
-      : step === 2 ? 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи') : '');
+      : step === 2 ? (noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи')) : '');
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
     $('.svc-nav__next', svcOpenBox).hidden = step === 3;
     $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Выбрать врача' : 'Далее: запись';
