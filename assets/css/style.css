@@ -298,9 +298,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 /* phone: the photo comes first, so the first screen is the doctor and the title, not a column of text; the three
    cards are one swipeable row (the next one peeks in) */
 @media (max-width: 640px) {
-  .hero__media { order: -1; min-height: 280px; margin-top: 8px; }
-  .hero__img { top: 0; width: 100%; height: 100%; object-position: 12% 22%; }
-  .hero__text { padding: 24px 0 28px; gap: 16px; }
+  /* the photo's lower part fades to white and the text starts on it, so the buttons fit on the first screen */
+  .hero__media { order: -1; min-height: 310px; margin-top: 8px; }
+  .hero__img { top: 0; width: 100%; height: 100%; object-position: 12% 18%; -webkit-mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .15) 78%, transparent 92%); mask-image: linear-gradient(to bottom, #000 45%, rgba(0, 0, 0, .15) 78%, transparent 92%); }
+  .hero__text { margin-top: -96px; padding: 0 0 28px; gap: 16px; }
   .hero .eyebrow { font-size: 12px; letter-spacing: .14em; }
   .hero__lead { font-size: 17px; }
   .hero__facts { display: flex; gap: 12px; margin: 0; padding: 0 var(--gutter) 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }

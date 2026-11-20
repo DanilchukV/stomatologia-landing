@@ -149,10 +149,13 @@ bottom-right, square corners elsewhere — `border-radius: 44% 0 / 50% 0`, measu
 (1907 × 1697). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
 middle of the leaf. Under 1128 px text and photo no longer fit side by side; the photo then goes full
 width under the text (`object-position: 25%`), same leaf shape. **On phones (≤ 640) the photo comes first** (`order: -1`,
-280 px high, `object-position: 12% 22%` keeps the face in the leaf; 2026-11-20, user: the photo had «улетела вниз» and
+310 px high, `object-position: 12% 18%` keeps the face in the leaf; 2026-11-20, user: the photo had «улетела вниз» and
 the first screen looked empty — now it is the doctor, the title, the lead and both buttons, which share one row
 ≤ 480 px without the arrow, 15 px text ≤ 374). The three fact cards are one swipeable row there (scroll-snap, 82 %
-wide so the next one peeks in, no scrollbar) to shorten the page.
+wide so the next one peeks in, no scrollbar) to shorten the page. The same day, so the buttons fit on the first
+screen (user: «текст наложим на фото чуть»), the photo's lower part fades to white (a mask: opaque to 45 %, 15 % at
+78 %, gone at 92 %) and the text starts 96 px up on it — the eyebrow and title sit on the faded part; buttons end
+at ~630 px on a 390 px phone.
 
 The fact cards span the same width as the text column plus the photo: from the text's left edge to the photo's
 right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026-11-19, user's request). On hover
