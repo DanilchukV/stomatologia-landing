@@ -631,7 +631,7 @@
     $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', inBooking(b.dataset.id)));
     // the whole booking by doctor, as in Services' step 3
     mount($('#book-svcs'), visitsKey(), () => (bookEmpty()
-      ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')} <a href="#services">${glue('Выбрать в «Услугах»')}</a></p>`
+      ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : visitsHTML() + `<button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button>`));
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     form.elements.time.value = state.time;
