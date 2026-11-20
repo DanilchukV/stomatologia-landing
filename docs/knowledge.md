@@ -159,7 +159,8 @@ desktop preview with a mouse) to shorten the page. The same day, so the buttons 
 screen (user: «текст наложим на фото чуть»), the photo's lower part fades to white (a mask: opaque to 45 %, 15 % at
 78 %, gone at 92 %) and the text starts 96 px up on it — the eyebrow and title sit on the faded part; buttons end
 at ~630 px on a 390 px phone. There the arch keeps only its dome: rounded bottom corners would show through the fade
-as a faint line, as the leaf's bottom-right curve did.
+as a faint line, as the leaf's bottom-right curve did. The text under the arch is centred on its axis (user: «текст по середине
+фото»).
 
 The fact cards span the same width as the text column plus the photo: from the text's left edge to the photo's
 right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026-11-19, user's request). On hover
@@ -345,13 +346,17 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   above has «Все разделы»). The panel nav puts «Выбрано N» and «Сбросить всё» in one row, the buttons under it.
   While the open panel fills the bottom of the screen the corner «Ваша запись» and back-to-top buttons hide
   (`panelAtBottom()`): on phones they covered «Выбрать врача» / «Далее».
-  With a section open, the tab bar is a **side rail** on phones (same day, user: «разделы … не сверху, а сбоку для
-  удобства»): `#svc-open` becomes a 64 px + rest grid, the bar a sticky column of tiles — a 48 px section photo
-  (`.svc-bar__ph`, hidden wider) and the short name in 10.5 px, «Все разделы» as a Mint grid tile on top. The long
-  tab names in `data.js` carry soft hyphens (U+00AD, invisible in the editor: «Диагно·стика», «Протези·рование»,
-  «Ортодон·тия», «Хирургия и имплан·тация»), because Chrome on Windows has no Russian hyphenation and broke the words
-  without a hyphen. Beside the rail the panel is ~280 px wide: a 44 px tick column, 15 px names, «можно несколько»
-  under the heading.
+  With a section open, the sections hide behind **one button** on phones (same day: first a side rail of photo
+  tiles beside the panel, which the user asked for and then replaced with «кнопку открыть разделы»): the sticky bar
+  is `.svc-bar__toggle` «Разделы · <current section>» with a chevron; a tap (`state.barOpen`) drops the list down
+  over the panel (fade + 8 px slide): «Все разделы» and the six sections, each with its 44 px photo (`.svc-bar__ph`,
+  hidden wider). Choosing one, a tap outside or Esc closes it. The long tab names in `data.js` carry soft hyphens
+  (U+00AD, invisible in the editor — added for the rail; harmless in the chips and the list).
+  **No jumps** (user: «не очень нравится скакание … не будем централизировать … плавные переходы»): on phones
+  opening a section leaves the page where it is (the panel takes the list's place; no flying cards, no lining the
+  bar up under the header), and opening or switching glides (`revealPanel()`, `glideTo`) only when the panel's top
+  is above the screen, so it starts under the bar; «Все разделы» glides back to the title. Desktop keeps the flying
+  tabs and the line-up.
 
 ## Booking by doctor (2026-11-20)
 

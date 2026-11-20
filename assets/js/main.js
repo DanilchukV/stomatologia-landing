@@ -52,7 +52,7 @@
   /* ---------- state ---------- */
   const state = {
     hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
-    cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
+    cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false, barOpen: false,
     // cart: ticked services {n, cat (name), cid}; picks: the doctor chosen per section;
     // extra: doctors booked without services {id, cid} (cid: the section's step 2 it came from, else null)
     // notes: what the helper was told {id (doctor), text}, shown in that doctor's group
@@ -309,6 +309,9 @@
       copyContacts(form, svcForm);
     }
     $$('.svc-bar__tab', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === cat.id));
+    $('.svc-bar', svcOpenBox).classList.toggle('is-open', state.barOpen);
+    $('.svc-bar__toggle', svcOpenBox).setAttribute('aria-expanded', state.barOpen);
+    $('.svc-bar__cur', svcOpenBox).textContent = cat.tab;
     mount($('#svc-head'), cat.id, () => panelHeadHTML(cat));
 
     // services list
@@ -391,7 +394,8 @@
   }
 
   function panelShellHTML() {
-    return `<div class="svc-bar"><div class="tabs-scroll svc-bar__tabs">
+    // phones: the tabs hide behind one button that drops them down (style.css)
+    return `<div class="svc-bar"><button type="button" class="svc-bar__toggle" data-act="bar-toggle" aria-expanded="false" aria-controls="svc-tabs">${icon('i-grid', 16, 2.4)}<span class="svc-bar__lbl">Разделы</span><span class="svc-bar__cur"></span>${icon('i-chev', 16, 2.4)}</button><div class="tabs-scroll svc-bar__tabs" id="svc-tabs">
         <button type="button" class="chip svc-bar__all" data-act="cat-close">${icon('i-grid', 15, 2.4)}<span class="svc-bar__t">Все разделы</span></button>
         <span class="svc-bar__sep" aria-hidden="true"></span>
         ${D.cats.map((c) => `<button type="button" class="chip svc-bar__tab" aria-pressed="false" data-act="cat-tab" data-cat="${c.id}"><span class="svc-bar__ph" aria-hidden="true"><img src="assets/img/services/${c.id}-800.webp" alt="" loading="lazy"></span><span class="svc-bar__t">${esc(c.tab)}</span></button>`).join('')}
@@ -728,7 +732,18 @@
   function toggleCart(n, cat) {
     set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat: cat.name, cid: cat.id }]) });
   }
+  // phones: the section opens where it is (no jump to line it up); the page glides only when the panel's top is
+  // above the screen, so the section starts under the bar
+  function revealPanel() {
+    const gap = $('#svc-panel').getBoundingClientRect().top - $('.svc-bar').getBoundingClientRect().bottom - 10;
+    if (gap < 0) glideTo(window.scrollY + gap, 550);
+  }
   function openCat(id) {
+    if (swipeMedia.matches) {
+      set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false, barOpen: false });
+      revealPanel();
+      return;
+    }
     // from the grid: every card flies up into its tab of the sticky bar
     const from = !state.cat && !reduceMotion.matches
       ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
@@ -826,11 +841,17 @@
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {
       if (t.dataset.cat === state.cat) return;
-      set({ cat: t.dataset.cat, svcStep: 1, picks: withPick(t.dataset.cat), docsAll: false, svcAll: false, svcOpen: null });
-      scrollToId('svc-panel');
+      set({ cat: t.dataset.cat, svcStep: 1, picks: withPick(t.dataset.cat), docsAll: false, svcAll: false, svcOpen: null, barOpen: false });
+      if (swipeMedia.matches) revealPanel(); else scrollToId('svc-panel');
     },
     // back to the section's title with all the cards under it
-    'cat-close': () => { set({ cat: null }); scrollToId('services'); },
+    'cat-close': () => {
+      set({ cat: null, barOpen: false });
+      if (swipeMedia.matches) glideTo(window.scrollY + $('#services').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
+      else scrollToId('services');
+    },
+    // phones: the button in the sticky bar drops the sections down
+    'bar-toggle': () => set({ barOpen: !state.barOpen }),
     'svc-check': (t) => {
       const n = t.closest('.svc-row').dataset.svc;
       if (n !== CONSULT) { toggleCart(n, catById(state.cat)); return; }
@@ -930,13 +951,16 @@
   document.addEventListener('click', (e) => {
     // a click anywhere else folds the corner list
     if (state.bkOpen && !e.target.closest('.bk')) set({ bkOpen: false });
+    if (state.barOpen && !e.target.closest('.svc-bar')) set({ barOpen: false });
     const t = e.target.closest('[data-act]');
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
   });
   // iOS Safari applies :active (the press-in in style.css) only when the page listens for touches
   document.addEventListener('touchstart', () => {}, { passive: true });
   document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape' || !state.bkOpen) return;
+    if (e.key !== 'Escape') return;
+    if (state.barOpen) { set({ barOpen: false }); $('.svc-bar__toggle').focus(); return; }
+    if (!state.bkOpen) return;
     set({ bkOpen: false });
     $('.bk__pill', bk).focus();
   });

@@ -462,8 +462,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-bar__sep { flex: none; width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
 /* the tabs grow to fill the capsule and never shrink, so narrow screens scroll them */
 .svc-bar__tab { flex: 1 0 auto; min-height: 40px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
-/* the section photo shows only in the phone's side rail */
-.svc-bar__ph { display: none; }
+/* the button and the section photos are for the phone's drop-down list only */
+.svc-bar__toggle, .svc-bar__ph { display: none; }
 /* opening a section from the grid: ghosts of the cards fly into the tabs (main.js flyToTabs); a tab shows when its ghost lands */
 .svc-bar__tabs.is-landing .svc-bar__tab:not(.is-landed) { visibility: hidden; }
 .svc-fly { position: fixed; z-index: 25; overflow: hidden; box-sizing: border-box; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); display: grid; place-items: center; pointer-events: none; }
@@ -635,27 +635,22 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-panel__intro .back-link, .svc-panel__desc { display: none; }
   .svc-panel__name { margin: 0; font-size: 22px; }
   .svc-panel__meta { padding: 6px 12px; font-size: 13px; }
-  /* with a section open the sections are a rail at the left (user: «не сверху, а сбоку для удобства»): a photo
-     and the short name each, sticky under the header, so another section is a thumb's reach away */
-  #svc-open:not([hidden]) { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; align-items: start; }
-  .svc-bar { padding: 6px 3px; border-radius: 22px; }
-  .svc-bar__tabs { flex-direction: column; align-items: stretch; gap: 4px; overflow: visible; }
-  .svc-bar__sep { width: auto; height: 1px; margin: 2px 8px; }
-  /* the long names carry soft hyphens in data.js (Chrome on Windows has no Russian hyphenation) */
-  .svc-bar__all, .svc-bar__tab { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; padding: 4px 2px 6px; border: 0; border-radius: 16px; background: none; font-size: 10.5px; line-height: 1.15; white-space: normal; text-align: center; -webkit-hyphens: manual; hyphens: manual; }
-  .svc-bar__all .ic { box-sizing: content-box; width: 20px; height: 20px; padding: 14px; border-radius: 14px; background: var(--tint); }
-  .svc-bar__ph { display: block; flex: none; width: 48px; height: 48px; border-radius: 14px; overflow: hidden; }
+  /* with a section open the sections hide behind one button in the sticky bar (user: «сделаем кнопку открыть
+     разделы»): «Разделы · <current>», a tap drops the list down over the panel with a short fade and slide */
+  .svc-bar { overflow: visible; padding: 5px; }
+  .svc-bar__toggle { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 0 14px 0 12px; border: 0; border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 700; text-align: left; cursor: pointer; }
+  .svc-bar__toggle .ic { display: block; flex: none; }
+  .svc-bar__toggle .ic:last-child { transition: transform .25s ease; }
+  .svc-bar.is-open .svc-bar__toggle .ic:last-child { transform: rotate(180deg); }
+  .svc-bar__cur { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; color: var(--accent-ink); }
+  .svc-bar__tabs { position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; margin: 0; padding: 8px; max-height: calc(100vh - var(--hdr-h) - 100px); max-height: calc(100dvh - var(--hdr-h) - 100px); overflow-y: auto; overscroll-behavior: contain; background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 20px 44px rgba(12, 44, 71, .2); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .22s ease, transform .25s var(--ease-out), visibility .22s; }
+  .svc-bar.is-open .svc-bar__tabs { opacity: 1; visibility: visible; transform: none; }
+  .svc-bar__sep { display: none; }
+  .svc-bar__all, .svc-bar__tab { flex: none; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 16px; background: none; font-size: 16px; white-space: normal; text-align: left; }
+  .svc-bar__all .ic { box-sizing: content-box; width: 20px; height: 20px; padding: 12px; border-radius: 12px; background: var(--tint); }
+  .svc-bar__ph { display: block; flex: none; width: 44px; height: 44px; border-radius: 12px; overflow: hidden; }
   .svc-bar__ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .svc-bar__tab[aria-pressed="true"] { background: var(--ink); color: var(--white); }
-  .svc-panel { border-radius: 24px; }
-  .svc-panel__body { padding: 18px 14px; gap: 18px; }
-  /* the panel is ~280 px wide beside the rail: a narrower tick column, smaller names, the hint under the heading */
-  .panel-label { flex-wrap: wrap; gap: 2px 12px; }
-  .panel-hint { flex-basis: 100%; margin-left: 0; }
-  .svc-row__check { width: 44px; padding: 0 0 0 4px; }
-  .svc-row__toggle { min-height: 52px; gap: 8px; padding-right: 8px; font-size: 15px; line-height: 1.3; }
-  .svc-row__chev { width: 28px; height: 28px; }
-  .svc-row__content { padding-left: 48px; }
   .wiz__btn { flex-direction: column; gap: 6px; padding: 0; font-size: 13px; }
   .wiz__item { align-items: flex-start; }
   .wiz__item:not(:last-child)::after { margin-top: 15px; }
