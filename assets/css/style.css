@@ -308,6 +308,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .hero__facts { display: flex; gap: 12px; margin: 0; padding: 0 var(--gutter) 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }
   .hero__facts::-webkit-scrollbar { display: none; }
   .fact { flex: 0 0 82%; scroll-snap-align: start; padding: 20px; }
+  /* the row clips what sticks out of it, so a hover shadow would end in a hard line under the cards */
+  .fact:hover { box-shadow: none; }
 }
 /* the two buttons share a row: shorter labels' padding, no arrow */
 @media (max-width: 480px) {

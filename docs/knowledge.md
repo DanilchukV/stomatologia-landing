@@ -152,7 +152,8 @@ width under the text (`object-position: 25%`), same leaf shape. **On phones (≤
 310 px high, `object-position: 12% 18%` keeps the face in the leaf; 2026-11-20, user: the photo had «улетела вниз» and
 the first screen looked empty — now it is the doctor, the title, the lead and both buttons, which share one row
 ≤ 480 px without the arrow, 15 px text ≤ 374). The three fact cards are one swipeable row there (scroll-snap, 82 %
-wide so the next one peeks in, no scrollbar) to shorten the page. The same day, so the buttons fit on the first
+wide so the next one peeks in, no scrollbar, and no hover shadow: the row clips it into a hard line, seen in the
+desktop preview with a mouse) to shorten the page. The same day, so the buttons fit on the first
 screen (user: «текст наложим на фото чуть»), the photo's lower part fades to white (a mask: opaque to 45 %, 15 % at
 78 %, gone at 92 %) and the text starts 96 px up on it — the eyebrow and title sit on the faded part; buttons end
 at ~630 px on a 390 px phone. There only the top-left corner of the leaf stays round: the bottom-right curve showed
