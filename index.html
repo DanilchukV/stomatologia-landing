@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261119zzn">
-<script src="assets/js/header.js?v=20261119zzn" defer></script>
-<script src="assets/js/data.js?v=20261119zzn" defer></script>
-<script src="assets/js/form.js?v=20261119zzn" defer></script>
-<script src="assets/js/main.js?v=20261119zzn" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261120a">
+<script src="assets/js/header.js?v=20261120a" defer></script>
+<script src="assets/js/data.js?v=20261120a" defer></script>
+<script src="assets/js/form.js?v=20261120a" defer></script>
+<script src="assets/js/main.js?v=20261120a" defer></script>
 </head>
 <body>
 
@@ -41,6 +41,7 @@
   <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
@@ -363,11 +364,11 @@
     <div class="book__body">
       <form class="book__form" id="book-form" novalidate>
         <div class="book__row">
-          <span class="book__k">Услуги</span>
+          <span class="book__k">Врачи и&nbsp;услуги</span>
           <div class="book__v" id="book-svcs"></div>
         </div>
         <div class="book__row">
-          <span class="book__k" id="book-k-doc">Врач</span>
+          <span class="book__k" id="book-k-doc">Врач<span class="book__k-hint">можно нескольких</span></span>
           <div class="book__docs" id="book-docs" role="group" aria-labelledby="book-k-doc"></div>
         </div>
         <div class="book__row" role="radiogroup" aria-labelledby="book-k-time">
@@ -515,6 +516,9 @@
     </div>
   </div>
 </dialog>
+
+<!-- Floating: the booking so far (doctors and services), shown once something is chosen -->
+<div class="bk" id="bk" hidden></div>
 
 <!-- Floating: back to top -->
 <button type="button" class="to-top" id="to-top" data-act="top" aria-label="Наверх" hidden><svg class="ic" width="20" height="20" stroke-width="2.4" aria-hidden="true"><use href="#i-up"/></svg></button>

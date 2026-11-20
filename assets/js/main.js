@@ -53,30 +53,73 @@
   const state = {
     hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
     cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false,
-    svcStep: 1, docPick: null, cart: [],
+    // cart: ticked services {n, cat (name), cid}; picks: the doctor chosen per section;
+    // extra: doctors booked without services {id, cid} (cid: the section's step 2 it came from, else null)
+    svcStep: 1, picks: {}, extra: [], cart: [], bkOpen: false,
     docPage: 0, docOpen: null,
     time: 'любое', sent: false
   };
   function set(patch) {
     Object.assign(state, patch);
+    if (bookEmpty()) state.bkOpen = false;
     render();
   }
 
-  const inCart = (n) => state.cart.some((x) => x.n === n);
+  const inCart = (n, cid) => state.cart.some((x) => x.n === n && x.cid === (cid || state.cat));
   const catById = (id) => D.cats.find((c) => c.id === id);
   const currentSymptom = () => D.symptoms.find((x) => x.id === state.symptom) || null;
   // doctors are picked by id: names are empty until the clinic sends them, so the speciality stands in
   const docById = (id) => D.doctors.find((d) => d.id === id);
   const docsFor = (roles) => D.doctors.filter((d) => roles.includes(d.role));
   const docTitle = (d) => d.name || d.spec;
-  // with nothing picked (a plain check-up) the booking goes to the therapist
-  const docLabel = () => (state.docPick ? docTitle(docById(state.docPick)) : 'любой, подберём');
   // photo if there is one, else initials, else a silhouette; the box around it crops it (object-fit)
   const docAvatar = (d, size) => (d.photo ? `<img class="av-img" src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? initials(d.name) : person(size));
   // who sees patients in a category; in diagnostics, whoever does the ticked consultation
-  const catRoles = (cat, cart) => (cat.id === 'diag' ? cart.filter((x) => CONSULT_ROLE[x.n]).map((x) => CONSULT_ROLE[x.n]) : cat.roles);
+  const catRoles = (cat, cart) => (cat.id === 'diag' ? cart.filter((x) => x.cid === 'diag' && CONSULT_ROLE[x.n]).map((x) => CONSULT_ROLE[x.n]) : cat.roles);
   // the doctor picked automatically: the first one found, in the order of the roles
   const autoDoc = (roles) => { for (const r of roles) { const d = D.doctors.find((x) => x.role === r); if (d) return d.id; } return null; };
+  // the section's doctor: kept once chosen, else the automatic one
+  const withPick = (cid, cart) => ({ ...state.picks, [cid]: state.picks[cid] || autoDoc(catRoles(catById(cid), cart || state.cart)) });
+
+  /* ---------- the booking: every section has its own doctor ---------- */
+  // a ticked service goes to its section's doctor; diagnostics without a consultation to nobody
+  function itemDoc(x) {
+    if (x.cid === 'diag' && !isConsult(x.n)) return null;
+    return state.picks[x.cid] || autoDoc(catRoles(catById(x.cid), state.cart));
+  }
+  // the booking by doctor: each doctor with their services, doctors without services too; diagnostics last
+  function visits() {
+    const map = new Map();
+    const at = (id) => { if (!map.has(id)) map.set(id, []); return map.get(id); };
+    state.cart.forEach((x) => at(itemDoc(x) || '').push(x));
+    state.extra.forEach((e) => at(e.id));
+    return Array.from(map, ([id, items]) => ({ id, doc: id ? docById(id) : null, items })).sort((a, b) => !a.doc - !b.doc);
+  }
+  const bookEmpty = () => !state.cart.length && !state.extra.length;
+  const bookCount = () => visits().reduce((s, v) => s + (v.items.length || 1), 0);
+  const inBooking = (id) => visits().some((v) => v.id === id);
+  // adds a doctor without services; from a section's step 2 (cid) it replaces that section's earlier one
+  function withDoc(id, cid) {
+    const rest = state.extra.filter((e) => !(cid && e.cid === cid && e.id !== id));
+    return rest.some((e) => e.id === id) ? rest : rest.concat([{ id, cid: cid || null }]);
+  }
+  // a doctor out of the booking, with their services ('' is the diagnostics group)
+  const dropDoc = (id) => set({ cart: state.cart.filter((x) => (itemDoc(x) || '') !== id), extra: state.extra.filter((e) => e.id !== id) });
+  // structure key for mount(): changes whenever the list would
+  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',')).join('|');
+  // the same list in step 3 of Services, the booking form and the corner button
+  function visitsHTML() {
+    return `<ul class="visits">${visits().map((v) => {
+      const d = v.doc;
+      const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
+        : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
+      const svcs = v.items.length
+        ? `<ul class="visit__svcs">${v.items.map((x) => `<li class="visit__svc"><span class="visit__svc-n">${esc(glue(x.n))}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>`
+        : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
+      return `<li class="visit"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${svcs}</li>`;
+    }).join('')}</ul>`;
+  }
+  const PLUS = icon('i-plus', 16, 2.4);
 
   // Rebuilds el only when its structure key changes; keeps keyboard focus on the same [data-focus] item.
   function mount(el, key, build) {
@@ -273,32 +316,29 @@
     moreSvcs.firstChild.textContent = expanded ? 'Свернуть' : 'Показать ещё ' + (cat.items.length - SVC_LIMIT);
 
     // doctor choice: in diagnostics it follows the chosen consultation
-    const consRoles = cat.id === 'diag' ? Object.keys(CONSULT_ROLE).filter(inCart).map((k) => CONSULT_ROLE[k]) : [];
     const roles = catRoles(cat, state.cart);
+    const pick = state.picks[cat.id] || null;
     const docs = docsFor(roles);
     $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
-      : cat.id === 'diag' && !consRoles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
+      : cat.id === 'diag' && !roles.length ? 'Отметьте консультацию — покажем, кто её проводит' : 'Врача подберём при записи');
 
     const opts = docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : 'Фото и имя скоро появятся' }));
-    const picked = opts.findIndex((d) => d.id === state.docPick);
+    const picked = opts.findIndex((d) => d.id === pick);
     const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
     const grid = $('#doc-pick-grid');
     mount(grid, roles.join() + docsExpanded, () => opts.filter((d, k) => docsExpanded || k < DOC_LIMIT).map((d) => `<button type="button" class="doc-card" aria-pressed="false" data-act="panel-doc" data-id="${d.id}" data-focus="pdoc:${d.id}"><span class="doc-card__av">${d.av}</span><span class="doc-card__text"><span class="doc-card__name">${esc(d.title)}</span>${d.sub ? `<span class="doc-card__sub">${esc(d.sub)}</span>` : ''}</span><span class="doc-card__tick">${icon('i-check', 16, 2.8)}</span></button>`).join(''));
-    $$('.doc-card', grid).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === state.docPick));
+    $$('.doc-card', grid).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === pick));
     const moreDocs = $('#docs-all');
     moreDocs.hidden = opts.length <= DOC_LIMIT;
     moreDocs.setAttribute('aria-expanded', docsExpanded);
     moreDocs.firstChild.textContent = docsExpanded ? 'Свернуть' : 'Показать ещё ' + (opts.length - DOC_LIMIT);
 
-    // step 3: the whole booking, services of every category included
-    const items = state.cart.map((x) => `<li class="svc-sum__item"><span class="svc-sum__tick">${icon('i-check', 13, 3.2)}</span><span class="svc-sum__name">${esc(glue(x.n))}<span class="svc-sum__cat">${esc(glue(x.cat))}</span></span><button type="button" class="svc-sum__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 13, 2.8)}</button></li>`).join('');
-    // no doctor picked (after "Сбросить всё"): any doctor, chosen by the services
-    const doc = state.docPick ? docById(state.docPick) : null;
-    // one card, a row per part: label on the left, value on the right
-    mount($('#svc-sum'), state.cart.map((x) => x.n).join('|') + '#' + (doc ? doc.id : ''), () => `
-      <div class="svc-sum__row"><span class="svc-sum__k">Услуги</span><div class="svc-sum__v">${items ? `<ul class="svc-sum__list">${items}</ul>`
-        : `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>`}</div></div>
-      <div class="svc-sum__row"><span class="svc-sum__k">Врач</span><div class="svc-sum__v"><div class="svc-sum__doc"><span class="av">${doc ? docAvatar(doc, 20) : person(20)}</span><span class="svc-sum__doc-text"><span class="svc-sum__doc-name">${esc(glue(doc ? docTitle(doc) : 'Любой врач'))}</span>${doc ? (doc.name ? `<span class="svc-sum__cat">${esc(doc.spec)}</span>` : '') : `<span class="svc-sum__cat">подберём по услугам</span>`}</span></div></div></div>
+    // step 3: the whole booking by doctor, services of every section included; one card, a row per part
+    const empty = bookEmpty();
+    mount($('#svc-sum'), visitsKey(), () => `
+      <div class="svc-sum__row"><span class="svc-sum__k">Врачи и&nbsp;услуги</span><div class="svc-sum__v">${empty
+        ? `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>` : visitsHTML()}
+        <button type="button" class="add-svc" data-act="add-svc">${PLUS}${empty ? 'Выбрать услугу' : 'Добавить ещё услугу'}</button></div></div>
       <div class="svc-sum__row"><span class="svc-sum__k">Удобное время</span><div class="svc-sum__v">
         <div class="svc-time">${TIMES.map(([v, label]) => `<button type="button" class="chip svc-time__chip" aria-pressed="false" data-act="svc-time" data-time="${v}" data-focus="time:${v}">${label}</button>`).join('')}</div>
         <p class="svc-sum__note">${glue('Точное время администратор согласует по телефону.')}</p></div></div>`);
@@ -312,9 +352,9 @@
       if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       b.parentElement.classList.toggle('is-done', k < step);
     });
-    const n = state.cart.filter((x) => x.cat === cat.name).length;
+    const n = state.cart.filter((x) => x.cid === cat.id).length;
     $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
-      : step === 2 ? 'Врач: ' + docLabel() : '');
+      : step === 2 ? 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи') : '');
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
     $('.svc-nav__next', svcOpenBox).hidden = step === 3;
     $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Выбрать врача' : 'Далее: запись';
@@ -557,20 +597,52 @@
   });
 
   function renderBooking() {
-    // the doctor: "any" (docPick null) or one of the bookable doctors; shared with Services and the helper
+    // the doctors: each tile adds that doctor to the booking or takes them out (with their services)
     const docsBox = $('#book-docs');
-    mount(docsBox, 'docs', () => [{ id: '', title: 'Любой врач', sub: 'подберём по услугам', av: person(26) }]
-      .concat(D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => ({ id: d.id, title: docTitle(d), sub: d.spec, av: docAvatar(d, 20) })))
-      .map((o) => `<button type="button" class="book-doc" aria-pressed="false" data-act="book-pick" data-id="${o.id}"><span class="av">${o.av}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(o.title))}</span><span class="book-doc__sub">${esc(o.sub)}</span></span></button>`).join(''));
-    $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === (state.docPick || '')));
-    // the services picked in Services, each removable
-    mount($('#book-svcs'), state.cart.map((x) => x.n).join('|'), () => (state.cart.length
-      ? `<ul class="book__svcs">${state.cart.map((x) => `<li class="book-svc">${esc(glue(x.n))}<button type="button" class="book-svc__x" data-act="cart-remove" data-svc="${esc(x.n)}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>`
-      : `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')} <a href="#services">${glue('Выбрать в «Услугах»')}</a></p>`));
-    $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = !state.cart.length && !state.docPick; });
+    mount(docsBox, 'docs', () => D.doctors.filter((d) => BOOKABLE.includes(d.role))
+      .map((d) => `<button type="button" class="book-doc" aria-pressed="false" data-act="book-pick" data-id="${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(docTitle(d)))}</span><span class="book-doc__sub">${esc(d.spec)}</span></span></button>`).join(''));
+    $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', inBooking(b.dataset.id)));
+    // the whole booking by doctor, as in Services' step 3
+    mount($('#book-svcs'), visitsKey(), () => (bookEmpty()
+      ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')} <a href="#services">${glue('Выбрать в «Услугах»')}</a></p>`
+      : visitsHTML() + `<button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button>`));
+    $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     form.elements.time.value = state.time;
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
+  }
+
+  /* ---------- the booking in the corner ---------- */
+  // «Ваша запись · N» bottom right once something is chosen; opens the same list as step 3, with remove buttons.
+  // Hidden while the booking form is on screen (it shows the same) and after sending.
+  const bk = $('#bk');
+  function bookOnScreen() {
+    const r = $('.book__card').getBoundingClientRect();
+    return r.top < window.innerHeight - 120 && r.bottom > 120;
+  }
+  function renderCorner() {
+    const n = bookCount();
+    const hide = !n || state.sent || bookOnScreen();
+    if (hide && state.bkOpen) state.bkOpen = false;
+    bk.hidden = hide;
+    toTop.classList.toggle('is-raised', !hide);
+    if (hide) return;
+    mount(bk, 'bk', () => `<div class="bk__pop" id="bk-pop" role="dialog" aria-labelledby="bk-title" hidden>
+        <div class="bk__head"><span class="bk__title" id="bk-title">Ваша запись</span>
+          <button type="button" class="bk__close" data-act="bk-toggle" aria-label="Свернуть">${icon('i-close', 16, 2.4)}</button></div>
+        <div class="bk__list" id="bk-list"></div>
+        <div class="bk__foot">
+          <p class="bk__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p>
+          <div class="bk__actions"><button type="button" class="btn btn--ghost bk__add" data-act="add-svc">${PLUS}Добавить услугу</button><a href="#book" class="btn btn--dark bk__go" data-act="bk-go">Оформить${icon('i-arrow', 16, 2.4)}</a></div>
+        </div>
+      </div>
+      <button type="button" class="bk__pill" data-act="bk-toggle" aria-expanded="false" aria-controls="bk-pop"><span class="bk__count" id="bk-count"></span><span>Ваша запись</span>${icon('i-chev-up', 16, 2.4)}</button>`);
+    $('#bk-pop').hidden = !state.bkOpen;
+    mount($('#bk-list'), visitsKey(), visitsHTML);
+    $('#bk-count').textContent = n;
+    const pill = $('.bk__pill', bk);
+    pill.setAttribute('aria-expanded', state.bkOpen);
+    pill.classList.toggle('on-dark', !state.bkOpen && darkUnder(pill));
   }
 
   /* ---------- scroll-driven bits ---------- */
@@ -578,7 +650,7 @@
   // true when the page under a floating button is dark, so the button switches to its light version
   function darkUnder(node) {
     const r = node.getBoundingClientRect();
-    let el = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find((n) => !n.closest('.to-top'));
+    let el = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find((n) => !n.closest('.to-top, .bk'));
     while (el && el !== document.documentElement) {
       const m = getComputedStyle(el).backgroundColor.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/);
       if (m && (m[4] === undefined || +m[4] > 0.5)) return (0.2126 * m[1] + 0.7152 * m[2] + 0.0722 * m[3]) / 255 < 0.4;
@@ -595,6 +667,7 @@
     const stuck = !!bar && Math.abs(bar.getBoundingClientRect().top - parseFloat(getComputedStyle(bar).top)) < 1.5;
     if (bar) bar.classList.toggle('is-stuck', stuck);
     hdr.classList.toggle('is-scrolled', y > 8 && !stuck);
+    renderCorner();
     toTop.hidden = y <= 900;
     if (!toTop.hidden) toTop.classList.toggle('on-dark', darkUnder(toTop));
   }
@@ -618,13 +691,13 @@
 
   /* ---------- actions ---------- */
   function toggleCart(n, cat) {
-    set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat }]) });
+    set({ cart: inCart(n, cat.id) ? state.cart.filter((x) => !(x.n === n && x.cid === cat.id)) : state.cart.concat([{ n, cat: cat.name, cid: cat.id }]) });
   }
   function openCat(id) {
     // from the grid: every card flies up into its tab of the sticky bar
     const from = !state.cat && !reduceMotion.matches
       ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
-    set({ cat: id, svcStep: 1, docPick: autoDoc(catRoles(catById(id), state.cart)), docsAll: false, svcAll: false });
+    set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false });
     // the page lines the tab bar up under the header (where it sticks), scrolling while the cards fly
     // (the ghosts measure the tabs first, so the scroll starts after that)
     const shift = Math.max(0, $('.svc-bar').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 10);
@@ -668,7 +741,11 @@
   // shows step k of the services panel; scrolls back up if the step bar is above the screen
   function goStep(k) {
     if (k < 1 || k > STEPS.length) return;
-    set({ svcStep: k });
+    const patch = { svcStep: k };
+    // on to step 3 from the doctor step with none of the section's services ticked: the doctor alone is booked
+    const c = state.cat, id = state.picks[c];
+    if (k === 3 && state.svcStep === 2 && id && !state.cart.some((x) => x.cid === c && itemDoc(x))) patch.extra = withDoc(id, c);
+    set(patch);
     const bar = $('#svc-steps');
     if (bar.getBoundingClientRect().top < $('.svc-bar').getBoundingClientRect().bottom) scrollToId('svc-steps');
     $(`.svc-step[data-step="${k}"] .panel-h`).focus({ preventScroll: true });
@@ -694,7 +771,7 @@
       const id = helperDoc();
       if (!id) return;
       helper.close();
-      set({ docPick: id });
+      set({ extra: withDoc(id) });
       scrollToId('book');
     },
     'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
@@ -709,23 +786,25 @@
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {
       if (t.dataset.cat === state.cat) return;
-      set({ cat: t.dataset.cat, svcStep: 1, docPick: autoDoc(catRoles(catById(t.dataset.cat), state.cart)), docsAll: false, svcAll: false, svcOpen: null });
+      set({ cat: t.dataset.cat, svcStep: 1, picks: withPick(t.dataset.cat), docsAll: false, svcAll: false, svcOpen: null });
       scrollToId('svc-panel');
     },
     // back to the section's title with all the cards under it
     'cat-close': () => { set({ cat: null }); scrollToId('services'); },
     'svc-check': (t) => {
       const n = t.closest('.svc-row').dataset.svc;
-      if (n !== CONSULT) { toggleCart(n, catById(state.cat).name); return; }
+      if (n !== CONSULT) { toggleCart(n, catById(state.cat)); return; }
       // a consultation needs a specialist: open the row to pick one, or clear the chosen one
-      if (CONSULT_SUBS.some(([, cn]) => inCart(cn))) set({ cart: state.cart.filter((x) => !isConsult(x.n)), docPick: null });
+      if (CONSULT_SUBS.some(([, cn]) => inCart(cn))) set({ cart: state.cart.filter((x) => !(x.cid === state.cat && isConsult(x.n))), picks: { ...state.picks, [state.cat]: null } });
       else set({ svcOpen: n });
     },
+    // diagnostics: one consultation at a time; its specialist becomes the section's doctor
     'svc-sub': (t) => {
       const cn = t.dataset.sub;
-      const rest = state.cart.filter((x) => !isConsult(x.n));
-      const cart = inCart(cn) ? rest : rest.concat([{ n: cn, cat: catById(state.cat).name }]);
-      set({ cart, docPick: autoDoc(catRoles(catById(state.cat), cart)), docsAll: false });
+      const cat = catById(state.cat);
+      const rest = state.cart.filter((x) => !(x.cid === cat.id && isConsult(x.n)));
+      const cart = inCart(cn) ? rest : rest.concat([{ n: cn, cat: cat.name, cid: cat.id }]);
+      set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(catRoles(cat, cart)) }, docsAll: false });
     },
     'svc-toggle': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcOpen: state.svcOpen === n ? null : n }); },
     'svc-more': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcMore: state.svcMore === n ? null : n }); },
@@ -737,7 +816,13 @@
         scrollToId('pick-svc');
       } else set({ svcAll: true });
     },
-    'panel-doc': (t) => set({ docPick: t.dataset.id }),
+    // the section's doctor; if that section's doctor was booked alone (see goStep), the new one takes the place
+    'panel-doc': (t) => {
+      const c = state.cat;
+      const patch = { picks: { ...state.picks, [c]: t.dataset.id } };
+      if (state.extra.some((e) => e.cid === c)) patch.extra = withDoc(t.dataset.id, c);
+      set(patch);
+    },
     'docs-all': (t) => {
       const collapsing = t.getAttribute('aria-expanded') === 'true';
       set({ docsAll: !collapsing });
@@ -753,15 +838,20 @@
       const svcForm = $('#svc-form');
       if (svcForm) svcForm.reset();
       const cat = catById(state.cat);
-      set({ sent: false, cart: [], time: 'любое', svcStep: 1, svcOpen: null, docPick: cat ? autoDoc(catRoles(cat, [])) : null });
+      set({ sent: false, cart: [], extra: [], time: 'любое', svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} });
       if (t.dataset.from === 'svc') scrollToId('svc-steps');
       else form.elements.name.focus();
     },
 
-    'cart-remove': (t) => set({ cart: state.cart.filter((x) => x.n !== t.dataset.svc) }),
-    // "Сбросить всё": the picked services and doctor, in Services and the booking form alike (name and phone stay)
-    'cart-reset': () => set({ cart: [], docPick: null, svcOpen: null }),
-    'book-pick': (t) => set({ docPick: t.dataset.id || null }),
+    'cart-remove': (t) => set({ cart: state.cart.filter((x) => !(x.n === t.dataset.svc && x.cid === t.dataset.cid)) }),
+    'visit-remove': (t) => dropDoc(t.dataset.id),
+    // "Сбросить всё": the picked services and doctors, in Services and the booking form alike (name and phone stay)
+    'cart-reset': () => set({ cart: [], extra: [], svcOpen: null }),
+    'book-pick': (t) => { const id = t.dataset.id; if (inBooking(id)) dropDoc(id); else set({ extra: withDoc(id) }); },
+    // the corner button: open or fold the list; «Добавить услугу» goes back to all the sections
+    'bk-toggle': () => set({ bkOpen: !state.bkOpen }),
+    'bk-go': () => set({ bkOpen: false }),
+    'add-svc': () => { set({ bkOpen: false, cat: null }); scrollToId('services'); },
 
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
@@ -778,15 +868,22 @@
     'doc-page': (t) => set({ docPage: +t.dataset.page, docOpen: null }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p, docOpen: null }); },
-    'book-doc': (t) => set({ docPick: t.dataset.id }),
+    'book-doc': (t) => set({ extra: withDoc(t.dataset.id) }),
 
     top: () => scrollToTop(),
     'cookie-ok': () => closeCookie()
   };
 
   document.addEventListener('click', (e) => {
+    // a click anywhere else folds the corner list
+    if (state.bkOpen && !e.target.closest('.bk')) set({ bkOpen: false });
     const t = e.target.closest('[data-act]');
     if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !state.bkOpen) return;
+    set({ bkOpen: false });
+    $('.bk__pill', bk).focus();
   });
 
 

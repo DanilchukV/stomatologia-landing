@@ -181,8 +181,8 @@ outside the dialog's rounded corners:
   direction and `svcs` as a plain list (a link to the category in Services was removed at the user's request).
   With two or more doctors the cards are a choice (user's request): a tick and a Navy outline on the chosen one
   (`state.hDoc`, `helperDoc()`); «Записаться» stays disabled until then, a lone doctor counts as chosen.
-  «Записаться» closes the dialog, sets the booking form's doctor to the chosen
-  one (`docPick`) and scrolls to the form. The site's scroll uses requestAnimationFrame, which never fires in the
+  «Записаться» closes the dialog, adds the chosen doctor to the booking (without services, see "Booking by
+  doctor") and scrolls to the form. The helper always books one doctor. The site's scroll uses requestAnimationFrame, which never fires in the
   headless shot harness — to check such a jump there, replace it with a timer in `-Do`.
 - The jaw is sized by the dialog's height (`.jaw__frame` max-width from `100dvh`), so step 1 fits without
   scrolling on a laptop; its min-width keeps the side labels inside.
@@ -260,8 +260,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   1 Услуги (the list in two columns on desktop) → 2 Врач (horizontal doctor cards; a lone one spans
   [the step numbers use the helper's colours since 2026-11-19: current Navy with a Yellow halo, done Navy with a
   tick, ahead an outline; the line between done steps Navy]
-  the width) → 3 Проверка (one card with rows, label left / value right: all ticked services, any
-  category, with remove buttons; the doctor; the
+  the width) → 3 Проверка (one card with rows, label left / value right: «Врачи и услуги» — the whole booking by
+  doctor, every section included (see "Booking by doctor"), with «+ Добавить ещё услугу» under it; the
   preferred time — the same `state.time` as the booking form's radios, so choosing in one updates the other) →
   contacts: name, phone, optional e-mail; "Отправить заявку" (a `form="svc-form"` button in the nav)
   sends from the panel itself, without going to the booking form (user's request, 2026-11-17). Same
@@ -284,10 +284,32 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   (`.svc-panel__photo[data-cat=…]`). On phones the photo becomes a band above the text, which would
   otherwise sit on a bright part of the picture.
 
+## Booking by doctor (2026-11-20)
+
+Until then the whole booking had one doctor (`docPick`): ticking caries in «Лечение зубов» and then an extraction in
+«Хирургия» silently switched the doctor to the surgeon, so the caries went to the surgeon too. The user chose
+«свой врач на раздел»: one request, inside it the services grouped by doctor.
+- `state.picks[cat id]` — each section's doctor (step 2; set automatically on opening, kept once chosen). A ticked
+  service (`cart` item `{n, cat, cid}`) goes to its section's doctor (`itemDoc`), so changing the doctor in step 2
+  moves the section's services with it. Two sections with the same doctor (treatment and aesthetics → therapist)
+  make one group. Diagnostics without a consultation have no doctor: a «Диагностика · без записи к врачу» group, last.
+- `state.extra` — doctors booked without services: a doctor card's «Записаться», the helper's «Записаться», a tile
+  of the booking form, or going from step 2 to step 3 with none of the section's services ticked (then `cid` marks the
+  section, and picking another doctor there replaces it instead of adding a second one).
+- `visits()` builds the groups; `visitsHTML()` draws them the same in Services' step 3, the booking form and the
+  corner list: a Mint card per doctor (photo, name, speciality, ✕ removes the doctor with their services) with the
+  services as white chips (✕ each); a doctor without services says «Услуги подберёт врач на приёме».
+- «+ Добавить ещё услугу» (step 3, booking form, corner list) closes the open section and scrolls to all the sections.
+
+**The corner button** (`#bk`, user's request, replacing the cart pill removed on 2026-11-19): «Ваша запись» with a
+Yellow count (services, plus 1 per doctor without services), bottom right, once anything is chosen. It opens a list
+above it (the groups, «Добавить услугу», «Оформить» → the booking form); a click outside or Esc folds it. Hidden while
+the booking card is on screen (it shows the same) and after sending; the back-to-top button moves up above it
+(`.is-raised`). On phones the list spans the width and the button sits above the cookie notice.
+
 ## Back-to-top
 
-The floating cart pill (selected services, with «Записаться») was removed on 2026-11-19 at the user's request;
-the ticked services still show in step 3 of the Services panel and in the booking card. Back-to-top shows
+Back-to-top shows
 after 900 px and switches to a white version over dark backgrounds: `darkUnder()` reads the background
 colour under the button's centre on scroll.
 
@@ -321,15 +343,14 @@ check the lead text in `index.html`.
   word pairs, are glued with no-break spaces. `.doc__spec` reserves room for those two lines, so both pages keep
   the same height when paging.
 - Section: no tabs (the user wants one list: doctors, then nurses, then administrators), 4 per page (2 pages) with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
-  doctor (not the nurses or administrators) has "Записаться", which also picks that doctor for the booking summary.
-- No "любой свободный врач" option (removed on the user's request, 2026-11-17): a concrete doctor is
-  always named. Opening a category, ticking a consultation or picking a symptom selects the doctor of
+  doctor (not the nurses or administrators) has "Записаться", which also adds that doctor to the booking.
+- No "любой свободный врач" option in Services (removed on the user's request, 2026-11-17): a section's doctor is
+  always named. Opening a section or ticking a consultation selects the doctor of
   the first role in `roles` (`autoDoc`; so the order of `roles` sets the default, e.g. aesthetics →
-  therapist); the visitor can switch to another one shown, but not unselect. With nothing picked (a plain
-  check-up, diagnostics without a consultation) the booking summary says the therapist.
+  therapist); the visitor can switch to another one shown, but not unselect.
 - Doctor choice: in the services panel (step 2, doctors of `cats[].roles`; in diagnostics, of the
-  ticked consultation), in the picker's "Кто примет" (`recommend[symptom].roles`), and as "Врач" in the
-  cart and booking summary. Categories or symptoms whose role has nobody say "Врача
+  ticked consultation), in the helper (`recommend[symptom].roles`), and the tiles of the booking form.
+  Every section has its own doctor — see "Booking by doctor". Categories whose role has nobody say "Врача
   подберём при записи".
 
 
@@ -386,17 +407,17 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 ## Booking
 
 Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
-выбором врача»). The rows follow the order of Services' step 3 (user): Услуги, Врач, Удобное время, Контакты —
+выбором врача»). The rows follow the order of Services' step 3 (user): Врачи и услуги, Врач, Удобное время, Контакты —
 a white card, label on the left, «Отправить заявку» at the bottom right:
-- «Врач» — five equal tiles in one row (photo above the name, cropped from the top so the head is whole; a list of
-  rows on phones; user disliked one chip
-  wrapping alone): «Любой врач» (`docPick` null; chosen, its circle stays white like the photo circles) and the
-  four bookable doctors. The choice is the
-  same `docPick` as in Services and the helper, so a doctor picked there shows here and the other way round.
-- «Услуги» — the services ticked in Services as removable chips; none: a line and a link to «Услуги».
-- «Контакты» (name, phone) and «Удобное время». Services' step 3 and this form are one booking: doctor, services
+- «Врачи и услуги» — the booking by doctor, as in Services' step 3, with «+ Добавить ещё услугу»; none: a line and a
+  link to «Услуги».
+- «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is
+  whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
+  the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on
+  2026-11-20 with the move to several doctors: with none chosen the administrator picks.
+- «Контакты» (name, phone) and «Удобное время». Services' step 3 and this form are one booking: doctors, services
   and time share the state, and the name and phone are mirrored as they are typed (`copyContacts`).
-- «Сбросить всё» (top right, and next to «Выбрано N услуг» in the services panel) clears the services and the doctor
+- «Сбросить всё» (top right, and next to «Выбрано N услуг» in the services panel) clears the services and the doctors
   (`cart-reset`; user's choice: name and phone stay); hidden when there is nothing to clear.
 
 The lead is only «Оставьте номер — перезвоним и подберём удобное время.»; the "Или позвоните сами" phones were
@@ -408,7 +429,7 @@ keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typ
 "+" and a code other than 375 is kept as typed (digits and separators, max 15 digits) and needs at least 8
 digits; digits typed without "+" are still taken as a Belarusian number. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
 After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card,
-the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the floating cart
+the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the corner
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle
 of the screen (`markSent`). Headless Chrome in `tools/shot` neither runs smooth scrolling nor fires
 `requestAnimationFrame` reliably — to check, patch `scrollIntoView` to `behavior: 'instant'` in `-Do`.
