@@ -370,9 +370,13 @@ so it takes no room then). The panel: a big photo on the left, the name, special
 story in two columns — «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with
 years), «Дипломы и сертификаты» (`certs`) from `data.js`; «Записаться к врачу», «Свернуть» and a ✕. A caret on top
 points at the chosen card (`docCaret()`, `--caret-x`, kept in place on resize and on swiping the phone row). The
-panel keeps its content while it folds away; another doctor swaps it with a fade. Opening from a row low on the
-screen glides the row up under the header; closing while scrolled into the panel glides back to the row; paging
-closes it. Under 900 px the story is one column and the photo smaller; on phones the photo is a 4:3 band on top.
+panel keeps its content while it folds away; another doctor swaps it with a fade. Paging closes it.
+Motion (2026-11-20, user: smoother, and centre on the story): the height glides in 700 ms with an ease-in-out
+(`--glide`), the story fades in a beat later and slides down 16 px; on open the page glides (`glideTo()`, the same
+700 ms, shared with back-to-top) so the panel's final box sits in the middle of the screen under the header, or just
+under the header when it is taller than the screen (phones); closing while scrolled into the panel glides back to
+the row. To check in the shot harness, patch `requestAnimationFrame` to a timer in `-Do` and click after the
+harness has scrolled (a `setTimeout`). Under 900 px the story is one column and the photo smaller; on phones the photo is a 4:3 band on top.
 History (same day): the opened card first widened in its row with photo-beside-text (the layout snapped mid-motion),
 then via a View Transition, then with pinned photo heights; the user disliked all three («скачет», «не красиво»)
 and chose the panel under the row. To check the motion in the shot harness, re-enable `transition` in `-Do`, pause

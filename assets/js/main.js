@@ -870,14 +870,23 @@
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
       const track = $('#doc-track');
-      const wasOpen = !!state.docOpen;
+      const panel = $('#doc-panel');
+      // where the panel will start once open: its negative margin (closed) goes to 0
+      const panelTop = panel.getBoundingClientRect().top - parseFloat(getComputedStyle(panel).marginTop);
       set({ docOpen: id });
-      const smooth = reduceMotion.matches ? 'auto' : 'smooth';
-      // the row and the panel under it should both fit: opening from a row low on the screen glides it up under the
-      // header; closing while scrolled down into the panel glides back to the row
-      const row = track.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 16;
-      if (id && !wasOpen && track.getBoundingClientRect().bottom > window.innerHeight * .55) window.scrollBy({ top: row, behavior: smooth });
-      if (!id && row < 0) window.scrollBy({ top: row, behavior: smooth });
+      const under = hdr.getBoundingClientRect().bottom;
+      const room = window.innerHeight - under;
+      if (id) {
+        // the story in the middle of the screen under the header, glided along with the panel's opening
+        // (its final height is the content's); a story taller than the screen starts just under the header
+        const h = $('#doc-panel-in').scrollHeight;
+        const dy = h + 32 > room ? panelTop - under - 16 : panelTop + h / 2 - (under + room / 2);
+        glideTo(window.scrollY + dy, 700);
+      } else {
+        // closing while scrolled down into the panel: back to the row
+        const row = track.getBoundingClientRect().top - under - 16;
+        if (row < 0) glideTo(window.scrollY + row, 700);
+      }
     },
     'doc-page': (t) => set({ docPage: +t.dataset.page, docOpen: null }),
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
@@ -907,11 +916,19 @@
   function scrollToTop() {
     const from = window.scrollY;
     if (!from) return;
-    if (reduceMotion.matches) { window.scrollTo(0, 0); return; }
-    toTop.classList.remove('is-launch');
-    void toTop.offsetWidth; // restarts the CSS animation
-    toTop.classList.add('is-launch');
-    const dur = Math.min(1200, 500 + from / 8);
+    if (!reduceMotion.matches) {
+      toTop.classList.remove('is-launch');
+      void toTop.offsetWidth; // restarts the CSS animation
+      toTop.classList.add('is-launch');
+    }
+    glideTo(0, Math.min(1200, 500 + from / 8));
+  }
+  // the page glides to y: a slow start and a soft landing; a wheel turn or a touch stops it
+  function glideTo(y, dur) {
+    const from = window.scrollY;
+    const to = Math.max(0, Math.round(y));
+    if (Math.abs(to - from) < 2) return;
+    if (reduceMotion.matches) { window.scrollTo(0, to); return; }
     const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
     let stopped = false;
     const stop = () => { stopped = true; };
@@ -920,7 +937,7 @@
     const t0 = performance.now();
     (function step(now) {
       const p = stopped ? 1 : Math.min(1, (now - t0) / dur);
-      if (!stopped) window.scrollTo(0, Math.round(from * (1 - ease(p))));
+      if (!stopped) window.scrollTo(0, Math.round(from + (to - from) * ease(p)));
       if (p < 1) { requestAnimationFrame(step); return; }
       window.removeEventListener('wheel', stop);
       window.removeEventListener('touchstart', stop);
