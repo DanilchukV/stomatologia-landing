@@ -77,8 +77,9 @@
   const docTitle = (d) => d.name || d.spec;
   // photo if there is one, else initials, else a silhouette; the box around it crops it (object-fit)
   const docAvatar = (d, size) => (d.photo ? `<img class="av-img" src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? initials(d.name) : person(size));
-  // who sees patients in a category; in diagnostics, whoever does the ticked consultation
-  const catRoles = (cat, cart) => (cat.id === 'diag' ? cart.filter((x) => x.cid === 'diag' && CONSULT_ROLE[x.n]).map((x) => CONSULT_ROLE[x.n]) : cat.roles);
+  // who sees patients in a category; in diagnostics, whoever does the ticked consultations (also one ticked in
+  // treatment: it shows ticked there too)
+  const catRoles = (cat, cart) => (cat.id === 'diag' ? cart.filter((x) => CONSULT_ROLE[x.n]).map((x) => CONSULT_ROLE[x.n]) : cat.roles);
   // the doctor picked automatically: the first one found, in the order of the roles
   const autoDoc = (roles) => { for (const r of roles) { const d = D.doctors.find((x) => x.role === r); if (d) return d.id; } return null; };
   // the section's doctor: kept once chosen, else the automatic one
