@@ -145,8 +145,9 @@ The photo's right edge lines up with the header's "Записаться" button 
 it bled to the window edge, which the user disliked): `.hero` is an inline-size container and `.hero__media` gets a
 negative right margin of `min(660px, 50cqw − gutter) − min(720px, 50cqw − gutter)` — the header content is
 1440 px max, the hero's 1320. Its shape is a "leaf" from the user's `Rectangle 1.png`: big rounding top-left and
-bottom-right, square corners elsewhere — `border-radius: 44% 0 / 50% 0`, measured from that picture
-(1907 × 1697). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
+bottom-right, measured from that picture — `border-radius: 44% 32px / 50% 32px`; the other two corners were square
+until 2026-11-20 (user: «не нравится, что оно заостренное»), now 32 px (28 px on phones, where the bottom fades);
+that picture is 1907 × 1697. The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
 middle of the leaf. Under 1128 px text and photo no longer fit side by side; the photo then goes full
 width under the text (`object-position: 25%`), same leaf shape. **On phones (≤ 640) the photo comes first** (`order: -1`,
 310 px high, `object-position: 12% 18%` keeps the face in the leaf; 2026-11-20, user: the photo had «улетела вниз» and
@@ -343,6 +344,13 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   above has «Все разделы»). The panel nav puts «Выбрано N» and «Сбросить всё» in one row, the buttons under it.
   While the open panel fills the bottom of the screen the corner «Ваша запись» and back-to-top buttons hide
   (`panelAtBottom()`): on phones they covered «Выбрать врача» / «Далее».
+  With a section open, the tab bar is a **side rail** on phones (same day, user: «разделы … не сверху, а сбоку для
+  удобства»): `#svc-open` becomes a 64 px + rest grid, the bar a sticky column of tiles — a 48 px section photo
+  (`.svc-bar__ph`, hidden wider) and the short name in 10.5 px, «Все разделы» as a Mint grid tile on top. The long
+  tab names in `data.js` carry soft hyphens (U+00AD, invisible in the editor: «Диагно·стика», «Протези·рование»,
+  «Ортодон·тия», «Хирургия и имплан·тация»), because Chrome on Windows has no Russian hyphenation and broke the words
+  without a hyphen. Beside the rail the panel is ~280 px wide: a 44 px tick column, 15 px names, «можно несколько»
+  under the heading.
 
 ## Booking by doctor (2026-11-20)
 
@@ -491,8 +499,8 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
 выбором врача»). The rows follow the order of Services' step 3 (user): Врачи и услуги, Врач, Удобное время, Контакты —
 a white card, label on the left, «Отправить заявку» at the bottom right:
-- «Врачи и услуги» — the booking by doctor, as in Services' step 3, with «+ Добавить ещё услугу»; none: a line and a
-  link to «Услуги».
+- «Врачи и услуги» — the booking by doctor, as in Services' step 3, with «+ Добавить ещё услугу»; none: a line and
+  «+ Добавить услугу» (a link until 2026-11-20; the user missed the button there).
 - «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is
   whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
   the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on

@@ -458,6 +458,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-bar__sep { flex: none; width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
 /* the tabs grow to fill the capsule and never shrink, so narrow screens scroll them */
 .svc-bar__tab { flex: 1 0 auto; min-height: 40px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+/* the section photo shows only in the phone's side rail */
+.svc-bar__ph { display: none; }
 /* opening a section from the grid: ghosts of the cards fly into the tabs (main.js flyToTabs); a tab shows when its ghost lands */
 .svc-bar__tabs.is-landing .svc-bar__tab:not(.is-landed) { visibility: hidden; }
 .svc-fly { position: fixed; z-index: 25; overflow: hidden; box-sizing: border-box; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); display: grid; place-items: center; pointer-events: none; }
@@ -615,7 +617,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 }
 /* phone (user, 2026-11-20: pick a section at once, without scrolling): the sections are a list of rows — a small
    photo at the side, the name, a chevron — with the descriptions hidden; the open section's head is a short photo
-   band with the name and the count (the bar above has «Все разделы») */
+   band with the name and the count (the rail beside it has «Все разделы») */
 @media (max-width: 640px) {
   .svc-grid { gap: 8px; }
   .svc-card { flex-direction: row; align-items: center; gap: 14px; padding: 8px 18px 8px 8px; border-radius: 20px; }
@@ -623,12 +625,33 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-card__name { flex: 1; min-width: 0; width: auto; font-size: 18px; line-height: 1.2; }
   .svc-card__desc { display: none; }
   .svc-card::after { content: ''; flex: none; width: 9px; height: 9px; margin-right: 4px; border-top: 2px solid var(--ink); border-right: 2px solid var(--ink); transform: rotate(45deg); }
-  .svc-panel__head { min-height: 0; padding: 96px 20px 18px; gap: 10px 16px; align-items: center; }
+  .svc-panel__head { min-height: 0; padding: 84px 14px 14px; gap: 10px 16px; align-items: center; }
   .svc-panel__photo { width: 100%; bottom: auto; height: 150px; -webkit-mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, .45) 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, .45) 70%, transparent 100%); }
   .svc-panel__intro { gap: 0; }
   .svc-panel__intro .back-link, .svc-panel__desc { display: none; }
-  .svc-panel__name { margin: 0; font-size: 28px; }
+  .svc-panel__name { margin: 0; font-size: 22px; }
   .svc-panel__meta { padding: 6px 12px; font-size: 13px; }
+  /* with a section open the sections are a rail at the left (user: «не сверху, а сбоку для удобства»): a photo
+     and the short name each, sticky under the header, so another section is a thumb's reach away */
+  #svc-open:not([hidden]) { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; align-items: start; }
+  .svc-bar { padding: 6px 3px; border-radius: 22px; }
+  .svc-bar__tabs { flex-direction: column; align-items: stretch; gap: 4px; overflow: visible; }
+  .svc-bar__sep { width: auto; height: 1px; margin: 2px 8px; }
+  /* the long names carry soft hyphens in data.js (Chrome on Windows has no Russian hyphenation) */
+  .svc-bar__all, .svc-bar__tab { flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; padding: 4px 2px 6px; border: 0; border-radius: 16px; background: none; font-size: 10.5px; line-height: 1.15; white-space: normal; text-align: center; -webkit-hyphens: manual; hyphens: manual; }
+  .svc-bar__all .ic { box-sizing: content-box; width: 20px; height: 20px; padding: 14px; border-radius: 14px; background: var(--tint); }
+  .svc-bar__ph { display: block; flex: none; width: 48px; height: 48px; border-radius: 14px; overflow: hidden; }
+  .svc-bar__ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .svc-bar__tab[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+  .svc-panel { border-radius: 24px; }
+  .svc-panel__body { padding: 18px 14px; gap: 18px; }
+  /* the panel is ~280 px wide beside the rail: a narrower tick column, smaller names, the hint under the heading */
+  .panel-label { flex-wrap: wrap; gap: 2px 12px; }
+  .panel-hint { flex-basis: 100%; margin-left: 0; }
+  .svc-row__check { width: 44px; padding: 0 0 0 4px; }
+  .svc-row__toggle { min-height: 52px; gap: 8px; padding-right: 8px; font-size: 15px; line-height: 1.3; }
+  .svc-row__chev { width: 28px; height: 28px; }
+  .svc-row__content { padding-left: 48px; }
   .wiz__btn { flex-direction: column; gap: 6px; padding: 0; font-size: 13px; }
   .wiz__item { align-items: flex-start; }
   .wiz__item:not(:last-child)::after { margin-top: 15px; }

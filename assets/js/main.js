@@ -392,9 +392,9 @@
 
   function panelShellHTML() {
     return `<div class="svc-bar"><div class="tabs-scroll svc-bar__tabs">
-        <button type="button" class="chip svc-bar__all" data-act="cat-close">${icon('i-grid', 15, 2.4)}Все разделы</button>
+        <button type="button" class="chip svc-bar__all" data-act="cat-close">${icon('i-grid', 15, 2.4)}<span class="svc-bar__t">Все разделы</span></button>
         <span class="svc-bar__sep" aria-hidden="true"></span>
-        ${D.cats.map((c) => `<button type="button" class="chip svc-bar__tab" aria-pressed="false" data-act="cat-tab" data-cat="${c.id}">${esc(c.tab)}</button>`).join('')}
+        ${D.cats.map((c) => `<button type="button" class="chip svc-bar__tab" aria-pressed="false" data-act="cat-tab" data-cat="${c.id}"><span class="svc-bar__ph" aria-hidden="true"><img src="assets/img/services/${c.id}-800.webp" alt="" loading="lazy"></span><span class="svc-bar__t">${esc(c.tab)}</span></button>`).join('')}
       </div></div>
       <div class="svc-panel" id="svc-panel">
         <div class="svc-panel__head" id="svc-head"></div>
