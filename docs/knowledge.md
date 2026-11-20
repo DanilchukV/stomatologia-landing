@@ -101,7 +101,10 @@ Breakpoints, from wide to narrow:
 - ≥ 1390 px — the export's layout: logo + address, nav, phone with hours, CTA, one row.
 - < 1390 — the phone number and hours are visually hidden (still read by screen readers), only
   the round icon stays; that is what lets the row fit down to 1280.
-- < 1280 — burger: `.hdr__menu` (nav + contacts) becomes a drop-down panel. On desktop it is
+- < 1280 — burger: `.hdr__menu` (nav + contacts) becomes a drop-down card (since 2026-11-20, user: «у нас же закругления везде»;
+  before, a full-width straight panel with ruled rows): 28 px corners, 8 px under the header, full width minus the
+  gutters on phones and 420 px at the right on tablets; the links in the desktop nav's soft capsule, the current one
+  a white pill with Orange text. On desktop it is
   `display: contents`, so its children stay flex items of the header row.
 - < 640 — the address leaves the header (the menu's "Контакты" leads to it).
 

@@ -225,11 +225,13 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
   .hdr__burger[aria-expanded="true"] span::before { transform: translateY(6px) rotate(45deg); }
   .hdr__burger[aria-expanded="true"] span::after { transform: translateY(-6px) rotate(-45deg); }
 
-  .hdr__menu { display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: calc(100vh - var(--hdr-h)); max-height: calc(100dvh - var(--hdr-h)); overflow-y: auto; overscroll-behavior: contain; background: var(--white); border-top: 1px solid var(--line-2); box-shadow: 0 18px 30px rgba(12, 44, 71, .14); padding: 8px var(--gutter) 24px; white-space: normal; }
-  .hdr.is-menu .hdr__menu { display: flex; flex-direction: column; gap: 20px; animation: dropIn .18s ease both; }
-  .nav { flex-direction: column; align-items: stretch; gap: 0; margin: 0; padding: 0; border-radius: 0; background: none; font-size: 18px; }
-  .nav__link, .nav__link:hover, .nav__link[aria-current] { padding: 14px 0; border-radius: 0; border-bottom: 1px solid var(--line-2); background: none; box-shadow: none; }
-  .hdr__contact { flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+  /* the menu is a rounded card under the burger (full width on phones, 420 px on tablets); the links sit in the
+     same soft capsule as on desktop, the current one a white pill */
+  .hdr__menu { display: none; position: absolute; top: calc(100% + 8px); right: var(--gutter); width: min(420px, calc(100% - 2 * var(--gutter))); box-sizing: border-box; max-height: calc(100vh - var(--hdr-h) - 16px); max-height: calc(100dvh - var(--hdr-h) - 16px); overflow-y: auto; overscroll-behavior: contain; background: var(--white); border: 1px solid var(--line); border-radius: 28px; box-shadow: 0 20px 44px rgba(12, 44, 71, .2); padding: 10px; white-space: normal; }
+  .hdr.is-menu .hdr__menu { display: flex; flex-direction: column; gap: 16px; animation: dropIn .18s ease both; }
+  .nav { flex-direction: column; align-items: stretch; gap: 2px; margin: 0; padding: 6px; border-radius: 22px; font-size: 18px; }
+  .nav__link { padding: 13px 18px; }
+  .hdr__contact { flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 0 6px 6px; }
   .hdr__phone-text { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
 }
 @media (max-width: 1279px) and (min-width: 640px) {
