@@ -74,9 +74,16 @@ CSS: headings and `summary` use `text-wrap: balance`, paragraphs `pretty`. When 
 
 ## Fonts
 
-Manrope (headings), Onest (text) and Playfair Display italic (only the motto in "О клинике").
-Only the cyrillic and latin subsets are self-hosted (plus Onest "symbols" for ★ and ←); each file
-is a variable font, so one `@font-face` per subset covers all weights. Licences: `assets/fonts/OFL.txt`.
+Nunito (headings, `--f-head`), Nunito Sans (text, `--f-body`) and Playfair Display italic (only the motto in
+"О клинике"). Chosen 2026-11-20 by the user from a side-by-side comparison of free Cyrillic Google Fonts (Nunito
+liked; of «Nunito везде», «Nunito + Golos Text» and «Nunito + Nunito Sans» the last: the same rounded family, but
+the small text — service descriptions, stories, the form — stays crisp; Golos is wider and would have broken the
+tight line counts). Before: Manrope + Onest (in git history).
+Only the cyrillic and latin subsets are self-hosted; each file is a variable font (Nunito 400–900, Nunito Sans
+400–700), so one `@font-face` per subset covers all weights. The site's text has no characters outside those
+subsets (checked: the only arrow is in code comments). Nunito is lighter than Manrope at the same weight, so the
+heading-font rules that were 600 are 700. For a softer look everywhere, set `--f-body` to Nunito too.
+Licences: `assets/fonts/OFL.txt`.
 
 ## Header
 
