@@ -148,7 +148,11 @@ negative right margin of `min(660px, 50cqw − gutter) − min(720px, 50cqw − 
 bottom-right, square corners elsewhere — `border-radius: 44% 0 / 50% 0`, measured from that picture
 (1907 × 1697). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
 middle of the leaf. Under 1128 px text and photo no longer fit side by side; the photo then goes full
-width under the text (`object-position: 25%`; 12 % on phones centres the doctor), same leaf shape.
+width under the text (`object-position: 25%`), same leaf shape. **On phones (≤ 640) the photo comes first** (`order: -1`,
+280 px high, `object-position: 12% 22%` keeps the face in the leaf; 2026-11-20, user: the photo had «улетела вниз» and
+the first screen looked empty — now it is the doctor, the title, the lead and both buttons, which share one row
+≤ 480 px without the arrow, 15 px text ≤ 374). The three fact cards are one swipeable row there (scroll-snap, 82 %
+wide so the next one peeks in, no scrollbar) to shorten the page.
 
 The fact cards span the same width as the text column plus the photo: from the text's left edge to the photo's
 right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026-11-19, user's request). On hover
