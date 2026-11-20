@@ -232,6 +232,14 @@ outside the dialog's rounded corners:
   checked down to 680 px in all steps. Only shorter screens still scroll the step body.
 - Below 900 px the dialog is full-screen, the steps go in a row on top and only the current one keeps its title;
   the disclaimer then moves from the left column into step 3.
+- Phones (≤ 640 px, 2026-11-20, user: «помощник давай попробуем сделать без скрола»): no step scrolls at 390×700
+  (an iPhone with Safari's bars) nor at 360×640, checked with the worst case — a wisdom tooth (adds the note) and a
+  symptom with two doctors. The dialog title is visually hidden (it still names the dialog and takes the focus), so
+  the step row shares the top line with the close button; «Шаг N из 3», the lead of steps 1–2 (`.helper[data-step]`,
+  set in `renderPicker`), step 2's title (the step row says it) and the status line above the buttons go; step 1's two
+  ways out share a row and the mirror note goes (the side labels say it); smaller chips; on step 3 40 px photos, no
+  experience line, the likely services in a run. Back and Next stay in one row. Shorter still (≤ 680 px high) the
+  chips lose their group captions and step 3 its direction row and disclaimer.
 - The tooth map is `assets/img/teeth.webp` (1536 × 1024) with 32 buttons positioned in % of that
   size. Its gums were recoloured on 2026-11-19 to the softer, warmer pink of the Finder's smile picture (user's
   request): only pink and light pixels (the teeth are not pink, the tongue and mouth are dark) got lighter (HSL L

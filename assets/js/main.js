@@ -207,6 +207,7 @@
     const step = s.hStep;
 
     $$('.hpane', helper).forEach((el) => { el.hidden = +el.dataset.step !== step; });
+    helper.dataset.step = step;
     $('#helper-k').textContent = `Шаг ${step} из 3`;
     $('#helper-h').textContent = glue(step === 3 ? sym.title : HSTEPS[step - 1][0]);
     $('#helper-lead').textContent = glue(step === 3 ? sym.text : HSTEPS[step - 1][1]);

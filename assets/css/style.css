@@ -849,9 +849,78 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__answer-v { font-size: 24px; }
   .hint__disclaimer { display: block; }
 }
+/* phones: every step fits the screen without scrolling (user, 2026-11-20). The dialog title is kept for screen
+   readers only (it names the dialog and takes the focus), so the steps share the top row with the close button;
+   «Шаг N из 3» repeats the steps, the lead of steps 1–2 repeats what the screen shows, and the status line above the
+   buttons repeats the choice on screen — they go, the answer's text on step 3 stays */
+@media (max-width: 640px) {
+  .helper__side { padding: 12px 68px 12px 20px; gap: 0; }
+  .helper__titles { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .helper__close { top: 8px; width: 40px; height: 40px; }
+  .helper__head { padding: 14px 20px 8px; gap: 4px; }
+  .helper__k { display: none; }
+  .helper__h { font-size: 22px; }
+  .helper:not([data-step="3"]) .helper__lead { display: none; }
+  /* step 2's title is the step's own label in the row above */
+  .helper[data-step="2"] .helper__head { display: none; }
+  .helper[data-step="2"] .helper__body { padding-top: 14px; }
+  .helper__lead { font-size: 14px; line-height: 1.45; }
+  .helper__body { padding: 4px 20px 12px; }
+  .helper__nav { padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); }
+  .helper__info { display: none; }
+  .helper__nav { flex-wrap: nowrap; gap: 10px; }
+  .helper__back, .helper__next, .helper__book { min-height: 48px; }
+  .helper__back { padding: 0 18px 0 14px; }
+  .helper__next, .helper__book { min-width: 0; padding: 0 16px; white-space: nowrap; }
+  .hpane { gap: 12px; }
+  /* step 1: the picture as wide as the screen allows, the two ways out in one row */
+  .jaw { padding: 8px; gap: 6px; border-radius: 20px; }
+  .jaw__frame { min-width: 0; max-width: none; }
+  .jaw__note { display: none; }
+  .jaw__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .jaw__or { grid-column: 1 / -1; text-align: center; margin: 0; font-size: 14px; }
+  .jaw__btn { min-height: 44px; padding: 0 10px; font-size: 14px; white-space: nowrap; }
+  /* step 2: smaller chips */
+  .sym-wrap { gap: 10px; }
+  .sym-group { gap: 6px; }
+  .sym-group .caps { font-size: 11px; }
+  .sym-group__chips { gap: 6px; }
+  .sym-chip { min-height: 34px; padding: 0 12px; font-size: 14px; }
+  /* step 3: small photos, no experience line, tighter type */
+  .hint { gap: 10px; }
+  .hint__note { padding: 8px 12px; font-size: 14px; }
+  .hint__answer { padding: 14px; gap: 6px; border-radius: 20px; }
+  .hint__answer-v { font-size: 20px; }
+  .hint__pick-note { margin-top: -4px; font-size: 14px; }
+  .hint__docs { gap: 8px; }
+  .hint__doc { gap: 12px; padding: 6px 12px 6px 6px; border-radius: 16px; }
+  .hint__doc-ph { width: 40px; border-radius: 10px; font-size: 16px; }
+  .hint__doc-name { font-size: 16px; }
+  .hint__doc-spec { font-size: 14px; }
+  .hint__doc-exp { display: none; }
+  .hint__visit { padding: 4px 0 0; gap: 6px; }
+  .hint__visit .bullets li { font-size: 14px; line-height: 1.4; }
+  .hint__more { gap: 8px; }
+  .hint__row { padding-bottom: 8px; font-size: 14px; }
+  .hint__sec { gap: 6px; }
+  /* the likely services in a run, not one per line */
+  .hint__sec .bullets { flex-direction: row; flex-wrap: wrap; gap: 2px 16px; }
+  .hint__sec .bullets li { font-size: 14px; line-height: 1.4; }
+  .hint__sec .bullets li::before { margin-top: 7px; }
+  .hint__disclaimer { font-size: 12px; }
+}
+/* short phones (small Androids, iPhone SE): the group captions, the direction row and the disclaimer go too */
+@media (max-width: 640px) and (max-height: 680px) {
+  .sym-group .caps { display: none; }
+  .sym-wrap { gap: 5px; }
+  .sym-group__chips { gap: 5px; }
+  .sym-chip { min-height: 32px; padding: 0 11px; }
+  .hint__row, .hint__disclaimer { display: none; }
+  .hint__note { font-size: 13px; }
+  .hint__answer { padding: 12px; }
+}
 @media (max-width: 480px) {
   .jaw__sides { padding: 4px 0 0; font-size: 12px; }
-  .jaw__or { flex-basis: 100%; text-align: center; margin: 0; }
 }
 
 /* ===== Doctors ===== */
