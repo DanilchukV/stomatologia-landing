@@ -505,7 +505,7 @@
   const BIO = [['Образование', 'edu'], ['Опыт работы', 'work'], ['Повышение квалификации', 'courses'], ['Дипломы и сертификаты', 'certs']];
   const hasBio = (d) => BIO.some(([, k]) => d[k] && d[k].length);
   const docPhoto = (d) => (d.photo ? `<img src="assets/img/doctors/${d.photo}.webp" alt="" loading="lazy">` : d.name ? `<span class="doc__ini" aria-hidden="true">${initials(d.name)}</span>` : PERSON);
-  const docPanelHTML = (d) => `<div class="doc-panel__card">
+  const docPanelHTML = (d) => `<div class="doc-panel__card" data-id="${d.id}">
       <div class="doc-panel__photo">${docPhoto(d)}</div>
       <div class="doc-panel__body">
         <div class="doc-panel__head"><h3 class="doc-panel__name">${esc(d.name || d.spec)}</h3><span class="doc-panel__spec">${esc(d.spec)}</span>${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</div>
@@ -546,9 +546,12 @@
       const b = $('.doc__toggle', el);
       if (b) { b.setAttribute('aria-expanded', on); b.firstChild.textContent = on ? 'Свернуть' : 'Подробнее'; }
     });
-    // the panel keeps its last content while it folds away, so closing doesn't empty it mid-motion
+    // every story is in the panel at once, stacked (style.css), so the panel has one size for all doctors;
+    // it keeps the last one shown while it folds away, so closing doesn't empty it mid-motion
     const panel = $('#doc-panel');
-    if (open) mount($('#doc-panel-in'), open.id, () => docPanelHTML(open));
+    const panelIn = $('#doc-panel-in');
+    mount(panelIn, 'all', () => `<div class="doc-panel__stack">${list.filter(hasBio).map(docPanelHTML).join('')}</div>`);
+    if (open) $$('.doc-panel__card', panelIn).forEach((c) => c.classList.toggle('is-cur', c.dataset.id === open.id));
     panel.classList.toggle('is-open', !!open);
     panel.setAttribute('aria-hidden', !open);
     if (open) docCaret();

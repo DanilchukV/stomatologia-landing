@@ -371,6 +371,9 @@ story in two columns — «Образование» (`edu`), «Опыт рабо
 years), «Дипломы и сертификаты» (`certs`) from `data.js`; «Записаться к врачу», «Свернуть» and a ✕. A caret on top
 points at the chosen card (`docCaret()`, `--caret-x`, kept in place on resize and on swiping the phone row). The
 panel keeps its content while it folds away; another doctor swaps it with a fade. Paging closes it.
+One size for everyone (2026-11-20, user): all the stories are in the panel at once, stacked in one grid cell
+(`.doc-panel__stack`, only `.is-cur` visible), so the panel is as tall as the longest story at the current width and
+doesn't change size between doctors; the buttons sit at the bottom of the card.
 Motion (2026-11-20, user: smoother, and centre on the story): the height glides in 700 ms with an ease-in-out
 (`--glide`), the story fades in a beat later and slides down 16 px; on open the page glides (`glideTo()`, the same
 700 ms, shared with back-to-top) so the panel's final box sits in the middle of the screen under the header, or just
