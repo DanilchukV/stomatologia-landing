@@ -32,11 +32,10 @@ Small behaviour addition over the export: footer service links open that categor
 
 ## Brand
 
-The logo is the user's `logo.svg` (tooth + «Гревитидент» + «стоматологическая клиника», text in outlines):
-`assets/img/logo.svg` in the header (48 px high, 38 px on phones) and in the footer. The footer is White with a
-1 px Navy line on top (2026-11-19, user's choice); links underline in Orange on hover: it was Navy with `logo-light.svg` and white text, then briefly
-Mint; the user disliked two dark blocks in a row (booking card and footer) and then the Mint. `logo-light.svg`
-(navy text white, the tooth's dark stops light) is kept, unused, for a dark background.
+The logo was first the user's `logo.svg` (tooth + «Гревитидент» + «стоматологическая клиника», text in outlines);
+since 2026-11-20 it is text, see below. The footer is White with a
+1 px Navy line on top (2026-11-19, user's choice); links underline in Orange on hover: it was Navy with a light logo and white text, then briefly
+Mint; the user disliked two dark blocks in a row (booking card and footer) and then the Mint.
 The favicon is the tooth alone (`assets/icons/favicon.svg`, square viewBox); the 32 px and
 apple-touch PNGs were rendered from it in headless Chrome. The site palette was left as it was: its
 accent `#6BAFC6` and ink `#263E49` already sit next to the logo's `#67B0C0` and dark `#233D49` (the
@@ -50,10 +49,15 @@ added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`:
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
 masks and the tooth overlay. The logo (tooth: Navy → Mint), `logo-light.svg`, favicon
 and its PNGs (re-rendered from `favicon.svg` in headless Chrome) follow it; `og-image.jpg` still has the old teal logo.
-The name is set in Arsenal (the user's `Arsenal_vector_text.svg`, outlined paths, 2026-11-19): «Гревитидент» Navy,
-«стоматологическая клиника» Orange. The header shows `logo-wordmark.svg` — the name only (no tooth, no divider;
-user's request so the header isn't overloaded); the footer's `logo.svg` is the tooth and divider of the old logo
-with the Arsenal text beside them (a scaled `<g>`). `logo-light.svg` and `og-image.jpg` still have the old lettering.
+**The logo is text** (2026-11-20, user's pick «прописными, с жёлтой точкой» from a comparison of six variants,
+after the switch to Nunito made the Arsenal lettering look foreign): `<a class="logo">` with «Гревитидент» in Nunito
+900, capitals, letter-spacing .1em, and a Yellow dot after it (`::after`), and «стоматологическая клиника» under it in
+Nunito Sans 700 Orange, capitals. The two letter-spacings are tuned so both lines are the same width (225 px at the
+header's 25 px; everything scales with `--s`: 25 px header, 21 px on phones, footer `min(28px, 11cqi)` so it shrinks
+to its grid column, which is 220 px around 1024). No tooth in the header (the user's earlier wish not to overload it).
+Before: Arsenal outlined in `logo-wordmark.svg` (header) and `logo.svg` (tooth + name, footer), with `logo-light.svg`
+unused — all removed, in git history before this date. `og-image.jpg` still has the old lettering; the favicon is
+still the tooth.
 Staff photos sit on plain white. Earlier palettes: the original blue (commit `332f29c`), a warm grey (`a75c886`),
 seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e9`).
 

@@ -173,8 +173,14 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 .hdr__menu { display: contents; }
 .hdr__call, .hdr__burger { display: none; }
 
-.logo { display: block; flex: none; }
-.logo__img { display: block; height: 48px; width: auto; }
+/* the name is text in the heading font: capitals and a Yellow dot, the specialty under it in Orange; the
+   letter-spacings make both lines the same width (the negative margins take off the spacing after the last letter) */
+.logo { --s: 25px; display: flex; flex-direction: column; align-items: flex-start; flex: none; color: var(--ink); text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+.logo__name { font-family: var(--f-head); font-weight: 900; font-size: var(--s); line-height: 1; letter-spacing: .1em; margin-right: -.1em; }
+.logo__name::after { content: ''; display: inline-block; width: .26em; height: .26em; margin-left: .04em; border-radius: 50%; background: var(--accent); }
+.logo__sub { margin-top: .2em; font-family: var(--f-body); font-weight: 700; font-size: calc(var(--s) * .44); line-height: 1; letter-spacing: .13em; margin-right: -.13em; color: var(--accent-ink); }
+/* the footer logo: 28 px, smaller when its grid column is narrow (the name is ~8.9 times --s wide) */
+.logo--lg { --s: min(28px, 11cqi); }
 
 .addr__btn { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 0 0 14px; text-decoration: none; border: none; border-left: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font-size: 16px; white-space: nowrap; cursor: pointer; text-align: left; transition: color .15s; }
 .addr__btn:hover { color: var(--accent-ink); }
@@ -232,7 +238,7 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 @media (max-width: 639px) {
   :root { --hdr-h: 70px; }
   .hdr__in { padding-top: 11px; padding-bottom: 11px; }
-  .logo__img { height: 38px; }
+  .logo:not(.logo--lg) { --s: 21px; }
   .addr { display: none; }
   .hdr__cta { flex: 1 1 100%; }
 }
@@ -1048,9 +1054,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .ftr { background: var(--white); border-top: 1px solid var(--line); color: var(--ink); padding: 72px var(--gutter) calc(28px + env(safe-area-inset-bottom, 0px)); }
 .ftr__in { display: flex; flex-direction: column; gap: 48px; }
 .ftr__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 40px 32px; }
-.ftr__brand { display: flex; flex-direction: column; gap: 18px; }
+.ftr__brand { display: flex; flex-direction: column; gap: 18px; container-type: inline-size; }
 .ftr__logo { align-self: flex-start; }
-.ftr__logo img { display: block; height: 46px; width: auto; }
 .ftr__about { margin: 0; font-size: 15px; line-height: 1.6; color: var(--ink); text-wrap: pretty; }
 .ftr__col { display: flex; flex-direction: column; gap: 12px; }
 .ftr__contacts { gap: 14px; }
