@@ -651,7 +651,9 @@ a white card, label on the left, «Отправить заявку» at the bott
   which cut outlines and focus rings at the sides); the services list fades in only as it opens (`pickerFresh`), not on
   every chip. A service ticked in an open list grows its doctor's card (the first two; more go into «+N»): then the
   form glides without clipping and the list slides down along with it (`translateY` from where it was), so nothing
-  jumps (user, 2026-11-23: «при выборе услуг у врача первых двух скачет форма»). The list used to be above the doctor
+  jumps (user, 2026-11-23: «при выборе услуг у врача первых двух скачет форма»; then «в услугах тоже»): `slideAfter`
+  slides the list and everything after it — the cards below it in a one-column list, «Добавить ещё услугу», the rows
+  after the list — while the wrapper's height glides; the same in Services' step 3 (`.svc-sum`). The list used to be above the doctor
   tiles, so it pushed the tile just pressed
   down (user: «пусть не скачет форма»); making the page scroll along kept the tile still but moved everything above
   it («скачет вверх и вниз»). Since 2026-11-22 the tiles come first and the list under them, so a tile stays put, the

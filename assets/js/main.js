@@ -468,10 +468,22 @@
 
     // step 3: the whole booking by doctor, services of every section included; one card, a row per part
     const empty = bookEmpty();
-    mount($('#svc-sum'), visitsKey(), () => `
+    const sum = $('#svc-sum');
+    const sumCard = sum.parentElement;
+    const sumH0 = sumCard.getBoundingClientRect().height;
+    const sumPk = $('.vpick', sum);
+    const sumPickTop = sumPk ? sumPk.getBoundingClientRect().top : null;
+    const sumRebuilt = mount(sum, visitsKey(), () => `
       <div class="svc-sum__row"><span class="svc-sum__k">Врачи и&nbsp;услуги</span><div class="svc-sum__v">${empty
         ? `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>` : visitsHTML({ full: true })}
         <button type="button" class="add-svc" data-act="add-svc">${PLUS}${empty ? 'Выбрать услугу' : 'Добавить ещё услугу'}</button></div></div>`);
+    // as in the booking form: a service ticked in an open doctor's list slides what is below it instead of a jump;
+    // other changes glide the card's height
+    const sumShape = visits().map((v) => v.id).join() + '#' + (state.addFor || '');
+    const sumDy = sumRebuilt && sumPickTop !== null && sumShape === sum.dataset.shape ? pickShift(sum, sumPickTop) : 0;
+    if (sumDy) slideAfter($('.vpick', sum), sumCard, sumH0, sumDy);
+    else if (sumRebuilt) growTo(sumCard, sumH0);
+    sum.dataset.shape = sumShape;
 
     // which step is shown, and the buttons under it
     const step = state.svcStep;
@@ -778,18 +790,37 @@
     // A service ticked in an open list grows its doctor's card: then the list under the cards slides down with the
     // glide instead of jumping (clipped, it was cut off for a moment)
     const shape = vs.map((v) => v.id).join() + '#' + (state.addFor || '');
-    const pk = $('.vpick', svcsBox);
-    const dy = rebuilt && pk && pickTop !== null && shape === svcsBox.dataset.shape ? pk.getBoundingClientRect().top - pickTop : 0;
-    if (Math.abs(dy) > 1 && !reduceMotion.matches) {
-      growTo(svcsBox, h0, true);
-      pk.animate({ transform: [`translateY(${-dy}px)`, 'none'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' });
-    } else if (rebuilt) growTo(svcsBox, h0);
+    const dy = rebuilt && pickTop !== null && shape === svcsBox.dataset.shape ? pickShift(svcsBox, pickTop) : 0;
+    if (dy) slideAfter($('.vpick', svcsBox), svcsBox, h0, dy);
+    else if (rebuilt) growTo(svcsBox, h0);
     svcsBox.dataset.shape = shape;
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
   }
 
+  // how far an open doctor's services list (.vpick) in box moved in a rebuild (0 when none, or under a pixel)
+  function pickShift(box, top0) {
+    const pk = $('.vpick', box);
+    const dy = pk ? pk.getBoundingClientRect().top - top0 : 0;
+    return Math.abs(dy) > 1 && !reduceMotion.matches ? dy : 0;
+  }
+  // A service ticked in an open list grew its doctor's card by dy: the list and everything after it (the cards
+  // below it in a one-column list, «Добавить ещё услугу», the rows after the list up to wrap) slide down from where
+  // they were while wrap's height glides, unclipped. In the booking form's grid the list is placed after all the cards
+  // (`order`), so the cards after it in the markup stand beside the grown card and stay.
+  function slideAfter(pk, wrap, h0, dy) {
+    const li = pk.closest('li') || pk;
+    const moving = [];
+    const gridLast = getComputedStyle(li).order !== '0';
+    for (let s = li; s; s = s.nextElementSibling) { moving.push(s); if (gridLast) break; }
+    for (let p = li.parentElement; p && p !== wrap; p = p.parentElement) {
+      for (let s = p.nextElementSibling; s; s = s.nextElementSibling) moving.push(s);
+    }
+    growTo(wrap, h0, true);
+    moving.filter((el) => getComputedStyle(el).display !== 'contents' && el.getClientRects().length)
+      .forEach((el) => el.animate({ transform: [`translateY(${-dy}px)`, 'none'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' }));
+  }
   // a list rebuilt at a new height glides from the old one, so the form grows or shrinks smoothly below it
   // (h0 is the height before the rebuild; a glide under way starts the next one from where it is)
   // slide: the content under the growing part moves along (the services list, translated by the caller), so nothing
