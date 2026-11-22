@@ -159,6 +159,8 @@
       open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
   }
   const SVCS_SHOWN = 3;
+  // true for the render right after a doctor's services list was opened (render() clears it)
+  let pickerFresh = false;
   // the caret on top of an open doctor's services points at that doctor's card
   function placeCarets() {
     $$('.vpick').forEach((p) => {
@@ -180,7 +182,8 @@
   // «Услуги врача» on a doctor's card opens that doctor's services under the list: a chip adds one to the booking
   // with that doctor (`doc` on the cart item), or takes it out if it is booked already
   function pickerHTML(d) {
-    return `<div class="vpick" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div>${
+    // it fades in when it opens, not again each time a chip is pressed (the list is rebuilt then)
+    return `<div class="vpick${pickerFresh ? ' is-in' : ''}" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div>${
       docServices(d).map((g) => `<div class="vpick__grp"><span class="caps">${esc(g.cat.name)}</span><div class="vpick__chips">${
         g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}" title="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`).join('')}</div>`;
   }
@@ -765,7 +768,11 @@
     const rebuilt = mount(svcsBox, visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
       ? `<p class="book__empty">${glue('Можно не выбирать — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`}`);
-    if (rebuilt) growTo(svcsBox, h0);
+    // the glide only when a doctor comes or goes or a doctor's services list opens or closes: a service ticked in that
+    // list only grows its card, and a glide then clipped the list below for a moment
+    const shape = vs.map((v) => v.id).join() + '#' + (state.addFor || '');
+    if (rebuilt && shape !== svcsBox.dataset.shape) growTo(svcsBox, h0);
+    svcsBox.dataset.shape = shape;
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
@@ -774,15 +781,17 @@
   // a list rebuilt at a new height glides from the old one, so the form grows or shrinks smoothly below it
   // (h0 is the height before the rebuild; a glide under way starts the next one from where it is)
   function growTo(el, h0) {
-    if (el.glide) { el.glide.cancel(); el.style.overflow = el.style.boxSizing = ''; }
+    if (el.glide) { el.glide.cancel(); el.style.clipPath = el.style.boxSizing = ''; }
     const h1 = el.getBoundingClientRect().height;
     if (!h0 || Math.abs(h1 - h0) < 1 || reduceMotion.matches || !el.offsetParent) return;
-    el.style.overflow = 'hidden';
+    // clipped only at the bottom (the growing edge): overflow: hidden also cut the cards' outlines and focus rings at
+    // the sides
+    el.style.clipPath = 'inset(-12px -12px 0 -12px)';
     el.style.boxSizing = 'border-box';
     // border-box: the heights are measured with the padding, and the keyframes must mean the same (with content-box
     // the 4 px top padding came on top: the rows below jumped 4 px down at the start and 4 px back up at the end)
     el.glide = el.animate({ height: [h0 + 'px', h1 + 'px'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' });
-    el.glide.finished.then(() => { el.style.overflow = el.style.boxSizing = ''; el.glide = null; }, () => {});
+    el.glide.finished.then(() => { el.style.clipPath = el.style.boxSizing = ''; el.glide = null; }, () => {});
   }
 
   /* ---------- the booking in the corner ---------- */
@@ -1051,7 +1060,7 @@
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => !(x.n === t.dataset.svc && x.cid === t.dataset.cid)) }),
     'visit-remove': (t) => dropDoc(t.dataset.id),
     'note-remove': (t) => set({ notes: state.notes.filter((x) => !(x.id === t.dataset.id && x.text === t.dataset.text)) }),
-    'visit-add': (t) => set({ addFor: state.addFor === t.dataset.id ? null : t.dataset.id }),
+    'visit-add': (t) => { const id = state.addFor === t.dataset.id ? null : t.dataset.id; pickerFresh = !!id; set({ addFor: id }); },
     'visit-all': (t) => { const id = t.dataset.id; set({ svcsAll: state.svcsAll.includes(id) ? state.svcsAll.filter((x) => x !== id) : state.svcsAll.concat([id]) }); },
     'visit-svc': (t) => {
       const n = t.dataset.svc;
@@ -1236,6 +1245,7 @@
     renderBooking();
     updateFloating();
     placeCarets();
+    pickerFresh = false;
   }
   buildTeeth();
   render();

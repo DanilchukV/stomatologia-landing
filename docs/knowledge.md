@@ -632,7 +632,11 @@ a white card, label on the left, «Отправить заявку» at the bott
   four in a row at 1440 under the four doctor tiles, one column on phones.
   When the list is rebuilt at another height (a doctor or a service in or out) it glides from the old height to the
   new one in 420 ms (`growTo` in `main.js`; user: «пусть форма плавно увеличивается снизу»), so the form grows and
-  shrinks smoothly instead of jumping. The list used to be above the doctor tiles, so it pushed the tile just pressed
+  shrinks smoothly instead of jumping — since 2026-11-23 only when a doctor comes or goes or a doctor's services list
+  opens or closes (user: «обрезается при добавлении услуг»: a service ticked in that list grows its card, and the glide
+  clipped the list below for a moment), clipped only at the growing bottom edge (`clip-path`, not `overflow: hidden`,
+  which cut outlines and focus rings at the sides); the services list fades in only as it opens (`pickerFresh`), not on
+  every chip. The list used to be above the doctor tiles, so it pushed the tile just pressed
   down (user: «пусть не скачет форма»); making the page scroll along kept the tile still but moved everything above
   it («скачет вверх и вниз»). Since 2026-11-22 the tiles come first and the list under them, so a tile stays put, the
   page doesn't scroll and the form grows downwards. On phones «Сбросить всё» moved from under the title (appearing with
