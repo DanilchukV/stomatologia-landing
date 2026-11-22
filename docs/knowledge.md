@@ -261,7 +261,9 @@ outside the dialog's rounded corners:
   corners. Every step has the same size (user's request, after a version whose height followed the step):
   780 px or the screen. Step 3 is one column (doctor, then direction and services), so it fills that height.
 - A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
-  in the left column only show progress — moving is by Назад / Далее alone (user's request). Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
+  in the left column only show progress — moving is by Назад / Далее alone (user's request). On desktop (≥ 900) the
+  three steps spread down the column (2026-11-22, user: the lower half stood empty; «ничего не скакало»): the first two
+  take equal shares, 96–170 px each, so an answer appearing under a title doesn't move the steps below. Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
   какой зуб» are answers themselves and go straight to step 2. The doctor shows in the left column only once
   step 3 is open, so it isn't given away while choosing the symptom.
 - Step 3: the heading and lead are the symptom's title and text; then «Вам к врачу» — the roles of
