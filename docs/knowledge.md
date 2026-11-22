@@ -106,6 +106,17 @@ from selecting button text or opening the iOS callout. iOS applies `:active` onl
 listener — `main.js` adds an empty passive one. New hover effects go into `@media (hover: hover)` too; nothing may
 be reachable by hover only.
 
+
+Touch targets (2026-11-22, site review): small controls answer a bigger finger area without changing their look
+(`@media (pointer: coarse)`, a transparent `::after` around them or padding offset by a negative margin): the ✕
+buttons of the booking lists, a doctor card's «Подробнее» and «Записаться», the footer links.
+
+**Portrait only on phones** (user, 2026-11-22: «на телефоне альбомной ориентации не будет»). A web page can't lock
+the orientation (only an installed app can), so a phone held sideways — `(orientation: landscape) and (max-height:
+500px) and (pointer: coarse)`; tablets are taller — gets a white cover, «Поверните телефон» with a turning phone icon
+(`.rotate`, the last block in `index.html`), the page under it doesn't scroll and an open helper dialog (top layer)
+is hidden. The site review's landscape items (the helper at 844×390, the header and tabs taking a third of it) are
+moot.
 ## Keyboard and screen readers (2026-11-22, site review)
 
 - The focus ring is Navy, 3 px, 2 px off the element, with a 2 px white ring under it (`box-shadow`) that keeps it
@@ -131,7 +142,9 @@ Breakpoints, from wide to narrow:
   `display: contents`, so its children stay flex items of the header row.
 - < 640 — the address leaves the header (the menu's "Контакты" leads to it). The burger is 44 px there and the
   logo `--s: 22px` (2026-11-20, user: «выровняй лого и значок бургера» — both were centred, but the 48 px circle
-  outweighed the 29 px logo); header padding 13 px keeps `--hdr-h` at 70.
+  outweighed the 29 px logo); header padding 13 px keeps `--hdr-h` at 70. Under 360 px the logo is 19 px (at 320 its
+  dot and «КЛИНИКА» went under the burger), and in the helper the current step's title ends in «…» instead of running
+  under the close button.
 
 `--hdr-h` is the header height at each breakpoint (82 / 74 / 70); sticky bars and
 `scroll-margin-top` use it. The desktop nav capsule is 50 px, as the CTA (padding 3 px, line-height 1.5): at 54 px
@@ -392,7 +405,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   With a section open, the sections hide behind **one button** on phones (same day: first a side rail of photo
   tiles beside the panel, which the user asked for and then replaced with «кнопку открыть разделы»): the sticky bar
   is `.svc-bar__toggle` «Разделы · <current section>» with a chevron; a tap (`state.barOpen`) drops the list down
-  over the panel (fade + 8 px slide): «Все разделы» and the six sections, each with its 44 px photo (`.svc-bar__ph`,
+  over the panel (fade + 8 px slide; a bar not yet stuck is first glided up to where it sticks, or at 360×640 the list
+  opened below the screen): «Все разделы» and the six sections, each with its 44 px photo (`.svc-bar__ph`,
   hidden wider). Choosing one, a tap outside or Esc closes it. The long tab names in `data.js` carry soft hyphens
   (U+00AD, invisible in the editor — added for the rail; harmless in the chips and the list).
   **No jumps** (user: «не очень нравится скакание … не будем централизировать … плавные переходы»): on phones
@@ -457,6 +471,9 @@ Yellow count (services, plus 1 per doctor without services), bottom right, once 
 above it (the groups, «Добавить услугу», «Оформить» → the booking form); a click outside or Esc folds it. Hidden while
 the booking card is on screen (it shows the same) and after sending; the back-to-top button moves up above it
 (`.is-raised`). On phones the list spans the width and the button sits above the cookie notice.
+On phones (2026-11-22, site review) the list fits between the header and the button, the cookie notice counted
+(`max-height` from `100dvh`, `--hdr-h` and `--cookie-h`; 72vh ran under the header at 360×640), and «Оформить» wraps
+under «Добавить услугу» when both don't fit (it stuck out of the card at 360 px).
 
 ## Back-to-top
 
@@ -475,6 +492,9 @@ into the «Ваша запись» button — where the
 back-to-top and corner buttons move up by its height via `--cookie-h`), «Мы используем файлы cookie…» and «Хорошо». It slides
 in 0.9 s after load and stays away once accepted (`localStorage` `cookie-ok`; if storage is blocked it shows on
 every visit). The site itself sets no cookies yet; the notice is there for when analytics or a chat widget arrive.
+On phones (≤ 480, 2026-11-22, site review: 111–150 px, a quarter of a small screen, covering the first screen's
+buttons) the notice is two lines: a shorter text, «Мы используем cookie. Продолжая, вы соглашаетесь.»
+(`.cookie__short`, the full one is `.cookie__long`), 13 px, and a smaller button.
 
 ## Doctors
 
@@ -494,7 +514,7 @@ check the lead text in `index.html`.
   The lines are kept short enough for two lines on the narrow 1024 px cards; numbers and «лет», and other key
   word pairs, are glued with no-break spaces. `.doc__spec` reserves room for those two lines, so both pages keep
   the same height when paging.
-- Section: no tabs (the user wants one list: doctors, then nurses, then administrators), 4 per page (2 pages) with arrows and dots; phone (≤ 640 px) one scroll-snap row. Every
+- Section: no tabs (the user wants one list: doctors, then nurses, then administrators), 4 per page (2 pages) with arrows and dots; phone (≤ 640 px) one scroll-snap row with a square photo (a 3:4 one made the card 572 px, too tall for a small screen) and one dot per person under it that follows the swipe (`swipeIndex`, `syncDots`; a dot scrolls to that card), since 2026-11-22. Every
   doctor (not the nurses or administrators) has "Записаться", which also adds that doctor to the booking.
 - No "любой свободный врач" option in Services (removed on the user's request, 2026-11-17): a section's doctor is
   always named. Opening a section or ticking a consultation selects the doctor of
@@ -642,6 +662,9 @@ are as wide as their text and stand side by side in the middle of the page (same
 brand and contacts columns are equal, `1fr` each; first the brand column was `1.3fr`), the contacts keep
 220 px for the unwrapped phone numbers. Before, four equal columns put «Навигация» right after the logo. Narrower,
 the columns wrap as before (one column on phones).
+
+On phones (2026-11-22, site review: 1 100 px long, and the back-to-top button covered «© 2026») «Навигация» and
+«Услуги» stand side by side, the logo and the contacts span both, and the footer has 96 px of room at the bottom.
 
 ## Removed pages
 

@@ -624,11 +624,24 @@
     if (open) docCaret();
     const multi = pages > 1;
     $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
-    $('#doc-dots-row').hidden = !multi;
+    // pages on desktop; on a phone one dot per doctor of the swipeable row
+    const n = swipe ? list.length : pages;
+    $('#doc-dots-row').hidden = n < 2;
     const dots = $('#doc-dots');
-    mount(dots, String(pages), () => Array.from({ length: pages }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="Страница ${k + 1} из ${pages}" data-act="doc-page" data-page="${k}"></button>`).join(''));
-    $$('.dot', dots).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === page));
+    mount(dots, (swipe ? 'swipe' : 'pages') + n, () => Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="${swipe ? 'Врач' : 'Страница'} ${k + 1} из ${n}" data-act="doc-page" data-page="${k}"></button>`).join(''));
+    syncDots(swipe ? swipeIndex() : page);
   }
+  // the card nearest the row's left edge on a phone
+  function swipeIndex() {
+    const track = $('#doc-track');
+    const first = track.firstElementChild;
+    if (!first) return 0;
+    const step = first.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0);
+    // the last card can't reach the left edge: scrolled to the end is the last one
+    if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 2) return track.children.length - 1;
+    return Math.max(0, Math.min(track.children.length - 1, Math.round(track.scrollLeft / step)));
+  }
+  function syncDots(cur) { $$('#doc-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === cur)); }
   const docPages = () => Math.max(1, Math.ceil(D.doctors.length / DOCS_PER_PAGE));
 
   /* ---------- «Что мы гарантируем» ---------- */
@@ -917,7 +930,13 @@
       $('#services-title').focus({ preventScroll: true });
     },
     // phones: the button in the sticky bar drops the sections down
-    'bar-toggle': () => set({ barOpen: !state.barOpen }),
+    // the list drops down under the bar: a bar not yet stuck is first glided up to where it sticks, or the list
+    // opened below the screen (360×640)
+    'bar-toggle': () => {
+      const shift = barShift();
+      if (!state.barOpen && shift > 1) glideTo(window.scrollY + shift, 400);
+      set({ barOpen: !state.barOpen });
+    },
     'svc-check': (t) => {
       const n = t.closest('.svc-row').dataset.svc;
       if (n !== CONSULT) { toggleCart(n, catById(state.cat)); return; }
@@ -1004,7 +1023,11 @@
         if (row < 0) glideTo(window.scrollY + row, 700);
       }
     },
-    'doc-page': (t) => set({ docPage: +t.dataset.page, docOpen: null }),
+    'doc-page': (t) => {
+      // a phone: the dot scrolls the row to that doctor
+      if (swipeMedia.matches) { const c = $('#doc-track').children[+t.dataset.page]; if (c) $('#doc-track').scrollTo({ left: c.offsetLeft - $('#doc-track').firstElementChild.offsetLeft, behavior: reduceMotion.matches ? 'auto' : 'smooth' }); return; }
+      set({ docPage: +t.dataset.page, docOpen: null });
+    },
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p, docOpen: null }); },
     'book-doc': (t) => set({ extra: withDoc(t.dataset.id) }),
@@ -1154,6 +1177,7 @@
     io.observe($('#finder'));
   }
   $('#doc-track').addEventListener('scroll', docCaret, { passive: true });
+  $('#doc-track').addEventListener('scroll', () => { if (swipeMedia.matches) syncDots(swipeIndex()); }, { passive: true });
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));

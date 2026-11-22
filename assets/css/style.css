@@ -275,6 +275,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .addr { display: none; }
   .hdr__cta { flex: 1 1 100%; }
 }
+/* 320 px (iPhone SE 1st gen): the yellow dot and the end of «КЛИНИКА» went under the burger */
+@media (max-width: 359px) {
+  .logo:not(.logo--lg) { --s: 19px; }
+}
 
 /* ===== Hero ===== */
 .hero { background: var(--white); overflow-x: clip; padding-bottom: 0; }
@@ -377,7 +381,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .about__chip { position: absolute; left: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: var(--white); color: var(--ink); font-size: 14px; font-weight: 600; box-shadow: 0 8px 20px rgba(12, 44, 71, .1); }
 .about__chip .ic { color: var(--accent); }
 .promise { grid-area: promise; display: flex; flex-direction: column; gap: 24px; padding-top: 32px; border-top: 1px solid rgba(12, 44, 71, .14); }
-.promise__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: 24px; color: var(--ink); }
+.promise__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: 24px; color: var(--ink); line-height: 1.2; }
 .promise__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
 .promise__item { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 6px 14px; }
 .promise__ic { flex: none; width: 36px; height: 36px; align-self: center; border-radius: 50%; background: var(--ink); color: var(--white); display: flex; align-items: center; justify-content: center; }
@@ -709,6 +713,12 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__x { width: 26px; height: 26px; background: var(--tint); }
 @media (hover: hover) { .visit__drop:hover, .visit__x:hover { color: var(--accent-ink); } }
 .visit__drop .ic, .visit__x .ic { display: block; }
+/* touch: the ✕ buttons (26 and 32 px) answer a 44 px finger area around them, the look unchanged */
+@media (pointer: coarse) {
+  .visit__drop, .visit__x { position: relative; }
+  .visit__drop::after, .visit__x::after { content: ''; position: absolute; inset: -9px; }
+  .visit__drop::after { inset: -6px; }
+}
 .visit__svcs { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
 /* a long name wraps inside its chip, so the radius stays moderate */
 .visit__svc { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 36px; padding: 4px 5px 4px 14px; box-sizing: border-box; border-radius: 18px; background: var(--white); font-size: 14px; font-weight: 500; line-height: 1.3; }
@@ -999,6 +1009,10 @@ html:has(.helper[open]) { overflow: hidden; }
 @media (max-width: 480px) {
   .jaw__sides { padding: 4px 0 0; font-size: 12px; }
 }
+/* 320 px: «Какой врач нужен» ran under the close button */
+@media (max-width: 360px) {
+  .hstep__t { overflow: hidden; text-overflow: ellipsis; }
+}
 
 /* ===== Doctors ===== */
 .doctors { background: var(--bg); padding: var(--sec-y) var(--gutter) 0; }
@@ -1031,6 +1045,11 @@ html:has(.helper[open]) { overflow: hidden; }
 .doc__toggle { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: none; background: none; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: color .15s; }
 @media (hover: hover) { .doc__toggle:hover { color: var(--accent-ink); } }
 .doc__toggle .ic { display: block; transition: transform .25s var(--ease-out); }
+/* touch: «Подробнее» and «Записаться» are 22 px text; a taller finger area around each */
+@media (pointer: coarse) {
+  .doc__toggle, .doc__book { position: relative; }
+  .doc__toggle::after, .doc__book::after { content: ''; position: absolute; inset: -11px -6px; }
+}
 .doc__toggle[aria-expanded="true"] .ic { transform: rotate(180deg); }
 /* the panel under the row: folded to nothing (grid rows 0fr, and a negative margin cancels the flex gap), it slides
    open under the chosen card; its content stays while it folds away. A caret on top points at the card */
@@ -1083,6 +1102,8 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc-grid { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter) 12px; scrollbar-width: none; overscroll-behavior-x: contain; }
   .doc-grid::-webkit-scrollbar { display: none; }
   .doc { flex: 0 0 78%; max-width: 300px; scroll-snap-align: start; animation: none; }
+  /* a square photo: with the 3:4 one the card (572 px) barely fitted a small phone's screen */
+  .doc__photo { aspect-ratio: 1 / 1; }
   .doc:hover { transform: none; box-shadow: none; }
   .doc.is-open { box-shadow: 0 0 0 1.5px var(--ink); }
   .doc-grid { flex-wrap: nowrap; }
@@ -1094,7 +1115,9 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc-panel__name { font-size: 24px; }
   .doc-panel__x { top: 20px; right: 20px; background: var(--white); }
   .doc-panel__btn { flex: 1 1 auto; }
-  .side-arrow, .dots-row { display: none; }
+  .side-arrow { display: none; }
+  /* one dot per doctor, following the swipe (main.js), so the row says it scrolls and how far */
+  .dots-row { padding-top: 0; }
 }
 
 /* ===== Clinics ===== */
@@ -1249,7 +1272,7 @@ html:has(.helper[open]) { overflow: hidden; }
 .ftr__h { font-family: var(--f-head); font-weight: 700; font-size: 15px; letter-spacing: .04em; color: var(--ink); }
 .ftr__link { color: var(--ink); text-decoration: none; font-size: 15px; line-height: 1.4; transition: color .15s; }
 @media (hover: hover) { .ftr__link:hover { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; } }
-.ftr__tel { font-family: var(--f-head); font-weight: 700; font-size: 22px; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.ftr__tel { font-family: var(--f-head); font-weight: 700; font-size: 22px; color: var(--ink); text-decoration: none; white-space: nowrap; line-height: 1.2; }
 @media (hover: hover) { .ftr__tel:hover { color: var(--ink); } }
 .ftr__addr { display: flex; flex-direction: column; gap: 4px; font-size: 15px; line-height: 1.5; }
 .ftr__cta { align-self: flex-start; gap: 8px; min-height: 48px; padding: 0 22px; font-size: 15px; margin-top: 4px; }
@@ -1259,6 +1282,17 @@ html:has(.helper[open]) { overflow: hidden; }
    equal), clear of the logo; 220 px keeps the phone numbers (no wrap) inside the contacts */
 @media (min-width: 1000px) {
   .ftr__grid { grid-template-columns: minmax(0, 1fr) auto auto minmax(220px, 1fr); column-gap: clamp(40px, 4.5vw, 64px); }
+}
+/* phones: the two link columns side by side (one under the other they made the footer 1 100 px long), and room under
+   the © line for the back-to-top button, which covered it */
+@media (max-width: 640px) {
+  .ftr { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .ftr__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 16px; }
+  .ftr__brand, .ftr__contacts { grid-column: 1 / -1; }
+}
+/* touch: a taller finger area for the 21 px links, the spacing unchanged */
+@media (pointer: coarse) {
+  .ftr__link { padding: 6px 0; margin: -6px 0; }
 }
 
 /* ===== Booking corner («Ваша запись» bottom right; the back-to-top button moves above it) ===== */
@@ -1284,7 +1318,11 @@ html:has(.helper[open]) { overflow: hidden; }
 /* phone and narrow tablet (≤ 760): the list spans the width, above the cookie notice while it shows */
 @media (max-width: 760px) {
   .bk { left: 12px; right: 12px; bottom: calc(24px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px)); max-width: none; }
-  .bk__pop { width: 100%; max-height: 72vh; }
+  /* the list fits between the header and the button, above the cookie notice too (72vh ran under the header) */
+  .bk__pop { width: 100%; max-height: calc(100vh - var(--hdr-h) - var(--cookie-h, 0px) - 120px); max-height: calc(100dvh - var(--hdr-h) - var(--cookie-h, 0px) - 120px); }
+  /* «Оформить» goes under «Добавить услугу» when both don't fit (it stuck out of the card at 360 px) */
+  .bk__actions { flex-wrap: wrap; }
+  .bk__go { flex: 1 1 auto; }
   /* in line with the back-to-top button, 24 px from the edge */
   .bk__pill { margin-right: 12px; }
 }
@@ -1321,9 +1359,19 @@ html:has(.helper[open]) { overflow: hidden; }
 .cookie__ic svg { display: block; }
 .cookie__text { margin: 0; font-size: 14px; line-height: 1.45; text-wrap: pretty; }
 .cookie__ok { flex: none; min-height: 44px; padding: 0 20px; font-size: 15px; }
+.cookie__short { display: none; }
 /* phone and narrow tablet (≤ 760, where the corner button would run into it): across the bottom, 12 px from the edges (the buttons move above it) */
 @media (max-width: 760px) {
   .cookie { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); max-width: none; }
   .cookie__ic { display: none; }
+}
+/* phones: a shorter text («Мы используем cookie. Продолжая, вы соглашаетесь.») and a smaller button, two lines instead of four,
+   so the notice no longer covers the first screen's buttons */
+@media (max-width: 480px) {
+  .cookie { gap: 12px; padding: 10px 10px 10px 16px; border-radius: 18px; }
+  .cookie__long { display: none; }
+  .cookie__short { display: inline; }
+  .cookie__text { font-size: 13px; line-height: 1.4; }
+  .cookie__ok { min-height: 40px; padding: 0 16px; font-size: 14px; }
 }
 
