@@ -144,13 +144,14 @@ the burger header) is hidden without its link.
 The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that
 it bled to the window edge, which the user disliked): `.hero` is an inline-size container and `.hero__media` gets a
 negative right margin of `min(660px, 50cqw − gutter) − min(720px, 50cqw − gutter)` — the header content is
-1440 px max, the hero's 1320. Its shape is an **arch** since 2026-11-20 (user: «сделай просто аркой», after
-«не нравится, что оно заостренное»): `border-radius: 50% 50% 32px 32px / 42% 42% 32px 32px` — a dome across the
-whole width and 42 % of the height down, soft bottom corners; on phones only the dome (`/ 46%`), the bottom fades.
-Before, a "leaf" from the user's `Rectangle 1.png` (1907 × 1697): big rounding top-left and bottom-right, square
-elsewhere (`44% 0 / 50% 0`). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
+1440 px max, the hero's 1320. Above 640 px its shape is a "leaf" from the user's `Rectangle 1.png` (1907 × 1697):
+big rounding top-left and bottom-right, 32 px elsewhere (`44% 32px / 50% 32px`). **On phones it is an arch**
+(2026-11-20, user: «сделай просто аркой»; on 2026-11-22 the arch was kept for phones only and the leaf returned
+above, user: «в вебе верни как прежде»): only the dome, the bottom fades. The dome is `999px 999px 0 0`, which the
+browser shrinks to half the width, so it is a true semicircle; the earlier `50% / 46%` made a flattened ellipse on
+the wide, short phone photo (user: «не растягивай»). The doctor stands at 31 % of the picture's width; `object-position: 0%` brings the doctor nearest the
 middle of the arch. Under 1128 px text and photo no longer fit side by side; the photo then goes full
-width under the text (`object-position: 25%`), same arch. **On phones (≤ 640) the photo comes first** (`order: -1`,
+width under the text (`object-position: 25%`), same leaf. **On phones (≤ 640) the photo comes first** (`order: -1`,
 310 px high, `object-position: 0% 18%` keeps the doctor nearest the middle of the dome; 2026-11-20, user: the photo had «улетела вниз» and
 the first screen looked empty — now it is the doctor, the title, the lead and both buttons, which share one row
 ≤ 480 px without the arrow, 15 px text ≤ 374). The three fact cards are one swipeable row there (scroll-snap, 82 %
