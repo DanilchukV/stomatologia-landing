@@ -733,12 +733,15 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__svc { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 36px; padding: 4px 5px 4px 14px; box-sizing: border-box; border-radius: 18px; background: var(--white); font-size: 14px; font-weight: 500; line-height: 1.3; }
 /* one line each: a long name ends in «…» (the whole name is the chip's title) */
 .visit__svc-n { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* the round «+N» after the first two services (an up arrow folds them again) */
-.visit__fold { display: flex; }
-.visit__all { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; width: 36px; height: 36px; padding: 0; border: 1.5px solid var(--white); border-radius: 50%; background: var(--white); color: var(--ink); font: inherit; font-size: 12px; font-weight: 700; line-height: 1; cursor: pointer; transition: border-color .15s, color .15s; }
-.visit__all .ic { display: block; }
+/* the round «+N» (an up arrow folds them again): Navy, at the right end of the services and in the middle of their
+   height, reaching a little over the chips' ends; a ring in the card's Mint cuts it out of them, and the list keeps
+   28 px on the right, so it never covers a chip's ✕ */
+.visit__svcs:has(> .visit__fold) { position: relative; padding-right: 28px; }
+.visit__fold { position: absolute; top: 50%; right: 0; transform: translateY(-50%); display: flex; }
+.visit__all { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: var(--white); box-shadow: 0 0 0 3px var(--tint); font: inherit; font-size: 12px; font-weight: 700; line-height: 1; cursor: pointer; transition: background-color .15s, color .15s; }
 .visit__all-n { margin-top: 1px; }
-@media (hover: hover) { .visit__all:hover { border-color: var(--ink); } }
+@media (hover: hover) { .visit__all:hover { background: var(--accent); color: var(--ink); } }
+.visit__all .ic { display: block; }
 .visit__none { margin: 0; font-size: 14px; color: var(--muted); }
 /* the reason from the helper: a white strip like the service chips */
 .visit__note { display: flex; align-items: center; gap: 10px; margin: 0; padding: 6px 5px 6px 14px; border-radius: 18px; background: var(--white); font-size: 14px; line-height: 1.4; }
