@@ -51,6 +51,7 @@
   --hdr-h: 82px; /* sticky header height: offsets for sticky bars and anchor jumps */
   --gutter: 24px; /* side padding of sections */
   --sec-y: 96px; /* vertical padding of sections */
+  --wrap: 1440px; /* the content width of every section: the header's, from the logo to «Записаться» */
 }
 @media (max-width: 640px) {
   :root { --sec-y: 64px; }
@@ -106,7 +107,7 @@ img.is-loading { background: linear-gradient(100deg, #E3EDEB 30%, #F5F9F8 50%, #
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .ic--miter { stroke-linejoin: miter; }
-.wrap { max-width: 1200px; margin: 0 auto; }
+.wrap { max-width: var(--wrap); margin: 0 auto; }
 .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--accent-ink); }
 .title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1; letter-spacing: -.02em; }
 .caps { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
@@ -291,7 +292,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .hero { background: var(--white); overflow-x: clip; padding-bottom: 0; }
 /* «Главная» and the logo (#top) go to the very top of the page: a margin bigger than the page offset clamps to 0 */
 #top { scroll-margin-top: 100vh; }
-.hero__in { max-width: 1320px; margin: 0 auto; padding: 0 var(--gutter); display: flex; flex-wrap: wrap; align-items: stretch; }
+.hero__in { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); display: flex; flex-wrap: wrap; align-items: stretch; }
 .hero__text { flex: 1 1 520px; min-width: 0; padding: 48px 0 112px; display: flex; flex-direction: column; gap: 24px; position: relative; z-index: 1; }
 .hero__title { margin: 0; font-family: var(--f-head); font-size: clamp(44px, 5.6vw, 78px); line-height: 1; letter-spacing: -.015em; color: var(--ink); display: flex; flex-direction: column; gap: 14px; }
 .hero__title-main { font-weight: 700; }
@@ -299,13 +300,13 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .hero__lead { margin: 0; max-width: 520px; color: var(--muted); font-size: 19px; line-height: 1.6; }
 .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
 .btn--hero { gap: 14px; min-height: 60px; padding: 0 36px; font-size: 17px; }
-/* the photo reaches the right edge of the header's CTA: header content is 1440 px max, hero content 1320 */
+/* one width with the header: the text starts under the logo, the photo ends under «Записаться» */
 .hero { container-type: inline-size; }
-.hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; margin-right: calc(min(660px, 50cqw - var(--gutter)) - min(720px, 50cqw - var(--gutter))); }
+.hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; }
 /* leaf shape: big rounding top-left and bottom-right; the doctor stands at 31 % of the picture, 0 % keeps her nearest the middle */
 .hero__img { position: absolute; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); object-fit: cover; object-position: 0% 50%; border-radius: 44% 32px / 50% 32px; }
-/* the cards span from the text column to the photo's right edge (the header CTA), as .hero__media */
-.hero__facts { margin: -64px calc(50cqw - min(720px, 50cqw - var(--gutter))) 0 calc(50cqw - min(660px, 50cqw - var(--gutter))); position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
+/* the cards span the same width, from the text's left edge to the photo's right edge */
+.hero__facts { margin: -64px max(var(--gutter), 50cqw - var(--wrap) / 2) 0; position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
 /* the icon sits beside the title and the text runs the card's full width below, so every text fits two lines at ≥1280 px */
 .fact { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 24px; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 12px 14px; transition: box-shadow .3s ease; }
 .fact__ic { flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; }
@@ -476,6 +477,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .services__head { display: flex; flex-direction: column; gap: 12px; }
 .services__lead { margin: 0; color: var(--muted); max-width: 640px; font-size: 17px; }
 .svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(296px, 100%), 1fr)); gap: 16px; animation: stepIn .35s var(--ease-out) both; }
+/* three in a row from 1000 px, also on the full content width (auto-fill would make it 4 + 2 there) */@media (min-width: 1000px) {  .svc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }}
 .svc-card { text-align: left; padding: 22px 26px; border-radius: 24px; overflow: hidden; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 @media (hover: hover) { .svc-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(12, 44, 71, .12); border-color: var(--accent); } }
 /* photo strip bleeds to the card edges and fades into the card */
@@ -1237,7 +1239,7 @@ html:has(.helper[open]) { overflow: hidden; }
 /* ===== Booking ===== */
 /* a light card: rows with a label on the left (services, doctors, contacts), the button at the bottom */
 .book { padding: var(--sec-y) var(--gutter); }
-.book__card { box-sizing: border-box; max-width: 1200px; margin: 0 auto; background: var(--white); border: 1px solid var(--line); border-radius: 32px; padding: clamp(24px, 4vw, 48px); display: flex; flex-direction: column; gap: 20px; }
+.book__card { box-sizing: border-box; max-width: var(--wrap); margin: 0 auto; background: var(--white); border: 1px solid var(--line); border-radius: 32px; padding: clamp(24px, 4vw, 48px); display: flex; flex-direction: column; gap: 20px; }
 .book__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .book__titles { display: flex; flex-direction: column; gap: 10px; }
 .book__lead { margin: 0; color: var(--muted); font-size: 17px; }
@@ -1340,6 +1342,8 @@ html:has(.helper[open]) { overflow: hidden; }
    equal), clear of the logo; 220 px keeps the phone numbers (no wrap) inside the contacts */
 @media (min-width: 1000px) {
   .ftr__grid { grid-template-columns: minmax(0, 1fr) auto auto minmax(220px, 1fr); column-gap: clamp(40px, 4.5vw, 64px); }
+  /* the contacts end at the content's right edge, under «Записаться» in the header, as the logo starts under the logo */
+  .ftr__contacts { justify-self: end; }
 }
 /* phones: the two link columns side by side (one under the other they made the footer 1 100 px long), and room under
    the © line for the back-to-top button, which covered it */

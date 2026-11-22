@@ -95,6 +95,14 @@ subsets (checked: the only arrow is in code comments). Nunito is lighter than Ma
 heading-font rules that were 600 are 700. For a softer look everywhere, set `--f-body` to Nunito too.
 Licences: `assets/fonts/OFL.txt`.
 
+## Layout width
+
+One content width for the whole site since 2026-11-22 (user: «на ширину нашего хедера с навигацией, лого и контактами»,
+and the site review's D4 about a «лесенка» of left edges — the header 1440, the hero 1320, the sections 1200): the
+header's, `--wrap: 1440px` plus the gutters (`.wrap`, `.hero__in`, `.hero__facts`, `.book__card` use it), so every
+block starts under the logo and ends under «Записаться» (24–1416 at 1440 px, 240–1680 at 1920). Services stay three in
+a row from 1000 px (auto-fill would make it 4 + 2 at the full width); the footer's contacts stand at the right edge.
+
 ## Slow connections
 
 A picture still on its way shimmers in its place (2026-11-22, user asked for a skeleton or a tooth spinner; the
@@ -195,9 +203,10 @@ the burger header) is hidden without its link.
 ## Hero
 
 The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that
-it bled to the window edge, which the user disliked): `.hero` is an inline-size container and `.hero__media` gets a
-negative right margin of `min(660px, 50cqw − gutter) − min(720px, 50cqw − gutter)` — the header content is
-1440 px max, the hero's 1320. Above 640 px its shape is a "leaf" from the user's `Rectangle 1.png` (1907 × 1697):
+it bled to the window edge, which the user disliked). Since 2026-11-22 the whole site has the header's width (see
+"Layout width"), so the hero simply fills it: the text starts under the logo, the photo ends under «Записаться»
+(before, the hero was 1320 wide and the photo reached out with a negative margin).
+Above 640 px its shape is a "leaf" from the user's `Rectangle 1.png` (1907 × 1697):
 big rounding top-left and bottom-right, 32 px elsewhere (`44% 32px / 50% 32px`). **On phones it is an arch**
 (2026-11-20, user: «сделай просто аркой»; on 2026-11-22 the arch was kept for phones only and the leaf returned
 above, user: «в вебе верни как прежде»): only the dome, the bottom fades. The dome is `999px 999px 0 0`, which the
