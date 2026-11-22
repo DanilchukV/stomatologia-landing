@@ -1253,6 +1253,12 @@ html:has(.helper[open]) { overflow: hidden; }
 .ftr__cta { align-self: flex-start; gap: 8px; min-height: 48px; padding: 0 22px; font-size: 15px; margin-top: 4px; }
 .ftr__legal { display: flex; flex-wrap: wrap; gap: 10px 32px; justify-content: space-between; font-size: 13px; color: var(--ink); line-height: 1.5; }
 
+/* one row: the link columns as wide as their text and side by side, the brand column takes the room, so the
+   navigation no longer runs into the logo; 220 px keeps the phone numbers (no wrap) inside the contacts */
+@media (min-width: 1000px) {
+  .ftr__grid { grid-template-columns: minmax(0, 1.3fr) auto auto minmax(220px, 1fr); column-gap: clamp(40px, 4.5vw, 64px); }
+}
+
 /* ===== Booking corner («Ваша запись» bottom right; the back-to-top button moves above it) ===== */
 /* the box spans the width on phones: only its children take clicks */
 .bk { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 40; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; max-width: calc(100% - 48px); pointer-events: none; }

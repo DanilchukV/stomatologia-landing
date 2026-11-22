@@ -613,6 +613,14 @@ admin panel was discussed and postponed (it needs a backend such as Supabase, lo
 **Requests are not delivered anywhere yet** — submit only shows "Заявка отправлена". The delivery
 (e.g. Web3Forms, as in Nitowska, or a Telegram bot) goes into the form's submit handler in `main.js`.
 
+## Footer
+
+Four columns: the logo with a line about the clinic, «Навигация», «Услуги» (open that section), «Контакты». From
+1000 px (2026-11-22, user: «колонку с услугами ближе к навигации, а то будто находит на лого») the two link columns
+are as wide as their text and stand side by side, the brand column takes the room (`1.3fr`), the contacts keep
+220 px for the unwrapped phone numbers. Before, four equal columns put «Навигация» right after the logo. Narrower,
+the columns wrap as before (one column on phones).
+
 ## Removed pages
 
 The blog, documents and vacancies pages (with their scripts, the legal PDFs and the news block on the
