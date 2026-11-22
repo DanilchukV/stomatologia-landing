@@ -19,6 +19,10 @@
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false, hdr.contains(document.activeElement)); });
 
+  // links (most buttons on the site are links) and pictures can't be dragged out: dropped into another window or
+  // tab, a link opened there
+  document.addEventListener('dragstart', (e) => { if (e.target.closest && e.target.closest('a, img')) e.preventDefault(); });
+
   // computers: phone numbers are plain text (a tel: link opens Skype or a similar app there); phones and tablets keep the link
   if (!window.matchMedia('(pointer: coarse)').matches) {
     document.querySelectorAll('a[href^="tel:"]').forEach((a) => { a.removeAttribute('href'); a.classList.add('tel-text'); });

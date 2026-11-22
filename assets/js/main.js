@@ -1017,6 +1017,20 @@
   });
   const NEW_BOOKING = ['svc-check', 'svc-sub', 'panel-doc', 'book-pick', 'book-doc', 'helper-book'];
   const REMOVE = ['cart-remove', 'visit-remove', 'note-remove'];
+  // in-page links glide instead of jumping (registered after the actions, which may have handled the click);
+  // the skip link keeps its jump, it has to move the focus
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || a.classList.contains('skip') || e.button || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const hash = a.getAttribute('href');
+    const el = hash.length > 1 && document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!el) return;
+    e.preventDefault();
+    // where the browser's jump would stop: the target's scroll-margin-top under the top (#top's 100vh clamps to 0)
+    const y = el.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
+    glideTo(y, Math.min(1200, 500 + Math.abs(y - window.scrollY) / 8));
+    history.replaceState(null, '', hash);
+  });
   // iOS Safari applies :active (the press-in in style.css) only when the page listens for touches
   document.addEventListener('touchstart', () => {}, { passive: true });
   document.addEventListener('keydown', (e) => {

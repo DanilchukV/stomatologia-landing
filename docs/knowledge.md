@@ -146,6 +146,12 @@ the markup, so Tab skipped it); Escape returns the focus to the burger.
 Scroll-spy marks the nav link of the section crossing 140 px from the top; blocks with
 no link of their own light the nearest one (`SPY` in `main.js`, 2026-11-22): the helper's Finder «О клинике», the FAQ
 and the booking form «Контакты».
+In-page links glide instead of jumping (2026-11-22, user: «красивый скрол» for the nav): a click on any
+`a[href^="#"]` (the nav, the logo, «Записаться», the hero buttons, the footer) runs `glideTo` — the back-to-top ease,
+500 ms plus 1 ms per 8 px, at most 1.2 s — to where the browser's jump would stop (the target's `scroll-margin-top`),
+after the `data-act` actions, which may have handled the click (the footer's service links). The skip link keeps its
+jump (it has to move the focus). Links and images can't be dragged (`dragstart` in `header.js`, user: a button
+dragged into another window opened there as a link).
 A nav jump stops with the section title 28 px under the header (user's request, 2026-11-18): sections have
 `scroll-margin-top: calc(var(--hdr-h) - var(--sec-y) + 28px)`, a negative-ish margin that skips the top padding.
 
