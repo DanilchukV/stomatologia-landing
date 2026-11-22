@@ -122,6 +122,7 @@ buttons of the booking lists, a doctor card's «Подробнее» and «За�
 
 Landscape on phones: on 2026-11-22 a «Поверните телефон» cover for phones held sideways was added at the user's
 request and removed the same evening («убери функцию ориентации полностью»); it is in git history (`.rotate`).
+Round buttons in a rounded corner sit concentric with it (2026-11-22, user: «все элементы в кружочках выравниваем,сейчас криво»): the circle's centre on the corner's arc centre, so the gap to the edge is even all round — offset =inner corner radius − button radius. The doctor panel's ✕: 36 px, 8.5 px in from the 28 px corner (1.5 px border);on phones 32 px, concentric with the photo band's 20 px corner (16 px in). The helper's ✕: 10 px in from the dialog's32 px corner. (At 16 px they ran into the curve.) The icons inside every circle were measured centred (< 0.6 px).
 
 ## Keyboard and screen readers (2026-11-22, site review)
 
