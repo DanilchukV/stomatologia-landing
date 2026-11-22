@@ -521,10 +521,17 @@ The lead is only «Оставьте номер — перезвоним и по�
 dropped 2026-11-19 (user's request; the numbers are in the header, contacts and FAQ).
 
 Validation as in the export: name — letters only, at least 2, rejects
-keyboard mash; phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
-375 (also typed digit by digit). Another country (since 2026-11-17, user request): a number starting with
+keyboard mash (4+ consonants, three same letters, no vowel, and since 2026-11-22 a run along a keyboard row —
+«йцукен», «фыва», «qwerty»: 5+ keys inside a word or a whole word of 4+, since 4 anywhere would reject real names
+such as «Митьков»); phone — Belarus `+375 (XX) XXX-XX-XX`, auto-formatted while typing, a leading 80 becomes
+375 and a leading 00 a "+" (also typed digit by digit). Another country (since 2026-11-17, user request): a number starting with
 "+" and a code other than 375 is kept as typed (digits and separators, max 15 digits) and needs at least 8
 digits; digits typed without "+" are still taken as a Belarusian number. Errors show after the field was left or after a submit attempt; submit focuses the first bad field.
+Fixed 2026-11-22 (site review): a lone «3» or «37» typed without "+" stays as typed (it may become 375 or МТС's 33)
+— before, it showed «+3», and the next «3» made it French «+33…»; the bracket after the operator code appears with
+the next digit, so Backspace no longer gets stuck at «+375 (29)»; the caret keeps its place among the digits after
+the reformat (it jumped to the end), and Backspace/Delete on a bracket, space or dash removes the digit next to it
+(`reformat` in `form.js`, which reads the value before the keystroke from `beforeinput`).
 After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card,
 the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the corner
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle
