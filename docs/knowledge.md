@@ -487,7 +487,8 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   speciality grouped by section, plus their own consultation (`docServices`). A chip adds the service with that doctor
   (`doc` on the cart item, which `itemDoc` honours before the section's pick, so e.g. «Виниры» can go to the
   orthopedist while the rest of «Эстетика» stays with the therapist) or takes out a booked one. In all three lists
-  (Services' step 3, the booking form, the corner). A group re-rendered for its open/closed button doesn't fade in
+  (Services' step 3 and the booking form; the corner list only sums the booking up since 2026-11-23, user: «просто как
+  суммирует», `visitsHTML(true)`). A group re-rendered for its open/closed button doesn't fade in
   again: `.is-new` is only for a doctor not in the list before (`data-id`).
   Several doctors (2026-11-22, user): the groups keep the team's order (the doctor tiles' order, `visits()` sorts
   by it; before, a doctor jumped to the front when a service was added); a card shows two services (three until

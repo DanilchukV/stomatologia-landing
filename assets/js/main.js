@@ -136,9 +136,10 @@
   const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '') + '#' + state.svcsAll.join();
 
   // the same list in step 3 of Services and the corner button; the booking form puts the same cards in the doctors' slots
-  function visitsHTML() { return `<ul class="visits">${visits().map(visitHTML).join('')}</ul>`; }
+  // summary: the corner list only sums the booking up, with no «Услуги врача»
+  function visitsHTML(summary) { return `<ul class="visits">${visits().map((v) => visitHTML(v, summary)).join('')}</ul>`; }
   // one doctor's group (or diagnostics', id ''), and right after it that doctor's services list when open
-  function visitHTML(v) {
+  function visitHTML(v, summary) {
     const d = v.doc;
     const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
       : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
@@ -152,9 +153,9 @@
     const svcs = v.items.length
       ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
       : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
-    const open = state.addFor === v.id;
+    const open = !summary && state.addFor === v.id;
     // the list it opens closes with its own ✕ (pickerHTML); the button stays dark while it is open
-    const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
+    const more = d && !summary && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
     // the open doctor's services come right after the card (in a one-column list that is under it; the booking
     // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
     return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
@@ -830,7 +831,7 @@
       </div>
       <button type="button" class="bk__pill" data-act="bk-toggle" aria-expanded="false" aria-controls="bk-pop"><span class="bk__count" id="bk-count"></span><span>Ваша запись</span>${icon('i-chev-up', 16, 2.4)}</button>`);
     $('#bk-pop').hidden = !state.bkOpen;
-    mount($('#bk-list'), visitsKey(), visitsHTML);
+    mount($('#bk-list'), visitsKey(), () => visitsHTML(true));
     $('#bk-count').textContent = n;
     const pill = $('.bk__pill', bk);
     pill.setAttribute('aria-expanded', state.bkOpen);
