@@ -143,22 +143,24 @@
     const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
       : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
     const notes = notesOf(v.id).map((x) => `<p class="visit__note"><span class="visit__note-t"><b>Повод:</b> ${esc(glue(x.text))}</span><button type="button" class="visit__x" data-act="note-remove" data-id="${v.id}" data-text="${esc(x.text)}" aria-label="Убрать повод: ${esc(x.text)}">${icon('i-close', 12, 2.8)}</button></p>`).join('');
-    // three services show; the rest behind «Ещё N» (one line each, a long name cut with «…», whole in its title)
+    // two services show; the rest behind a round «+N» with a down arrow at the end of the row (an up arrow folds them
+    // again); one line each, a long name cut with «…», whole in its title
     const all = state.svcsAll.includes(v.id);
     const shown = all ? v.items : v.items.slice(0, SVCS_SHOWN);
     const rest = v.items.length - SVCS_SHOWN;
+    const fold = rest > 0 ? `<li class="visit__fold"><button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}" aria-label="${all ? 'Свернуть услуги' : 'Показать ещё ' + rest}">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</button></li>` : '';
     const svcs = v.items.length
-      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>${
-        rest > 0 ? `<button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}">${all ? 'Свернуть' : 'Ещё ' + rest}${icon('i-chev', 14, 2.6)}</button>` : ''}`
+      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
       : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
     const open = state.addFor === v.id;
-    const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${open ? icon('i-chev-up', 14, 2.6) : PLUS}${open ? 'Свернуть' : 'Услуги врача'}</button>` : '';
+    // the list it opens closes with its own ✕ (pickerHTML); the button stays dark while it is open
+    const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
     // the open doctor's services come right after the card (in a one-column list that is under it; the booking
     // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
     return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
       open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
   }
-  const SVCS_SHOWN = 3;
+  const SVCS_SHOWN = 2;
   // true for the render right after a doctor's services list was opened (render() clears it)
   let pickerFresh = false;
   // the caret on top of an open doctor's services points at that doctor's card
@@ -183,7 +185,7 @@
   // with that doctor (`doc` on the cart item), or takes it out if it is booked already
   function pickerHTML(d) {
     // it fades in when it opens, not again each time a chip is pressed (the list is rebuilt then)
-    return `<div class="vpick${pickerFresh ? ' is-in' : ''}" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div>${
+    return `<div class="vpick${pickerFresh ? ' is-in' : ''}" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div><button type="button" class="vpick__x" data-act="visit-add" data-id="${d.id}" data-focus="va:${d.id}" aria-label="Закрыть услуги врача">${icon('i-close', 14, 2.6)}</button>${
       docServices(d).map((g) => `<div class="vpick__grp"><span class="caps">${esc(g.cat.name)}</span><div class="vpick__chips">${
         g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}" title="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`).join('')}</div>`;
   }

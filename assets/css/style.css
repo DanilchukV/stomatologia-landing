@@ -733,11 +733,12 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__svc { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 36px; padding: 4px 5px 4px 14px; box-sizing: border-box; border-radius: 18px; background: var(--white); font-size: 14px; font-weight: 500; line-height: 1.3; }
 /* one line each: a long name ends in «…» (the whole name is the chip's title) */
 .visit__svc-n { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* «Ещё N» under the first three services, «Свернуть» once open */
-.visit__all { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; margin-top: -4px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
-.visit__all .ic { display: block; transition: transform .25s; }
-.visit__all[aria-expanded="true"] .ic { transform: rotate(180deg); }
-@media (hover: hover) { .visit__all:hover { color: var(--accent-ink); } }
+/* the round «+N» after the first two services (an up arrow folds them again) */
+.visit__fold { display: flex; }
+.visit__all { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; width: 36px; height: 36px; padding: 0; border: 1.5px solid var(--white); border-radius: 50%; background: var(--white); color: var(--ink); font: inherit; font-size: 12px; font-weight: 700; line-height: 1; cursor: pointer; transition: border-color .15s, color .15s; }
+.visit__all .ic { display: block; }
+.visit__all-n { margin-top: 1px; }
+@media (hover: hover) { .visit__all:hover { border-color: var(--ink); } }
 .visit__none { margin: 0; font-size: 14px; color: var(--muted); }
 /* the reason from the helper: a white strip like the service chips */
 .visit__note { display: flex; align-items: center; gap: 10px; margin: 0; padding: 6px 5px 6px 14px; border-radius: 18px; background: var(--white); font-size: 14px; line-height: 1.4; }
@@ -753,10 +754,14 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__more[aria-expanded="true"] { border-style: solid; background: var(--ink); color: var(--white); }
 @media (hover: hover) { .visit__more[aria-expanded="false"]:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 /* the caret on top points at the doctor's card (main.js placeCarets sets --caret-x) */
-.vpick { position: relative; margin-top: 6px; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--white); }
+.vpick { position: relative; margin-top: 6px; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 26px; background: var(--white); }
 .vpick.is-in { animation: fadeIn .25s ease both; }
 .vpick::before { content: ''; position: absolute; top: -9px; left: var(--caret-x, 50%); width: 16px; height: 16px; margin-left: -8px; box-sizing: border-box; background: var(--white); border-left: 1px solid var(--line); border-top: 1px solid var(--line); border-top-left-radius: 4px; transform: rotate(45deg); }.vpick-li { display: block; }
-.vpick__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.vpick__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding-right: 36px; }
+/* ✕ concentric with the 26 px corner: (26 - 1 border) - 16 = 9 px */
+.vpick__x { position: absolute; top: 9px; right: 9px; width: 32px; height: 32px; padding: 0; border: none; border-radius: 50%; background: var(--tint); color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background-color .15s; }
+.vpick__x .ic { display: block; }
+@media (hover: hover) { .vpick__x:hover { background: var(--accent); } }
 .vpick__t { font-family: var(--f-head); font-weight: 700; font-size: 17px; }
 .vpick__hint { font-size: 13px; color: var(--muted); }
 .vpick__grp { display: flex; flex-direction: column; gap: 8px; }
@@ -1365,7 +1370,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .bk__title { font-family: var(--f-head); font-weight: 700; font-size: 20px; }
 .bk__close { flex: none; width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; background: var(--tint); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
 .bk .ic { display: block; }
-.bk__list { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 12px; }
+/* a few px of room inside the scroller, which clips: an outlined card's edge (.is-picking) was cut at the top */
+.bk__list { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 3px 12px; }
 .bk__foot { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; padding: 14px 16px 16px; border-top: 1px solid var(--line-2); }
 .bk__note { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
 .bk__actions { display: flex; gap: 10px; }
