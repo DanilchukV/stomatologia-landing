@@ -711,7 +711,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visits { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .visit { display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 14px; border-radius: 18px; background: var(--tint); }
 /* a group just added (main.js mount keeps the others as they are) */
-.visit.is-new { animation: inUp .35s var(--ease-out) both; }
+.visit.is-new { animation: fadeIn .35s ease both; }
 .visit__head { display: flex; align-items: center; gap: 12px; }
 .visit .av { width: 44px; height: 44px; background: var(--white); }
 .visit__who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; line-height: 1.3; }
@@ -1182,6 +1182,10 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__reset { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .15s, color .15s; }
 @media (hover: hover) { .book__reset:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 .book__reset .ic { display: block; }
+/* phones: «Сбросить всё» sits under the list (below the doctor tiles), not under the title, where appearing with the
+   first doctor pushed the whole form down */
+.book__list-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.book__reset--list { display: none; }
 /* form and confirmation sit in one cell; the hidden one keeps its space, so nothing jumps on send */
 .book__body { display: grid; }
 .book__form, .book__done { grid-area: 1 / 1; }
@@ -1242,6 +1246,8 @@ html:has(.helper[open]) { overflow: hidden; }
 }
 @media (max-width: 480px) {
   .book__head { flex-direction: column; }
+  .book__head .book__reset { display: none; }
+  .book__reset--list { display: inline-flex; }
 }
 
 /* ===== Footer ===== */

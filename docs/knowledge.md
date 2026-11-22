@@ -571,7 +571,7 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 ## Booking
 
 Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
-выбором врача»). The rows follow the order of Services' step 3 (user): Врачи и услуги, Врач, Контакты —
+выбором врача»). Rows: Врач, Врачи и услуги, Контакты (the first two swapped on 2026-11-22, see below) —
 a white card, label on the left, «Отправить заявку» at the bottom right:
 - «Врачи и услуги» — the booking by doctor, as in Services' step 3, with «+ Добавить ещё услугу»; none: a line and
   «+ Добавить услугу» (a link until 2026-11-20; the user missed the button there).
@@ -579,9 +579,11 @@ a white card, label on the left, «Отправить заявку» at the bott
   four in a row at 1440 under the four doctor tiles, one column on phones.
   When the list is rebuilt at another height (a doctor or a service in or out) it glides from the old height to the
   new one in 420 ms (`growTo` in `main.js`; user: «пусть форма плавно увеличивается снизу»), so the form grows and
-  shrinks smoothly instead of jumping. The list is above the doctor tiles, so it pushed the tile just pressed down
-  (user: «пусть не скачет форма»): while it glides the page scrolls along (`holdStill`), keeping the tiles where they
-  were on screen; only when they are on screen, and a wheel turn or a touch lets go.
+  shrinks smoothly instead of jumping. The list used to be above the doctor tiles, so it pushed the tile just pressed
+  down (user: «пусть не скачет форма»); making the page scroll along kept the tile still but moved everything above
+  it («скачет вверх и вниз»). Since 2026-11-22 the tiles come first and the list under them, so a tile stays put, the
+  page doesn't scroll and the form grows downwards. On phones «Сбросить всё» moved from under the title (appearing with
+  the first doctor it pushed the form down) to beside «Добавить ещё услугу» (`.book__reset--list`).
   It still flickered: `mount()` rebuilt the whole list, so every doctor's photo reloaded and flashed. Now a group
   whose markup is unchanged keeps its node (matched by `outerHTML`), and a new one fades in (`.visit.is-new`).
 - «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is

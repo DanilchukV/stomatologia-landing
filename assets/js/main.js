@@ -676,36 +676,15 @@
     // the whole booking by doctor, as in Services' step 3
     const svcsBox = $('#book-svcs');
     const h0 = svcsBox.offsetHeight;
-    const a0 = docsBox.getBoundingClientRect().top;
     const rebuilt = mount(svcsBox, visitsKey(), () => (bookEmpty()
       ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
-      : visitsHTML() + `<button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button>`));
+      : visitsHTML() + `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`));
     if (rebuilt) growTo(svcsBox, h0);
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
-    // the list grows above the doctor tiles: the page follows it, so the tile just pressed stays under the pointer
-    if (rebuilt && a0 > 0 && a0 < window.innerHeight) holdStill(docsBox, a0, 460);
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
   }
 
-  // keeps el at `top` px from the top of the screen for `dur` ms, scrolling the page by whatever moved it (it
-  // measures each frame, so the browser's own scroll anchoring, if it moved first, isn't corrected twice);
-  // a wheel turn or a touch lets go
-  function holdStill(el, top, dur) {
-    const t0 = performance.now();
-    let stopped = false;
-    const stop = () => { stopped = true; };
-    window.addEventListener('wheel', stop, { passive: true, once: true });
-    window.addEventListener('touchstart', stop, { passive: true, once: true });
-    const fix = () => { const d = el.getBoundingClientRect().top - top; if (Math.abs(d) >= .5) window.scrollBy(0, d); };
-    fix();
-    (function step(now) {
-      if (stopped) return;
-      fix();
-      if (now - t0 < dur) requestAnimationFrame(step);
-      else { window.removeEventListener('wheel', stop); window.removeEventListener('touchstart', stop); }
-    })(t0);
-  }
   // a list rebuilt at a new height glides from the old one, so the form grows or shrinks smoothly below it
   // (h0 is the height before the rebuild; a glide under way starts the next one from where it is)
   function growTo(el, h0) {
