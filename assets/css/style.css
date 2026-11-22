@@ -503,7 +503,9 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-fly span { position: relative; font-size: 14px; font-weight: 600; white-space: nowrap; }
 /* «Все разделы»: the way back (main.js flyToCards); the cards stay hidden until their ghost lands, and the ghost's
    photo is the card's faded strip, so the card shows up under it without a swap */
-.svc-grid.is-landing { animation: none; }
+/* no entrance replay: the class stays until the grid hides again (main.js openCat), since taking `animation: none` off
+   a visible grid would restart its fade-in and flash the cards that have just landed */
+.svc-grid.is-quiet { animation: none; }
 .svc-grid.is-landing .svc-card:not(.is-landed) { visibility: hidden; }
 .svc-fly--back img { bottom: auto; height: 124px; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0, 0, 0, .6) 74%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0, 0, 0, .6) 74%, transparent 100%); }
 

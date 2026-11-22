@@ -833,6 +833,8 @@
     const seen = grid.bottom > 0 && grid.top < window.innerHeight;
     const from = !state.cat && seen && !reduceMotion.matches
       ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
+    // the grid hides in the same frame, so its fade-in may come back for the next time it shows (see closeCat)
+    $('#svc-grid').classList.remove('is-quiet');
     set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false });
     // the page lines the tab bar up under the header (where it sticks), scrolling while the cards fly
     // (the ghosts measure the tabs first, so the scroll starts after that); a bar already stuck stays where it is
@@ -916,7 +918,7 @@
       : $$('.svc-bar__tab').map((b) => ({ cat: b.dataset.cat, r: b.getBoundingClientRect(), label: b.textContent }));
     const active = state.cat;
     const barBottom = $('.svc-bar').getBoundingClientRect().bottom;
-    if (from) $('#svc-grid').classList.add('is-landing');
+    if (from) $('#svc-grid').classList.add('is-landing', 'is-quiet');
     set({ cat: null, barOpen: false });
     // the open panel was much taller than the grid: scrolled down into it, the page would now show what lies below
     // Services for a moment and then travel up. Before the first frame, the grid is put right under where the bar was
