@@ -477,6 +477,13 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   answers are wishes («Хочу белее»). The helper's «Вероятно понадобится» services are not added on purpose — a guess
   the visitor didn't choose. When delivery is added, the reasons go into the request.
 - «+ Добавить ещё услугу» (step 3, booking form, corner list) closes the open section and scrolls to all the sections.
+- «Услуги врача» on each doctor's card (2026-11-22, user: add a service of exactly this doctor, e.g. in the booking
+  form): it opens that doctor's services under the list (`pickerHTML`, `state.addFor`): the sections of their
+  speciality grouped by section, plus their own consultation (`docServices`). A chip adds the service with that doctor
+  (`doc` on the cart item, which `itemDoc` honours before the section's pick, so e.g. «Виниры» can go to the
+  orthopedist while the rest of «Эстетика» stays with the therapist) or takes out a booked one. In all three lists
+  (Services' step 3, the booking form, the corner). A group re-rendered for its open/closed button doesn't fade in
+  again: `.is-new` is only for a doctor not in the list before (`data-id`).
 
 **The corner button** (`#bk`, user's request, replacing the cart pill removed on 2026-11-19): «Ваша запись» with a
 Yellow count (services, plus 1 per doctor without services), bottom right, once anything is chosen. It opens a list

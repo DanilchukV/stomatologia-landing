@@ -735,6 +735,19 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .add-svc { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px 0 14px; border: 1.5px dashed var(--line); border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color .15s, color .15s; }
 @media (hover: hover) { .add-svc:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 .add-svc .ic { display: block; }
+/* «Услуги врача» on a doctor's card, and the list it opens under the cards (main.js pickerHTML) */
+.visit__more { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 9px; border: 1.5px dashed var(--ink); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; }
+.visit__more .ic { display: block; }
+.visit__more[aria-expanded="true"] { border-style: solid; background: var(--ink); color: var(--white); }
+@media (hover: hover) { .visit__more[aria-expanded="false"]:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
+.vpick { display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 20px; background: var(--white); animation: fadeIn .25s ease both; }
+.vpick__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.vpick__t { font-family: var(--f-head); font-weight: 700; font-size: 17px; }
+.vpick__hint { font-size: 13px; color: var(--muted); }
+.vpick__grp { display: flex; flex-direction: column; gap: 8px; }
+.vpick__chips { display: flex; flex-wrap: wrap; gap: 6px; }
+/* 18 px corners: a pill on one line, and a two-line name (phones) doesn't turn it into an oval */
+.vpick__chip { min-height: 36px; padding: 4px 14px; border-radius: 18px; font-size: 14px; line-height: 1.3; text-align: left; }
 
 /* ===== Helper (dialog: tooth → symptom → which doctor, one step at a time) ===== */
 /* one size for every step */

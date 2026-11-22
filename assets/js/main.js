@@ -51,7 +51,7 @@
   /* ---------- state ---------- */
   const state = {
     hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
-    cat: null, svcOpen: null, svcMore: null, svcAll: false, docsAll: false, barOpen: false,
+    cat: null, svcOpen: null, svcMore: null, addFor: null, svcAll: false, docsAll: false, barOpen: false,
     // cart: ticked services {n, cat (name), cid}; picks: the doctor chosen per section;
     // extra: doctors booked without services {id, cid} (cid: the section's step 2 it came from, else null)
     // notes: what the helper was told {id (doctor), text}, shown in that doctor's group
@@ -101,6 +101,8 @@
   // a ticked service goes to its section's doctor; diagnostics without a consultation to nobody, and each
   // consultation to a doctor of its speciality (the section's chosen one if they are)
   function itemDoc(x) {
+    // a service added from a doctor's own list in the booking stays with that doctor
+    if (x.doc && docById(x.doc)) return x.doc;
     if (x.cid === 'diag') {
       if (!isConsult(x.n)) return null;
       const role = CONSULT_ROLE[x.n];
@@ -129,7 +131,7 @@
   const dropDoc = (id) => set({ cart: state.cart.filter((x) => (itemDoc(x) || '') !== id), extra: state.extra.filter((e) => e.id !== id), notes: state.notes.filter((x) => x.id !== id) });
   const notesOf = (id) => state.notes.filter((x) => x.id === id);
   // structure key for mount(): changes whenever the list would
-  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|');
+  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '');
   // the same list in step 3 of Services, the booking form and the corner button
   function visitsHTML() {
     return `<ul class="visits">${visits().map((v) => {
@@ -140,8 +142,27 @@
       const svcs = v.items.length
         ? `<ul class="visit__svcs">${v.items.map((x) => `<li class="visit__svc"><span class="visit__svc-n">${esc(glue(x.n))}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>`
         : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
-      return `<li class="visit"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}</li>`;
-    }).join('')}</ul>`;
+      const open = state.addFor === v.id;
+      const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${open ? icon('i-chev-up', 14, 2.6) : PLUS}${open ? 'Свернуть' : 'Услуги врача'}</button>` : '';
+      return `<li class="visit" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>`;
+    }).join('')}</ul>${pickerHTML()}`;
+  }
+  // the services a doctor does: the sections of their speciality, plus their own consultation (diagnostics lists only
+  // «Консультация специалистов», so there each speciality's consultation is offered by its name)
+  function docServices(d) {
+    const groups = D.cats.filter((c) => c.roles.includes(d.role)).map((c) => ({ cat: c, items: c.items.filter((n) => n !== CONSULT) }));
+    const cn = Object.keys(CONSULT_ROLE).find((n) => CONSULT_ROLE[n] === d.role);
+    if (cn && !groups.some((g) => g.items.includes(cn))) groups.unshift({ cat: catById('diag'), items: [cn] });
+    return groups;
+  }
+  // «Услуги врача» on a doctor's card opens that doctor's services under the list: a chip adds one to the booking
+  // with that doctor (`doc` on the cart item), or takes it out if it is booked already
+  function pickerHTML() {
+    const d = state.addFor && visits().some((v) => v.id === state.addFor) ? docById(state.addFor) : null;
+    if (!d) return '';
+    return `<div class="vpick" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div>${
+      docServices(d).map((g) => `<div class="vpick__grp"><span class="caps">${esc(g.cat.name)}</span><div class="vpick__chips">${
+        g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}">${esc(glue(n))}</button>`).join('')}</div></div>`).join('')}</div>`;
   }
   const PLUS = icon('i-plus', 16, 2.4);
 
@@ -151,12 +172,13 @@
     const a = document.activeElement;
     const f = a && el.contains(a) ? a.dataset.focus : null;
     // a booking group that is still the same keeps its node: rebuilt, its photo reloaded and flashed; a new one fades in
+    const oldIds = new Set($$('li.visit', el).map((li) => li.dataset.id));
     const pool = new Map($$('li.visit', el).map((li) => { li.classList.remove('is-new'); return [li.outerHTML, li]; }));
     const tmp = document.createElement('div');
     tmp.innerHTML = build();
     $$('li.visit', tmp).forEach((li) => {
       const old = pool.get(li.outerHTML);
-      if (old) { pool.delete(li.outerHTML); li.replaceWith(old); } else if (el.dataset.key !== undefined) li.classList.add('is-new');
+      if (old) { pool.delete(li.outerHTML); li.replaceWith(old); } else if (el.dataset.key !== undefined && !oldIds.has(li.dataset.id)) li.classList.add('is-new');
     });
     el.replaceChildren(...tmp.childNodes);
     el.dataset.key = key;
@@ -1007,6 +1029,13 @@
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => !(x.n === t.dataset.svc && x.cid === t.dataset.cid)) }),
     'visit-remove': (t) => dropDoc(t.dataset.id),
     'note-remove': (t) => set({ notes: state.notes.filter((x) => !(x.id === t.dataset.id && x.text === t.dataset.text)) }),
+    'visit-add': (t) => set({ addFor: state.addFor === t.dataset.id ? null : t.dataset.id }),
+    'visit-svc': (t) => {
+      const n = t.dataset.svc;
+      if (inCart(n)) { set({ cart: state.cart.filter((x) => x.n !== n) }); return; }
+      const c = catById(t.dataset.cid);
+      set({ cart: state.cart.concat([{ n, cat: c.name, cid: c.id, doc: t.dataset.id }]) });
+    },
     // "Сбросить всё": the picked services and doctors, in Services and the booking form alike (name and phone stay)
     'cart-reset': () => set({ cart: [], extra: [], notes: [], svcOpen: null }),
     'book-pick': (t) => { const id = t.dataset.id; if (inBooking(id)) dropDoc(id); else set({ extra: withDoc(id) }); },
