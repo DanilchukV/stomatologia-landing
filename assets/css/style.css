@@ -1266,17 +1266,18 @@ html:has(.helper[open]) { overflow: hidden; }
   .book__v .visits .vpick-li { grid-column: 1 / -1; order: 1; }
 }
 
-/* the doctors: one row of equal tiles (photo above the name), each one in or out of the booking */
-.book__docs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+/* the doctors' row: a slot per doctor; not chosen — a tile (photo above the name, «+ Выбрать»), chosen — their card
+   (.visit) in the same place, so a chosen doctor isn't shown twice; the slots in a row are one height */
+.visit-slot { display: flex; }
+.visit-slot .book-doc { flex: 1; }
 .book-doc { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 10px 14px; border: 1.5px solid var(--line); border-radius: 20px; background: var(--white); color: var(--ink); font: inherit; text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color .15s, border-color .15s, color .15s; }
 @media (hover: hover) { .book-doc:hover { border-color: var(--accent); } }
-.book-doc[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--white); }
 .book-doc .av { width: 60px; height: 60px; }
-/* a chosen tile without a photo: its circle stays white, as the photo circles do */
-.book-doc[aria-pressed="true"] > .av { background: var(--white); color: var(--ink); }
 .book-doc__text { display: flex; flex-direction: column; align-items: center; gap: 2px; line-height: 1.25; }
 .book-doc__name { font-weight: 600; font-size: 15px; text-wrap: balance; }
 .book-doc__sub { font-size: 13px; opacity: .8; }
+.book-doc__add { display: inline-flex; align-items: center; gap: 4px; margin-top: auto; padding-top: 4px; font-size: 13px; font-weight: 600; color: var(--accent-ink); }
+.book-doc__add .ic { display: block; }
 
 .book__empty { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
 .book__empty a { color: var(--accent-ink); font-weight: 600; text-underline-offset: 3px; }
@@ -1305,11 +1306,11 @@ html:has(.helper[open]) { overflow: hidden; }
   .book__k { padding: 0; }
   .book__fields { grid-template-columns: minmax(0, 1fr); }
   .book__foot { flex-direction: column-reverse; align-items: stretch; }
-  /* four tiles don't fit: a list of rows instead */
-  .book__docs { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  /* narrow: a tile is a row (photo, name, «+ Выбрать» on the right) */
   .book-doc { flex-direction: row; gap: 12px; padding: 6px 18px 6px 6px; border-radius: 999px; text-align: left; }
   .book-doc .av { width: 44px; height: 44px; }
   .book-doc__text { align-items: flex-start; }
+  .book-doc__add { margin: 0 0 0 auto; padding: 0; }
 }
 @media (max-width: 480px) {
   .book__head { flex-direction: column; }

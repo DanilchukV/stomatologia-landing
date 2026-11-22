@@ -134,28 +134,29 @@
   const notesOf = (id) => state.notes.filter((x) => x.id === id);
   // structure key for mount(): changes whenever the list would
   const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '') + '#' + state.svcsAll.join();
-  // the same list in step 3 of Services, the booking form and the corner button
-  function visitsHTML() {
-    return `<ul class="visits">${visits().map((v) => {
-      const d = v.doc;
-      const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
-        : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
-      const notes = notesOf(v.id).map((x) => `<p class="visit__note"><span class="visit__note-t"><b>Повод:</b> ${esc(glue(x.text))}</span><button type="button" class="visit__x" data-act="note-remove" data-id="${v.id}" data-text="${esc(x.text)}" aria-label="Убрать повод: ${esc(x.text)}">${icon('i-close', 12, 2.8)}</button></p>`).join('');
-      // three services show; the rest behind «Ещё N» (one line each, a long name cut with «…», whole in its title)
-      const all = state.svcsAll.includes(v.id);
-      const shown = all ? v.items : v.items.slice(0, SVCS_SHOWN);
-      const rest = v.items.length - SVCS_SHOWN;
-      const svcs = v.items.length
-        ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>${
-          rest > 0 ? `<button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}">${all ? 'Свернуть' : 'Ещё ' + rest}${icon('i-chev', 14, 2.6)}</button>` : ''}`
-        : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
-      const open = state.addFor === v.id;
-      const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${open ? icon('i-chev-up', 14, 2.6) : PLUS}${open ? 'Свернуть' : 'Услуги врача'}</button>` : '';
-      // the open doctor's services come right after the card (in a one-column list that is under it; the booking
-      // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
-      return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
-        open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
-    }).join('')}</ul>`;
+
+  // the same list in step 3 of Services and the corner button; the booking form puts the same cards in the doctors' slots
+  function visitsHTML() { return `<ul class="visits">${visits().map(visitHTML).join('')}</ul>`; }
+  // one doctor's group (or diagnostics', id ''), and right after it that doctor's services list when open
+  function visitHTML(v) {
+    const d = v.doc;
+    const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
+      : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
+    const notes = notesOf(v.id).map((x) => `<p class="visit__note"><span class="visit__note-t"><b>Повод:</b> ${esc(glue(x.text))}</span><button type="button" class="visit__x" data-act="note-remove" data-id="${v.id}" data-text="${esc(x.text)}" aria-label="Убрать повод: ${esc(x.text)}">${icon('i-close', 12, 2.8)}</button></p>`).join('');
+    // three services show; the rest behind «Ещё N» (one line each, a long name cut with «…», whole in its title)
+    const all = state.svcsAll.includes(v.id);
+    const shown = all ? v.items : v.items.slice(0, SVCS_SHOWN);
+    const rest = v.items.length - SVCS_SHOWN;
+    const svcs = v.items.length
+      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>${
+        rest > 0 ? `<button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}">${all ? 'Свернуть' : 'Ещё ' + rest}${icon('i-chev', 14, 2.6)}</button>` : ''}`
+      : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
+    const open = state.addFor === v.id;
+    const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${open ? icon('i-chev-up', 14, 2.6) : PLUS}${open ? 'Свернуть' : 'Услуги врача'}</button>` : '';
+    // the open doctor's services come right after the card (in a one-column list that is under it; the booking
+    // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
+    return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
+      open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
   }
   const SVCS_SHOWN = 3;
   // the caret on top of an open doctor's services points at that doctor's card
@@ -751,17 +752,19 @@
   });
 
   function renderBooking() {
-    // the doctors: each tile adds that doctor to the booking or takes them out (with their services)
-    const docsBox = $('#book-docs');
-    mount(docsBox, 'docs', () => D.doctors.filter((d) => BOOKABLE.includes(d.role))
-      .map((d) => `<button type="button" class="book-doc" aria-pressed="false" data-act="book-pick" data-id="${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(docTitle(d)))}</span><span class="book-doc__sub">${esc(d.spec)}</span></span></button>`).join(''));
-    $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', inBooking(b.dataset.id)));
-    // the whole booking by doctor, as in Services' step 3
+    // one row, a slot per doctor in the team's order: a tile to choose them, which becomes their card (services,
+    // «Услуги врача», ✕) in the same place once chosen, so a chosen doctor isn't shown twice; diagnostics without a
+    // doctor follows as a card of its own
     const svcsBox = $('#book-svcs');
     const h0 = svcsBox.getBoundingClientRect().height;
-    const rebuilt = mount(svcsBox, visitsKey(), () => (bookEmpty()
-      ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
-      : visitsHTML() + `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`));
+    const vs = visits();
+    const slots = D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
+      const v = vs.find((x) => x.id === d.id);
+      return v ? visitHTML(v) : `<li class="visit-slot"><button type="button" class="book-doc" data-act="book-pick" data-id="${d.id}" data-focus="slot:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(docTitle(d)))}</span><span class="book-doc__sub">${esc(d.spec)}</span></span><span class="book-doc__add">${PLUS}Выбрать</span></button></li>`;
+    }).join('') + vs.filter((v) => !v.doc || !BOOKABLE.includes(v.doc.role)).map(visitHTML).join('');
+    const rebuilt = mount(svcsBox, visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
+      ? `<p class="book__empty">${glue('Можно не выбирать — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
+      : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`}`);
     if (rebuilt) growTo(svcsBox, h0);
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
@@ -1122,7 +1125,7 @@
     actions[act](t, e);
     // a ✕ takes its own button away: the focus goes to the one now in its place, else to «Добавить услугу»
     // (#svc-sum is display: contents, so visibility is checked on the button, not the list)
-    if (list && !t.isConnected && list.isConnected) {
+    if (list && !t.isConnected && list.isConnected && (!document.activeElement || document.activeElement === document.body)) {
       const bkBox = list.closest('.bk');
       const left = btns();
       const next = left[Math.min(at, left.length - 1)] || $('.add-svc', list) || (bkBox && $('.add-svc', bkBox));

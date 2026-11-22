@@ -623,7 +623,8 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 ## Booking
 
 Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
-выбором врача»). Rows: Врач, Врачи и услуги, Контакты (the first two swapped on 2026-11-22, see below) —
+выбором врача»). Rows: Врачи и услуги, Контакты (until 2026-11-22 «Врач» tiles and «Врачи и услуги» cards were two rows,
+see below) —
 a white card, label on the left, «Отправить заявку» at the bottom right:
 - «Врачи и услуги» — the booking by doctor, as in Services' step 3, with «+ Добавить ещё услугу»; none: a line and
   «+ Добавить услугу» (a link until 2026-11-20; the user missed the button there).
@@ -641,10 +642,13 @@ a white card, label on the left, «Отправить заявку» at the bott
   и на пару пикселей вверх»).
   It still flickered: `mount()` rebuilt the whole list, so every doctor's photo reloaded and flashed. Now a group
   whose markup is unchanged keeps its node (matched by `outerHTML`), and a new one fades in (`.visit.is-new`).
-- «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is
-  whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
-  the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on
-  2026-11-20 with the move to several doctors: with none chosen the administrator picks.
+- One row for the doctors (2026-11-22, user: «зачем нам дублировать врачей, только уже выбранных» — the «Врач» tiles
+  and the cards of the chosen doctors showed each chosen doctor twice): a slot per doctor in the team's order; a doctor
+  not chosen is a tile (photo above the name, cropped from the top so the head is whole, «+ Выбрать»; a row on
+  phones), a chosen one is their card in the same place (`visitHTML`: services, «Услуги врача», ✕ back to the tile).
+  Diagnostics without a doctor follows as a card of its own. With nothing chosen a line says the administrator will
+  help. Before: a separate row of four tiles that toggled. «Любой врач» was dropped on 2026-11-20 with the move to
+  several doctors: with none chosen the administrator picks.
 - «Контакты» (name, phone). Services' step 3 and this form are one booking: doctors and services
   share the state, and the name and phone are mirrored as they are typed (`copyContacts`).
 - «Сбросить всё» (top right, and next to «Выбрано N услуг» in the services panel) clears the services and the doctors
