@@ -159,7 +159,9 @@
     const more = d && !o.summary && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
     // the open doctor's services come right after the card (in a one-column list that is under it; the booking
     // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
-    return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
+    // the corner summary drops the doctor's ✕ when they have just one service: it would repeat that service's ✕
+    const drop = !(o.summary && v.items.length === 1 && !notesOf(v.id).length);
+    return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}${drop ? `<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button>` : ''}</div>${notes}${svcs}${more}</li>${
       open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
   }
   const SVCS_SHOWN = 2;
