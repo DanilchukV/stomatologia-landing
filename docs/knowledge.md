@@ -100,9 +100,12 @@ Licences: `assets/fonts/OFL.txt`.
 Added 2026-11-23 (user: «плавно появляющиеся по очереди, как будто с левой стороны… плавное появление разделов, но
 без фанатизма, профессионально»): on opening the page the three hero cards come in one after another
 (`factIn` + `factFade`). First from the left (28 px and a fade, 0.7 s); made slower and softer the same day (user: even
-smoother, one after another from the upper left): each card drifts 26 px left / 18 px up into place over 1.5 s on a
-soft ease-out (`cubic-bezier(.16, 1, .3, 1)`), coming into focus from a 6 px blur, with the fade on its own 1.1 s curve;
-delays 0.25 / 0.5 / 0.75 s. On phones the card row clips (it scrolls sideways), so it has 18 px of top padding, taken
+smoother, one after another from the upper left). A first try (1.5 s on a steep `cubic-bezier(.16, 1, .3, 1)` plus a
+6 px blur coming into focus) "jumped a lot" in a real browser although the measured path was smooth: an animated blur
+is repainted every frame and the text re-rasterises when the layer goes away, and the steep start reads as a lurch. Now:
+transform + opacity only, `will-change` keeps the cards on their own layer, 22 px left / 16 px up over 1.2 s on an
+ease-out without a steep start (`cubic-bezier(.25, .46, .45, .94)`), delays 0.2 / 0.4 / 0.6 s. Don't put a filter
+into this animation again. On phones the card row clips (it scrolls sideways), so it has 18 px of top padding, taken
 back by a negative margin. The sections below the first screen (About, Finder,
 Services, Doctors, Contacts, FAQ, the booking card) come up 18 px with a fade the first time they scroll into view
 (`.reveal` → `.is-in`, an IntersectionObserver in `main.js`, 0.8 s). None with reduced motion; without

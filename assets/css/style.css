@@ -319,14 +319,13 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .fact__body { display: contents; }
 .fact__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: 19px; line-height: 1.3; }
 .fact__text { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 15px; }
-/* opening the page: the three cards drift in one after another from the upper left, coming into focus; a long, very
-   soft ease-out for the move, opacity on its own shorter curve so a card never pops in */
-.hero__facts .fact { animation: factIn 1.5s cubic-bezier(.16, 1, .3, 1) both, factFade 1.1s ease-out both; }
-.hero__facts .fact:nth-child(1) { animation-delay: .25s; }
-.hero__facts .fact:nth-child(2) { animation-delay: .5s; }
-.hero__facts .fact:nth-child(3) { animation-delay: .75s; }
-@keyframes factIn { from { transform: translate(-26px, -18px); filter: blur(6px); } }
-@keyframes factFade { from { opacity: 0; } }
+/* opening the page: the three cards drift in one after another from the upper left. Transform and opacity only, on
+   their own layer (a blur, or a layer dropped at the end, made the text jump), and a curve without a steep start */
+.hero__facts .fact { will-change: transform, opacity; animation: factIn 1.2s cubic-bezier(.25, .46, .45, .94) both; }
+.hero__facts .fact:nth-child(1) { animation-delay: .2s; }
+.hero__facts .fact:nth-child(2) { animation-delay: .4s; }
+.hero__facts .fact:nth-child(3) { animation-delay: .6s; }
+@keyframes factIn { from { opacity: 0; transform: translate(-22px, -16px); } }
 @media (hover: hover) {
   .fact:hover { box-shadow: 0 14px 34px rgba(12, 44, 71, .14); }
 }
