@@ -329,23 +329,18 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   buttons since 2026-11-18 (user's request). Compact since 2026-11-19 (user: all six should fit one screen):
   a 124 px photo strip, 23 px titles, three columns from ~1000 px; the 2-line title reserve that keeps descriptions
   level applies only between 641 and 1279 px, where some titles wrap.
-- Opening a category from the grid (2026-11-19, user's request): every card flies up into its tab of the sticky
-  bar (`flyToTabs` in `main.js`): a fixed ghost per card animates from the card's rect to the tab's rect with the
-  Web Animations API (680 ms, staggered 28 ms), its photo fading out and the tab label fading in; the real tabs stay hidden
-  (`.is-landing`) until their ghost lands. The panel is held invisible meanwhile (a script animation, which beats its
-  CSS entrance) and then fades in where it is, without moving (the user disliked it rising and the page jumping up):
-  the page lines the tab bar up under the header (user: align to the section's navigation), scrolling while the
-  cards fly; the ghosts measure the tabs before the scroll starts and aim at where they will be (`shift`).
-  Skipped with reduced motion and when
-  switching tabs. "Все разделы" scrolls to the Services title (`#services`) with all the
-  cards under it; on desktop since 2026-11-22 (user: «так же красиво сворачивается, как и раскрывается») it is the
-  opening in reverse, `flyToCards`: every tab flies down into its card (the active one fades from Navy to white),
-  the label fading out and the photo strip in, aiming at where the cards will be after the scroll; a card shows as
-  its ghost lands and the ghost fades over it. Phones keep their glide. Closing from deep inside the tall panel first
-  showed what lies below Services and then travelled up (user: «немного скачет»): before the first frame the page now
-  puts the grid right under where the bar was, and only the short way to the title is glided. And the cards
-  flashed once landed: taking `animation: none` off the visible grid restarted its own fade-in, so `.is-quiet` now
-  stays on until the grid hides again (`openCat`). The tab bar is a floating capsule (rounded, 1 px Navy border),
+- The tab bar is always there on desktop and tablets (since 2026-11-22, user: «навигацию оставим в услугах, чтобы
+  оно нормально функционировало»): it has its own box above the grid (`#svc-bar-box`, `barHTML()`), with «Все разделы»
+  chosen while the cards show. Opening a section puts its panel in the grid's place under the bar and lines the bar
+  up under the header (`barShift()`); «Все разделы» puts the cards back under the bar, which stays where it is
+  (scrolled down into the much taller panel, the page is set back before the first frame, so the grid starts right
+  under the stuck bar) and then glides so the bar and the cards stand in the middle of the room under the header
+  (user: «центрировать при выходе во все разделы на навигации»; taller than the room, the bar where it sticks).
+  History: from 2026-11-19 the cards flew up into the tabs of a bar that existed only with a
+  section open, and on 2026-11-22 the tabs flew back into the cards; the user found the way back flickering and
+  jumpy, and chose the permanent bar with no flight (in git history: `flyToTabs`, `flyToCards`). Phones keep the bar
+  only with a section open (their grid is a list of rows already); there «Все разделы» glides back to the Services
+  title. The tab bar is a floating capsule (rounded, 1 px Navy border),
   sticky 10 px under the header (user: the straight full-width bar looked out of place). The tabs grow to fill it
   (`flex: 1 0 auto`), so there is no empty end on the right; where they don't fit they scroll. The scrolling row has
   2 px of room on every side (`padding: 2px; margin: -2px`): on a Windows screen scaled to 125 % the chips' top and

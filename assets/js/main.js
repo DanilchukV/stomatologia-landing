@@ -331,7 +331,7 @@
   }
   function showTab() {
     const el = $('#svc-tabs');
-    const tab = el && $('.svc-bar__tab[aria-pressed="true"]', el);
+    const tab = el && $('[aria-pressed="true"]', el);
     if (tab && !swipeMedia.matches) {
       const t = tab.getBoundingClientRect(), b = el.getBoundingClientRect();
       if (t.left < b.left + 40 || t.right > b.right - 40) el.scrollBy({ left: t.left + t.width / 2 - (b.left + b.width / 2) });
@@ -342,19 +342,26 @@
     const cat = catById(state.cat);
     $('#svc-grid').hidden = !!cat;
     svcOpenBox.hidden = !cat;
-    if (!cat) { mount(svcOpenBox, '', () => ''); tabsCat = null; return; }
+    // the tab bar stays above the grid too, with «Все разделы» chosen; on phones the grid is a list of rows already,
+    // so there the bar comes only with an open section
+    const barBox = $('#svc-bar-box');
+    if (!cat && swipeMedia.matches) { mount(barBox, '', () => ''); tabsCat = null; }
+    else {
+      if (mount(barBox, 'bar', barHTML)) $('#svc-tabs').addEventListener('scroll', tabsFade, { passive: true });
+      $$('.svc-bar__tab', barBox).forEach((b) => b.setAttribute('aria-pressed', !!cat && b.dataset.cat === cat.id));
+      $('.svc-bar__all', barBox).setAttribute('aria-pressed', !cat);
+      if (tabsCat !== state.cat) { tabsCat = state.cat; requestAnimationFrame(showTab); }
+      $('.svc-bar', barBox).classList.toggle('is-open', state.barOpen);
+      $('.svc-bar__toggle', barBox).setAttribute('aria-expanded', state.barOpen);
+      $('.svc-bar__cur', barBox).textContent = cat ? cat.tab : '';
+    }
+    if (!cat) { mount(svcOpenBox, '', () => ''); return; }
     // the shell (and its form) is rebuilt each time the panel opens, so the form is bound again
     if (mount(svcOpenBox, 'open', panelShellHTML)) {
       const svcForm = $('#svc-form');
       window.SiteForm.bind(svcForm, () => markSent('svc-done'));
       copyContacts(form, svcForm);
-      $('#svc-tabs').addEventListener('scroll', tabsFade, { passive: true });
     }
-    $$('.svc-bar__tab', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === cat.id));
-    if (tabsCat !== cat.id) { tabsCat = cat.id; requestAnimationFrame(showTab); }
-    $('.svc-bar', svcOpenBox).classList.toggle('is-open', state.barOpen);
-    $('.svc-bar__toggle', svcOpenBox).setAttribute('aria-expanded', state.barOpen);
-    $('.svc-bar__cur', svcOpenBox).textContent = cat.tab;
     mount($('#svc-head'), cat.id, () => panelHeadHTML(cat));
 
     // services list
@@ -432,13 +439,16 @@
     </label>`;
   }
 
-  function panelShellHTML() {
+  function barHTML() {
     // phones: the tabs hide behind one button that drops them down (style.css)
     return `<div class="svc-bar"><button type="button" class="svc-bar__toggle" data-act="bar-toggle" aria-expanded="false" aria-controls="svc-tabs">${icon('i-grid', 16, 2.4)}<span class="svc-bar__lbl">Разделы</span><span class="svc-bar__cur"></span>${icon('i-chev', 16, 2.4)}</button><div class="tabs-scroll svc-bar__tabs" id="svc-tabs">
         <button type="button" class="chip svc-bar__all" data-act="cat-close">${icon('i-grid', 15, 2.4)}<span class="svc-bar__t">Все разделы</span></button>
         <span class="svc-bar__sep" aria-hidden="true"></span>
         ${D.cats.map((c) => `<button type="button" class="chip svc-bar__tab" aria-pressed="false" data-act="cat-tab" data-cat="${c.id}"><span class="svc-bar__ph" aria-hidden="true"><img src="assets/img/services/${c.id}-800.webp" alt="" loading="lazy"></span><span class="svc-bar__t">${esc(c.tab)}</span></button>`).join('')}
-      </div></div>
+      </div></div>`;
+  }
+  function panelShellHTML() {
+    return `
       <div class="svc-panel" id="svc-panel">
         <div class="svc-panel__head" id="svc-head"></div>
         <div class="svc-panel__body">
@@ -800,115 +810,37 @@
     if (top < 0 || top > window.innerHeight) glideTo(window.scrollY + barShift(), 700);
     else if (gap < 0) glideTo(window.scrollY + gap, 550);
   }
+  // the tab bar stays above the section: opening one puts its panel in the grid's place under the bar, and on
+  // desktop the bar is lined up where it sticks under the header (down from the section's top, up from the footer)
   function openCat(id) {
-    if (swipeMedia.matches) {
-      set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false, barOpen: false });
-      revealPanel();
-      $('.svc-panel__name').focus({ preventScroll: true });
-      return;
+    set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false, svcOpen: null, barOpen: false });
+    if (swipeMedia.matches) revealPanel();
+    else {
+      const shift = barShift();
+      if (Math.abs(shift) > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
     }
-    // from the grid on screen: every card flies up into its tab of the sticky bar (not from the footer)
-    const grid = $('#svc-grid').getBoundingClientRect();
-    const seen = grid.bottom > 0 && grid.top < window.innerHeight;
-    const from = !state.cat && seen && !reduceMotion.matches
-      ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
-    // the grid hides in the same frame, so its fade-in may come back for the next time it shows (see closeCat)
-    $('#svc-grid').classList.remove('is-quiet');
-    set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false });
-    // the page lines the tab bar up under the header (where it sticks), scrolling while the cards fly
-    // (the ghosts measure the tabs first, so the scroll starts after that); a bar already stuck stays where it is
-    const shift = barShift();
-    const bar = $('.svc-bar');
-    const end = from ? flyToTabs(from, id, bar.getBoundingClientRect().top - parseFloat(getComputedStyle(bar).top)) : 0;
-    if (Math.abs(shift) > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
     $('.svc-panel__name').focus({ preventScroll: true });
-    if (!from) return;
-    // the panel waits until the cards have landed, then fades in where it is, without moving
-    // (a script animation, so it wins over the panel's own CSS entrance)
-    const REVEAL = 380;
-    const wait = end - 80;
-    $('#svc-panel').animate([{ opacity: 0, transform: 'none' }, { opacity: 0, transform: 'none', offset: wait / (wait + REVEAL) }, { opacity: 1, transform: 'none' }],
-      { duration: wait + REVEAL, easing: 'ease-out' });
   }
-
-  // ghosts from the card rects to the tab rects (where the tabs will be once the page has scrolled by `shift`);
-  // the real tabs stay invisible until their ghost lands
-  function flyToTabs(from, active, shift) {
-    const tabs = $('.svc-bar__tabs');
-    tabs.classList.add('is-landing');
-    const DUR = 680, STEP = 28;
-    from.forEach((f, k) => {
-      const tab = $(`.svc-bar__tab[data-cat="${f.cat}"]`, tabs);
-      if (!tab) return;
-      const r = tab.getBoundingClientRect();
-      const t = { left: r.left, top: r.top - shift, width: r.width, height: r.height };
-      const g = document.createElement('div');
-      g.className = 'svc-fly' + (f.cat === active ? ' is-active' : '');
-      g.innerHTML = `${f.img ? `<img src="${f.img}" alt="">` : ''}<span>${tab.textContent}</span>`;
-      document.body.appendChild(g);
-      const box = (r, radius) => ({ left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: radius });
-      const opt = { duration: DUR, delay: k * STEP, easing: 'cubic-bezier(.4, 0, .2, 1)', fill: 'both' };
-      g.animate([box(f.r, '24px'), box(t, t.height / 2 + 'px')], opt);
-      if (f.img) $('img', g).animate([{ opacity: 1 }, { opacity: 0, offset: .55 }, { opacity: 0 }], opt);
-      $('span', g).animate([{ opacity: 0 }, { opacity: 0, offset: .45 }, { opacity: 1 }], opt)
-        .finished.then(() => { tab.classList.add('is-landed'); g.remove(); });
-    });
-    const end = DUR + (from.length - 1) * STEP;
-    setTimeout(() => { tabs.classList.remove('is-landing'); $$('.is-landed', tabs).forEach((b) => b.classList.remove('is-landed')); }, end + 50);
-    return end;
-  }
-  // «Все разделы» on desktop, the way back: every tab flies down into its card while the page glides to the
-  // section's title (the ghosts aim at where the cards will be after that scroll, `dy`). A card shows as its
-  // ghost lands, and the ghost fades over it, so the photo strip and the text appear without a swap.
-  function flyToCards(from, active, dy) {
-    const grid = $('#svc-grid');
-    const DUR = 680, STEP = 28;
-    from.forEach((f, k) => {
-      const card = $(`.svc-card[data-cat="${f.cat}"]`, grid);
-      if (!card) return;
-      const r = card.getBoundingClientRect();
-      const t = { left: r.left, top: r.top - dy, width: r.width, height: r.height };
-      const img = ($('img', card) || {}).currentSrc;
-      const g = document.createElement('div');
-      g.className = 'svc-fly svc-fly--back' + (f.cat === active ? ' is-active' : '');
-      g.innerHTML = `${img ? `<img src="${img}" alt="">` : ''}<span>${f.label}</span>`;
-      document.body.appendChild(g);
-      const box = (b, radius, bg) => ({ left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px', borderRadius: radius, backgroundColor: bg });
-      const opt = { duration: DUR, delay: k * STEP, easing: 'cubic-bezier(.4, 0, .2, 1)', fill: 'both' };
-      const from0 = f.cat === active ? '#0C2C47' : '#FFFFFF';
-      g.animate([box(f.r, f.r.height / 2 + 'px', from0), box(t, '24px', '#FFFFFF')], opt);
-      $('span', g).animate([{ opacity: 1 }, { opacity: 0, offset: .45 }, { opacity: 0 }], opt);
-      if (img) $('img', g).animate([{ opacity: 0 }, { opacity: 0, offset: .4 }, { opacity: 1 }], opt);
-      g.animate([{ opacity: 1 }, { opacity: 1, offset: .82 }, { opacity: 0 }], opt).finished.then(() => g.remove());
-      setTimeout(() => card.classList.add('is-landed'), k * STEP + DUR * .82);
-    });
-    const end = DUR + (from.length - 1) * STEP;
-    setTimeout(() => { grid.classList.remove('is-landing'); $$('.is-landed', grid).forEach((c) => c.classList.remove('is-landed')); }, end + 50);
-  }
+  // «Все разделы»: on desktop the bar stays where it is and the cards take the panel's place under it; scrolled down
+  // into the (much taller) panel, the page is set back before the first frame, so the grid starts right under the
+  // stuck bar instead of what lies below Services showing for a moment. Phones (no bar over the grid) glide to the title.
   function closeCat() {
-    const sec = $('#services');
+    if (!state.cat) return;
+    set({ cat: null, barOpen: false });
     if (swipeMedia.matches) {
-      set({ cat: null, barOpen: false });
-      glideTo(window.scrollY + sec.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
+      glideTo(window.scrollY + $('#services').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
       return;
     }
-    // the tabs are measured before the bar goes; the cards once the grid is back
-    const from = reduceMotion.matches ? null
-      : $$('.svc-bar__tab').map((b) => ({ cat: b.dataset.cat, r: b.getBoundingClientRect(), label: b.textContent }));
-    const active = state.cat;
-    const barBottom = $('.svc-bar').getBoundingClientRect().bottom;
-    if (from) $('#svc-grid').classList.add('is-landing', 'is-quiet');
-    set({ cat: null, barOpen: false });
-    // the open panel was much taller than the grid: scrolled down into it, the page would now show what lies below
-    // Services for a moment and then travel up. Before the first frame, the grid is put right under where the bar was
-    // (the tabs drop into it from there), and only the short way to the title is glided.
-    const gap = $('#svc-grid').getBoundingClientRect().top - (barBottom + 16);
-    if (gap < 0) window.scrollBy(0, gap);
-    // where a jump to #services stops (its scroll-margin), within what the page can scroll
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const y = Math.max(0, Math.min(max, sec.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(sec).scrollMarginTop) || 0)));
-    if (from) flyToCards(from, active, y - window.scrollY);
-    window.scrollTo({ top: y, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    const shift = barShift();
+    if (shift < -1) window.scrollBy(0, shift);
+    // then the page glides so the bar and the cards stand in the middle of the room under the header (taller than
+    // the room: the bar where it sticks); the grid's height is read without its fade-in's offset
+    const bar = $('.svc-bar').getBoundingClientRect();
+    const under = hdr.getBoundingClientRect().bottom;
+    const room = window.innerHeight - under;
+    const h = bar.height + (parseFloat(getComputedStyle($('.services__in')).rowGap) || 0) + $('#svc-grid').offsetHeight;
+    const want = h < room - 20 ? under + (room - h) / 2 : under + 10;
+    glideTo(window.scrollY + bar.top - want, 600);
   }
   // shows step k of the services panel; scrolls back up if the step bar is above the screen
   function goStep(k) {
@@ -965,9 +897,7 @@
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {
       if (t.dataset.cat === state.cat) return;
-      set({ cat: t.dataset.cat, svcStep: 1, picks: withPick(t.dataset.cat), docsAll: false, svcAll: false, svcOpen: null, barOpen: false });
-      if (swipeMedia.matches) revealPanel(); else scrollToId('svc-panel');
-      $('.svc-panel__name').focus({ preventScroll: true });
+      openCat(t.dataset.cat);
     },
     // back to the section's title with all the cards under it
     'cat-close': () => {

@@ -477,7 +477,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-card__name { min-height: 0; }
 }
 
-.svc-open { display: contents; }
+.svc-open, .svc-bar-box { display: contents; }
 /* a floating capsule, like the header nav; it sticks 10 px under the header */
 .svc-bar { position: sticky; top: calc(var(--hdr-h) + 10px); z-index: 20; overflow: hidden; padding: 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); }
 .svc-bar.is-stuck { box-shadow: 0 6px 24px rgba(12, 44, 71, .10); }
@@ -491,23 +491,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-bar__tab { flex: 1 0 auto; min-height: 40px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
 /* the button and the section photos are for the phone's drop-down list only */
 .svc-bar__toggle, .svc-bar__ph { display: none; }
-/* opening a section from the grid: ghosts of the cards fly into the tabs (main.js flyToTabs); a tab shows when its ghost lands */
-.svc-bar__tabs.is-landing .svc-bar__tab:not(.is-landed) { visibility: hidden; }
 /* tablets: an edge with more tabs behind it fades (main.js tabsFade) */
 .svc-bar__tabs.fade-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
 .svc-bar__tabs.fade-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px); mask-image: linear-gradient(90deg, transparent, #000 56px); }
 .svc-bar__tabs.fade-l.fade-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent); }
-.svc-fly { position: fixed; z-index: 25; overflow: hidden; box-sizing: border-box; border: 1.5px solid var(--line); background: var(--white); color: var(--ink); display: grid; place-items: center; pointer-events: none; }
-.svc-fly.is-active { background: var(--ink); border-color: var(--ink); color: var(--white); }
-.svc-fly img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.svc-fly span { position: relative; font-size: 14px; font-weight: 600; white-space: nowrap; }
-/* «Все разделы»: the way back (main.js flyToCards); the cards stay hidden until their ghost lands, and the ghost's
-   photo is the card's faded strip, so the card shows up under it without a swap */
-/* no entrance replay: the class stays until the grid hides again (main.js openCat), since taking `animation: none` off
-   a visible grid would restart its fade-in and flash the cards that have just landed */
-.svc-grid.is-quiet { animation: none; }
-.svc-grid.is-landing .svc-card:not(.is-landed) { visibility: hidden; }
-.svc-fly--back img { bottom: auto; height: 124px; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0, 0, 0, .6) 74%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 52%, rgba(0, 0, 0, .6) 74%, transparent 100%); }
 
 #svc-panel { scroll-margin-top: calc(var(--hdr-h) + 80px); }
 .svc-panel { background: var(--bg); border: 1px solid var(--line); border-radius: 32px; overflow: hidden; display: flex; flex-direction: column; animation: panelIn .35s var(--ease-out) both; transform-origin: 50% 0; }
