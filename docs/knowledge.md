@@ -575,7 +575,9 @@ a white card, label on the left, «Отправить заявку» at the bott
   four in a row at 1440 under the four doctor tiles, one column on phones.
   When the list is rebuilt at another height (a doctor or a service in or out) it glides from the old height to the
   new one in 420 ms (`growTo` in `main.js`; user: «пусть форма плавно увеличивается снизу»), so the form grows and
-  shrinks smoothly instead of jumping.
+  shrinks smoothly instead of jumping. The list is above the doctor tiles, so it pushed the tile just pressed down
+  (user: «пусть не скачет форма»): while it glides the page scrolls along (`holdStill`), keeping the tiles where they
+  were on screen; only when they are on screen, and a wheel turn or a touch lets go.
 - «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is
   whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
   the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on
