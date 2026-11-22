@@ -71,10 +71,20 @@ window.SiteForm = (function () {
   // fixed in the middle sent the next one to the end). Backspace or Delete on a bracket, space or dash takes the
   // digit next to it instead, or the formatting would put the separator straight back.
   const digitsIn = (s) => s.replace(/\D/g, '').length;
+  // how many digits formatPhone adds (+) or drops (−) in front of the typed ones, mirroring its rules
+  function leadDelta(raw) {
+    const plus = raw.trim().startsWith('+');
+    const d = raw.replace(/\D/g, '');
+    if (!plus && d.startsWith('00')) return -2 + leadDelta('+' + d.slice(2));
+    if (plus || ['8', '0', '3', '37'].includes(d)) return 0;
+    if (d.startsWith('80')) return 1;
+    return d && !d.startsWith('375') && !'375'.startsWith(d) ? 3 : 0;
+  }
   function reformat(input, e, prev) {
     let v = input.value;
     let caret = input.selectionStart;
-    if (caret !== null && digitsIn(v) === digitsIn(prev) && v.length < prev.length) {
+    // (the deleted character is prev[caret]; a «+» is not a separator: it goes alone, and the formatter decides)
+    if (caret !== null && digitsIn(v) === digitsIn(prev) && v.length < prev.length && prev[caret] !== '+') {
       const back = e.inputType === 'deleteContentBackward';
       const at = back ? caret - 1 : caret;
       let k = at;
@@ -83,8 +93,9 @@ window.SiteForm = (function () {
     }
     const before = caret === null ? digitsIn(v) : digitsIn(v.slice(0, caret));
     const out = formatPhone(v);
-    // the formatting may add or drop digits at the start (375 for 80…, 00 for +)
-    let n = Math.max(0, before + digitsIn(out) - digitsIn(v));
+    // the formatting may add or drop digits at the start (375 for 80…, 00 for +); digits cut off at the end (over
+    // 12, or 15 abroad) don't move the caret
+    let n = Math.min(digitsIn(out), Math.max(0, before + leadDelta(v)));
     let pos = 0;
     while (n > 0 && pos < out.length) { if (/\d/.test(out[pos])) n--; pos++; }
     // past the «) » or «-» that follows, where the next digit goes

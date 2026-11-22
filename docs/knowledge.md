@@ -610,6 +610,9 @@ Fixed 2026-11-22 (site review): a lone «3» or «37» typed without "+" stays a
 the next digit, so Backspace no longer gets stuck at «+375 (29)»; the caret keeps its place among the digits after
 the reformat (it jumped to the end), and Backspace/Delete on a bracket, space or dash removes the digit next to it
 (`reformat` in `form.js`, which reads the value before the keystroke from `beforeinput`).
+Code review the same day: the caret moves only for digits the formatter adds or drops in front (`leadDelta`), not for
+digits cut off past 12 (or 15 abroad), so typing «56» in the middle of a full number no longer gives «65»; a «+»
+deleted with Delete goes alone (it isn't a separator, so the digit after it stays).
 After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card,
 the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the corner
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle
