@@ -761,8 +761,13 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__more[aria-expanded="true"] { border-style: solid; background: var(--ink); color: var(--white); }
 @media (hover: hover) { .visit__more[aria-expanded="false"]:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 /* the caret on top points at the doctor's card (main.js placeCarets sets --caret-x) */
-/* a little narrower than the doctor's card (16 px in on each side), so it reads as hanging from it */
-.vpick { position: relative; margin: 6px 16px 0; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 26px; background: var(--white); }
+/* in a one-column list the open doctor's card reaches 16 px further out on each side, so the list reads as hanging
+   from it (Services' step 3, the form on phones; in the form's row of cards the list spans them all) */
+.visits:not(.book__slots) .visit.is-picking { margin: 0 -16px; }
+@media (max-width: 480px) {
+  .book__slots .visit.is-picking { margin: 0 -16px; }
+}
+.vpick { position: relative; margin-top: 6px; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 26px; background: var(--white); }
 .vpick.is-in { animation: fadeIn .25s ease both; }
 .vpick::before { content: ''; position: absolute; top: -9px; left: var(--caret-x, 50%); width: 16px; height: 16px; margin-left: -8px; box-sizing: border-box; background: var(--white); border-left: 1px solid var(--line); border-top: 1px solid var(--line); border-top-left-radius: 4px; transform: rotate(45deg); }.vpick-li { display: block; }
 .vpick__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding-right: 36px; }
