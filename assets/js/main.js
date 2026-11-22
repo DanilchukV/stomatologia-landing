@@ -666,12 +666,26 @@
       .map((d) => `<button type="button" class="book-doc" aria-pressed="false" data-act="book-pick" data-id="${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(docTitle(d)))}</span><span class="book-doc__sub">${esc(d.spec)}</span></span></button>`).join(''));
     $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', inBooking(b.dataset.id)));
     // the whole booking by doctor, as in Services' step 3
-    mount($('#book-svcs'), visitsKey(), () => (bookEmpty()
+    const svcsBox = $('#book-svcs');
+    const h0 = svcsBox.offsetHeight;
+    const rebuilt = mount(svcsBox, visitsKey(), () => (bookEmpty()
       ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : visitsHTML() + `<button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button>`));
+    if (rebuilt) growTo(svcsBox, h0);
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
+  }
+
+  // a list rebuilt at a new height glides from the old one, so the form grows or shrinks smoothly below it
+  // (h0 is the height before the rebuild; a glide under way starts the next one from where it is)
+  function growTo(el, h0) {
+    if (el.glide) { el.glide.cancel(); el.style.overflow = ''; }
+    const h1 = el.offsetHeight;
+    if (!h0 || Math.abs(h1 - h0) < 2 || reduceMotion.matches || !el.offsetParent) return;
+    el.style.overflow = 'hidden';
+    el.glide = el.animate({ height: [h0 + 'px', h1 + 'px'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' });
+    el.glide.finished.then(() => { el.style.overflow = ''; el.glide = null; }, () => {});
   }
 
   /* ---------- the booking in the corner ---------- */

@@ -570,6 +570,9 @@ a white card, label on the left, «Отправить заявку» at the bott
   «+ Добавить услугу» (a link until 2026-11-20; the user missed the button there).
   The doctors stand side by side (2026-11-22, user: «в ряд, чтобы не растягивать форму»): a grid of 200 px+ columns,
   four in a row at 1440 under the four doctor tiles, one column on phones.
+  When the list is rebuilt at another height (a doctor or a service in or out) it glides from the old height to the
+  new one in 420 ms (`growTo` in `main.js`; user: «пусть форма плавно увеличивается снизу»), so the form grows and
+  shrinks smoothly instead of jumping.
 - «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is
   whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
   the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on
