@@ -525,7 +525,7 @@
     check.setAttribute('aria-label', (sel ? 'Убрать из записи: ' : 'Добавить к записи: ') + n);
     const toggle = $('.svc-row__toggle', row);
     toggle.setAttribute('aria-expanded', open);
-    $('.svc-row__label', row).textContent = glue(subSel.length ? n + ' · ' + subSel.map(([l]) => l.toLowerCase()).join(', ') : n);
+    $('.svc-row__label', row).textContent = glue(n);
     row.lastElementChild.classList.toggle('is-open', open);
     $$('.svc-subs__chip', row).forEach((b) => b.setAttribute('aria-pressed', inCart(b.dataset.sub)));
     const moreBtn = $('.more-btn', row);

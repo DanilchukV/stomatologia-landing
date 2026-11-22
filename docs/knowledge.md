@@ -361,7 +361,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
   scrolls back to the step bar only if it is above the screen.
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one
-  (therapist / orthopedist / surgeon / orthodontist), only one at a time.
+  (therapist / orthopedist / surgeon / orthodontist), only one at a time. The row's name stays «Консультация
+  специалистов» (until 2026-11-22 it added « · ортопед»; user: the chosen chip already says it).
 - Expanding rows animate `grid-template-rows: 0fr → 1fr`; the collapsed content also gets
   `visibility: hidden`, so links and buttons inside it are out of the tab order.
 - Photos: `assets/img/services/<category>.webp` (1600 px) and `-800.webp`. Since 2026-11-19 they are the user's
@@ -413,10 +414,10 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   нужен», a dashed card «Диагностика · без записи к врачу» in place of the doctors (not a choice), and a note that a
   doctor is needed only with a consultation.
 - A service is one per booking (user, 2026-11-20): `inCart` goes by the name only, so «Консультация терапевта»
-  ticked in «Лечение зубов» shows ticked in «Диагностика» (as «Консультация специалистов · терапевт») and the other way
+  ticked in «Лечение зубов» shows ticked in «Диагностика» (as «Консультация специалистов» with «Терапевт» chosen) and the other way
   round, unticking it in either takes it out, and «Выбрано N» counts it in both. Before, it could be booked twice.
   Diagnostics' step 2 counts a consultation ticked in treatment too (`catRoles`), or it said «Врач не нужен» next to
-  a row showing «Консультация специалистов · терапевт» (found 2026-11-20).
+  a row showing the therapist consultation ticked (found 2026-11-20).
 - Each consultation goes to a doctor of its speciality (2026-11-22): diagnostics' doctor is the one picked there if
   the speciality matches, else the first of that role (`itemDoc`). Before, with a therapist consultation ticked in
   treatment, an orthopedist one from diagnostics also went to the therapist. Diagnostics' pick follows its
