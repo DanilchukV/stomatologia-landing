@@ -122,7 +122,18 @@ Breakpoints, from wide to narrow:
   outweighed the 29 px logo); header padding 13 px keeps `--hdr-h` at 70.
 
 `--hdr-h` is the header height at each breakpoint (82 / 74 / 70); sticky bars and
-`scroll-margin-top` use it. Scroll-spy marks the nav link of the section crossing 140 px from the top.
+`scroll-margin-top` use it. The desktop nav capsule is 50 px, as the CTA (padding 3 px, line-height 1.5): at 54 px
+it made the header 86, so the services bar stuck 6 px under it instead of 10 (fixed 2026-11-22).
+Laptops 1280–1389 px with a mouse (2026-11-22, site review): the phone is only its icon there and `header.js` takes
+the `tel:` link off, so the icon did nothing; now it is focusable (`tabindex`, set by `header.js` for that range
+only) and pointing at it, clicking or Tab drops a card under it with «Запись на приём» and both numbers (the second
+number, `.hdr__phone-num--2`, shows only there).
+The burger menu at 640–1279 px now has the phone and «Записаться» under the links, as on phones (they were hidden
+there since the export). Opening the menu moves the focus to its first link (the menu comes before the burger in
+the markup, so Tab skipped it); Escape returns the focus to the burger.
+Scroll-spy marks the nav link of the section crossing 140 px from the top; blocks with
+no link of their own light the nearest one (`SPY` in `main.js`, 2026-11-22): the helper's Finder «О клинике», the FAQ
+and the booking form «Контакты».
 A nav jump stops with the section title 28 px under the header (user's request, 2026-11-18): sections have
 `scroll-margin-top: calc(var(--hdr-h) - var(--sec-y) + 28px)`, a negative-ish margin that skips the top padding.
 

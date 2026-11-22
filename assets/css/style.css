@@ -202,7 +202,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .addr__area { font-weight: 600; }
 
 /* the links sit in a soft capsule; the current section is a white pill with orange text, so the nav reads at once */
-.nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; flex: 0 1 auto; margin: 0 auto; padding: 5px; border-radius: 999px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); font-size: 17px; }
+/* padding 3 px and line-height 1.5: the capsule is 50 px, as the CTA, so the header is the 82 px of --hdr-h */
+.nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; flex: 0 1 auto; margin: 0 auto; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); font-size: 17px; line-height: 1.5; }
 .nav__link { flex: none; text-decoration: none; padding: 9px 18px; border-radius: 999px; color: var(--ink-2); font-weight: 600; transition: color .2s, background-color .2s, box-shadow .2s; }
 @media (hover: hover) { .nav__link:hover { color: var(--accent-ink); background: rgba(255, 255, 255, .6); } }
 .nav__link[aria-current] { color: var(--accent-ink); background: var(--white); box-shadow: 0 2px 10px rgba(12, 44, 71, .12); }
@@ -213,11 +214,23 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .hdr__phone-text { display: flex; flex-direction: column; line-height: 1.3; }
 .hdr__phone-num { font-weight: 600; font-size: 17px; }
 .hdr__phone-hours { font-size: 13px; color: var(--muted); }
+/* the second number shows only in the icon's pop-up (1280–1389) */
+.hdr__phone-num--2 { display: none; }
 .hdr__cta { min-height: 50px; padding: 0 22px; font-size: 16px; flex: none; }
 
 /* below ~1390 px the full header no longer fits one row: phone collapses to its icon */
 @media (max-width: 1389px) {
   .hdr__phone-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+}
+/* laptops: pointing at the icon or focusing it (a click, Tab; header.js makes it focusable) drops both numbers
+   down under it; the ::before bridges the gap, so the pointer can move onto the card */
+@media (min-width: 1280px) and (max-width: 1389px) {
+  .hdr__phone { position: relative; cursor: default; }
+  .hdr__phone-num--2 { display: block; }
+  .hdr__phone:hover .hdr__phone-text, .hdr__phone:focus .hdr__phone-text { top: calc(100% + 10px); left: 50%; z-index: 5; width: auto; height: auto; overflow: visible; clip-path: none; gap: 2px; padding: 12px 18px; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: 0 14px 30px rgba(12, 44, 71, .16); white-space: nowrap; animation: dropIn .16s ease both; }
+  .hdr__phone-text::before { content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+  .hdr__phone:focus-visible { outline: none; box-shadow: none; }
+  .hdr__phone:focus-visible .hdr__phone-ic { outline: 3px solid var(--ink); outline-offset: 2px; }
 }
 
 /* burger: nav and contacts move into a drop-down panel */
@@ -241,13 +254,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
      same soft capsule as on desktop, the current one a white pill */
   .hdr__menu { display: none; position: absolute; top: calc(100% + 8px); right: var(--gutter); width: min(420px, calc(100% - 2 * var(--gutter))); box-sizing: border-box; max-height: calc(100vh - var(--hdr-h) - 16px); max-height: calc(100dvh - var(--hdr-h) - 16px); overflow-y: auto; overscroll-behavior: contain; background: var(--white); border: 1px solid var(--line); border-radius: 28px; box-shadow: 0 20px 44px rgba(12, 44, 71, .2); padding: 10px; white-space: normal; }
   .hdr.is-menu .hdr__menu { display: flex; flex-direction: column; gap: 16px; animation: dropIn .18s ease both; }
-  .nav { flex-direction: column; align-items: stretch; gap: 2px; margin: 0; padding: 6px; border-radius: 22px; font-size: 18px; }
+  .nav { flex-direction: column; align-items: stretch; gap: 2px; margin: 0; padding: 6px; border-radius: 22px; font-size: 18px; line-height: 1.55; }
   .nav__link { padding: 13px 18px; }
   .hdr__contact { flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 0 6px 6px; }
   .hdr__phone-text { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
-}
-@media (max-width: 1279px) and (min-width: 640px) {
-  .hdr__contact { order: -1; display: none; }
 }
 @media (max-width: 639px) {
   :root { --hdr-h: 70px; }
