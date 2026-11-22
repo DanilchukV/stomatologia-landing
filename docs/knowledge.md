@@ -489,6 +489,13 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   orthopedist while the rest of «Эстетика» stays with the therapist) or takes out a booked one. In all three lists
   (Services' step 3, the booking form, the corner). A group re-rendered for its open/closed button doesn't fade in
   again: `.is-new` is only for a doctor not in the list before (`data-id`).
+  Several doctors (2026-11-22, user): the groups keep the team's order (the doctor tiles' order, `visits()` sorts
+  by it; before, a doctor jumped to the front when a service was added); a card shows three services and «Ещё N» /
+  «Свернуть» for the rest (`state.svcsAll`), every service name on one line with «…» (whole in its `title`), the
+  picker's chips too; the open doctor's card is outlined and the list of their services carries a caret pointing at it
+  (`placeCarets`). The list is rendered right after that card: in a one-column list it is under it, in the booking
+  form's grid (≥ 481 px) `order` and a full row put it under all the cards, so no card moves; cards keep their own
+  height (`align-items: start`).
 
 **The corner button** (`#bk`, user's request, replacing the cart pill removed on 2026-11-19): «Ваша запись» with a
 Yellow count (services, plus 1 per doctor without services), bottom right, once anything is chosen. It opens a list

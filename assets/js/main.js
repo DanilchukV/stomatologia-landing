@@ -51,7 +51,7 @@
   /* ---------- state ---------- */
   const state = {
     hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
-    cat: null, svcOpen: null, svcMore: null, addFor: null, svcAll: false, docsAll: false, barOpen: false,
+    cat: null, svcOpen: null, svcMore: null, addFor: null, svcsAll: [], svcAll: false, docsAll: false, barOpen: false,
     // cart: ticked services {n, cat (name), cid}; picks: the doctor chosen per section;
     // extra: doctors booked without services {id, cid} (cid: the section's step 2 it came from, else null)
     // notes: what the helper was told {id (doctor), text}, shown in that doctor's group
@@ -111,13 +111,15 @@
     }
     return state.picks[x.cid] || autoDoc(catRoles(catById(x.cid), state.cart));
   }
-  // the booking by doctor: each doctor with their services, doctors without services too; diagnostics last
+  // the booking by doctor: each doctor with their services, doctors without services too, in the team's order (the
+  // order of the doctor tiles), so a card never jumps when a service is added; diagnostics last
   function visits() {
     const map = new Map();
     const at = (id) => { if (!map.has(id)) map.set(id, []); return map.get(id); };
     state.cart.forEach((x) => at(itemDoc(x) || '').push(x));
     state.extra.forEach((e) => at(e.id));
-    return Array.from(map, ([id, items]) => ({ id, doc: id ? docById(id) : null, items })).sort((a, b) => !a.doc - !b.doc);
+    const rank = (id) => (id ? D.doctors.findIndex((d) => d.id === id) : D.doctors.length);
+    return Array.from(map, ([id, items]) => ({ id, doc: id ? docById(id) : null, items })).sort((a, b) => rank(a.id) - rank(b.id));
   }
   const bookEmpty = () => !state.cart.length && !state.extra.length;
   const bookCount = () => visits().reduce((s, v) => s + (v.items.length || 1), 0);
@@ -131,7 +133,7 @@
   const dropDoc = (id) => set({ cart: state.cart.filter((x) => (itemDoc(x) || '') !== id), extra: state.extra.filter((e) => e.id !== id), notes: state.notes.filter((x) => x.id !== id) });
   const notesOf = (id) => state.notes.filter((x) => x.id === id);
   // structure key for mount(): changes whenever the list would
-  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '');
+  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '') + '#' + state.svcsAll.join();
   // the same list in step 3 of Services, the booking form and the corner button
   function visitsHTML() {
     return `<ul class="visits">${visits().map((v) => {
@@ -139,13 +141,32 @@
       const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
         : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
       const notes = notesOf(v.id).map((x) => `<p class="visit__note"><span class="visit__note-t"><b>Повод:</b> ${esc(glue(x.text))}</span><button type="button" class="visit__x" data-act="note-remove" data-id="${v.id}" data-text="${esc(x.text)}" aria-label="Убрать повод: ${esc(x.text)}">${icon('i-close', 12, 2.8)}</button></p>`).join('');
+      // three services show; the rest behind «Ещё N» (one line each, a long name cut with «…», whole in its title)
+      const all = state.svcsAll.includes(v.id);
+      const shown = all ? v.items : v.items.slice(0, SVCS_SHOWN);
+      const rest = v.items.length - SVCS_SHOWN;
       const svcs = v.items.length
-        ? `<ul class="visit__svcs">${v.items.map((x) => `<li class="visit__svc"><span class="visit__svc-n">${esc(glue(x.n))}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>`
+        ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}</ul>${
+          rest > 0 ? `<button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}">${all ? 'Свернуть' : 'Ещё ' + rest}${icon('i-chev', 14, 2.6)}</button>` : ''}`
         : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
       const open = state.addFor === v.id;
       const more = d && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${open ? icon('i-chev-up', 14, 2.6) : PLUS}${open ? 'Свернуть' : 'Услуги врача'}</button>` : '';
-      return `<li class="visit" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>`;
-    }).join('')}</ul>${pickerHTML()}`;
+      // the open doctor's services come right after the card (in a one-column list that is under it; the booking
+      // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
+      return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
+        open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
+    }).join('')}</ul>`;
+  }
+  const SVCS_SHOWN = 3;
+  // the caret on top of an open doctor's services points at that doctor's card
+  function placeCarets() {
+    $$('.vpick').forEach((p) => {
+      const card = p.closest('.visits').querySelector(`li.visit[data-id="${state.addFor}"]`);
+      const r = p.getBoundingClientRect();
+      if (!card || !r.width) return;
+      const c = card.getBoundingClientRect();
+      p.style.setProperty('--caret-x', Math.max(28, Math.min(r.width - 28, c.left + c.width / 2 - r.left)) + 'px');
+    });
   }
   // the services a doctor does: the sections of their speciality, plus their own consultation (diagnostics lists only
   // «Консультация специалистов», so there each speciality's consultation is offered by its name)
@@ -157,12 +178,10 @@
   }
   // «Услуги врача» on a doctor's card opens that doctor's services under the list: a chip adds one to the booking
   // with that doctor (`doc` on the cart item), or takes it out if it is booked already
-  function pickerHTML() {
-    const d = state.addFor && visits().some((v) => v.id === state.addFor) ? docById(state.addFor) : null;
-    if (!d) return '';
+  function pickerHTML(d) {
     return `<div class="vpick" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div>${
       docServices(d).map((g) => `<div class="vpick__grp"><span class="caps">${esc(g.cat.name)}</span><div class="vpick__chips">${
-        g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}">${esc(glue(n))}</button>`).join('')}</div></div>`).join('')}</div>`;
+        g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}" title="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`).join('')}</div>`;
   }
   const PLUS = icon('i-plus', 16, 2.4);
 
@@ -1030,6 +1049,7 @@
     'visit-remove': (t) => dropDoc(t.dataset.id),
     'note-remove': (t) => set({ notes: state.notes.filter((x) => !(x.id === t.dataset.id && x.text === t.dataset.text)) }),
     'visit-add': (t) => set({ addFor: state.addFor === t.dataset.id ? null : t.dataset.id }),
+    'visit-all': (t) => { const id = t.dataset.id; set({ svcsAll: state.svcsAll.includes(id) ? state.svcsAll.filter((x) => x !== id) : state.svcsAll.concat([id]) }); },
     'visit-svc': (t) => {
       const n = t.dataset.svc;
       if (inCart(n)) { set({ cart: state.cart.filter((x) => x.n !== n) }); return; }
@@ -1212,6 +1232,7 @@
     renderDoctors();
     renderBooking();
     updateFloating();
+    placeCarets();
   }
   buildTeeth();
   render();
@@ -1224,6 +1245,7 @@
   window.addEventListener('resize', docCaret);
   window.addEventListener('resize', tabsFade);
   window.addEventListener('resize', () => { if (helper.open) alignSteps(); });
+  window.addEventListener('resize', placeCarets);
   // the tooth map is lazy inside the closed helper, so it began loading only when the helper opened (an empty box
   // for a second); it starts once the finder is near the screen or its button is pointed at
   const jawImg = $('.jaw__img');
