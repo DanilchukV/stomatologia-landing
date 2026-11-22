@@ -708,6 +708,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 /* ===== Visits (the booking by doctor: Services' step 3, the booking form, the corner list) ===== */
 .visits { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .visit { display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 14px; border-radius: 18px; background: var(--tint); }
+/* a group just added (main.js mount keeps the others as they are) */
+.visit.is-new { animation: inUp .35s var(--ease-out) both; }
 .visit__head { display: flex; align-items: center; gap: 12px; }
 .visit .av { width: 44px; height: 44px; background: var(--white); }
 .visit__who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; line-height: 1.3; }

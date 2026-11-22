@@ -143,7 +143,15 @@
     if (el.dataset.key === key) return false;
     const a = document.activeElement;
     const f = a && el.contains(a) ? a.dataset.focus : null;
-    el.innerHTML = build();
+    // a booking group that is still the same keeps its node: rebuilt, its photo reloaded and flashed; a new one fades in
+    const pool = new Map($$('li.visit', el).map((li) => { li.classList.remove('is-new'); return [li.outerHTML, li]; }));
+    const tmp = document.createElement('div');
+    tmp.innerHTML = build();
+    $$('li.visit', tmp).forEach((li) => {
+      const old = pool.get(li.outerHTML);
+      if (old) { pool.delete(li.outerHTML); li.replaceWith(old); } else if (el.dataset.key !== undefined) li.classList.add('is-new');
+    });
+    el.replaceChildren(...tmp.childNodes);
     el.dataset.key = key;
     if (f) {
       const t = $$('[data-focus]', el).find((x) => x.dataset.focus === f);

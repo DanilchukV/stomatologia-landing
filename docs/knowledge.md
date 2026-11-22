@@ -580,6 +580,8 @@ a white card, label on the left, «Отправить заявку» at the bott
   shrinks smoothly instead of jumping. The list is above the doctor tiles, so it pushed the tile just pressed down
   (user: «пусть не скачет форма»): while it glides the page scrolls along (`holdStill`), keeping the tiles where they
   were on screen; only when they are on screen, and a wheel turn or a touch lets go.
+  It still flickered: `mount()` rebuilt the whole list, so every doctor's photo reloaded and flashed. Now a group
+  whose markup is unchanged keeps its node (matched by `outerHTML`), and a new one fades in (`.visit.is-new`).
 - «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is
   whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
   the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on
