@@ -103,6 +103,7 @@ isn't `complete` the class `.is-loading` (a MutationObserver catches the ones ad
 `load`/`error` (capture listeners); `img.is-loading` has a Mint gradient moving across (`shimmer`), in the picture's
 own box, radius and crop. A class only while loading, so a loaded picture's markup is unchanged and `mount()` still
 matches unchanged booking groups. A tooth spinner is kept in mind for «Отправить заявку» once requests are really sent.
+Tooltips (2026-11-23, user: «тултип в цвет сайта, как в навигаторе»): a name cut with «…» (`[data-tip]`: the booking'sservice chips, the doctor's services list) shows whole in `.tip` — the nav capsule's soft Mint, Navy text, a carettowards it — above it (below when there is no room), on mouse hover or keyboard focus, only when it is really cut.It replaced the browser's grey `title` tooltip; touch screens have none (no hover).
 
 ## Touch screens
 
@@ -495,7 +496,7 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   2026-11-23) and a round Navy «+N» with a down arrow, an up arrow folding them again: at the right end of the services,
   in the middle of their height, reaching a little over the chips' ends with a Mint ring (user: «должен находить и быть
   посередине, не сливаться по цвету»; the list keeps 28 px on the right so it never covers a chip's ✕; it was «Ещё N» /
-  «Свернуть» for the rest (`state.svcsAll`), every service name on one line with «…» (whole in its `title`), the
+  «Свернуть» for the rest (`state.svcsAll`), every service name on one line with «…» (whole in a tooltip, `data-tip`), the
   picker's chips too; the open doctor's card is outlined and the list of their services carries a caret pointing at it
   and closes with its own ✕, concentric with its 26 px corner («Услуги врача» stays dark while it is open; until
   2026-11-23 it turned into «Свернуть»)

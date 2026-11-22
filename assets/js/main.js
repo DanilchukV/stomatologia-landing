@@ -145,13 +145,13 @@
       : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
     const notes = notesOf(v.id).map((x) => `<p class="visit__note"><span class="visit__note-t"><b>Повод:</b> ${esc(glue(x.text))}</span><button type="button" class="visit__x" data-act="note-remove" data-id="${v.id}" data-text="${esc(x.text)}" aria-label="Убрать повод: ${esc(x.text)}">${icon('i-close', 12, 2.8)}</button></p>`).join('');
     // two services show; the rest behind a round «+N» with a down arrow at the end of the row (an up arrow folds them
-    // again); one line each, a long name cut with «…», whole in its title
+    // again); one line each, a long name cut with «…», whole in its tooltip
     const all = state.svcsAll.includes(v.id);
     const shown = all ? v.items : v.items.slice(0, SVCS_SHOWN);
     const rest = v.items.length - SVCS_SHOWN;
     const fold = rest > 0 ? `<li class="visit__fold"><button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}" aria-label="${all ? 'Свернуть услуги' : 'Показать ещё ' + rest}">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</button></li>` : '';
     const svcs = v.items.length
-      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" title="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
+      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" data-tip="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
       : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
     const open = !summary && state.addFor === v.id;
     // the list it opens closes with its own ✕ (pickerHTML); the button stays dark while it is open
@@ -188,7 +188,7 @@
     // it fades in when it opens, not again each time a chip is pressed (the list is rebuilt then)
     return `<div class="vpick${pickerFresh ? ' is-in' : ''}" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div><button type="button" class="vpick__x" data-act="visit-add" data-id="${d.id}" data-focus="va:${d.id}" aria-label="Закрыть услуги врача">${icon('i-close', 14, 2.6)}</button>${
       docServices(d).map((g) => `<div class="vpick__grp"><span class="caps">${esc(g.cat.name)}</span><div class="vpick__chips">${
-        g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}" title="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`).join('')}</div>`;
+        g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}" data-tip="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`).join('')}</div>`;
   }
   const PLUS = icon('i-plus', 16, 2.4);
 
@@ -1225,6 +1225,44 @@
     cookie.classList.replace('is-in', 'is-out');
     setTimeout(() => { cookie.hidden = true; liftToTop(); }, 280);
   }
+
+  /* ---------- tooltips ---------- */
+  // a name cut with «…» ([data-tip]) shows whole in a tooltip in the site's colours (style.css .tip), above it (below
+  // when there is no room), while the mouse is over it or it has the keyboard focus; only when it is really cut, and
+  // not on touch screens (no hover there)
+  const tip = document.createElement('div');
+  tip.className = 'tip';
+  tip.setAttribute('role', 'tooltip');
+  tip.hidden = true;
+  document.body.appendChild(tip);
+  let tipFor = null;
+  function showTip(el) {
+    const box = $('.visit__svc-n', el) || el;
+    if (box.scrollWidth <= box.clientWidth + 1) { hideTip(); return; }
+    tipFor = el;
+    tip.textContent = el.dataset.tip;
+    tip.hidden = false;
+    const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
+    const below = r.top - t.height - 10 < 8;
+    tip.classList.toggle('is-below', below);
+    const left = Math.max(8, Math.min(window.innerWidth - t.width - 8, r.left + r.width / 2 - t.width / 2));
+    tip.style.left = left + 'px';
+    tip.style.top = (below ? r.bottom + 10 : r.top - t.height - 10) + 'px';
+    tip.style.setProperty('--tip-x', (r.left + r.width / 2 - left) + 'px');
+  }
+  function hideTip() { tipFor = null; tip.hidden = true; }
+  document.addEventListener('pointerover', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const el = e.target.closest('[data-tip]');
+    if (el !== tipFor) { if (el) showTip(el); else hideTip(); }
+  });
+  document.addEventListener('focusin', (e) => {
+    const el = e.target.closest('[data-tip]');
+    if (el && e.target.matches(':focus-visible')) showTip(el); else if (tipFor) hideTip();
+  });
+  document.addEventListener('focusout', hideTip);
+  window.addEventListener('scroll', hideTip, { passive: true });
+  document.addEventListener('click', hideTip, true);
 
   /* ---------- pictures on a slow connection ---------- */
   // a picture not loaded yet shimmers in its place (style.css img.is-loading); pictures the scripts add later are
