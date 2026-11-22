@@ -99,6 +99,10 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
 }
 
 /* ===== Shared ===== */
+/* slow connections: a picture still on its way shows a soft shimmer in the site's Mint where it will be (main.js
+   marks it .is-loading until it arrives); its own box, radius and crop give the placeholder its shape */
+img.is-loading { background: linear-gradient(100deg, #E3EDEB 30%, #F5F9F8 50%, #E3EDEB 70%); background-size: 300% 100%; animation: shimmer 1.4s ease-in-out infinite; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .ic--miter { stroke-linejoin: miter; }

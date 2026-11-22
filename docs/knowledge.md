@@ -95,6 +95,15 @@ subsets (checked: the only arrow is in code comments). Nunito is lighter than Ma
 heading-font rules that were 600 are 700. For a softer look everywhere, set `--f-body` to Nunito too.
 Licences: `assets/fonts/OFL.txt`.
 
+## Slow connections
+
+A picture still on its way shimmers in its place (2026-11-22, user asked for a skeleton or a tooth spinner; the
+skeleton, since the text and buttons are there at once and only pictures lag): `main.js` gives every `<img>` that
+isn't `complete` the class `.is-loading` (a MutationObserver catches the ones added later) and takes it off on
+`load`/`error` (capture listeners); `img.is-loading` has a Mint gradient moving across (`shimmer`), in the picture's
+own box, radius and crop. A class only while loading, so a loaded picture's markup is unchanged and `mount()` still
+matches unchanged booking groups. A tooth spinner is kept in mind for «Отправить заявку» once requests are really sent.
+
 ## Touch screens
 
 Phones have no hover — only taps, long presses and swipes (user, 2026-11-20). Every `:hover` rule sits in

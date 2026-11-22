@@ -1162,6 +1162,20 @@
     setTimeout(() => { cookie.hidden = true; liftToTop(); }, 280);
   }
 
+  /* ---------- pictures on a slow connection ---------- */
+  // a picture not loaded yet shimmers in its place (style.css img.is-loading); pictures the scripts add later are
+  // caught by the observer. A class, not an attribute, and only while loading: a loaded picture has no trace of it,
+  // so mount() still finds a rebuilt booking group identical to the old one.
+  const watchImg = (img) => { if (!img.complete) img.classList.add('is-loading'); };
+  const imgDone = (e) => { if (e.target.tagName === 'IMG') e.target.classList.remove('is-loading'); };
+  document.addEventListener('load', imgDone, true);
+  document.addEventListener('error', imgDone, true);
+  $$('img').forEach(watchImg);
+  new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => {
+    if (n.nodeType !== 1) return;
+    if (n.tagName === 'IMG') watchImg(n); else $$('img', n).forEach(watchImg);
+  }))).observe(document.body, { childList: true, subtree: true });
+
   /* ---------- start ---------- */
   function render() {
     renderPicker();
