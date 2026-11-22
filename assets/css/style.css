@@ -1375,3 +1375,18 @@ html:has(.helper[open]) { overflow: hidden; }
   .cookie__ok { min-height: 40px; padding: 0 16px; font-size: 14px; }
 }
 
+
+/* ===== Rotate notice (phones held sideways) ===== */
+/* the site is portrait only on phones (user, 2026-11-22): a web page can't lock the orientation, so a phone on its
+   side (coarse pointer, a short landscape screen; tablets are taller) gets this cover until it is turned back */
+.rotate { display: none; }
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .rotate { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; background: var(--white); color: var(--ink); text-align: center; }
+  .rotate__ic { color: var(--accent-ink); margin-bottom: 8px; animation: rotateHint 2.4s var(--ease-out) infinite; }
+  .rotate__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: 22px; }
+  .rotate__text { margin: 0; font-size: 15px; color: var(--muted); }
+  html { overflow: hidden; }
+  /* the helper dialog sits in the top layer, above any z-index */
+  .helper[open] { display: none; }
+}
+@keyframes rotateHint { 0%, 30% { transform: rotate(-90deg); } 60%, 100% { transform: rotate(0deg); } }

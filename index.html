@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/nunito-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/nunito-sans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261122x">
-<script src="assets/js/header.js?v=20261122x" defer></script>
-<script src="assets/js/data.js?v=20261122x" defer></script>
-<script src="assets/js/form.js?v=20261122x" defer></script>
-<script src="assets/js/main.js?v=20261122x" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261122y">
+<script src="assets/js/header.js?v=20261122y" defer></script>
+<script src="assets/js/data.js?v=20261122y" defer></script>
+<script src="assets/js/form.js?v=20261122y" defer></script>
+<script src="assets/js/main.js?v=20261122y" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Перейти к содержимому</a>
@@ -516,6 +516,13 @@
 
 <!-- Floating: back to top -->
 <button type="button" class="to-top" id="to-top" data-act="top" aria-label="Наверх" hidden><svg class="ic" width="20" height="20" stroke-width="2.4" aria-hidden="true"><use href="#i-up"/></svg></button>
+
+<!-- Phones held sideways: the site is portrait only, this covers it until the phone is turned back -->
+<div class="rotate" aria-hidden="true">
+  <svg class="rotate__ic" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
+  <p class="rotate__title">Поверните телефон</p>
+  <p class="rotate__text">Сайт открывается в&nbsp;вертикальном положении</p>
+</div>
 
 <!-- Floating: cookie notice -->
 <div class="cookie" id="cookie" role="region" aria-label="Файлы cookie" hidden>
