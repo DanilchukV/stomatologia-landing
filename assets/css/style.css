@@ -812,7 +812,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .helper__back, .helper__next, .helper__book { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: 16px; }
 .helper__back { padding-left: 18px; }
 .helper__nav .ic { display: block; }
-.helper__next:disabled, .helper__book:disabled { opacity: .35; cursor: default; box-shadow: none; filter: none; }
+/* waiting for a choice: the soft Mint with muted Navy text, not a faded Navy (it looked washed out) */
+.helper__next:disabled, .helper__book:disabled { background: var(--tint); color: rgba(12, 44, 71, .45); cursor: default; box-shadow: none; filter: none; }
 
 .jaw { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 /* the whole step fits the dialog's height: the picture is 3:2 */

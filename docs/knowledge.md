@@ -269,7 +269,8 @@ outside the dialog's rounded corners:
   «Записаться» on step 3). Only the body scrolls, so the scrollbar sits between the head and the bar, clear of the
   corners. Every step has the same size (user's request, after a version whose height followed the step):
   780 px or the screen. Step 3 is one column (doctor, then direction and services), so it fills that height.
-- A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
+- A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then (since 2026-11-22
+  shown as the soft Mint with muted Navy text: the faded Navy, opacity .35, looked washed out to the user); done steps
   in the left column only show progress — moving is by Назад / Далее alone (user's request). On desktop (≥ 900) the
   three steps spread down the column (2026-11-22, user: the lower half stood empty; «ничего не скакало»; «выровняй по
   окошку справа»): `alignSteps()` measures the right pane on opening and on resize (not per step, or they would move
