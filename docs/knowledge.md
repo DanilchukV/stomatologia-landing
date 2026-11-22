@@ -649,7 +649,10 @@ a white card, label on the left, «Отправить заявку» at the bott
   opens or closes (user: «обрезается при добавлении услуг»: a service ticked in that list grows its card, and the glide
   clipped the list below for a moment), clipped only at the growing bottom edge (`clip-path`, not `overflow: hidden`,
   which cut outlines and focus rings at the sides); the services list fades in only as it opens (`pickerFresh`), not on
-  every chip. The list used to be above the doctor tiles, so it pushed the tile just pressed
+  every chip. A service ticked in an open list grows its doctor's card (the first two; more go into «+N»): then the
+  form glides without clipping and the list slides down along with it (`translateY` from where it was), so nothing
+  jumps (user, 2026-11-23: «при выборе услуг у врача первых двух скачет форма»). The list used to be above the doctor
+  tiles, so it pushed the tile just pressed
   down (user: «пусть не скачет форма»); making the page scroll along kept the tile still but moved everything above
   it («скачет вверх и вниз»). Since 2026-11-22 the tiles come first and the list under them, so a tile stays put, the
   page doesn't scroll and the form grows downwards. On phones «Сбросить всё» moved from under the title (appearing with

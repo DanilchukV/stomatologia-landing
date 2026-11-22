@@ -764,6 +764,8 @@
     // doctor follows as a card of its own
     const svcsBox = $('#book-svcs');
     const h0 = svcsBox.getBoundingClientRect().height;
+    const pk0 = $('.vpick', svcsBox);
+    const pickTop = pk0 ? pk0.getBoundingClientRect().top : null;
     const vs = visits();
     const slots = D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
       const v = vs.find((x) => x.id === d.id);
@@ -772,10 +774,16 @@
     const rebuilt = mount(svcsBox, visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
       ? `<p class="book__empty">${glue('Можно не выбирать — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`}`);
-    // the glide only when a doctor comes or goes or a doctor's services list opens or closes: a service ticked in that
-    // list only grows its card, and a glide then clipped the list below for a moment
+    // a doctor coming or going, a services list opening or closing: the form glides, clipped at its growing edge.
+    // A service ticked in an open list grows its doctor's card: then the list under the cards slides down with the
+    // glide instead of jumping (clipped, it was cut off for a moment)
     const shape = vs.map((v) => v.id).join() + '#' + (state.addFor || '');
-    if (rebuilt && shape !== svcsBox.dataset.shape) growTo(svcsBox, h0);
+    const pk = $('.vpick', svcsBox);
+    const dy = rebuilt && pk && pickTop !== null && shape === svcsBox.dataset.shape ? pk.getBoundingClientRect().top - pickTop : 0;
+    if (Math.abs(dy) > 1 && !reduceMotion.matches) {
+      growTo(svcsBox, h0, true);
+      pk.animate({ transform: [`translateY(${-dy}px)`, 'none'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' });
+    } else if (rebuilt) growTo(svcsBox, h0);
     svcsBox.dataset.shape = shape;
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
@@ -784,13 +792,15 @@
 
   // a list rebuilt at a new height glides from the old one, so the form grows or shrinks smoothly below it
   // (h0 is the height before the rebuild; a glide under way starts the next one from where it is)
-  function growTo(el, h0) {
+  // slide: the content under the growing part moves along (the services list, translated by the caller), so nothing
+  // sticks out and no clipping is needed
+  function growTo(el, h0, slide) {
     if (el.glide) { el.glide.cancel(); el.style.clipPath = el.style.boxSizing = ''; }
     const h1 = el.getBoundingClientRect().height;
     if (!h0 || Math.abs(h1 - h0) < 1 || reduceMotion.matches || !el.offsetParent) return;
     // clipped only at the bottom (the growing edge): overflow: hidden also cut the cards' outlines and focus rings at
     // the sides
-    el.style.clipPath = 'inset(-12px -12px 0 -12px)';
+    if (!slide) el.style.clipPath = 'inset(-12px -12px 0 -12px)';
     el.style.boxSizing = 'border-box';
     // border-box: the heights are measured with the padding, and the keyframes must mean the same (with content-box
     // the 4 px top padding came on top: the rows below jumped 4 px down at the start and 4 px back up at the end)
