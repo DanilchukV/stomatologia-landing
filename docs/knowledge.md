@@ -556,7 +556,8 @@ so it takes no room then). The panel: a big photo on the left, the name, special
 story in two columns — «Образование» (`edu`), «Опыт работы» (`work`), «Повышение квалификации» (`courses`, with
 years), «Дипломы и сертификаты» (`certs`) from `data.js`; «Записаться к врачу», «Свернуть» and a ✕. A caret on top
 points at the chosen card (`docCaret()`, `--caret-x`, kept in place on resize and on swiping the phone row). The
-panel keeps its content while it folds away; another doctor swaps it with a fade. Paging closes it.
+panel keeps its content while it folds away; another doctor swaps it with a fade. Paging closes it, so while it is open the
+page dots fade out (user's request, 2026-11-22), keeping their room so nothing below moves.
 One size for everyone (2026-11-20, user): all the stories are in the panel at once, stacked in one grid cell
 (`.doc-panel__stack`, only `.is-cur` visible), so the panel is as tall as the longest story at the current width and
 doesn't change size between doctors; the buttons sit at the bottom of the card.
