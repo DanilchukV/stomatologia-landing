@@ -352,8 +352,7 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   [the step numbers use the helper's colours since 2026-11-19: current Navy with a Yellow halo, done Navy with a
   tick, ahead an outline; the line between done steps Navy]
   the width) → 3 Проверка (one card with rows, label left / value right: «Врачи и услуги» — the whole booking by
-  doctor, every section included (see "Booking by doctor"), with «+ Добавить ещё услугу» under it; the
-  preferred time — the same `state.time` as the booking form's radios, so choosing in one updates the other) →
+  doctor, every section included (see "Booking by doctor"), with «+ Добавить ещё услугу» under it) →
   contacts: name, phone, optional e-mail; "Отправить заявку" (a `form="svc-form"` button in the nav)
   sends from the panel itself, without going to the booking form (user's request, 2026-11-17). Same
   validation as the booking form (`SiteForm.bind`, which also checks an `email` field if the form has one);
@@ -558,7 +557,7 @@ the card jump at both ends; the closed height is the summary plus the borders (f
 ## Booking
 
 Redesigned 2026-11-19 (user disliked the Navy card with a static «Повод / Врач / Время» summary; chose «светлая с
-выбором врача»). The rows follow the order of Services' step 3 (user): Врачи и услуги, Врач, Удобное время, Контакты —
+выбором врача»). The rows follow the order of Services' step 3 (user): Врачи и услуги, Врач, Контакты —
 a white card, label on the left, «Отправить заявку» at the bottom right:
 - «Врачи и услуги» — the booking by doctor, as in Services' step 3, with «+ Добавить ещё услугу»; none: a line and
   «+ Добавить услугу» (a link until 2026-11-20; the user missed the button there).
@@ -566,8 +565,8 @@ a white card, label on the left, «Отправить заявку» at the bott
   whole; a list of rows on phones; user disliked one chip wrapping alone). Each tile is on while that doctor is in
   the booking; pressing it adds the doctor or takes them out with their services. «Любой врач» was dropped on
   2026-11-20 with the move to several doctors: with none chosen the administrator picks.
-- «Контакты» (name, phone) and «Удобное время». Services' step 3 and this form are one booking: doctors, services
-  and time share the state, and the name and phone are mirrored as they are typed (`copyContacts`).
+- «Контакты» (name, phone). Services' step 3 and this form are one booking: doctors and services
+  share the state, and the name and phone are mirrored as they are typed (`copyContacts`).
 - «Сбросить всё» (top right, and next to «Выбрано N услуг» in the services panel) clears the services and the doctors
   (`cart-reset`; user's choice: name and phone stay); hidden when there is nothing to clear.
 
@@ -592,14 +591,13 @@ button disappears too, and the confirmation (here or in the services panel) is s
 of the screen (`markSent`). Headless Chrome in `tools/shot` neither runs smooth scrolling nor fires
 `requestAnimationFrame` reliably — to check, patch `scrollIntoView` to `behavior: 'instant'` in `-Do`.
 Both confirmations have "Записаться ещё раз" (`book-again`): it resets both forms (`form.reset()`; `SiteForm`
-clears its errors on reset), the services, the time and the doctor, and returns to step 1 of the services
+clears its errors on reset), the services and the doctor, and returns to step 1 of the services
 panel or to the booking form's name field.
 
-**Preferred time** (2026-11-17): radio pills `name="time"` — утром / днём / вечером / любое (default),
-shown in the summary as "Время". No date and no real slots on purpose: the administrator calls back and
-agrees the exact time. Hours are not shown because the clinic's opening hours are still unknown. A real
-calendar with free/blocked slots and a doctors' admin panel was discussed and postponed (it needs a
-backend such as Supabase, logins and handling of patients' personal data).
+**Preferred time** — removed 2026-11-22 (user: «удобное время уберем из заявки», everywhere): until then the booking
+form had radio pills утром / днём / вечером / любое and Services' step 3 the same chips (`state.time`, in git
+history). The administrator agrees the time on the phone call. A real calendar with free/blocked slots and a doctors'
+admin panel was discussed and postponed (it needs a backend such as Supabase, logins and patients' personal data).
 
 **Requests are not delivered anywhere yet** — submit only shows "Заявка отправлена". The delivery
 (e.g. Web3Forms, as in Nitowska, or a Telegram bot) goes into the form's submit handler in `main.js`.

@@ -41,8 +41,6 @@
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;
   const STEPS = ['Услуги', 'Врач', 'Запись'];
-  // the same values as the booking form's time radios in index.html
-  const TIMES = [['утром', 'Утром'], ['днём', 'Днём'], ['вечером', 'Вечером'], ['любое', 'Любое']];
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
   const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
@@ -59,7 +57,7 @@
     // notes: what the helper was told {id (doctor), text}, shown in that doctor's group
     svcStep: 1, picks: {}, extra: [], notes: [], cart: [], bkOpen: false,
     docPage: 0, docOpen: null,
-    time: 'любое', sent: false
+    sent: false
   };
   function set(patch) {
     Object.assign(state, patch);
@@ -390,11 +388,7 @@
     mount($('#svc-sum'), visitsKey(), () => `
       <div class="svc-sum__row"><span class="svc-sum__k">Врачи и&nbsp;услуги</span><div class="svc-sum__v">${empty
         ? `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>` : visitsHTML()}
-        <button type="button" class="add-svc" data-act="add-svc">${PLUS}${empty ? 'Выбрать услугу' : 'Добавить ещё услугу'}</button></div></div>
-      <div class="svc-sum__row"><span class="svc-sum__k">Удобное время</span><div class="svc-sum__v">
-        <div class="svc-time">${TIMES.map(([v, label]) => `<button type="button" class="chip svc-time__chip" aria-pressed="false" data-act="svc-time" data-time="${v}" data-focus="time:${v}">${label}</button>`).join('')}</div>
-        <p class="svc-sum__note">${glue('Точное время администратор согласует по телефону.')}</p></div></div>`);
-    $$('.svc-time__chip', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.time === state.time));
+        <button type="button" class="add-svc" data-act="add-svc">${PLUS}${empty ? 'Выбрать услугу' : 'Добавить ещё услугу'}</button></div></div>`);
 
     // which step is shown, and the buttons under it
     const step = state.svcStep;
@@ -654,7 +648,6 @@
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
   window.SiteForm.bind(form, () => markSent('book-done'));
-  form.addEventListener('change', (e) => { if (e.target.name === 'time') set({ time: e.target.value }); });
   // Services' step 3 and this form are one booking: the name and phone typed in either show in the other
   const CONTACTS = ['name', 'phone'];
   function copyContacts(from, to) {
@@ -677,7 +670,6 @@
       ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : visitsHTML() + `<button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button>`));
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
-    form.elements.time.value = state.time;
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
   }
@@ -951,14 +943,13 @@
     'svc-step': (t) => goStep(+t.dataset.step),
     'svc-prev': () => goStep(state.svcStep - 1),
     'svc-next': () => goStep(state.svcStep + 1),
-    'svc-time': (t) => set({ time: t.dataset.time }),
-    // a new booking: empty forms, no services, default doctor and time; back to where it was clicked
+    // a new booking: empty forms, no services, default doctor; back to where it was clicked
     'book-again': (t) => {
       form.reset();
       const svcForm = $('#svc-form');
       if (svcForm) svcForm.reset();
       const cat = catById(state.cat);
-      set({ sent: false, cart: [], extra: [], notes: [], time: 'любое', svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} });
+      set({ sent: false, cart: [], extra: [], notes: [], svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} });
       if (t.dataset.from === 'svc') { scrollToId('svc-steps'); $('#pick-svc .panel-h').focus({ preventScroll: true }); }
       else form.elements.name.focus();
     },

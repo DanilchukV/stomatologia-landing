@@ -181,7 +181,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .btn:active, .chip:active, .sym-chip:active, .svc-card:active, .doc-card:not(.doc-card--none):active, .book-doc:active,
   .hint__doc.is-pick:active, .bk__pill:active, .add-svc:active, .to-top:active { scale: .97; }
   .svc-row__check:active .box, .visit__x:active, .visit__drop:active, .wiz__btn:active .num { scale: .9; }
-  .when__opt:active span, .faq summary:active .faq__ic, .doc__toggle:active, .nav__link:active, .promise__btn:active { opacity: .7; }
+  .faq summary:active .faq__ic, .doc__toggle:active, .nav__link:active, .promise__btn:active { opacity: .7; }
 }
 
 /* ===== Header ===== */
@@ -621,8 +621,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-sum__k { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .svc-sum__v { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 .svc-sum__empty, .svc-sum__note { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
-.svc-time { display: flex; flex-wrap: wrap; gap: 8px; }
-.svc-time__chip { min-width: 112px; min-height: 44px; padding: 0 18px; font-size: 15px; }
 .svc-sum__rows { display: contents; }
 /* the label lines up with the first doctor's name, not with the bottom of the photo */
 .svc-sum__row:has(.visits) .svc-sum__k { align-self: start; padding-top: 22px; }
@@ -695,8 +693,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .doc-pick__who { flex-basis: 100%; margin-left: 0; text-align: left; }
   .doc-card { gap: 14px; padding-right: 16px; }
   .doc-card__av { width: 72px; }
-  .svc-time { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .svc-time__chip { min-width: 0; }
   /* the count and «Сбросить всё» share the first row, the buttons the second */
   .svc-nav__info { flex: 1 1 calc(100% - 160px); order: -2; }
   .svc-nav__reset { order: -1; }
@@ -1168,7 +1164,7 @@ html:has(.helper[open]) { overflow: hidden; }
 }
 
 /* ===== Booking ===== */
-/* a light card: rows with a label on the left (doctor, services, contacts, time), the button at the bottom */
+/* a light card: rows with a label on the left (services, doctors, contacts), the button at the bottom */
 .book { padding: var(--sec-y) var(--gutter); }
 .book__card { box-sizing: border-box; max-width: 1200px; margin: 0 auto; background: var(--white); border: 1px solid var(--line); border-radius: 32px; padding: clamp(24px, 4vw, 48px); display: flex; flex-direction: column; gap: 20px; }
 .book__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
@@ -1210,13 +1206,6 @@ html:has(.helper[open]) { overflow: hidden; }
 .field__input[aria-invalid="true"] { border-color: #BF512C; box-shadow: 0 0 0 3px rgba(191, 81, 44, .25); }
 .field__err { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #BF512C; font-weight: 500; }
 .field__err .ic { color: #BF512C; }
-.when__opts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.when__opt { position: relative; display: flex; }
-.when__opt input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
-.when__opt span { flex: 1; min-height: 48px; display: flex; align-items: center; justify-content: center; padding: 0 10px; border-radius: 999px; border: 1.5px solid var(--line); color: var(--ink); font-size: 15px; font-weight: 600; cursor: pointer; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
-@media (hover: hover) { .when__opt:hover span { border-color: var(--accent); } }
-.when__opt input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--white); }
-.when__opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .book__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; padding-top: 24px; border-top: 1px solid rgba(12, 44, 71, .15); }
 .book__consent { margin: 0; max-width: 420px; font-size: 13px; color: var(--muted); line-height: 1.5; text-wrap: pretty; }
@@ -1243,7 +1232,6 @@ html:has(.helper[open]) { overflow: hidden; }
 }
 @media (max-width: 480px) {
   .book__head { flex-direction: column; }
-  .when__opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ===== Footer ===== */
