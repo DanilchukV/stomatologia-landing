@@ -153,12 +153,16 @@ Breakpoints, from wide to narrow:
   under the close button.
 
 `--hdr-h` is the header height at each breakpoint (82 / 74 / 70); sticky bars and
-`scroll-margin-top` use it. The desktop nav capsule is 50 px, as the CTA (padding 3 px, line-height 1.5): at 54 px
+`scroll-margin-top` use it. The desktop nav capsule is 50 px, as the CTA (padding 5 px round links with 7 px of vertical
+padding and line-height 1.5; a 3 px padding, used for a day, left the current pill touching the capsule's edge — user:
+«разное расстояние между формой и кнопкой»): at 54 px
 it made the header 86, so the services bar stuck 6 px under it instead of 10 (fixed 2026-11-22).
 Laptops 1280–1389 px with a mouse (2026-11-22, site review): the phone is only its icon there and `header.js` takes
 the `tel:` link off, so the icon did nothing; now it is focusable (`tabindex`, set by `header.js` for that range
 only) and pointing at it, clicking or Tab drops a card under it with «Запись на приём» and both numbers (the second
 number, `.hdr__phone-num--2`, shows only there).
+The phone icon circles (`.hdr__phone-ic`, and `.hdr__call` in the burger header) take the nav capsule's soft Mint
+(Mint mixed 35 % into White) since 2026-11-22, user's request; before, the full Mint.
 The burger menu at 640–1279 px now has the phone and «Записаться» under the links, as on phones (they were hidden
 there since the export). Opening the menu moves the focus to its first link (the menu comes before the burger in
 the markup, so Tab skipped it); Escape returns the focus to the burger.

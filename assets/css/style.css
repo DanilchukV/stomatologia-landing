@@ -213,15 +213,18 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .addr__area { font-weight: 600; }
 
 /* the links sit in a soft capsule; the current section is a white pill with orange text, so the nav reads at once */
-/* padding 3 px and line-height 1.5: the capsule is 50 px, as the CTA, so the header is the 82 px of --hdr-h */
-.nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; flex: 0 1 auto; margin: 0 auto; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); font-size: 17px; line-height: 1.5; }
-.nav__link { flex: none; text-decoration: none; padding: 9px 18px; border-radius: 999px; color: var(--ink-2); font-weight: 600; transition: color .2s, background-color .2s, box-shadow .2s; }
+/* 5 px round the links, so the current one's white pill has the same room on every side (at 3 px it touched the
+   capsule's edge); links 7 px high padding and line-height 1.5 keep the capsule at 50 px, as the CTA, so the header is
+   the 82 px of --hdr-h */
+.nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; flex: 0 1 auto; margin: 0 auto; padding: 5px; border-radius: 999px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); font-size: 17px; line-height: 1.5; }
+.nav__link { flex: none; text-decoration: none; padding: 7px 18px; border-radius: 999px; color: var(--ink-2); font-weight: 600; transition: color .2s, background-color .2s, box-shadow .2s; }
 @media (hover: hover) { .nav__link:hover { color: var(--accent-ink); background: rgba(255, 255, 255, .6); } }
 .nav__link[aria-current] { color: var(--accent-ink); background: var(--white); box-shadow: 0 2px 10px rgba(12, 44, 71, .12); }
 
 .hdr__contact { display: flex; align-items: center; gap: 12px 16px; flex-wrap: nowrap; }
 .hdr__phone { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.hdr__phone-ic { width: 40px; height: 40px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+/* the same soft Mint as the nav capsule */
+.hdr__phone-ic { width: 40px; height: 40px; border-radius: 50%; background: color-mix(in srgb, var(--tint) 35%, var(--white)); color: var(--ink); display: flex; align-items: center; justify-content: center; }
 .hdr__phone-text { display: flex; flex-direction: column; line-height: 1.3; }
 .hdr__phone-num { font-weight: 600; font-size: 17px; }
 .hdr__phone-hours { font-size: 13px; color: var(--muted); }
@@ -250,7 +253,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .hdr__in { flex-wrap: nowrap; gap: 8px; padding: 13px var(--gutter); }
   .hdr__brand { margin-right: auto; min-width: 0; }
   .hdr__call, .hdr__burger { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; }
-  .hdr__call { background: var(--tint); color: var(--ink); }
+  .hdr__call { background: color-mix(in srgb, var(--tint) 35%, var(--white)); color: var(--ink); }
   .hdr__burger { border: none; background: var(--ink); cursor: pointer; padding: 0; }
   .hdr__burger span, .hdr__burger span::before, .hdr__burger span::after { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--white); transition: transform .25s ease, background-color .2s; }
   .hdr__burger span { position: relative; }
