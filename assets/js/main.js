@@ -167,13 +167,14 @@
   const SVCS_SHOWN = 2;
   // true for the render right after a doctor's services list was opened (render() clears it)
   let pickerFresh = false;
-  // the caret on top of an open doctor's services points at that doctor's card
+  // the caret on top of an open doctor's services points at that doctor's «Услуги врача» button (on a wide card its
+  // middle was far from it)
   function placeCarets() {
     $$('.vpick').forEach((p) => {
       const card = p.closest('.visits').querySelector(`li.visit[data-id="${state.addFor}"]`);
       const r = p.getBoundingClientRect();
       if (!card || !r.width) return;
-      const c = card.getBoundingClientRect();
+      const c = ($('.visit__more', card) || card).getBoundingClientRect();
       p.style.setProperty('--caret-x', Math.max(28, Math.min(r.width - 28, c.left + c.width / 2 - r.left)) + 'px');
     });
   }
