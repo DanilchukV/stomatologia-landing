@@ -178,7 +178,8 @@ A nav jump stops with the section title 28 px under the header (user's request, 
 
 Nav capsule (2026-11-19). Earlier the same day the links were chained by "braces" (the user's `Frame 7.svg`: a
 wire with an orthodontic bracket before each label, in git history); the user then dropped them and asked for the
-nav itself to stand out at once. Now the links sit in a soft capsule (Mint mixed 35 % into White) as pills; the
+nav itself to stand out at once. Now the links sit in a soft capsule (Mint, `#E2ECEB`: until 2026-11-22 the old Mint mixed
+35 % into White, the same colour, which the user then chose for all the Mint) as pills; the
 current section is a White pill with a light shadow and Orange text, hover gives a half-white pill and Orange text.
 No movement (the user dislikes hover jumps). In the burger menu it is a plain list again. "Главная" (`#top`, the
 hero) is the first link and is in scroll-spy; it and the logo go to the very top of the page (`#top` has
