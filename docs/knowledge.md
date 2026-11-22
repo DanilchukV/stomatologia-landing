@@ -111,12 +111,9 @@ Touch targets (2026-11-22, site review): small controls answer a bigger finger a
 (`@media (pointer: coarse)`, a transparent `::after` around them or padding offset by a negative margin): the ✕
 buttons of the booking lists, a doctor card's «Подробнее» and «Записаться», the footer links.
 
-**Portrait only on phones** (user, 2026-11-22: «на телефоне альбомной ориентации не будет»). A web page can't lock
-the orientation (only an installed app can), so a phone held sideways — `(orientation: landscape) and (max-height:
-500px) and (pointer: coarse)`; tablets are taller — gets a white cover, «Поверните телефон» with a turning phone icon
-(`.rotate`, the last block in `index.html`), the page under it doesn't scroll and an open helper dialog (top layer)
-is hidden. The site review's landscape items (the helper at 844×390, the header and tabs taking a third of it) are
-moot.
+Landscape on phones: on 2026-11-22 a «Поверните телефон» cover for phones held sideways was added at the user's
+request and removed the same evening («убери функцию ориентации полностью»); it is in git history (`.rotate`).
+
 ## Keyboard and screen readers (2026-11-22, site review)
 
 - The focus ring is Navy, 3 px, 2 px off the element, with a 2 px white ring under it (`box-shadow`) that keeps it
@@ -262,8 +259,12 @@ outside the dialog's rounded corners:
   780 px or the screen. Step 3 is one column (doctor, then direction and services), so it fills that height.
 - A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
   in the left column only show progress — moving is by Назад / Далее alone (user's request). On desktop (≥ 900) the
-  three steps spread down the column (2026-11-22, user: the lower half stood empty; «ничего не скакало»): the first two
-  take equal shares, 96–170 px each, so an answer appearing under a title doesn't move the steps below. Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
+  three steps spread down the column (2026-11-22, user: the lower half stood empty; «ничего не скакало»; «выровняй по
+  окошку справа»): `alignSteps()` measures the right pane on opening and on resize (not per step, or they would move
+  with the head's height) — the first circle's top meets the right box's top (at least 28 px under the title), the last
+  step ends 16 px above the buttons' bar; the first two
+  take equal shares and the last a fixed 84 px, so an answer appearing under a title moves nothing. The digits are
+  centred by their own height (`text-box: trim-both cap alphabetic`), not the font's uneven line box. Choosing a tooth only selects it; «По всей челюсти» and «Не знаю,
   какой зуб» are answers themselves and go straight to step 2. The doctor shows in the left column only once
   step 3 is open, so it isn't given away while choosing the symptom.
 - Step 3: the heading and lead are the symptom's title and text; then «Вам к врачу» — the roles of

@@ -222,6 +222,18 @@
   const recRoles = (sym) => { const r = (D.recommend[sym.id] || {}).roles || []; return r.length ? r : ['ther']; };
   const rolesText = (sym) => { const t = recRoles(sym).map((r) => ROLE_NAME[r]).join(' и '); return t[0].toUpperCase() + t.slice(1); };
 
+  // desktop: the steps on the left line up with the step on the right — the first circle with the top of its box,
+  // the last step with the bottom of the body above the buttons. Measured on opening (step 1) and on resize, not
+  // per step: the head on the right changes height between steps, and the steps must not move (style.css .hsteps)
+  function alignSteps() {
+    const d = helper.getBoundingClientRect();
+    const body = $('#helper-body');
+    // a short laptop: the right box starts high, so the first step keeps at least 28 px under the title
+    const top = Math.max(body.getBoundingClientRect().top + parseFloat(getComputedStyle(body).paddingTop),
+      $('.helper__titles').getBoundingClientRect().bottom + 28) - d.top;
+    helper.style.setProperty('--steps-top', top + 'px');
+    helper.style.setProperty('--steps-bottom', d.bottom - $('.helper__nav').getBoundingClientRect().top + 'px');
+  }
   function hStep(k) {
     if (!canStep(k)) return;
     set({ hStep: k });
@@ -913,6 +925,7 @@
     'finder-open': () => {
       set({ hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null });
       helper.showModal();
+      alignSteps();
       $('#helper-body').scrollTop = 0;
     },
     'helper-close': () => helper.close(),
@@ -1167,6 +1180,7 @@
   // the panel's caret follows its card when the page is resized or the phone row is swiped
   window.addEventListener('resize', docCaret);
   window.addEventListener('resize', tabsFade);
+  window.addEventListener('resize', () => { if (helper.open) alignSteps(); });
   // the tooth map is lazy inside the closed helper, so it began loading only when the helper opened (an empty box
   // for a second); it starts once the finder is near the screen or its button is pointed at
   const jawImg = $('.jaw__img');
