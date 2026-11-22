@@ -579,6 +579,9 @@ a white card, label on the left, «Отправить заявку» at the bott
   it («скачет вверх и вниз»). Since 2026-11-22 the tiles come first and the list under them, so a tile stays put, the
   page doesn't scroll and the form grows downwards. On phones «Сбросить всё» moved from under the title (appearing with
   the first doctor it pushed the form down) to beside «Добавить ещё услугу» (`.book__reset--list`).
+  The glide is border-box (inline `box-sizing` while it runs): measured with the list's 4 px top padding but applied to
+  the content box, it first dropped the rows below by 4 px and at the end pulled them 4 px back up (user: «уезжает вниз
+  и на пару пикселей вверх»).
   It still flickered: `mount()` rebuilt the whole list, so every doctor's photo reloaded and flashed. Now a group
   whose markup is unchanged keeps its node (matched by `outerHTML`), and a new one fades in (`.visit.is-new`).
 - «Врач · можно нескольких» — four equal tiles in one row (photo above the name, cropped from the top so the head is

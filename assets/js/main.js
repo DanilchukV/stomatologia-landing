@@ -685,7 +685,7 @@
     $$('.book-doc', docsBox).forEach((b) => b.setAttribute('aria-pressed', inBooking(b.dataset.id)));
     // the whole booking by doctor, as in Services' step 3
     const svcsBox = $('#book-svcs');
-    const h0 = svcsBox.offsetHeight;
+    const h0 = svcsBox.getBoundingClientRect().height;
     const rebuilt = mount(svcsBox, visitsKey(), () => (bookEmpty()
       ? `<p class="book__empty">${glue('Не выбраны — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : visitsHTML() + `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`));
@@ -698,12 +698,15 @@
   // a list rebuilt at a new height glides from the old one, so the form grows or shrinks smoothly below it
   // (h0 is the height before the rebuild; a glide under way starts the next one from where it is)
   function growTo(el, h0) {
-    if (el.glide) { el.glide.cancel(); el.style.overflow = ''; }
-    const h1 = el.offsetHeight;
-    if (!h0 || Math.abs(h1 - h0) < 2 || reduceMotion.matches || !el.offsetParent) return;
+    if (el.glide) { el.glide.cancel(); el.style.overflow = el.style.boxSizing = ''; }
+    const h1 = el.getBoundingClientRect().height;
+    if (!h0 || Math.abs(h1 - h0) < 1 || reduceMotion.matches || !el.offsetParent) return;
     el.style.overflow = 'hidden';
+    el.style.boxSizing = 'border-box';
+    // border-box: the heights are measured with the padding, and the keyframes must mean the same (with content-box
+    // the 4 px top padding came on top: the rows below jumped 4 px down at the start and 4 px back up at the end)
     el.glide = el.animate({ height: [h0 + 'px', h1 + 'px'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' });
-    el.glide.finished.then(() => { el.style.overflow = ''; el.glide = null; }, () => {});
+    el.glide.finished.then(() => { el.style.overflow = el.style.boxSizing = ''; el.glide = null; }, () => {});
   }
 
   /* ---------- the booking in the corner ---------- */
