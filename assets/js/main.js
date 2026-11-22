@@ -1353,6 +1353,19 @@
   window.addEventListener('scroll', hideTip, { passive: true });
   document.addEventListener('click', hideTip, true);
 
+  /* ---------- sections coming into view ---------- */
+  // each section's content comes up softly the first time it scrolls into view (style.css .reveal); the ones already
+  // on screen do it on opening. Skipped with reduced motion, and without IntersectionObserver nothing is hidden
+  if ('IntersectionObserver' in window && !reduceMotion.matches) {
+    const blocks = $$('.about__in, .finder__card, .services__in, .doctors__in, .clinics__in, .faq-sec__in, .book__card');
+    const seen = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-in');
+      seen.unobserve(e.target);
+    }), { rootMargin: '0px 0px -8% 0px' });
+    blocks.forEach((el) => { el.classList.add('reveal'); seen.observe(el); });
+  }
+
   /* ---------- pictures on a slow connection ---------- */
   // a picture not loaded yet shimmers in its place (style.css img.is-loading); pictures the scripts add later are
   // caught by the observer. A class, not an attribute, and only while loading: a loaded picture has no trace of it,

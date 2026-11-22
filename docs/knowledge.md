@@ -95,6 +95,19 @@ subsets (checked: the only arrow is in code comments). Nunito is lighter than Ma
 heading-font rules that were 600 are 700. For a softer look everywhere, set `--f-body` to Nunito too.
 Licences: `assets/fonts/OFL.txt`.
 
+## Entrance motion
+
+Added 2026-11-23 (user: «плавно появляющиеся по очереди, как будто с левой стороны… плавное появление разделов, но
+без фанатизма, профессионально»): on opening the page the three hero cards come in one after another from the left
+(`factIn`: 28 px and a fade, 0.7 s, 0.2 / 0.32 / 0.44 s delays). The sections below the first screen (About, Finder,
+Services, Doctors, Contacts, FAQ, the booking card) come up 18 px with a fade the first time they scroll into view
+(`.reveal` → `.is-in`, an IntersectionObserver in `main.js`, 0.8 s). None with reduced motion; without
+IntersectionObserver nothing is hidden. `tools/shot.html` forces `.reveal` visible, or shots of lower sections would
+come out blank.
+
+The FAQ invites a click on hover (mouse only): a closed question gets a Yellow outline and a soft shadow, its text
+turns Orange, the circle Yellow and its arrow dips 2 px; nothing moves or changes size (the user dislikes hover jumps).
+
 ## Slow connections
 
 A picture still on its way shimmers in its place (2026-11-22, user asked for a skeleton or a tooth spinner; the

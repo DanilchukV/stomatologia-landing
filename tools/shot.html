@@ -21,7 +21,7 @@ f.onload = function () {
   var w = f.contentWindow, d = w.document;
   // no animations or smooth scrolling; if the page has a scroll-reveal class, force it visible here too
   var st = d.createElement('style');
-  st.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}html{scroll-behavior:auto!important}';
+  st.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}html{scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}';
   d.head.appendChild(st);
   d.fonts.ready.then(function () {
     setTimeout(function () {

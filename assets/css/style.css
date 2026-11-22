@@ -105,6 +105,10 @@ img.is-loading { background: linear-gradient(100deg, #E3EDEB 30%, #F5F9F8 50%, #
 @keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 /* tooltips (main.js, [data-tip]): small, next to the mouse pointer; the nav capsule's soft Mint, Navy text */
 .tip { position: fixed; z-index: 60; max-width: min(260px, calc(100vw - 16px)); box-sizing: border-box; padding: 4px 9px; border-radius: 8px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.35; box-shadow: 0 4px 14px rgba(12, 44, 71, .16); pointer-events: none; animation: fadeIn .12s ease both; }
+/* the sections below the first screen come up softly as they scroll into view, once (main.js adds .reveal to them,
+   then .is-in; none with reduced motion or without IntersectionObserver) */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.reveal.is-in { opacity: 1; transform: none; }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .ic--miter { stroke-linejoin: miter; }
@@ -315,6 +319,12 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .fact__body { display: contents; }
 .fact__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: 19px; line-height: 1.3; }
 .fact__text { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 15px; }
+/* opening the page: the three cards come in one after another from the left */
+.hero__facts .fact { animation: factIn .7s var(--ease-out) both; }
+.hero__facts .fact:nth-child(1) { animation-delay: .2s; }
+.hero__facts .fact:nth-child(2) { animation-delay: .32s; }
+.hero__facts .fact:nth-child(3) { animation-delay: .44s; }
+@keyframes factIn { from { opacity: 0; transform: translateX(-28px); } }
 @media (hover: hover) {
   .fact:hover { box-shadow: 0 14px 34px rgba(12, 44, 71, .14); }
 }
@@ -1251,14 +1261,21 @@ html:has(.helper[open]) { overflow: hidden; }
 .faq-sec__lead { margin: 11px 0 0; color: var(--muted); max-width: 520px; line-height: 1.5; text-wrap: pretty; }
 .faq-cols { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
 .faq-col { flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-.faq { box-sizing: border-box; background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 0 28px; transition: box-shadow .2s; }
+.faq { box-sizing: border-box; background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 0 28px; transition: box-shadow .25s ease, border-color .25s ease; }
 .faq[open]:not(.is-closing) { box-shadow: 0 10px 26px rgba(12, 44, 71, .08); }
 .faq summary { cursor: pointer; list-style: none; padding: 20px 0; min-height: 100px; box-sizing: border-box; display: flex; align-items: center; gap: 18px; }
 .faq summary::-webkit-details-marker { display: none; }
-.faq__q { flex: 1; font-family: var(--f-head); font-weight: 700; font-size: 19px; line-height: 1.35; text-wrap: balance; }
+.faq__q { flex: 1; font-family: var(--f-head); font-weight: 700; font-size: 19px; line-height: 1.35; text-wrap: balance; transition: color .2s; }
 .faq__ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--ink); display: flex; align-items: center; justify-content: center; transition: transform .25s ease, background-color .2s; }
-.faq__ic .ic { display: block; }
-@media (hover: hover) { .faq summary:hover .faq__ic { background: var(--tint); } }
+.faq__ic .ic { display: block; transition: transform .25s var(--ease-out); }
+/* hover (a mouse only): a closed question invites a click — a Yellow outline and a soft shadow, the question in Orange,
+   the circle Yellow with its arrow dipping a little; nothing moves or changes size */
+@media (hover: hover) {
+  .faq:not([open]):hover { border-color: var(--accent); box-shadow: 0 10px 26px rgba(12, 44, 71, .10); }
+  .faq:not([open]) summary:hover .faq__q { color: var(--accent-ink); }
+  .faq:not([open]) summary:hover .faq__ic { background: var(--accent); }
+  .faq:not([open]) summary:hover .faq__ic .ic { transform: translateY(2px); }
+}
 .faq[open]:not(.is-closing) summary .faq__ic { transform: rotate(180deg); background: var(--ink); color: var(--white); }
 .faq__a { margin: 0; padding: 0 24px 26px 0; color: var(--ink-2); font-size: 17px; line-height: 1.65; max-width: 720px; text-wrap: pretty; }
 
