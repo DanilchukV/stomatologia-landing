@@ -108,6 +108,9 @@ service chips, the doctor's services list) shows whole in `.tip` — the nav cap
 (12 px) — next to the mouse pointer and following it (user, the same day: the first version stood over the chip with a
 caret and covered the name), or under the element on keyboard focus; only when the name is really cut. It replaced
 the browser's grey `title` tooltip; touch screens have none (no hover).
+
+## Touch screens
+
 Phones have no hover — only taps, long presses and swipes (user, 2026-11-20). Every `:hover` rule sits in
 `@media (hover: hover)` (on the same line, in its component's place), otherwise a tapped card stays lifted and
 outlined until the next tap. Instead, `@media (hover: none)` at the end of "Shared" gives a press-in on `:active`
