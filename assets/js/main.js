@@ -847,6 +847,53 @@
     setTimeout(() => { tabs.classList.remove('is-landing'); $$('.is-landed', tabs).forEach((b) => b.classList.remove('is-landed')); }, end + 50);
     return end;
   }
+  // «Все разделы» on desktop, the way back: every tab flies down into its card while the page glides to the
+  // section's title (the ghosts aim at where the cards will be after that scroll, `dy`). A card shows as its
+  // ghost lands, and the ghost fades over it, so the photo strip and the text appear without a swap.
+  function flyToCards(from, active, dy) {
+    const grid = $('#svc-grid');
+    const DUR = 680, STEP = 28;
+    from.forEach((f, k) => {
+      const card = $(`.svc-card[data-cat="${f.cat}"]`, grid);
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const t = { left: r.left, top: r.top - dy, width: r.width, height: r.height };
+      const img = ($('img', card) || {}).currentSrc;
+      const g = document.createElement('div');
+      g.className = 'svc-fly svc-fly--back' + (f.cat === active ? ' is-active' : '');
+      g.innerHTML = `${img ? `<img src="${img}" alt="">` : ''}<span>${f.label}</span>`;
+      document.body.appendChild(g);
+      const box = (b, radius, bg) => ({ left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px', borderRadius: radius, backgroundColor: bg });
+      const opt = { duration: DUR, delay: k * STEP, easing: 'cubic-bezier(.4, 0, .2, 1)', fill: 'both' };
+      const from0 = f.cat === active ? '#0C2C47' : '#FFFFFF';
+      g.animate([box(f.r, f.r.height / 2 + 'px', from0), box(t, '24px', '#FFFFFF')], opt);
+      $('span', g).animate([{ opacity: 1 }, { opacity: 0, offset: .45 }, { opacity: 0 }], opt);
+      if (img) $('img', g).animate([{ opacity: 0 }, { opacity: 0, offset: .4 }, { opacity: 1 }], opt);
+      g.animate([{ opacity: 1 }, { opacity: 1, offset: .82 }, { opacity: 0 }], opt).finished.then(() => g.remove());
+      setTimeout(() => card.classList.add('is-landed'), k * STEP + DUR * .82);
+    });
+    const end = DUR + (from.length - 1) * STEP;
+    setTimeout(() => { grid.classList.remove('is-landing'); $$('.is-landed', grid).forEach((c) => c.classList.remove('is-landed')); }, end + 50);
+  }
+  function closeCat() {
+    const sec = $('#services');
+    if (swipeMedia.matches) {
+      set({ cat: null, barOpen: false });
+      glideTo(window.scrollY + sec.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
+      return;
+    }
+    // the tabs are measured before the bar goes; the cards once the grid is back
+    const from = reduceMotion.matches ? null
+      : $$('.svc-bar__tab').map((b) => ({ cat: b.dataset.cat, r: b.getBoundingClientRect(), label: b.textContent }));
+    const active = state.cat;
+    if (from) $('#svc-grid').classList.add('is-landing');
+    set({ cat: null, barOpen: false });
+    // where a jump to #services stops (its scroll-margin), within what the page can scroll
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const y = Math.max(0, Math.min(max, sec.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(sec).scrollMarginTop) || 0)));
+    if (from) flyToCards(from, active, y - window.scrollY);
+    window.scrollTo({ top: y, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+  }
   // shows step k of the services panel; scrolls back up if the step bar is above the screen
   function goStep(k) {
     if (k < 1 || k > STEPS.length) return;
@@ -908,9 +955,7 @@
     },
     // back to the section's title with all the cards under it
     'cat-close': () => {
-      set({ cat: null, barOpen: false });
-      if (swipeMedia.matches) glideTo(window.scrollY + $('#services').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
-      else scrollToId('services');
+      closeCat();
       $('#services-title').focus({ preventScroll: true });
     },
     // phones: the button in the sticky bar drops the sections down
