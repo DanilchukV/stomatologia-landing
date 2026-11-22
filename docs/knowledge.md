@@ -581,6 +581,8 @@ a white card, label on the left, «Отправить заявку» at the bott
 
 The lead is only «Оставьте номер — перезвоним и подберём удобное время.»; the "Или позвоните сами" phones were
 dropped 2026-11-19 (user's request; the numbers are in the header, contacts and FAQ).
+The consent line under the form has no width cap since 2026-11-22 (user: one line), so it is one line from ~1000 px;
+narrower, with the button beside it or on phones, it still wraps.
 
 Validation as in the export: name — letters only, at least 2, rejects
 keyboard mash (4+ consonants, three same letters, no vowel, and since 2026-11-22 a run along a keyboard row —

@@ -1210,7 +1210,7 @@ html:has(.helper[open]) { overflow: hidden; }
 .field__err .ic { color: #BF512C; }
 
 .book__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; padding-top: 24px; border-top: 1px solid rgba(12, 44, 71, .15); }
-.book__consent { margin: 0; max-width: 420px; font-size: 13px; color: var(--muted); line-height: 1.5; text-wrap: pretty; }
+.book__consent { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; text-wrap: pretty; }
 .book__send { flex: none; gap: 10px; min-height: 56px; padding: 0 32px; font-size: 17px; }
 .book__send .ic { display: block; }
 .book__done { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 28px; text-align: center; }
@@ -1225,7 +1225,6 @@ html:has(.helper[open]) { overflow: hidden; }
   .book__k { padding: 0; }
   .book__fields { grid-template-columns: minmax(0, 1fr); }
   .book__foot { flex-direction: column-reverse; align-items: stretch; }
-  .book__consent { max-width: none; }
   /* four tiles don't fit: a list of rows instead */
   .book__docs { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .book-doc { flex-direction: row; gap: 12px; padding: 6px 18px 6px 6px; border-radius: 999px; text-align: left; }
