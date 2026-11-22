@@ -39,7 +39,7 @@
   --faint: #0C2C47;
   --accent: #F0AA2F;
   --accent-ink: #BF512C;
-  --tint: #E2ECEB;
+  --tint: #ABC8C4;
   --line: #0C2C47;
   --line-2: #0C2C47;
   --bg: #FFFFFF;
@@ -214,7 +214,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 
 /* the links sit in a soft capsule; the current section is a white pill with orange text, so the nav reads at once */
 /* padding 3 px and line-height 1.5: the capsule is 50 px, as the CTA, so the header is the 82 px of --hdr-h */
-.nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; flex: 0 1 auto; margin: 0 auto; padding: 3px; border-radius: 999px; background: var(--tint); font-size: 17px; line-height: 1.5; }
+.nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; flex: 0 1 auto; margin: 0 auto; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); font-size: 17px; line-height: 1.5; }
 .nav__link { flex: none; text-decoration: none; padding: 9px 18px; border-radius: 999px; color: var(--ink-2); font-weight: 600; transition: color .2s, background-color .2s, box-shadow .2s; }
 @media (hover: hover) { .nav__link:hover { color: var(--accent-ink); background: rgba(255, 255, 255, .6); } }
 .nav__link[aria-current] { color: var(--accent-ink); background: var(--white); box-shadow: 0 2px 10px rgba(12, 44, 71, .12); }
@@ -812,8 +812,7 @@ html:has(.helper[open]) { overflow: hidden; }
 .helper__back, .helper__next, .helper__book { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: 16px; }
 .helper__back { padding-left: 18px; }
 .helper__nav .ic { display: block; }
-/* waiting for a choice: the soft Mint with muted Navy text, not a faded Navy (it looked washed out) */
-.helper__next:disabled, .helper__book:disabled { background: var(--tint); color: rgba(12, 44, 71, .45); cursor: default; box-shadow: none; filter: none; }
+.helper__next:disabled, .helper__book:disabled { opacity: .35; cursor: default; box-shadow: none; filter: none; }
 
 .jaw { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 /* the whole step fits the dialog's height: the picture is 3:2 */

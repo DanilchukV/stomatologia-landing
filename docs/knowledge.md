@@ -41,9 +41,7 @@ Until 2026-11-20 the favicon was that tooth alone (see "Icons and the link previ
 every section and card), Navy `#0C2C47` (`--ink`, `--ink-2`, `--muted`, `--faint`: all text; `--line`, `--line-2`: 1 px
 card borders, which replace the old tinted section bands; the dark booking card and the map mock), Yellow
 `#F0AA2F` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
-Mint `#E2ECEB` (`--tint`, lighter since 2026-11-22: user, «вместо #aac9c1 делаем #e2eceb» — the old `#ABC8C4` as a
-colour picker reads it on screen; the street map in «Как нас найти» and the tooth map's fills keep `#ABC8C4`, which
-they need for contrast; icon circles, soft fills and hovers, tags, the visit cards —
+Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
 masks and the tooth overlay.
@@ -178,8 +176,7 @@ A nav jump stops with the section title 28 px under the header (user's request, 
 
 Nav capsule (2026-11-19). Earlier the same day the links were chained by "braces" (the user's `Frame 7.svg`: a
 wire with an orthodontic bracket before each label, in git history); the user then dropped them and asked for the
-nav itself to stand out at once. Now the links sit in a soft capsule (Mint, `#E2ECEB`: until 2026-11-22 the old Mint mixed
-35 % into White, the same colour, which the user then chose for all the Mint) as pills; the
+nav itself to stand out at once. Now the links sit in a soft capsule (Mint mixed 35 % into White) as pills; the
 current section is a White pill with a light shadow and Orange text, hover gives a half-white pill and Orange text.
 No movement (the user dislikes hover jumps). In the burger menu it is a plain list again. "Главная" (`#top`, the
 hero) is the first link and is in scroll-spy; it and the logo go to the very top of the page (`#top` has
@@ -269,8 +266,7 @@ outside the dialog's rounded corners:
   «Записаться» on step 3). Only the body scrolls, so the scrollbar sits between the head and the bar, clear of the
   corners. Every step has the same size (user's request, after a version whose height followed the step):
   780 px or the screen. Step 3 is one column (doctor, then direction and services), so it fills that height.
-- A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then (since 2026-11-22
-  shown as the soft Mint with muted Navy text: the faded Navy, opacity .35, looked washed out to the user); done steps
+- A step opens once the one before it has an answer (`canStep()`); «Далее» is disabled until then; done steps
   in the left column only show progress — moving is by Назад / Далее alone (user's request). On desktop (≥ 900) the
   three steps spread down the column (2026-11-22, user: the lower half stood empty; «ничего не скакало»; «выровняй по
   окошку справа»): `alignSteps()` measures the right pane on opening and on resize (not per step, or they would move
