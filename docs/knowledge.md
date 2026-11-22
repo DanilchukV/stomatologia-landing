@@ -486,7 +486,10 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   never clears it; the same doctor again gets a second reason, not a second group. «Повод», not «Жалоба»: some
   answers are wishes («Хочу белее»). The helper's «Вероятно понадобится» services are not added on purpose — a guess
   the visitor didn't choose. When delivery is added, the reasons go into the request.
-- «+ Добавить ещё услугу» (step 3, booking form, corner list) closes the open section and scrolls to all the sections.
+- «+ Добавить ещё услугу» (step 3, booking form, corner list) first opens a menu of the six sections under the button
+  (`openCatMenu`, a floating card with photos; a scroll, a click elsewhere or Escape closes it), and the chosen section
+  opens at its step 1 (since 2026-11-23, user: «сначала дадим выбрать категорию, чтобы человек сразу не переносился
+  во все разделы»; before, it closed the open section and scrolled to all the sections).
 - «Услуги врача» on each doctor's card (2026-11-22, user: add a service of exactly this doctor, e.g. in the booking
   form): it opens that doctor's services under the list (`pickerHTML`, `state.addFor`): the sections of their
   speciality grouped by section, plus their own consultation (`docServices`). A chip adds the service with that doctor
@@ -505,7 +508,8 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   picker's chips too; the open doctor's card is outlined and the list of their services carries a caret pointing at it
   (at the card's «Услуги врача» button since 2026-11-23 — on a wide card its middle was far from it); in a one-column
   list (Services' step 3, the form on phones) the open card reaches 16 px further out on each side than the list, so the
-  list reads as hanging from it (user: «чуть меньше, чем форма врача»; first the list was made narrower, then the user
+  list reads as hanging from it, and the list reaches the card's right edge (user: «чуть меньше, чем форма врача», then
+  «по правой до конца дотянуть»; first the list was made narrower, then the user
   asked for the list's width back and the card stretched instead)
   and closes with its own ✕, concentric with its 26 px corner («Услуги врача» stays dark while it is open; until
   2026-11-23 it turned into «Свернуть»)

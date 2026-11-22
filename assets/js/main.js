@@ -1122,7 +1122,10 @@
     // the corner button: open or fold the list; «Добавить услугу» goes back to all the sections
     'bk-toggle': () => set({ bkOpen: !state.bkOpen }),
     'bk-go': () => set({ bkOpen: false }),
-    'add-svc': () => { set({ bkOpen: false, cat: null }); scrollToId('services'); },
+    // «Добавить услугу» first asks which section (a small menu under the button), then opens that section; the
+    // menu keeps people from landing on all the sections with nothing chosen
+    'add-svc': (t) => { if (catMenu.hidden || catMenuFor !== t) openCatMenu(t); else closeCatMenu(); },
+    'add-cat': (t) => { closeCatMenu(); set({ bkOpen: false }); openCat(t.dataset.cat); },
 
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
@@ -1162,7 +1165,8 @@
 
   document.addEventListener('click', (e) => {
     // a click anywhere else folds the corner list
-    if (state.bkOpen && !e.target.closest('.bk')) set({ bkOpen: false });
+    if (!catMenu.hidden && !e.target.closest('.cat-menu, [data-act="add-svc"]')) closeCatMenu();
+    if (state.bkOpen && !e.target.closest('.bk, .cat-menu')) set({ bkOpen: false });
     if (state.barOpen && !e.target.closest('.svc-bar')) set({ barOpen: false });
     const t = e.target.closest('[data-act]');
     if (!t || !actions[t.dataset.act]) return;
@@ -1212,6 +1216,7 @@
   document.addEventListener('touchstart', () => {}, { passive: true });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    if (!catMenu.hidden) { const b = catMenuFor; closeCatMenu(); if (b && b.isConnected) b.focus(); return; }
     if (state.barOpen) { set({ barOpen: false }); $('.svc-bar__toggle').focus(); return; }
     if (!state.bkOpen) return;
     set({ bkOpen: false });
@@ -1270,6 +1275,35 @@
     cookie.classList.replace('is-in', 'is-out');
     setTimeout(() => { cookie.hidden = true; liftToTop(); }, 280);
   }
+
+  /* ---------- «Добавить услугу»: which section ---------- */
+  // one floating menu of the six sections, under the button that opened it (above it when there is no room below);
+  // a scroll, a click elsewhere or Escape closes it
+  const catMenu = document.createElement('div');
+  catMenu.className = 'cat-menu';
+  catMenu.setAttribute('role', 'menu');
+  catMenu.setAttribute('aria-label', 'Раздел услуг');
+  catMenu.hidden = true;
+  catMenu.innerHTML = `<span class="cat-menu__h">Выберите раздел</span>${D.cats.map((c) => `<button type="button" class="cat-menu__item" role="menuitem" data-act="add-cat" data-cat="${c.id}"><span class="cat-menu__ph" aria-hidden="true"><img src="assets/img/services/${c.id}-800.webp" alt="" loading="lazy"></span><span>${esc(glue(c.name))}</span></button>`).join('')}`;
+  document.body.appendChild(catMenu);
+  let catMenuFor = null;
+  function openCatMenu(btn) {
+    catMenuFor = btn;
+    catMenu.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    const r = btn.getBoundingClientRect(), m = catMenu.getBoundingClientRect();
+    const below = r.bottom + 8 + m.height <= window.innerHeight - 8;
+    catMenu.style.left = Math.max(8, Math.min(window.innerWidth - m.width - 8, r.left)) + 'px';
+    catMenu.style.top = (below ? r.bottom + 8 : Math.max(8, r.top - 8 - m.height)) + 'px';
+    $('.cat-menu__item', catMenu).focus({ preventScroll: true });
+  }
+  function closeCatMenu() {
+    if (catMenuFor) catMenuFor.removeAttribute('aria-expanded');
+    catMenuFor = null;
+    catMenu.hidden = true;
+  }
+  window.addEventListener('scroll', () => { if (!catMenu.hidden) closeCatMenu(); }, { passive: true });
+  window.addEventListener('resize', () => { if (!catMenu.hidden) closeCatMenu(); });
 
   /* ---------- tooltips ---------- */
   // a name cut with «…» ([data-tip]) shows whole in a small tooltip in the site's colours (style.css .tip): next to the

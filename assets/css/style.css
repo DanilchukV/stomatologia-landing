@@ -754,6 +754,13 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .add-svc { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px 0 14px; border: 1.5px dashed var(--line); border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: border-color .15s, color .15s; }
 @media (hover: hover) { .add-svc:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 .add-svc .ic { display: block; }
+/* «Добавить услугу» opens this menu of the sections first (main.js openCatMenu), a floating card under the button */
+.cat-menu { position: fixed; z-index: 45; box-sizing: border-box; width: 300px; max-width: calc(100vw - 16px); display: flex; flex-direction: column; gap: 2px; padding: 8px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); box-shadow: 0 20px 44px rgba(12, 44, 71, .2); animation: dropIn .18s ease both; }
+.cat-menu__h { padding: 6px 10px 8px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.cat-menu__item { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 4px 12px 4px 4px; border: 0; border-radius: 14px; background: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 600; line-height: 1.25; text-align: left; cursor: pointer; transition: background-color .15s; }
+@media (hover: hover) { .cat-menu__item:hover { background: color-mix(in srgb, var(--tint) 35%, var(--white)); } }
+.cat-menu__ph { flex: none; width: 44px; height: 44px; border-radius: 10px; overflow: hidden; }
+.cat-menu__ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* «Услуги врача» on a doctor's card, and the list it opens under the cards (main.js pickerHTML) */
 /* at the bottom of the card, so in the form's row of equal cards the buttons stand on one line */
 .visit__more { align-self: flex-start; margin-top: auto; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 9px; border: 1.5px dashed var(--ink); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; }
@@ -761,11 +768,14 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__more[aria-expanded="true"] { border-style: solid; background: var(--ink); color: var(--white); }
 @media (hover: hover) { .visit__more[aria-expanded="false"]:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 /* the caret on top points at the doctor's card (main.js placeCarets sets --caret-x) */
-/* in a one-column list the open doctor's card reaches 16 px further out on each side, so the list reads as hanging
+/* in a one-column list the open doctor's card reaches 16 px further out on each side and its services list 16 px further
+   right (to the card's right edge), so the list reads as hanging
    from it (Services' step 3, the form on phones; in the form's row of cards the list spans them all) */
 .visits:not(.book__slots) .visit.is-picking { margin: 0 -16px; }
+.visits:not(.book__slots) .vpick { margin-right: -16px; }
 @media (max-width: 480px) {
   .book__slots .visit.is-picking { margin: 0 -16px; }
+  .book__slots .vpick { margin-right: -16px; }
 }
 .vpick { position: relative; margin-top: 6px; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 18px; border: 1px solid var(--line); border-radius: 26px; background: var(--white); }
 .vpick.is-in { animation: fadeIn .25s ease both; }
