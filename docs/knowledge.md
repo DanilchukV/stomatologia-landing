@@ -494,8 +494,9 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   «Свернуть» for the rest (`state.svcsAll`), every service name on one line with «…» (whole in its `title`), the
   picker's chips too; the open doctor's card is outlined and the list of their services carries a caret pointing at it
   (`placeCarets`). The list is rendered right after that card: in a one-column list it is under it, in the booking
-  form's grid (≥ 481 px) `order` and a full row put it under all the cards, so no card moves; cards keep their own
-  height (`align-items: start`).
+  form's grid (≥ 481 px) `order` and a full row put it under all the cards, so no card moves; the cards in a row are
+  one height and «Услуги врача» sits at the bottom of each (`margin-top: auto`), so the buttons stand on one line
+  (user, the same day; for an hour the cards kept their own heights and the buttons stood at different levels).
 
 **The corner button** (`#bk`, user's request, replacing the cart pill removed on 2026-11-19): «Ваша запись» with a
 Yellow count (services, plus 1 per doctor without services), bottom right, once anything is chosen. It opens a list

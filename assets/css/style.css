@@ -747,7 +747,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (hover: hover) { .add-svc:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
 .add-svc .ic { display: block; }
 /* «Услуги врача» on a doctor's card, and the list it opens under the cards (main.js pickerHTML) */
-.visit__more { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 9px; border: 1.5px dashed var(--ink); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; }
+/* at the bottom of the card, so in the form's row of equal cards the buttons stand on one line */
+.visit__more { align-self: flex-start; margin-top: auto; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px 0 9px; border: 1.5px dashed var(--ink); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; }
 .visit__more .ic { display: block; }
 .visit__more[aria-expanded="true"] { border-style: solid; background: var(--ink); color: var(--white); }
 @media (hover: hover) { .visit__more[aria-expanded="false"]:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
@@ -1258,7 +1259,7 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__k-hint { display: block; margin-top: 2px; font-family: var(--f-body); font-weight: 400; font-size: 13px; color: var(--muted); }
 .book__v { min-width: 0; padding-top: 4px; display: flex; flex-direction: column; gap: 12px; }
 /* the doctors side by side (four in a row on desktop), so the form doesn't grow tall; one column on phones */
-.book__v .visits { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); align-items: start; }
+.book__v .visits { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
 /* two columns or more: the open doctor's services go under all the cards (full width), so no card moves; one column
    (phones) keeps them right under their card */
 @media (min-width: 481px) {
