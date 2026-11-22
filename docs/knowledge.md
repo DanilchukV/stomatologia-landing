@@ -503,7 +503,8 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   посередине, не сливаться по цвету»; the list keeps 28 px on the right so it never covers a chip's ✕; it was «Ещё N» /
   «Свернуть» for the rest (`state.svcsAll`), every service name on one line with «…» (whole in a tooltip, `data-tip`), the
   picker's chips too; the open doctor's card is outlined and the list of their services carries a caret pointing at it
-  (at the card's «Услуги врача» button since 2026-11-23 — on a wide card its middle was far from it)
+  (at the card's «Услуги врача» button since 2026-11-23 — on a wide card its middle was far from it) and is 16 px
+  narrower than the card on each side, so it reads as hanging from it (user: «чуть меньше, чем форма врача»)
   and closes with its own ✕, concentric with its 26 px corner («Услуги врача» stays dark while it is open; until
   2026-11-23 it turned into «Свернуть»)
   (`placeCarets`). The list is rendered right after that card: in a one-column list it is under it, in the booking
