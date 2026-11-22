@@ -41,7 +41,9 @@ Until 2026-11-20 the favicon was that tooth alone (see "Icons and the link previ
 every section and card), Navy `#0C2C47` (`--ink`, `--ink-2`, `--muted`, `--faint`: all text; `--line`, `--line-2`: 1 px
 card borders, which replace the old tinted section bands; the dark booking card and the map mock), Yellow
 `#F0AA2F` (`--accent`: buttons with Navy text, selected chips, hover borders, input borders, main roads on the map),
-Mint `#ABC8C4` (`--tint`: icon circles, soft fills and hovers, tags, inactive carousel dots, the selected tooth fill —
+Mint `#E2ECEB` (`--tint`, lighter since 2026-11-22: user, «вместо #aac9c1 делаем #e2eceb» — the old `#ABC8C4` as a
+colour picker reads it on screen; the street map in «Как нас найти» and the tooth map's fills keep `#ABC8C4`, which
+they need for contrast; icon circles, soft fills and hovers, tags, the visit cards —
 added back because Yellow alone was too much), Orange `#BF512C` (`--accent-ink`: eyebrows and link hovers; errors, the
 map pin, the header address pin, list bullets, the quote mark). Text on Navy is White. Alpha only for shadows,
 masks and the tooth overlay.
