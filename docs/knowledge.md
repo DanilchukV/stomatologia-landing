@@ -402,7 +402,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   both forms share `state.sent`; once sent, step 3 shows only the confirmation (no entered data,
   heading, consent or buttons). The step was called "Проверка", now "Запись". `state.svcStep`; the step bar on top is clickable,
   "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
-  scrolls back to the step bar only if it is above the screen.
+  scrolls back to the step bar only if it is above the screen. With anything booked, on steps 1–2 step 3 calls
+  (2026-11-23, user: «над 3 шагом пусть мигает и с подписью „ваша запись“»): its circle pulses Yellow and a Yellow
+  «Ваша запись · N» (`bookCount`) stands above it; gone on step 3 and with an empty booking.
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one
   (therapist / orthopedist / surgeon / orthodontist), only one at a time. The row's name stays «Консультация
   специалистов» (until 2026-11-22 it added « · ортопед»; user: the chosen chip already says it).
