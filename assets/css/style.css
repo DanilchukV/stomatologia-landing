@@ -1183,6 +1183,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__k { padding: 10px 0 0; font-family: var(--f-head); font-weight: 700; font-size: 17px; }
 .book__k-hint { display: block; margin-top: 2px; font-family: var(--f-body); font-weight: 400; font-size: 13px; color: var(--muted); }
 .book__v { min-width: 0; padding-top: 4px; display: flex; flex-direction: column; gap: 12px; }
+/* the doctors side by side (four in a row on desktop), so the form doesn't grow tall; one column on phones */
+.book__v .visits { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
 
 /* the doctors: one row of equal tiles (photo above the name), each one in or out of the booking */
 .book__docs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
