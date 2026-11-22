@@ -35,7 +35,8 @@
 
   /* ---------- constants ---------- */
   const WISDOM = [1, 16, 17, 32];
-  const SPY = ['top', 'calm', 'services', 'doctors', 'clinics'];
+  // section → the menu link lit while it is under the header; blocks without a link of their own light the nearest
+  const SPY = [['top', 'top'], ['calm', 'calm'], ['finder', 'calm'], ['services', 'services'], ['doctors', 'doctors'], ['clinics', 'clinics'], ['faq', 'clinics'], ['book', 'clinics']];
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;
@@ -63,6 +64,12 @@
   function set(patch) {
     Object.assign(state, patch);
     if (bookEmpty()) state.bkOpen = false;
+    // diagnostics' doctor follows the ticked consultations: once theirs is gone (a ✕, «Сбросить всё») so is the doctor
+    const dp = state.picks.diag && docById(state.picks.diag);
+    if (dp) {
+      const roles = catRoles(catById('diag'), state.cart);
+      if (!roles.includes(dp.role)) state.picks = { ...state.picks, diag: autoDoc(roles) };
+    }
     render();
   }
 
@@ -86,9 +93,15 @@
   const withPick = (cid, cart) => ({ ...state.picks, [cid]: state.picks[cid] || autoDoc(catRoles(catById(cid), cart || state.cart)) });
 
   /* ---------- the booking: every section has its own doctor ---------- */
-  // a ticked service goes to its section's doctor; diagnostics without a consultation to nobody
+  // a ticked service goes to its section's doctor; diagnostics without a consultation to nobody, and each
+  // consultation to a doctor of its speciality (the section's chosen one if they are)
   function itemDoc(x) {
-    if (x.cid === 'diag' && !isConsult(x.n)) return null;
+    if (x.cid === 'diag') {
+      if (!isConsult(x.n)) return null;
+      const role = CONSULT_ROLE[x.n];
+      const p = docById(state.picks.diag);
+      return p && p.role === role ? p.id : autoDoc([role]);
+    }
     return state.picks[x.cid] || autoDoc(catRoles(catById(x.cid), state.cart));
   }
   // the booking by doctor: each doctor with their services, doctors without services too; diagnostics last
@@ -143,7 +156,10 @@
   // after sending: show the confirmation and bring it to the middle of the screen
   function markSent(id) {
     set({ sent: true });
-    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const box = document.getElementById(id);
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // the pressed button is gone: the focus goes to the confirmation, so a screen reader reads it
+    $('[tabindex="-1"]', box).focus({ preventScroll: true });
   }
   function scrollToId(id) {
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -297,18 +313,39 @@
 
   /* ---------- services panel ---------- */
   const svcOpenBox = $('#svc-open');
+  // tablets: the tabs scroll sideways with no scrollbar; the chosen one is scrolled into view, and an edge with more
+  // tabs behind it fades (phones list them in a drop-down instead)
+  let tabsCat = null;
+  function tabsFade() {
+    const el = $('#svc-tabs');
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    el.classList.toggle('fade-l', !swipeMedia.matches && el.scrollLeft > 1);
+    el.classList.toggle('fade-r', !swipeMedia.matches && el.scrollLeft < max - 1);
+  }
+  function showTab() {
+    const el = $('#svc-tabs');
+    const tab = el && $('.svc-bar__tab[aria-pressed="true"]', el);
+    if (tab && !swipeMedia.matches) {
+      const t = tab.getBoundingClientRect(), b = el.getBoundingClientRect();
+      if (t.left < b.left + 40 || t.right > b.right - 40) el.scrollBy({ left: t.left + t.width / 2 - (b.left + b.width / 2) });
+    }
+    tabsFade();
+  }
   function renderServices() {
     const cat = catById(state.cat);
     $('#svc-grid').hidden = !!cat;
     svcOpenBox.hidden = !cat;
-    if (!cat) { mount(svcOpenBox, '', () => ''); return; }
+    if (!cat) { mount(svcOpenBox, '', () => ''); tabsCat = null; return; }
     // the shell (and its form) is rebuilt each time the panel opens, so the form is bound again
     if (mount(svcOpenBox, 'open', panelShellHTML)) {
       const svcForm = $('#svc-form');
       window.SiteForm.bind(svcForm, () => markSent('svc-done'));
       copyContacts(form, svcForm);
+      $('#svc-tabs').addEventListener('scroll', tabsFade, { passive: true });
     }
     $$('.svc-bar__tab', svcOpenBox).forEach((b) => b.setAttribute('aria-pressed', b.dataset.cat === cat.id));
+    if (tabsCat !== cat.id) { tabsCat = cat.id; requestAnimationFrame(showTab); }
     $('.svc-bar', svcOpenBox).classList.toggle('is-open', state.barOpen);
     $('.svc-bar__toggle', svcOpenBox).setAttribute('aria-expanded', state.barOpen);
     $('.svc-bar__cur', svcOpenBox).textContent = cat.tab;
@@ -428,9 +465,9 @@
                   ${fieldHTML('email', 'Эл. почта (необязательно)', 'email', 'autocomplete="email" inputmode="email" maxlength="80" placeholder="name@mail.com"')}
                 </div>
               </form>
-              <div class="svc-done" id="svc-done" hidden>
+              <div class="svc-done" id="svc-done" role="status" hidden>
                 <span class="svc-done__ic">${icon('i-check', 22, 2.6)}</span>
-                <div class="svc-done__text"><h5 class="svc-done__title">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
+                <div class="svc-done__text"><h5 class="svc-done__title" tabindex="-1">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
                 <button type="button" class="btn btn--dark svc-done__again" data-act="book-again" data-from="svc">Записаться ещё раз</button>
               </div>
             </div>
@@ -454,7 +491,7 @@
     return `<span class="svc-panel__photo" data-cat="${cat.id}" aria-hidden="true"><img src="${img}.webp" srcset="${img}-800.webp 800w, ${img}.webp 1600w" sizes="(max-width: 1240px) 66vw, 792px" alt=""></span>
       <div class="svc-panel__intro">
         <button type="button" class="back-link" data-act="cat-close">${icon('i-back', 16, 2.4)}Все разделы</button>
-        <h3 class="svc-panel__name">${esc(glue(cat.name))}</h3>
+        <h3 class="svc-panel__name" tabindex="-1">${esc(glue(cat.name))}</h3>
         <p class="svc-panel__desc">${esc(glue(cat.desc))}</p>
       </div>
       <span class="svc-panel__meta">${meta}</span>`;
@@ -563,6 +600,8 @@
     if (open) $$('.doc-panel__card', panelIn).forEach((c) => c.classList.toggle('is-cur', c.dataset.id === open.id));
     panel.classList.toggle('is-open', !!open);
     panel.setAttribute('aria-hidden', !open);
+    // folded, its buttons are out of the Tab order too
+    panel.inert = !open;
     if (open) docCaret();
     const multi = pages > 1;
     $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
@@ -712,9 +751,9 @@
   }
   function onScroll() {
     let active = null;
-    SPY.forEach((id) => {
+    SPY.forEach(([id, link]) => {
       const r = document.getElementById(id).getBoundingClientRect();
-      if (r.top <= 140 && r.bottom > 140) active = id;
+      if (r.top <= 140 && r.bottom > 140) active = link;
     });
     $$('.nav__link').forEach((a) => {
       if (a.getAttribute('href') === '#' + active) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
@@ -732,27 +771,41 @@
   function toggleCart(n, cat) {
     set({ cart: inCart(n) ? state.cart.filter((x) => x.n !== n) : state.cart.concat([{ n, cat: cat.name, cid: cat.id }]) });
   }
+  // the scroll that puts the open section's tab bar where it sticks, 10 px under the header: positive while the
+  // section is lower on the page, negative when it is above (a footer link, a card low in a scrolled grid). The bar
+  // follows the section's head (the grid hides while a section is open), so it can be measured before it exists.
+  function barShift() {
+    const gap = parseFloat(getComputedStyle($('.services__in')).rowGap) || 0;
+    return $('.services__head').getBoundingClientRect().bottom + gap - (hdr.getBoundingClientRect().bottom + 10);
+  }
   // phones: the section opens where it is (no jump to line it up); the page glides only when the panel's top is
-  // above the screen, so the section starts under the bar
+  // above the screen, so the section starts under the bar, or when the section is off the screen (the footer)
   function revealPanel() {
-    const gap = $('#svc-panel').getBoundingClientRect().top - $('.svc-bar').getBoundingClientRect().bottom - 10;
-    if (gap < 0) glideTo(window.scrollY + gap, 550);
+    const top = $('#svc-panel').getBoundingClientRect().top;
+    const gap = top - $('.svc-bar').getBoundingClientRect().bottom - 10;
+    if (top < 0 || top > window.innerHeight) glideTo(window.scrollY + barShift(), 700);
+    else if (gap < 0) glideTo(window.scrollY + gap, 550);
   }
   function openCat(id) {
     if (swipeMedia.matches) {
       set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false, barOpen: false });
       revealPanel();
+      $('.svc-panel__name').focus({ preventScroll: true });
       return;
     }
-    // from the grid: every card flies up into its tab of the sticky bar
-    const from = !state.cat && !reduceMotion.matches
+    // from the grid on screen: every card flies up into its tab of the sticky bar (not from the footer)
+    const grid = $('#svc-grid').getBoundingClientRect();
+    const seen = grid.bottom > 0 && grid.top < window.innerHeight;
+    const from = !state.cat && seen && !reduceMotion.matches
       ? $$('.svc-card').map((c) => ({ cat: c.dataset.cat, r: c.getBoundingClientRect(), img: ($('img', c) || {}).currentSrc })) : null;
     set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false });
     // the page lines the tab bar up under the header (where it sticks), scrolling while the cards fly
-    // (the ghosts measure the tabs first, so the scroll starts after that)
-    const shift = Math.max(0, $('.svc-bar').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 10);
-    const end = from ? flyToTabs(from, id, shift) : 0;
-    if (shift > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    // (the ghosts measure the tabs first, so the scroll starts after that); a bar already stuck stays where it is
+    const shift = barShift();
+    const bar = $('.svc-bar');
+    const end = from ? flyToTabs(from, id, bar.getBoundingClientRect().top - parseFloat(getComputedStyle(bar).top)) : 0;
+    if (Math.abs(shift) > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    $('.svc-panel__name').focus({ preventScroll: true });
     if (!from) return;
     // the panel waits until the cards have landed, then fades in where it is, without moving
     // (a script animation, so it wins over the panel's own CSS entrance)
@@ -793,8 +846,10 @@
     if (k < 1 || k > STEPS.length) return;
     const patch = { svcStep: k };
     // on to step 3 from the doctor step with none of the section's services ticked: the doctor alone is booked
+    // (not when step 2 said «Врач не нужен»)
     const c = state.cat, id = state.picks[c];
-    if (k === 3 && state.svcStep === 2 && id && !state.cart.some((x) => x.cid === c && itemDoc(x))) patch.extra = withDoc(id, c);
+    const noDoc = c === 'diag' && !catRoles(catById(c), state.cart).length;
+    if (k === 3 && state.svcStep === 2 && id && !noDoc && !state.cart.some((x) => x.cid === c && itemDoc(x))) patch.extra = withDoc(id, c);
     set(patch);
     const bar = $('#svc-steps');
     if (bar.getBoundingClientRect().top < $('.svc-bar').getBoundingClientRect().bottom) scrollToId('svc-steps');
@@ -805,13 +860,14 @@
       const n = +t.dataset.tooth;
       if (state.tooth === n) { set({ tooth: null }); return; }
       const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
-      set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null });
+      // a doctor picked for another tooth or symptom isn't a choice made for this one
+      set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null, hDoc: null });
     },
-    'pick-jaw': () => { if (state.scope !== 'jaw') set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null }); hStep(2); },
-    'skip-tooth': () => { if (state.tooth !== null || !state.skipTooth || state.scope === 'jaw') set({ skipTooth: true, scope: 'tooth', tooth: null, symptom: null }); hStep(2); },
+    'pick-jaw': () => { if (state.scope !== 'jaw') set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null, hDoc: null }); hStep(2); },
+    'skip-tooth': () => { if (state.tooth !== null || !state.skipTooth || state.scope === 'jaw') set({ skipTooth: true, scope: 'tooth', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     symptom: (t) => {
       const id = state.symptom === t.dataset.id ? null : t.dataset.id;
-      set({ symptom: id });
+      set({ symptom: id, hDoc: null });
     },
     'helper-next': () => hStep(state.hStep + 1),
     'helper-back': () => hStep(state.hStep - 1),
@@ -829,10 +885,9 @@
       set({ extra: withDoc(id), notes });
       scrollToId('book');
     },
-    'helper-open': () => { helper.showModal(); $('#helper-body').scrollTop = 0; },
-    // the finder's «Выбрать зуб»: the helper on its first step, the tooth map
+    // the finder's «Выбрать зуб»: the helper from a clean sheet, on its first step, the tooth map
     'finder-open': () => {
-      set({ hStep: 1 });
+      set({ hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null });
       helper.showModal();
       $('#helper-body').scrollTop = 0;
     },
@@ -843,12 +898,14 @@
       if (t.dataset.cat === state.cat) return;
       set({ cat: t.dataset.cat, svcStep: 1, picks: withPick(t.dataset.cat), docsAll: false, svcAll: false, svcOpen: null, barOpen: false });
       if (swipeMedia.matches) revealPanel(); else scrollToId('svc-panel');
+      $('.svc-panel__name').focus({ preventScroll: true });
     },
     // back to the section's title with all the cards under it
     'cat-close': () => {
       set({ cat: null, barOpen: false });
       if (swipeMedia.matches) glideTo(window.scrollY + $('#services').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
       else scrollToId('services');
+      $('#services-title').focus({ preventScroll: true });
     },
     // phones: the button in the sticky bar drops the sections down
     'bar-toggle': () => set({ barOpen: !state.barOpen }),
@@ -865,8 +922,9 @@
       const cn = t.dataset.sub;
       const cat = catById(state.cat);
       const rest = state.cart.filter((x) => !(isConsult(x.n) && (x.cid === cat.id || x.n === cn)));
-      const cart = inCart(cn) ? rest : rest.concat([{ n: cn, cat: cat.name, cid: cat.id }]);
-      set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(catRoles(cat, cart)) }, docsAll: false });
+      const adding = !inCart(cn);
+      const cart = adding ? rest.concat([{ n: cn, cat: cat.name, cid: cat.id }]) : rest;
+      set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(adding ? [CONSULT_ROLE[cn]] : catRoles(cat, cart)) }, docsAll: false });
     },
     'svc-toggle': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcOpen: state.svcOpen === n ? null : n }); },
     'svc-more': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcMore: state.svcMore === n ? null : n }); },
@@ -901,7 +959,7 @@
       if (svcForm) svcForm.reset();
       const cat = catById(state.cat);
       set({ sent: false, cart: [], extra: [], notes: [], time: 'любое', svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} });
-      if (t.dataset.from === 'svc') scrollToId('svc-steps');
+      if (t.dataset.from === 'svc') { scrollToId('svc-steps'); $('#pick-svc .panel-h').focus({ preventScroll: true }); }
       else form.elements.name.focus();
     },
 
@@ -953,8 +1011,21 @@
     if (state.bkOpen && !e.target.closest('.bk')) set({ bkOpen: false });
     if (state.barOpen && !e.target.closest('.svc-bar')) set({ barOpen: false });
     const t = e.target.closest('[data-act]');
-    if (t && actions[t.dataset.act]) actions[t.dataset.act](t, e);
+    if (!t || !actions[t.dataset.act]) return;
+    const act = t.dataset.act;
+    // a choice made after sending starts a new booking with just that choice (name and phone stay)
+    if (state.sent && NEW_BOOKING.includes(act)) Object.assign(state, { sent: false, cart: [], extra: [], notes: [] });
+    const list = REMOVE.includes(act) ? t.closest('#svc-sum, #book-svcs, #bk-list') : null;
+    actions[act](t, e);
+    // a ✕ takes its own button away: the focus goes to the next one in the list, else to «Добавить услугу»
+    if (list && !t.isConnected && list.isConnected && list.offsetParent) {
+      const bkBox = list.closest('.bk');
+      const next = $('.visit__drop, .visit__x, .add-svc', list) || (bkBox && $('.add-svc', bkBox));
+      if (next) next.focus({ preventScroll: true });
+    }
   });
+  const NEW_BOOKING = ['svc-check', 'svc-sub', 'panel-doc', 'book-pick', 'book-doc', 'helper-book'];
+  const REMOVE = ['cart-remove', 'visit-remove', 'note-remove'];
   // iOS Safari applies :active (the press-in in style.css) only when the page listens for touches
   document.addEventListener('touchstart', () => {}, { passive: true });
   document.addEventListener('keydown', (e) => {
@@ -1035,6 +1106,16 @@
   syncPromises();
   // the panel's caret follows its card when the page is resized or the phone row is swiped
   window.addEventListener('resize', docCaret);
+  window.addEventListener('resize', tabsFade);
+  // the tooth map is lazy inside the closed helper, so it began loading only when the helper opened (an empty box
+  // for a second); it starts once the finder is near the screen or its button is pointed at
+  const jawImg = $('.jaw__img');
+  const warmJaw = () => { jawImg.loading = 'eager'; };
+  $('.finder__pick').addEventListener('pointerenter', warmJaw, { once: true });
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting)) { warmJaw(); io.disconnect(); } }, { rootMargin: '400px 0px' });
+    io.observe($('#finder'));
+  }
   $('#doc-track').addEventListener('scroll', docCaret, { passive: true });
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists

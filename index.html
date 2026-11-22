@@ -22,13 +22,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/nunito-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/nunito-sans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=20261122c">
-<script src="assets/js/header.js?v=20261122c" defer></script>
-<script src="assets/js/data.js?v=20261122c" defer></script>
-<script src="assets/js/form.js?v=20261122c" defer></script>
-<script src="assets/js/main.js?v=20261122c" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261122d">
+<script src="assets/js/header.js?v=20261122d" defer></script>
+<script src="assets/js/data.js?v=20261122d" defer></script>
+<script src="assets/js/form.js?v=20261122d" defer></script>
+<script src="assets/js/main.js?v=20261122d" defer></script>
 </head>
 <body>
+<a class="skip" href="#main">Перейти к содержимому</a>
 
 <svg class="sprite" aria-hidden="true">
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
@@ -90,7 +91,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
 
 <!-- Hero -->
 <section class="hero" id="top">
@@ -209,7 +210,7 @@
 <section class="services" id="services">
   <div class="wrap services__in">
     <div class="services__head">
-      <h2 class="title">Услуги</h2>
+      <h2 class="title" id="services-title" tabindex="-1">Услуги</h2>
       <p class="services__lead">Точный план и&nbsp;стоимость врач назовёт после осмотра&nbsp;— до&nbsp;начала лечения. Узнать ориентировочную цену можно по&nbsp;телефону <a href="tel:+375290123456" class="tel">+375 (29) 012-34-56</a>.</p>
     </div>
     <div class="svc-grid grid-in" id="svc-grid">
@@ -273,7 +274,7 @@
     <h2 class="title">Как&nbsp;нас&nbsp;найти</h2>
     <article class="clinic">
       <!-- the whole map opens Google Maps; the drawing is inline so the route and the pin can move -->
-      <a class="clinic__map" href="https://www.google.com/maps/search/?api=1&amp;query=%D0%B3.%20%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB.%20%D0%9B%D0%B8%D0%BF%D0%BE%D0%B2%D0%B0%D1%8F%2C%2018" target="_blank" rel="noopener" aria-label="Клиника на карте Google">
+      <a class="clinic__map" href="https://www.google.com/maps/search/?api=1&amp;query=%D0%B3.%20%D0%91%D1%80%D0%B5%D1%81%D1%82%2C%20%D1%83%D0%BB.%20%D0%9B%D0%B8%D0%BF%D0%BE%D0%B2%D0%B0%D1%8F%2C%2018" target="_blank" rel="noopener" aria-label="Открыть в Google Картах — клиника на карте">
         <svg class="clinic__art" viewBox="0 0 1200 460" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
           <rect width="1200" height="460" fill="#ABC8C4"/>
           <g fill="#FFFFFF" opacity=".38">
@@ -399,9 +400,9 @@
           <button class="btn btn--accent book__send" type="submit">Отправить заявку<svg class="ic" width="18" height="18" stroke-width="2.2" aria-hidden="true"><use href="#i-arrow"/></svg></button>
         </div>
       </form>
-      <div class="book__done" id="book-done">
+      <div class="book__done" id="book-done" role="status">
         <span class="book__done-ic"><svg class="ic" width="26" height="26" stroke-width="2.6" aria-hidden="true"><use href="#i-check"/></svg></span>
-        <h3 class="book__done-title">Заявка отправлена</h3>
+        <h3 class="book__done-title" tabindex="-1">Заявка отправлена</h3>
         <p class="book__done-text">Перезвоним и&nbsp;подберём удобное время.</p>
         <button type="button" class="btn btn--dark book__again" data-act="book-again" data-from="book">Записаться ещё раз</button>
       </div>

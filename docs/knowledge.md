@@ -106,6 +106,18 @@ from selecting button text or opening the iOS callout. iOS applies `:active` onl
 listener — `main.js` adds an empty passive one. New hover effects go into `@media (hover: hover)` too; nothing may
 be reachable by hover only.
 
+## Keyboard and screen readers (2026-11-22, site review)
+
+- The focus ring is Navy, 3 px, 2 px off the element, with a 2 px white ring under it (`box-shadow`) that keeps it
+  visible on Navy too. It was Yellow: 2 : 1 on white and invisible on the Yellow buttons. The carousel's inactive dots
+  are white with a Navy outline (Mint on white was 1.8 : 1).
+- «Перейти к содержимому» (`.skip`) is the first Tab stop, shown only while focused; it goes to `<main id="main">`.
+- When a script takes away the focused button, the focus goes somewhere sensible: opening or switching a section →
+  its name (`.svc-panel__name`); «Все разделы» → the «Услуги» title; sending → «Заявка отправлена» (both
+  confirmations are `role="status"`); «Записаться ещё раз» → step 1's heading; a ✕ in a booking list → the next ✕,
+  else «Добавить услугу». These targets have `tabindex="-1"`, and `[tabindex="-1"]:focus` has no outline.
+- The folded doctor panel is `inert`, so Tab no longer lands on its hidden buttons.
+
 ## Header
 
 Breakpoints, from wide to narrow:
@@ -179,6 +191,8 @@ right edge (the header CTA), with the same `cqw` margins as `.hero__media` (2026
 (`@media (hover: hover)` only) only a deeper shadow appears — no colour, which the user reads as an active button,
 and no movement. The icon sits beside the title and the text runs the full card width below it (2026-11-19, user:
 the braces card wrapped to three lines), so all three texts take two lines at ≥ 1280 px and the cards are level.
+At 641–1000 px the three cards are one row (2026-11-22; before, two and one), with the icon above the title:
+beside it «Протезирование» didn't fit a third of a tablet.
 
 ## Finder (the helper's mini section)
 
@@ -245,7 +259,16 @@ outside the dialog's rounded corners:
   scrolling on a laptop; its min-width keeps the side labels inside.
 - No step scrolls on a laptop (user, 2026-11-19): below 860 px of height the head, the bar, the jaw and the
   doctor photos get tighter, and below 720 px tighter still (no experience line, a smaller first-visit list);
-  checked down to 680 px in all steps. Only shorter screens still scroll the step body.
+  checked down to 680 px in all steps. Only shorter screens still scroll the step body. A wisdom tooth with another
+  symptom adds the surgeon note, which overflowed step 3 by up to 63 px (found 2026-11-22); with the note
+  (`.hint:has(.hint__note)`, ≥ 900 px wide) the note, the answer, the first-visit list and the photos are tighter
+  (64 / 56 / 48 px photos by height), and below 720 px the direction row goes. Checked: every symptom on tooth 1,
+  1440 and 1366 wide, 900 / 860 / 768 / 680 high, 0 px of scroll.
+- The helper starts from a clean sheet every time it opens (`finder-open`, 2026-11-22: it reopened on step 1 with
+  the old answer in the left column). A doctor picked on step 3 is dropped when the tooth or the symptom changes
+  (`hDoc`), or another answer came back with that doctor already chosen.
+- The tooth map is lazy inside the closed dialog, so the first open showed an empty box for a moment; it starts
+  loading (`loading = 'eager'`) once the Finder is within 400 px of the screen or «Выбрать зуб» is pointed at.
 - Below 900 px the dialog is full-screen, the steps go in a row on top and only the current one keeps its title;
   the disclaimer then moves from the left column into step 3.
 - Phones (≤ 640 px, 2026-11-20, user: «помощник давай попробуем сделать без скрола»): no step scrolls at 390×700
@@ -276,7 +299,7 @@ it used to break between «чтобы» and «вы»; two lines do not fit the c
 Two columns from 1000 px: text (title, lead, the three promises in a column, the motto pinned to the
 bottom) and a photo collage that stretches to the text's height: one large tile (with the address
 chip) and two small ones. Below 1000 px one column: the collage goes between the lead and the
-promises, which line up in a row again. On phones (≤ 640, 2026-11-20, user: «сокращаем либо делаем кнопки,
+promises, which line up in a row again (three in a row at 641–1000 px since 2026-11-22; before, two and one). On phones (≤ 640, 2026-11-20, user: «сокращаем либо делаем кнопки,
 чтобы можно было развернуть») only the three headings show, each a button with the FAQ's Mint chevron that opens
 its text (grid rows 0fr → 1fr): 450 → 285 px. Wider, `syncPromises()` disables those buttons, so they are plain text
 and the texts always show. The tiles are placeholders («Кабинет», «Холл», «Оборудование»,
@@ -369,6 +392,14 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   bar up under the header), and opening or switching glides (`revealPanel()`, `glideTo`) only when the panel's top
   is above the screen, so it starts under the bar; «Все разделы» glides back to the title. Desktop keeps the flying
   tabs and the line-up.
+- The footer's service links (2026-11-22, site review): they opened the section 3–4 thousand px up and left the page
+  where it was (the line-up only scrolled down, and `preventDefault` stopped the `#services` jump). The line-up is
+  now `barShift()`, measured from the services head, which the bar always follows: positive or negative, so the
+  page also scrolls up — from the footer, and on desktop when a card low in a scrolled grid hid the section's head
+  under the stuck bar. The cards fly only when the grid is on screen. On phones `revealPanel()` glides there too
+  when the panel is off the screen.
+- Tablets (2026-11-22): the tabs scroll sideways with a hidden scrollbar; the chosen one is scrolled into view
+  (`showTab`), and an edge with more tabs behind it fades (`.fade-l` / `.fade-r`, a mask; `tabsFade`).
 
 ## Booking by doctor (2026-11-20)
 
@@ -387,6 +418,14 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   round, unticking it in either takes it out, and «Выбрано N» counts it in both. Before, it could be booked twice.
   Diagnostics' step 2 counts a consultation ticked in treatment too (`catRoles`), or it said «Врач не нужен» next to
   a row showing «Консультация специалистов · терапевт» (found 2026-11-20).
+- Each consultation goes to a doctor of its speciality (2026-11-22): diagnostics' doctor is the one picked there if
+  the speciality matches, else the first of that role (`itemDoc`). Before, with a therapist consultation ticked in
+  treatment, an orthopedist one from diagnostics also went to the therapist. Diagnostics' pick follows its
+  consultations (`set()`): when they are gone (a ✕, «Сбросить всё») so is the doctor, and step 3 adds no doctor
+  where step 2 said «Врач не нужен».
+- After sending (`state.sent`), any new choice — a service, a consultation, a doctor anywhere — starts a new booking
+  with just that choice (`NEW_BOOKING` in `main.js`; name and phone stay). Before, the choices joined the sent
+  booking, which step 3 couldn't send again.
 - `state.extra` — doctors booked without services: a doctor card's «Записаться», the helper's «Записаться», a tile
   of the booking form, or going from step 2 to step 3 with none of the section's services ticked (then `cid` marks the
   section, and picking another doctor there replaces it instead of adding a second one).
@@ -472,6 +511,8 @@ Motion (2026-11-20, user: smoother, and centre on the story): the height glides 
 under the header when it is taller than the screen (phones); closing while scrolled into the panel glides back to
 the row. To check in the shot harness, patch `requestAnimationFrame` to a timer in `-Do` and click after the
 harness has scrolled (a `setTimeout`). Under 900 px the story is one column and the photo smaller; on phones the photo is a 4:3 band on top.
+641–900 px: two cards per row. `.doc` is content-box, so its paddings and borders (22 px) count on top of the
+flex basis: `calc(50% - 8px)` didn't fit two and every card took the full width (fixed 2026-11-22: `50% - 30px`).
 History (same day): the opened card first widened in its row with photo-beside-text (the layout snapped mid-motion),
 then via a View Transition, then with pinned photo heights; the user disliked all three («скачет», «не красиво»)
 and chose the panel under the row. To check the motion in the shot harness, re-enable `transition` in `-Do`, pause
@@ -493,6 +534,8 @@ links to Google Maps; the «Открыть в Google Картах» pill on it i
 Over its left part sits a white card: «Адрес», «ул. Липовая 18, офис 4», «г. Брест», rows with icon circles (the
 entrance, the two phones), and «Построить маршрут» (Yellow, Google Maps directions to the address) and «Записаться
 на приём». Under 760 px the map is a 260 px band above the card.
+The map link's accessible name starts with its visible text, «Открыть в Google Картах — клиника на карте» (2026-11-22,
+Lighthouse: voice control finds a link by what it shows).
 
 ## Reviews
 
