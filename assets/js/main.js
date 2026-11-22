@@ -907,8 +907,14 @@
     const from = reduceMotion.matches ? null
       : $$('.svc-bar__tab').map((b) => ({ cat: b.dataset.cat, r: b.getBoundingClientRect(), label: b.textContent }));
     const active = state.cat;
+    const barBottom = $('.svc-bar').getBoundingClientRect().bottom;
     if (from) $('#svc-grid').classList.add('is-landing');
     set({ cat: null, barOpen: false });
+    // the open panel was much taller than the grid: scrolled down into it, the page would now show what lies below
+    // Services for a moment and then travel up. Before the first frame, the grid is put right under where the bar was
+    // (the tabs drop into it from there), and only the short way to the title is glided.
+    const gap = $('#svc-grid').getBoundingClientRect().top - (barBottom + 16);
+    if (gap < 0) window.scrollBy(0, gap);
     // where a jump to #services stops (its scroll-margin), within what the page can scroll
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const y = Math.max(0, Math.min(max, sec.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(sec).scrollMarginTop) || 0)));

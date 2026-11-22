@@ -341,7 +341,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   cards under it; on desktop since 2026-11-22 (user: «так же красиво сворачивается, как и раскрывается») it is the
   opening in reverse, `flyToCards`: every tab flies down into its card (the active one fades from Navy to white),
   the label fading out and the photo strip in, aiming at where the cards will be after the scroll; a card shows as
-  its ghost lands and the ghost fades over it. Phones keep their glide. The tab bar is a floating capsule (rounded, 1 px Navy border),
+  its ghost lands and the ghost fades over it. Phones keep their glide. Closing from deep inside the tall panel first
+  showed what lies below Services and then travelled up (user: «немного скачет»): before the first frame the page now
+  puts the grid right under where the bar was, and only the short way to the title is glided. The tab bar is a floating capsule (rounded, 1 px Navy border),
   sticky 10 px under the header (user: the straight full-width bar looked out of place). The tabs grow to fill it
   (`flex: 1 0 auto`), so there is no empty end on the right; where they don't fit they scroll. The scrolling row has
   2 px of room on every side (`padding: 2px; margin: -2px`): on a Windows screen scaled to 125 % the chips' top and
