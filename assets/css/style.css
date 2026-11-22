@@ -103,10 +103,8 @@ a.tel-text:not([href]), a.tel-text:not([href]):hover { color: inherit; text-deco
    marks it .is-loading until it arrives); its own box, radius and crop give the placeholder its shape */
 img.is-loading { background: linear-gradient(100deg, #E3EDEB 30%, #F5F9F8 50%, #E3EDEB 70%); background-size: 300% 100%; animation: shimmer 1.4s ease-in-out infinite; }
 @keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
-/* tooltips (main.js, [data-tip]): the nav capsule's soft Mint, Navy text, a caret towards the element */
-.tip { position: fixed; z-index: 60; max-width: min(320px, calc(100vw - 16px)); box-sizing: border-box; padding: 8px 12px; border-radius: 12px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); color: var(--ink); font-size: 13px; font-weight: 600; line-height: 1.35; box-shadow: 0 8px 22px rgba(12, 44, 71, .16); pointer-events: none; animation: fadeIn .15s ease both; }
-.tip::after { content: ''; position: absolute; top: 100%; left: var(--tip-x, 50%); margin-left: -6px; border: 6px solid transparent; border-top-color: color-mix(in srgb, var(--tint) 35%, var(--white)); }
-.tip.is-below::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: color-mix(in srgb, var(--tint) 35%, var(--white)); }
+/* tooltips (main.js, [data-tip]): small, next to the mouse pointer; the nav capsule's soft Mint, Navy text */
+.tip { position: fixed; z-index: 60; max-width: min(260px, calc(100vw - 16px)); box-sizing: border-box; padding: 4px 9px; border-radius: 8px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.35; box-shadow: 0 4px 14px rgba(12, 44, 71, .16); pointer-events: none; animation: fadeIn .12s ease both; }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .ic--miter { stroke-linejoin: miter; }

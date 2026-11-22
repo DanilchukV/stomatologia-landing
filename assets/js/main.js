@@ -1228,40 +1228,43 @@
   }
 
   /* ---------- tooltips ---------- */
-  // a name cut with «…» ([data-tip]) shows whole in a tooltip in the site's colours (style.css .tip), above it (below
-  // when there is no room), while the mouse is over it or it has the keyboard focus; only when it is really cut, and
-  // not on touch screens (no hover there)
+  // a name cut with «…» ([data-tip]) shows whole in a small tooltip in the site's colours (style.css .tip): next to the
+  // mouse pointer, following it, so it never covers the name; under the element when it has the keyboard focus. Only
+  // when the name is really cut, and not on touch screens (no hover there)
   const tip = document.createElement('div');
   tip.className = 'tip';
   tip.setAttribute('role', 'tooltip');
   tip.hidden = true;
   document.body.appendChild(tip);
   let tipFor = null;
-  function showTip(el) {
-    const box = $('.visit__svc-n', el) || el;
-    if (box.scrollWidth <= box.clientWidth + 1) { hideTip(); return; }
+  const isCut = (el) => { const box = $('.visit__svc-n', el) || el; return box.scrollWidth > box.clientWidth + 1; };
+  // x, y: the point to show it at (below and right of it), kept on the screen
+  function placeTip(x, y) {
+    const t = tip.getBoundingClientRect();
+    tip.style.left = Math.max(8, Math.min(window.innerWidth - t.width - 8, x)) + 'px';
+    tip.style.top = (y + t.height + 8 > window.innerHeight ? y - t.height - 28 : y) + 'px';
+  }
+  function showTip(el, x, y) {
+    if (!isCut(el)) { hideTip(); return; }
     tipFor = el;
     tip.textContent = el.dataset.tip;
     tip.hidden = false;
-    const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
-    const below = r.top - t.height - 10 < 8;
-    tip.classList.toggle('is-below', below);
-    const left = Math.max(8, Math.min(window.innerWidth - t.width - 8, r.left + r.width / 2 - t.width / 2));
-    tip.style.left = left + 'px';
-    tip.style.top = (below ? r.bottom + 10 : r.top - t.height - 10) + 'px';
-    tip.style.setProperty('--tip-x', (r.left + r.width / 2 - left) + 'px');
+    placeTip(x, y);
   }
   function hideTip() { tipFor = null; tip.hidden = true; }
-  document.addEventListener('pointerover', (e) => {
+  document.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
     const el = e.target.closest('[data-tip]');
-    if (el !== tipFor) { if (el) showTip(el); else hideTip(); }
+    if (!el) { if (tipFor) hideTip(); return; }
+    if (el !== tipFor) showTip(el, e.clientX + 12, e.clientY + 18);
+    else placeTip(e.clientX + 12, e.clientY + 18);
   });
   document.addEventListener('focusin', (e) => {
     const el = e.target.closest('[data-tip]');
-    if (el && e.target.matches(':focus-visible')) showTip(el); else if (tipFor) hideTip();
+    if (el && e.target.matches(':focus-visible')) { const r = el.getBoundingClientRect(); showTip(el, r.left, r.bottom + 6); } else if (tipFor) hideTip();
   });
   document.addEventListener('focusout', hideTip);
+  document.addEventListener('pointerleave', hideTip);
   window.addEventListener('scroll', hideTip, { passive: true });
   document.addEventListener('click', hideTip, true);
 

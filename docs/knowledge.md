@@ -103,10 +103,11 @@ isn't `complete` the class `.is-loading` (a MutationObserver catches the ones ad
 `load`/`error` (capture listeners); `img.is-loading` has a Mint gradient moving across (`shimmer`), in the picture's
 own box, radius and crop. A class only while loading, so a loaded picture's markup is unchanged and `mount()` still
 matches unchanged booking groups. A tooth spinner is kept in mind for «Отправить заявку» once requests are really sent.
-Tooltips (2026-11-23, user: «тултип в цвет сайта, как в навигаторе»): a name cut with «…» (`[data-tip]`: the booking'sservice chips, the doctor's services list) shows whole in `.tip` — the nav capsule's soft Mint, Navy text, a carettowards it — above it (below when there is no room), on mouse hover or keyboard focus, only when it is really cut.It replaced the browser's grey `title` tooltip; touch screens have none (no hover).
-
-## Touch screens
-
+Tooltips (2026-11-23, user: «тултип в цвет сайта, как в навигаторе»): a name cut with «…» (`[data-tip]`: the booking's
+service chips, the doctor's services list) shows whole in `.tip` — the nav capsule's soft Mint, Navy text, small
+(12 px) — next to the mouse pointer and following it (user, the same day: the first version stood over the chip with a
+caret and covered the name), or under the element on keyboard focus; only when the name is really cut. It replaced
+the browser's grey `title` tooltip; touch screens have none (no hover).
 Phones have no hover — only taps, long presses and swipes (user, 2026-11-20). Every `:hover` rule sits in
 `@media (hover: hover)` (on the same line, in its component's place), otherwise a tapped card stays lifted and
 outlined until the next tap. Instead, `@media (hover: none)` at the end of "Shared" gives a press-in on `:active`
