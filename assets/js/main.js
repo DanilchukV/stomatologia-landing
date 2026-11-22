@@ -136,10 +136,11 @@
   const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '') + '#' + state.svcsAll.join();
 
   // the same list in step 3 of Services and the corner button; the booking form puts the same cards in the doctors' slots
-  // summary: the corner list only sums the booking up, with no «Услуги врача»
-  function visitsHTML(summary) { return `<ul class="visits">${visits().map((v) => visitHTML(v, summary)).join('')}</ul>`; }
+  // o.full: every service in full, names wrapping (Services' step 3, the corner list); o.summary: no «Услуги врача»
+  // (the corner list only sums the booking up); the booking form's cards pass neither (two services, «+N», «…»)
+  function visitsHTML(o) { return `<ul class="visits">${visits().map((v) => visitHTML(v, o)).join('')}</ul>`; }
   // one doctor's group (or diagnostics', id ''), and right after it that doctor's services list when open
-  function visitHTML(v, summary) {
+  function visitHTML(v, o = {}) {
     const d = v.doc;
     const who = d ? `<span class="av">${docAvatar(d, 20)}</span><span class="visit__who"><span class="visit__name">${esc(glue(docTitle(d)))}</span>${d.name ? `<span class="visit__spec">${esc(d.spec)}</span>` : ''}</span>`
       : `<span class="av">${icon('i-grid', 18, 2)}</span><span class="visit__who"><span class="visit__name">Диагностика</span><span class="visit__spec">без записи к&nbsp;врачу</span></span>`;
@@ -147,15 +148,15 @@
     // two services show; the rest behind a round «+N» with a down arrow at the end of the row (an up arrow folds them
     // again); one line each, a long name cut with «…», whole in its tooltip
     const all = state.svcsAll.includes(v.id);
-    const shown = all ? v.items : v.items.slice(0, SVCS_SHOWN);
+    const shown = all || o.full ? v.items : v.items.slice(0, SVCS_SHOWN);
     const rest = v.items.length - SVCS_SHOWN;
-    const fold = rest > 0 ? `<li class="visit__fold"><button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}" aria-label="${all ? 'Свернуть услуги' : 'Показать ещё ' + rest}">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</button></li>` : '';
+    const fold = rest > 0 && !o.full ? `<li class="visit__fold"><button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}" aria-label="${all ? 'Свернуть услуги' : 'Показать ещё ' + rest}">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</button></li>` : '';
     const svcs = v.items.length
-      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc" data-tip="${esc(x.n)}"><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
+      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc${o.full ? ' is-full"' : `" data-tip="${esc(x.n)}"`}><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
       : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
-    const open = !summary && state.addFor === v.id;
+    const open = !o.summary && state.addFor === v.id;
     // the list it opens closes with its own ✕ (pickerHTML); the button stays dark while it is open
-    const more = d && !summary && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
+    const more = d && !o.summary && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
     // the open doctor's services come right after the card (in a one-column list that is under it; the booking
     // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
     return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button></div>${notes}${svcs}${more}</li>${
@@ -469,7 +470,7 @@
     const empty = bookEmpty();
     mount($('#svc-sum'), visitsKey(), () => `
       <div class="svc-sum__row"><span class="svc-sum__k">Врачи и&nbsp;услуги</span><div class="svc-sum__v">${empty
-        ? `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>` : visitsHTML()}
+        ? `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>` : visitsHTML({ full: true })}
         <button type="button" class="add-svc" data-act="add-svc">${PLUS}${empty ? 'Выбрать услугу' : 'Добавить ещё услугу'}</button></div></div>`);
 
     // which step is shown, and the buttons under it
@@ -831,7 +832,7 @@
       </div>
       <button type="button" class="bk__pill" data-act="bk-toggle" aria-expanded="false" aria-controls="bk-pop"><span class="bk__count" id="bk-count"></span><span>Ваша запись</span>${icon('i-chev-up', 16, 2.4)}</button>`);
     $('#bk-pop').hidden = !state.bkOpen;
-    mount($('#bk-list'), visitsKey(), () => visitsHTML(true));
+    mount($('#bk-list'), visitsKey(), () => visitsHTML({ full: true, summary: true }));
     $('#bk-count').textContent = n;
     const pill = $('.bk__pill', bk);
     pill.setAttribute('aria-expanded', state.bkOpen);

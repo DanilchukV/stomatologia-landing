@@ -492,7 +492,9 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   суммирует», `visitsHTML(true)`). A group re-rendered for its open/closed button doesn't fade in
   again: `.is-new` is only for a doctor not in the list before (`data-id`).
   Several doctors (2026-11-22, user): the groups keep the team's order (the doctor tiles' order, `visits()` sorts
-  by it; before, a doctor jumped to the front when a service was added); a card shows two services (three until
+  Services' step 3 and the corner list show every service in full, names wrapping, with no «+N» (2026-11-23, user:
+  «там пусть пишутся нормально в строку все услуги, скрывать не будем»; `visitsHTML({ full: true })`).
+  by it; before, a doctor jumped to the front when a service was added); in the booking form a card shows two services (three until
   2026-11-23) and a round Navy «+N» with a down arrow, an up arrow folding them again: at the right end of the services,
   in the middle of their height, reaching a little over the chips' ends with a Mint ring (user: «должен находить и быть
   посередине, не сливаться по цвету»; the list keeps 28 px on the right so it never covers a chip's ✕; it was «Ещё N» /

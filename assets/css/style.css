@@ -737,6 +737,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__svc { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; min-height: 36px; padding: 4px 5px 4px 14px; box-sizing: border-box; border-radius: 18px; background: var(--white); font-size: 14px; font-weight: 500; line-height: 1.3; }
 /* one line each: a long name ends in «…» (the whole name is the chip's title) */
 .visit__svc-n { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Services' step 3 and the corner list show every name in full, wrapping */
+.visit__svc.is-full .visit__svc-n { white-space: normal; overflow: visible; overflow-wrap: break-word; }
 /* the round «+N» (an up arrow folds them again): Navy, at the right end of the services and in the middle of their
    height, reaching a little over the chips' ends; a ring in the card's Mint cuts it out of them, and the list keeps
    28 px on the right, so it never covers a chip's ✕ */
