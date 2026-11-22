@@ -66,7 +66,12 @@
     const dp = state.picks.diag && docById(state.picks.diag);
     if (dp) {
       const roles = catRoles(catById('diag'), state.cart);
-      if (!roles.includes(dp.role)) state.picks = { ...state.picks, diag: autoDoc(roles) };
+      if (!roles.includes(dp.role)) {
+        const pick = autoDoc(roles);
+        state.picks = { ...state.picks, diag: pick };
+        // a doctor booked alone from diagnostics' step 2 (goStep) goes with it
+        state.extra = state.extra.filter((x) => x.cid !== 'diag' || x.id === pick);
+      }
     }
     render();
   }
@@ -74,6 +79,8 @@
   // a service is one per booking, whichever section it was ticked in («Консультация терапевта» is both in
   // treatment and, as a consultation, in diagnostics)
   const inCart = (n) => state.cart.some((x) => x.n === n);
+  // a row's box is ticked: for «Консультация специалистов», when any of its specialists is chosen
+  const isTicked = (n) => (n === CONSULT ? CONSULT_SUBS.some(([, cn]) => inCart(cn)) : inCart(n));
   const catById = (id) => D.cats.find((c) => c.id === id);
   const currentSymptom = () => D.symptoms.find((x) => x.id === state.symptom) || null;
   // doctors are picked by id: names are empty until the clinic sends them, so the speciality stands in
@@ -853,7 +860,7 @@
     // (not when step 2 said «Врач не нужен»)
     const c = state.cat, id = state.picks[c];
     const noDoc = c === 'diag' && !catRoles(catById(c), state.cart).length;
-    if (k === 3 && state.svcStep === 2 && id && !noDoc && !state.cart.some((x) => x.cid === c && itemDoc(x))) patch.extra = withDoc(id, c);
+    if (k === 3 && state.svcStep === 2 && id && !noDoc && !state.sent && !state.cart.some((x) => x.cid === c && itemDoc(x))) patch.extra = withDoc(id, c);
     set(patch);
     const bar = $('#svc-steps');
     if (bar.getBoundingClientRect().top < $('.svc-bar').getBoundingClientRect().bottom) scrollToId('svc-steps');
@@ -899,11 +906,13 @@
 
     cat: (t, e) => { e.preventDefault(); openCat(t.dataset.cat); },
     'cat-tab': (t) => {
-      if (t.dataset.cat === state.cat) return;
+      // the current section again: nothing to open, but the phone's drop-down closes as with any other choice
+      if (t.dataset.cat === state.cat) { if (state.barOpen) set({ barOpen: false }); return; }
       openCat(t.dataset.cat);
     },
     // back to the section's title with all the cards under it
     'cat-close': () => {
+      if (!state.cat) return;
       closeCat();
       $('#services-title').focus({ preventScroll: true });
     },
@@ -921,9 +930,10 @@
     'svc-sub': (t) => {
       const cn = t.dataset.sub;
       const cat = catById(state.cat);
-      const rest = state.cart.filter((x) => !(isConsult(x.n) && (x.cid === cat.id || x.n === cn)));
       const adding = !inCart(cn);
-      const cart = adding ? rest.concat([{ n: cn, cat: cat.name, cid: cat.id }]) : rest;
+      // adding replaces this section's consultation; pressing a chosen one takes out only that one
+      const cart = adding ? state.cart.filter((x) => !(isConsult(x.n) && x.cid === cat.id)).concat([{ n: cn, cat: cat.name, cid: cat.id }])
+        : state.cart.filter((x) => x.n !== cn);
       set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(adding ? [CONSULT_ROLE[cn]] : catRoles(cat, cart)) }, docsAll: false });
     },
     'svc-toggle': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcOpen: state.svcOpen === n ? null : n }); },
@@ -1013,14 +1023,25 @@
     if (!t || !actions[t.dataset.act]) return;
     const act = t.dataset.act;
     // a choice made after sending starts a new booking with just that choice (name and phone stay)
-    if (state.sent && NEW_BOOKING.includes(act)) Object.assign(state, { sent: false, cart: [], extra: [], notes: [] });
+    if (state.sent && NEW_BOOKING.includes(act)) {
+      // the sent booking's ticks still show: unticking one of them only clears it (an emptied booking), it doesn't
+      // start a new one with that very service
+      const unticking = act === 'svc-check' ? isTicked(t.closest('.svc-row').dataset.svc)
+        : act === 'svc-sub' ? inCart(t.dataset.sub) : act === 'book-pick' && inBooking(t.dataset.id);
+      Object.assign(state, { sent: false, cart: [], extra: [], notes: [] });
+      if (unticking) { set({}); return; }
+    }
     const list = REMOVE.includes(act) ? t.closest('#svc-sum, #book-svcs, #bk-list') : null;
+    const btns = () => $$('.visit__drop, .visit__x', list);
+    const at = list ? btns().indexOf(t) : -1;
     actions[act](t, e);
-    // a ✕ takes its own button away: the focus goes to the next one in the list, else to «Добавить услугу»
-    if (list && !t.isConnected && list.isConnected && list.offsetParent) {
+    // a ✕ takes its own button away: the focus goes to the one now in its place, else to «Добавить услугу»
+    // (#svc-sum is display: contents, so visibility is checked on the button, not the list)
+    if (list && !t.isConnected && list.isConnected) {
       const bkBox = list.closest('.bk');
-      const next = $('.visit__drop, .visit__x, .add-svc', list) || (bkBox && $('.add-svc', bkBox));
-      if (next) next.focus({ preventScroll: true });
+      const left = btns();
+      const next = left[Math.min(at, left.length - 1)] || $('.add-svc', list) || (bkBox && $('.add-svc', bkBox));
+      if (next && next.offsetParent) next.focus({ preventScroll: true });
     }
   });
   const NEW_BOOKING = ['svc-check', 'svc-sub', 'panel-doc', 'book-pick', 'book-doc', 'helper-book'];
@@ -1038,6 +1059,9 @@
     const y = el.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
     glideTo(y, Math.min(1200, 500 + Math.abs(y - window.scrollY) / 8));
     history.replaceState(null, '', hash);
+    // the jump used to take the keyboard focus there too; the next Tab goes on from the target
+    if (!el.hasAttribute('tabindex') && !el.matches('a[href], button, input, select, textarea')) el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
   });
   // iOS Safari applies :active (the press-in in style.css) only when the page listens for touches
   document.addEventListener('touchstart', () => {}, { passive: true });

@@ -434,6 +434,10 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
 - After sending (`state.sent`), any new choice — a service, a consultation, a doctor anywhere — starts a new booking
   with just that choice (`NEW_BOOKING` in `main.js`; name and phone stay). Before, the choices joined the sent
   booking, which step 3 couldn't send again.
+  Code review (2026-11-22): unticking one of the sent booking's ticks (they still show) only clears it, it doesn't book
+  that service anew (`isTicked`); going from step 2 to step 3 after sending adds no doctor to the sent booking.
+- A consultation chip pressed in diagnostics takes out only that consultation (it took the section's other one too);
+  when diagnostics loses its doctor, a doctor booked alone from its step 2 goes as well (`extra` with `cid: 'diag'`).
 - `state.extra` — doctors booked without services: a doctor card's «Записаться», the helper's «Записаться», a tile
   of the booking form, or going from step 2 to step 3 with none of the section's services ticked (then `cid` marks the
   section, and picking another doctor there replaces it instead of adding a second one).
