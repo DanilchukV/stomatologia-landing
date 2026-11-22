@@ -662,7 +662,8 @@ a white card, label on the left, «Отправить заявку» at the bott
 - One row for the doctors (2026-11-22, user: «зачем нам дублировать врачей, только уже выбранных» — the «Врач» tiles
   and the cards of the chosen doctors showed each chosen doctor twice): a slot per doctor in the team's order; a doctor
   not chosen is a tile (photo above the name, cropped from the top so the head is whole, «+ Выбрать»; a row on
-  phones), a chosen one is their card in the same place (`visitHTML`: services, «Услуги врача», ✕ back to the tile).
+  phones), a chosen one is their card in the same place (`visitHTML`: services, «Услуги врача», ✕ back to the tile),
+  outlined in Yellow (2 px, as the chosen doctor in Services' step 2; user, 2026-11-23: «обведём выбранного врача»).
   Diagnostics without a doctor follows as a card of its own. With nothing chosen a line says the administrator will
   help. Before: a separate row of four tiles that toggled. «Любой врач» was dropped on 2026-11-20 with the move to
   several doctors: with none chosen the administrator picks.
