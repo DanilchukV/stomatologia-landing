@@ -126,6 +126,7 @@ Touch targets (2026-11-22, site review): small controls answer a bigger finger a
 buttons of the booking lists, a doctor card's «Подробнее» and «Записаться», the footer links.
 
 Landscape on phones: on 2026-11-22 a «Поверните телефон» cover for phones held sideways was added at the user's
+Centring in circles (2026-11-23, user: «выровняй все цифры в кружочках», «криво стоят стрелочки», «не ровный крестик»):every number in a circle is centred by its own height, `text-box: trim-both cap alphabetic` on a block around it(the helper's steps, the Services step numbers `.wiz__n`, the corner count `.bk__n`, «+N», the tooth numbers), not bythe font's uneven line box. The down and up chevrons (`i-chev`, `i-chev-row`, `i-chev-up`) are drawn 0.6 units offcentre towards their point, an optical correction: a «v» looks high when centred exactly (`i-prev`/`i-next` alreadyhad one). The ✕ of a doctor card and of the services list are 16 px in their 32 px circles, an offset of 8 that stayson whole pixels at 125 % and 150 % (14 px gave 9, blurred off-centre on Windows at 125 %).
 request and removed the same evening («убери функцию ориентации полностью»); it is in git history (`.rotate`).
 Round buttons in a rounded corner sit concentric with it (2026-11-22, user: «все элементы в кружочках выравниваем,сейчас криво»): the circle's centre on the corner's arc centre, so the gap to the edge is even all round — offset =inner corner radius − button radius. The doctor panel's ✕: 36 px, 8.5 px in from the 28 px corner (1.5 px border);on phones 32 px, concentric with the photo band's 20 px corner (16 px in). The helper's ✕: 10 px in from the dialog's32 px corner. (At 16 px they ran into the curve.) The icons inside every circle were measured centred (< 0.6 px).
 
@@ -404,7 +405,7 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   "Назад / Далее" below. Opening or switching a category resets it to step 1. Going to another step
   scrolls back to the step bar only if it is above the screen. With anything booked, on steps 1–2 step 3 calls
   (2026-11-23, user: «над 3 шагом пусть мигает и с подписью „ваша запись“»): its circle pulses Yellow and a Yellow
-  «Ваша запись · N» (`bookCount`) stands above it; gone on step 3 and with an empty booking.
+  «Ваша запись» (no number, the user's choice) stands above it; gone on step 3 and with an empty booking.
 - "Консультация специалистов" needs a specialist: its checkbox opens the row to choose one
   (therapist / orthopedist / surgeon / orthodontist), only one at a time. The row's name stays «Консультация
   специалистов» (until 2026-11-22 it added « · ортопед»; user: the chosen chip already says it).

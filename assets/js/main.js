@@ -161,7 +161,7 @@
     // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
     // the corner summary drops the doctor's ✕ when they have just one service: it would repeat that service's ✕
     const drop = !(o.summary && v.items.length === 1 && !notesOf(v.id).length);
-    return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}${drop ? `<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 14, 2.6)}</button>` : ''}</div>${notes}${svcs}${more}</li>${
+    return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}${drop ? `<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 16, 2.4)}</button>` : ''}</div>${notes}${svcs}${more}</li>${
       open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
   }
   const SVCS_SHOWN = 2;
@@ -190,7 +190,7 @@
   // with that doctor (`doc` on the cart item), or takes it out if it is booked already
   function pickerHTML(d) {
     // it fades in when it opens, not again each time a chip is pressed (the list is rebuilt then)
-    return `<div class="vpick${pickerFresh ? ' is-in' : ''}" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div><button type="button" class="vpick__x" data-act="visit-add" data-id="${d.id}" data-focus="va:${d.id}" aria-label="Закрыть услуги врача">${icon('i-close', 14, 2.6)}</button>${
+    return `<div class="vpick${pickerFresh ? ' is-in' : ''}" role="group" aria-label="Услуги врача: ${esc(docTitle(d))}"><div class="vpick__head"><span class="vpick__t">Услуги врача · ${esc(glue(docTitle(d)))}</span><span class="vpick__hint">${glue('нажмите, чтобы добавить или убрать')}</span></div><button type="button" class="vpick__x" data-act="visit-add" data-id="${d.id}" data-focus="va:${d.id}" aria-label="Закрыть услуги врача">${icon('i-close', 16, 2.4)}</button>${
       docServices(d).map((g) => `<div class="vpick__grp"><span class="caps">${esc(g.cat.name)}</span><div class="vpick__chips">${
         g.items.map((n) => `<button type="button" class="chip vpick__chip" aria-pressed="${inCart(n)}" data-act="visit-svc" data-id="${d.id}" data-svc="${esc(n)}" data-cid="${g.cat.id}" data-focus="vs:${esc(n)}" data-tip="${esc(n)}">${esc(n)}</button>`).join('')}</div></div>`).join('')}</div>`;
   }
@@ -258,7 +258,7 @@
       b.setAttribute('aria-pressed', 'false');
       b.style.cssText = `left:${pct(x, 1536)}%;top:${pct(y, 1024)}%;width:${pct(w, 1536)}%;height:${pct(h, 1024)}%`;
       b.innerHTML = `<svg viewBox="${x} ${y} ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path class="tooth__shape" d="${d}"/></svg>`
-        + `<span class="tooth__n" style="left:${cx}%;top:${cy}%">${qn(n)}</span>`;
+        + `<span class="tooth__n" style="left:${cx}%;top:${cy}%"><span>${qn(n)}</span></span>`;
       map.appendChild(b);
     });
   }
@@ -496,12 +496,12 @@
       if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       b.parentElement.classList.toggle('is-done', k < step);
     });
-    // something booked while on steps 1–2: step 3 calls with a pulsing ring and «Ваша запись · N» above it
+    // something booked while on steps 1–2: step 3 calls with a pulsing ring and «Ваша запись» above it
     const booked = bookCount();
     const calling = !!booked && step !== 3;
     const wizBadge = $('.wiz__badge', svcOpenBox);
     wizBadge.hidden = !calling;
-    wizBadge.textContent = 'Ваша запись · ' + booked;
+    wizBadge.textContent = 'Ваша запись';
     wizBadge.parentElement.classList.toggle('is-calling', calling);
     // the section's ticked rows, counting a service ticked in another section that is also listed here
     const n = cat.items.filter((x) => (x === CONSULT ? CONSULT_SUBS.some(([, cn]) => inCart(cn)) : inCart(x))).length;
@@ -884,7 +884,7 @@
       <button type="button" class="bk__pill" data-act="bk-toggle" aria-expanded="false" aria-controls="bk-pop"><span class="bk__count" id="bk-count"></span><span>Ваша запись</span>${icon('i-chev-up', 16, 2.4)}</button>`);
     $('#bk-pop').hidden = !state.bkOpen;
     mount($('#bk-list'), visitsKey(), () => visitsHTML({ full: true, summary: true }));
-    $('#bk-count').textContent = n;
+    $('#bk-count').innerHTML = '<span class="bk__n">' + n + '</span>';
     const pill = $('.bk__pill', bk);
     pill.setAttribute('aria-expanded', state.bkOpen);
     pill.classList.toggle('on-dark', !state.bkOpen && darkUnder(pill));

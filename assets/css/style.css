@@ -748,7 +748,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__svcs:has(> .visit__fold) { position: relative; padding-right: 28px; }
 .visit__fold { position: absolute; top: 50%; right: 0; transform: translateY(-50%); display: flex; }
 .visit__all { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: var(--white); box-shadow: 0 0 0 3px var(--tint); font: inherit; font-size: 12px; font-weight: 700; line-height: 1; cursor: pointer; transition: background-color .15s, color .15s; }
-.visit__all-n { margin-top: 1px; }
 @media (hover: hover) { .visit__all:hover { background: var(--accent); color: var(--ink); } }
 .visit__all .ic { display: block; }
 .visit__none { margin: 0; font-size: 14px; color: var(--muted); }
@@ -826,6 +825,8 @@ html:has(.helper[open]) { overflow: hidden; }
 /* the digit is centred by its own height (cap height to baseline), not by the font's line box, whose ascent and
    descent differ: by the line box it sat a pixel off on some screens (Windows at 125 %) */
 .hstep__n { line-height: 1; text-box: trim-both cap alphabetic; }
+/* the same for every number in a circle: the step numbers in Services, the corner count, «+N», the tooth numbers */
+.wiz__n, .bk__n, .visit__all-n, .tooth__n > span { display: block; line-height: 1; text-box: trim-both cap alphabetic; }
 .hstep__check { display: none; color: var(--white); }
 .hstep.is-done .hstep__dot { background: var(--ink); border-color: var(--ink); }
 .hstep.is-done .hstep__check { display: block; }
