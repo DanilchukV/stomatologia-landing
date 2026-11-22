@@ -492,8 +492,6 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   суммирует», `visitsHTML(true)`). A group re-rendered for its open/closed button doesn't fade in
   again: `.is-new` is only for a doctor not in the list before (`data-id`).
   Several doctors (2026-11-22, user): the groups keep the team's order (the doctor tiles' order, `visits()` sorts
-  Services' step 3 and the corner list show every service in full, names wrapping, with no «+N» (2026-11-23, user:
-  «там пусть пишутся нормально в строку все услуги, скрывать не будем»; `visitsHTML({ full: true })`).
   by it; before, a doctor jumped to the front when a service was added); in the booking form a card shows two services (three until
   2026-11-23) and a round Navy «+N» with a down arrow, an up arrow folding them again: at the right end of the services,
   in the middle of their height, reaching a little over the chips' ends with a Mint ring (user: «должен находить и быть
@@ -506,6 +504,8 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   form's grid (≥ 481 px) `order` and a full row put it under all the cards, so no card moves; the cards in a row are
   one height and «Услуги врача» sits at the bottom of each (`margin-top: auto`), so the buttons stand on one line
   (user, the same day; for an hour the cards kept their own heights and the buttons stood at different levels).
+  Services' step 3 and the corner list show every service in full, names wrapping, with no «+N» (2026-11-23, user:
+  «там пусть пишутся нормально в строку все услуги, скрывать не будем»; `visitsHTML({ full: true })`).
 
 **The corner button** (`#bk`, user's request, replacing the cart pill removed on 2026-11-19): «Ваша запись» with a
 Yellow count (services, plus 1 per doctor without services), bottom right, once anything is chosen. It opens a list
