@@ -635,7 +635,7 @@
   function renderFind() {
     const q = norm($('#svc-q').value).trim();
     if (q.length < 2) {
-      findBox.innerHTML = `<div class="svc-pop"><span class="svc-pop__h">Популярное:</span>${POPULAR.map(([n, label]) => `<button type="button" class="chip svc-pop__chip" data-act="svc-go" data-svc="${esc(n)}">${esc(label)}${D.prices[n] ? ` <b>от&nbsp;${D.prices[n]}&nbsp;руб.</b>` : ''}</button>`).join('')}</div>`;
+      findBox.innerHTML = `<div class="svc-pop"><span class="svc-pop__h">Популярное</span>${POPULAR.map(([n, label]) => `<button type="button" class="chip svc-pop__chip" data-act="svc-go" data-svc="${esc(n)}">${esc(label)}${D.prices[n] ? ` <b>от&nbsp;${D.prices[n]}&nbsp;руб.</b>` : ''}</button>`).join('')}</div>`;
       return;
     }
     const words = q.split(' ').map((w) => ' ' + w);
@@ -989,12 +989,14 @@
     else if (gap < 0) glideTo(window.scrollY + gap, 550);
   }
   // the tab bar stays above the section: opening one puts its panel in the grid's place under the bar, and on
-  // desktop the bar is lined up where it sticks under the header (down from the section's top, up from the footer)
+  // desktop the page scrolls so the section's steps come right under the bar stuck under the header
   function openCat(id) {
     set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false, svcOpen: null, barOpen: false });
     if (swipeMedia.matches) revealPanel();
     else {
-      const shift = barShift();
+      // the section's steps and services right under the stuck tab bar, its head photo scrolled away above
+      // (user, 2026-11-23: «вот так центрируем»)
+      const shift = $('#svc-steps').getBoundingClientRect().top - (hdr.getBoundingClientRect().bottom + 10 + $('.svc-bar').offsetHeight + 16);
       if (Math.abs(shift) > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
     }
     $('.svc-panel__name').focus({ preventScroll: true });

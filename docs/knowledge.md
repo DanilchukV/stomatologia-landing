@@ -481,8 +481,10 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   mention Services' step 3, `svc-sum` or `svc-form` describe that removed step.
 - «Выбрать ещё услугу» (phones «Ещё услуга») beside «К записи» once a service is ticked: the sections' menu. The
   popular row is one line everywhere (it swipes where it doesn't fit). The in-panel «Все разделы» went (the tab bar has
-  it); opening a section lines the tab bar up under the header below the search, and on phones «Все разделы» glides
-  to the list of sections, so the choice shows rather than the search.
+  it); on desktop opening a section scrolls its steps right under the stuck tab bar (the head photo above the
+  screen; user: «вот так центрируем»), and on phones «Все разделы» glides
+  to the list of sections, so the choice shows rather than the search. The popular pills have no outline (soft Mint,
+  darker on hover/press), «ПОПУЛЯРНОЕ» is a small caption; the search field has only the box's Yellow focus ring.
 - No doctor step when the section has one doctor (or diagnostics needs none): step 1's button is «К записи» at once
   (`docStep()`).
 

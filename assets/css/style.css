@@ -562,13 +562,18 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-find__box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(240, 170, 47, .35); }
 .svc-find__ic { flex: none; display: block; }
 .svc-find__q { flex: 1; min-width: 0; height: 48px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: var(--fs-l); outline: none; }
+/* the box shows the focus (its Yellow ring); the field's own focus ring drew a second, dark frame inside it */
+.svc-find__q:focus-visible { outline: none; box-shadow: none; }
 .svc-find__q::placeholder { color: var(--muted); opacity: 1; }
 /* one row; where it doesn't fit it swipes (2 px of room for the focus ring) */
 .svc-pop { display: flex; align-items: center; gap: 8px; margin: -2px; padding: 2px; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
 .svc-pop::-webkit-scrollbar { display: none; }
 .svc-pop__h, .svc-pop__chip { flex: none; }
-.svc-pop__h { margin-right: 2px; font-size: var(--fs-s); font-weight: 600; color: var(--muted); }
-.svc-pop__chip { min-height: 38px; padding: 0 14px; font-size: var(--fs-m); }
+.svc-pop__h { margin-right: 4px; font-size: var(--fs-xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+/* soft pills without outlines (user: too many outlines in that row); hover and press darken them */
+.svc-pop__chip { min-height: 38px; padding: 0 16px; border-color: transparent; background: color-mix(in srgb, var(--tint) 40%, var(--white)); font-size: var(--fs-m); }
+@media (hover: hover) { .svc-pop__chip:hover { background: color-mix(in srgb, var(--tint) 80%, var(--white)); } }
+.svc-pop__chip:active { background: color-mix(in srgb, var(--tint) 80%, var(--white)); }
 .svc-pop__chip b { color: var(--accent-ink); font-weight: 700; }
 .svc-hits { display: flex; flex-direction: column; border: 1.5px solid var(--line); border-radius: 18px; background: var(--white); overflow: hidden; }
 .svc-hit { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 18px; border: 0; border-top: 1px solid var(--line-2); background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
