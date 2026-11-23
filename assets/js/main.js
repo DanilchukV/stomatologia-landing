@@ -515,8 +515,9 @@
       if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       b.parentElement.classList.toggle('is-done', k < step);
     });
-    // the section's ticked rows, counting a service ticked in another section that is also listed here
-    const n = cat.items.filter((x) => (x === CONSULT ? CONSULT_SUBS.some(([, cn]) => inCart(cn)) : inCart(x))).length;
+    // every service chosen, in all sections: counted for this section only, a second one from another section went
+    // unseen (user, 2026-11-23: «почему одна, если я выбрала две?»)
+    const n = state.cart.length;
     $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
       : noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи'));
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
