@@ -70,6 +70,10 @@ seven colours with Mauve, Green and Mint (`4556e29`), four without Mint (`0a844e
 The hero photo (AI-generated, from the design) had the VestMedServis logo on the coat; it was painted
 out on 2026-11-03 (each column of the patch interpolated between the rows above and below, in a canvas,
 re-encoded as WebP). `og-image.jpg` was rebuilt from an HTML layout with the new logo and address.
+On 2026-11-23 the hero photo was replaced with the user's «Улыбающийся стоматолог в современной клинике» (1448 ×
+1086 PNG → `hero.webp`, cwebp -q 80 -m 6 -sharp_yuv, 67 KB; linked as `hero.webp?v=2`). The doctor stands at 41 % of
+it; on phones the hand-lettered motto went 24 px higher, off the chair's monitor, with a wider white halo.
+`og-image.jpg` still shows the old photo.
 
 ## Typography (line breaks)
 

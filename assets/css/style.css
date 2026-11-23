@@ -344,7 +344,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 /* the photo reaches the right edge of the header's CTA: header content is 1440 px max, hero content 1320 */
 .hero { container-type: inline-size; }
 .hero__media { flex: 1 1 560px; min-width: 0; min-height: 600px; position: relative; margin-right: calc(min(660px, 50cqw - var(--gutter)) - min(720px, 50cqw - var(--gutter))); }
-/* leaf shape: big rounding top-left and bottom-right; the doctor stands at 31 % of the picture, 0 % keeps her nearest the middle */
+/* leaf shape: big rounding top-left and bottom-right; the doctor stands at 41 % of the picture, 0 % keeps her nearest the middle */
 .hero__img { position: absolute; top: 48px; left: 0; width: 100%; height: calc(100% - 48px); object-fit: cover; object-position: 0% 50%; border-radius: 44% 32px / 50% 32px; }
 /* the cards span from the text column to the photo's right edge (the header CTA), as .hero__media */
 .hero__facts { margin: -64px calc(50cqw - min(720px, 50cqw - var(--gutter))) 0 calc(50cqw - min(660px, 50cqw - var(--gutter))); position: relative; z-index: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; }
@@ -409,10 +409,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 480px) {
   /* the motto, hand-lettered on the photo's light wall right of the doctor's head (user, 2026-11-23; wider than
      480 px the wall there is busy with the lamp and instruments). The text
-     column started 310 - 96 = 214 px below the photo's top, so -208 px is 6 px into it, over the arch's edge; its margin is
+     column started 310 - 96 = 214 px below the photo's top, so -232 px is 18 px above it, over the arch's edge; its margin is
      35 px smaller than above, so the title stays where it was with the motto in the column */
   .hero__text { margin-top: -61px; }
-  .hero .hero__motto { position: absolute; top: -208px; right: 0; display: flex; flex-direction: column; align-items: center; font-family: var(--f-hand); font-size: var(--fs-2xl); font-weight: 700; line-height: .95; letter-spacing: .02em; text-transform: none; transform: rotate(-6deg); text-shadow: 0 0 6px rgba(255, 255, 255, .9); pointer-events: none; animation: fadeIn .8s ease .4s both; }
+  .hero .hero__motto { position: absolute; top: -232px; right: 0; display: flex; flex-direction: column; align-items: center; font-family: var(--f-hand); font-size: var(--fs-2xl); font-weight: 700; line-height: .95; letter-spacing: .02em; text-transform: none; transform: rotate(-6deg); text-shadow: 0 0 6px rgba(255, 255, 255, .95), 0 0 14px rgba(255, 255, 255, .9); pointer-events: none; animation: fadeIn .8s ease .4s both; }
   .hero__actions { flex-wrap: nowrap; gap: 10px; margin-top: 4px; }
   .btn--hero { flex: 1 1 0; min-width: 0; min-height: 54px; padding: 0 12px; font-size: var(--fs-m); white-space: nowrap; }
   .btn--hero .ic { display: none; }
