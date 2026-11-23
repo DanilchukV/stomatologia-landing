@@ -84,7 +84,8 @@ CSS: headings and `summary` use `text-wrap: balance`, paragraphs `pretty`. When 
 
 ## Fonts
 
-Nunito (headings, `--f-head`), Nunito Sans (text, `--f-body`) and Playfair Display italic (only the motto in
+Nunito (headings, `--f-head`), Nunito Sans (text, `--f-body`), Amatic SC Bold (`--f-hand`, only the hero motto on
+phones, see Hero) and Playfair Display italic (only the motto in
 "О клинике"). Chosen 2026-11-20 by the user from a side-by-side comparison of free Cyrillic Google Fonts (Nunito
 liked; of «Nunito везде», «Nunito + Golos Text» and «Nunito + Nunito Sans» the last: the same rounded family, but
 the small text — service descriptions, stories, the form — stays crisp; Golos is wider and would have broken the
@@ -277,6 +278,12 @@ and no movement. The icon sits beside the title and the text runs the full card 
 the braces card wrapped to three lines), so all three texts take two lines at ≥ 1280 px and the cards are level.
 At 641–1000 px the three cards are one row (2026-11-22; before, two and one), with the icon above the title:
 beside it «Протезирование» didn't fit a third of a tablet.
+
+Hand-lettered motto (2026-11-23, user: «Amatic SC … сбоку фото, не перекрывая лицо девушки … не перегрузить»): up
+to 480 px the eyebrow «Здоровые улыбки — счастливые люди» leaves the text column and sits on the photo, on the light
+wall right of the doctor's head, in Amatic SC Bold (`--f-hand`, self-hosted, bold only), 24 px, four short lines,
+Terracotta, tilted −6°, with a soft white halo; it fades in. The title keeps its place (the column's negative margin
+is 35 px smaller). From 481 px the photo's crop puts the lamp and instruments there, so the plain eyebrow stays.
 
 ## Finder (the helper's mini section)
 
