@@ -851,13 +851,18 @@
       return v ? visitHTML(v) : `<li class="visit-slot"><button type="button" class="book-doc" data-act="book-pick" data-id="${d.id}" data-focus="slot:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(docTitle(d)))}</span><span class="book-doc__sub">${esc(d.spec)}</span></span><span class="book-doc__add">${PLUS}Выбрать</span></button></li>`;
     }).join('') + vs.filter((v) => !v.doc || !BOOKABLE.includes(v.doc.role)).map(visitHTML).join('');
     // phones: the doctors as one row of round photos (speciality, surname) above the chosen ones' cards; the tiles
-    // in the slots are hidden there (style.css). A tap chooses a doctor or takes them out again
-    const picks = `<div class="book-pick" role="group" aria-label="Врачи">${D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
-      const on = vs.some((x) => x.id === d.id);
-      const short = d.name ? d.name.split(' ').slice(1).join(' ') || d.name : '';
-      return `<button type="button" class="book-pick__doc" data-act="book-pick" data-id="${d.id}" data-focus="pick:${d.id}" aria-pressed="${on}" aria-label="${esc(docTitle(d))}, ${esc(d.spec)}"><span class="book-pick__ph"><span class="av">${docAvatar(d, 20)}</span><span class="book-pick__tick">${icon('i-check', 12, 3)}</span></span><span class="book-pick__spec">${esc(d.spec)}</span>${short ? `<span class="book-pick__name">${esc(glue(short))}</span>` : ''}</button>`;
-    }).join('')}</div>`;
-    const rebuilt = mount(svcsBox, visitsKey() + '#slots', () => `${picks}<ul class="visits book__slots">${slots}</ul>${bookEmpty()
+    // in the slots are hidden there (style.css). A tap chooses a doctor or takes them out again. Built once and
+    // only re-marked: rebuilt with the list, its photos blinked out on an iPhone at every tap
+    let picksBox = $('.book-pick', svcsBox);
+    if (!picksBox) {
+      svcsBox.innerHTML = `<div class="book-pick" role="group" aria-label="Врачи">${D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
+        const short = d.name ? d.name.split(' ').slice(1).join(' ') || d.name : '';
+        return `<button type="button" class="book-pick__doc" data-act="book-pick" data-id="${d.id}" aria-pressed="false" aria-label="${esc(docTitle(d))}, ${esc(d.spec)}"><span class="book-pick__ph"><span class="av">${docAvatar(d, 20)}</span><span class="book-pick__tick">${icon('i-check', 12, 3)}</span></span><span class="book-pick__spec">${esc(d.spec)}</span>${short ? `<span class="book-pick__name">${esc(glue(short))}</span>` : ''}</button>`;
+      }).join('')}</div><div class="book__slots-box"></div>`;
+      picksBox = $('.book-pick', svcsBox);
+    }
+    $$('.book-pick__doc', picksBox).forEach((b) => b.setAttribute('aria-pressed', vs.some((x) => x.id === b.dataset.id)));
+    const rebuilt = mount($('.book__slots-box', svcsBox), visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
       ? `<p class="book__empty">${glue('Можно не выбирать — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`}`);
     // a doctor coming or going, a services list opening or closing: the form glides, clipped at its growing edge.

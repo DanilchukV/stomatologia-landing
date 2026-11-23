@@ -648,7 +648,10 @@ back — the user wants two visible.) With one or two services the pills keep th
 Doctors in the form on phones (2026-11-23, user: «мне кажется форма сложной»): up to 480 px the four tiles give way
 to one row of round photos (60 px; speciality, surname) above the cards of the chosen doctors; a tap chooses a doctor
 (Orange ring, Navy tick) or takes them out again (`book-pick`). Under 360 px only the speciality shows. Chosen over a
-compact list and a 2 × 2 grid, which the user was also offered.
+compact list and a 2 × 2 grid, which the user was also offered. The row is built once and only re-marked
+(`.book-pick` in `#book-svcs`, the cards in `.book__slots-box`, `display: contents`, rebuilt by `mount`): rebuilt
+at every tap, its photos blinked out on an iPhone (user's recording, 2026-11-23). The chosen cards' Orange ring and
+the open card's Navy one are inset: drawn outside the card, Safari sometimes left a strip of it after the card went.
 
 ## Back-to-top
 
