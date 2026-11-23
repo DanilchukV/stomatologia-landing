@@ -46,6 +46,8 @@
   const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one
     : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many);
   const servicesWord = (n) => plural(n, 'услуга', 'услуги', 'услуг');
+  // «от 90 руб.» from the price list (data.js prices; nothing for a service without a price)
+  const priceHTML = (n, cls) => (D.prices[n] ? `<span class="${cls}">от&nbsp;${D.prices[n]}&nbsp;руб.</span>` : '');
   const doctorsWord = (n) => plural(n, 'врач', 'врача', 'врачей');
   const initials = (name) => name.split(' ').slice(0, 2).map((w) => w[0]).join('');
   const person = (size) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5"/></svg>`;
@@ -655,7 +657,7 @@
     return `<div class="svc-row" data-svc="${esc(n)}">
       <div class="svc-row__bar">
         <button type="button" class="svc-row__check" data-act="svc-check" aria-pressed="false" data-focus="chk:${esc(n)}"><span class="box box--lg">${icon('i-check', 14, 3.2)}</span></button>
-        <button type="button" class="svc-row__toggle" data-act="svc-toggle" aria-expanded="false" data-focus="tgl:${esc(n)}"><span class="svc-row__label"></span><span class="svc-row__chev">${icon('i-chev-row', 16, 2.4)}</span></button>
+        <button type="button" class="svc-row__toggle" data-act="svc-toggle" aria-expanded="false" data-focus="tgl:${esc(n)}"><span class="svc-row__txt"><span class="svc-row__label"></span>${priceHTML(n, 'svc-row__price')}</span><span class="svc-row__chev">${icon('i-chev-row', 16, 2.4)}</span></button>
       </div>
       <div class="drawer"><div><div class="svc-row__content">${subs}<p class="svc-row__desc">${esc(glue(D.serviceText[n] || 'Подробности расскажет врач на консультации.'))}</p>${more}</div></div></div>
     </div>`;
