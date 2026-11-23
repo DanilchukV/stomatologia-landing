@@ -804,6 +804,15 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__all { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: var(--white); box-shadow: 0 0 0 3px var(--tint); font: inherit; font-size: var(--fs-xs); font-weight: 700; line-height: 1; cursor: pointer; transition: background-color .15s, color .15s; }
 @media (hover: hover) { .visit__all:hover { background: var(--accent); color: var(--ink); } }
 .visit__all .ic { display: block; }
+/* phones, the form's cards (user, 2026-11-23): the services reach the card's right edge, and the round «+N» sits
+   over their right ends, on the seam between the two; their ✕ moves left of it */
+@media (max-width: 480px) {
+  .book__slots .visit__svc { flex-basis: 100%; }
+  .book__slots .visit__svcs:has(> .visit__fold) { padding-right: 0; }
+  .book__slots .visit__svcs:has(> .visit__fold) > .visit__svc { padding-right: 44px; }
+  /* right: 0, the circle (36 px) concentric with the pills' rounded ends (36 px tall) */
+  .book__slots .visit__fold { right: 0; }
+}
 .visit__none { margin: 0; font-size: var(--fs-m); color: var(--muted); }
 /* the reason from the helper: a white strip like the service chips */
 .visit__note { display: flex; align-items: center; gap: 10px; margin: 0; padding: 6px 5px 6px 14px; border-radius: 18px; background: var(--white); font-size: var(--fs-m); line-height: 1.4; }

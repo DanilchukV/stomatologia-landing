@@ -594,6 +594,7 @@ the booking card is on screen (it shows the same) and after sending; the back-to
 On phones (2026-11-22, site review) the list fits between the header and the button, the cookie notice counted
 (`max-height` from `100dvh`, `--hdr-h` and `--cookie-h`; 72vh ran under the header at 360×640), and «Оформить» wraps
 under «Добавить услугу» when both don't fit (it stuck out of the card at 360 px).
+Services in the form's cards on phones (2026-11-23, user): two show, then the round «+N»; up to 480 px the pills reachthe card's right edge and the «+N» sits over their right ends, on the seam between the two, concentric with theirrounded ends; their ✕ moves 44 px in. (Folding all of them into «Выбрано услуг: N» was tried the same day and takenback — the user wants two visible.)
 
 ## Back-to-top
 
