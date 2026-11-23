@@ -55,7 +55,9 @@ if [ -d "/Applications/Google Chrome.app" ]; then
     --user-data-dir="$HOME/Library/Application Support/stomatologia-mobile-preview" \
     --no-first-run --no-default-browser-check \
     --app="$URL" --window-size=406,900 --window-position=40,40 \
-    --user-agent="$UA"
+    --user-agent="$UA" \
+    --blink-settings=primaryHoverType=1,availableHoverTypes=1,primaryPointerType=2,availablePointerTypes=2
+  # ^ report a touch screen (hover: none, pointer: coarse), as a phone does - with a mouse Chrome reports hover
   echo 'Opened: desktop tab + mobile window.'
 else
   echo 'Chrome not found — no mobile window. Use DevTools → Cmd+Shift+M.'

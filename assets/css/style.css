@@ -1196,7 +1196,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .side-arrow .ic { display: block; }
 .side-arrow--prev { left: -22px; }
 .side-arrow--next { right: -22px; }
-.side-arrow:hover, .side-arrow:active { transform: translateY(-50%) scale(1.06); }
+@media (hover: hover) { .side-arrow:hover { transform: translateY(-50%) scale(1.06); } }
+.side-arrow:active { transform: translateY(-50%) scale(1.06); }
 .dots-row { display: flex; justify-content: center; align-items: center; gap: 20px; padding-top: 4px; }
 /* with a doctor's story open the page dots fade out (paging would close it); they keep their room, so nothing below moves */
 .dots-row { transition: opacity .3s ease, visibility .3s; }

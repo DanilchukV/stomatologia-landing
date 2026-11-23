@@ -64,5 +64,7 @@ Start-Process $browser -ArgumentList @(
     "--user-data-dir=`"$env:LOCALAPPDATA\stomatologia-mobile-preview`"",
     '--no-first-run', '--no-default-browser-check',
     "--app=$url", '--window-size=406,900', '--window-position=40,40',
-    "--user-agent=`"$ua`"")
+    "--user-agent=`"$ua`"",
+    # report a touch screen (hover: none, pointer: coarse), as a phone does - with a mouse Chrome reports hover
+    '--blink-settings=primaryHoverType=1,availableHoverTypes=1,primaryPointerType=2,availablePointerTypes=2')
 Write-Host 'Opened: desktop tab + mobile window.'
