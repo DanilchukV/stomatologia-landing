@@ -1635,6 +1635,22 @@ html:has(.helper[open]) { overflow: hidden; }
   .to-top.is-raised { bottom: calc(96px + env(safe-area-inset-bottom, 0px) + var(--cookie-h, 0px)); }
 }
 
+/* ===== Rotate notice (phones held sideways) ===== */
+/* the site is portrait only on phones (user, 2026-11-22; brought back 2026-11-23): a web page can't lock the
+   orientation, so a phone on its side (coarse pointer, a short landscape screen; tablets are taller) gets this cover
+   until it is turned back */
+.rotate { display: none; }
+@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .rotate { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; background: var(--white); color: var(--ink); text-align: center; }
+  .rotate__ic { color: var(--accent-ink); margin-bottom: 8px; animation: rotateHint 2.4s var(--ease-out) infinite; }
+  .rotate__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: var(--fs-2xl); }
+  .rotate__text { margin: 0; font-size: var(--fs-m); color: var(--muted); }
+  html { overflow: hidden; }
+  /* the helper dialog sits in the top layer, above any z-index */
+  .helper[open] { display: none; }
+}
+@keyframes rotateHint { 0%, 30% { transform: rotate(-90deg); } 60%, 100% { transform: rotate(0deg); } }
+
 /* ===== Cookie notice ===== */
 .cookie { position: fixed; left: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 38; box-sizing: border-box; max-width: 460px; display: flex; align-items: center; gap: 14px; padding: 14px 14px 14px 16px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); color: var(--ink); box-shadow: 0 16px 40px rgba(12, 44, 71, .18); }
 .cookie.is-in { animation: cookieIn .45s var(--ease-out) both; }

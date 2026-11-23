@@ -174,10 +174,25 @@ Touch targets (2026-11-22, site review): small controls answer a bigger finger a
 (`@media (pointer: coarse)`, a transparent `::after` around them or padding offset by a negative margin): the ✕
 buttons of the booking lists, a doctor card's «Подробнее» and «Записаться», the footer links.
 
-Landscape on phones: on 2026-11-22 a «Поверните телефон» cover for phones held sideways was added at the user's
-Centring in circles (2026-11-23, user: «выровняй все цифры в кружочках», «криво стоят стрелочки», «не ровный крестик»):every number in a circle is centred by its own height, `text-box: trim-both cap alphabetic` on a block around it(the helper's steps, the Services step numbers `.wiz__n`, the corner count `.bk__n`, «+N», the tooth numbers), not bythe font's uneven line box. The down and up chevrons (`i-chev`, `i-chev-row`, `i-chev-up`) are drawn 0.6 units offcentre towards their point, an optical correction: a «v» looks high when centred exactly (`i-prev`/`i-next` alreadyhad one). The ✕ of a doctor card and of the services list are 16 px in their 32 px circles, an offset of 8 that stayson whole pixels at 125 % and 150 % (14 px gave 9, blurred off-centre on Windows at 125 %).
-request and removed the same evening («убери функцию ориентации полностью»); it is in git history (`.rotate`).
-Round buttons in a rounded corner sit concentric with it (2026-11-22, user: «все элементы в кружочках выравниваем,сейчас криво»): the circle's centre on the corner's arc centre, so the gap to the edge is even all round — offset =inner corner radius − button radius. The doctor panel's ✕: 36 px, 8.5 px in from the 28 px corner (1.5 px border);on phones 32 px, concentric with the photo band's 20 px corner (16 px in). The helper's ✕: 10 px in from the dialog's32 px corner. (At 16 px they ran into the curve.) The icons inside every circle were measured centred (< 0.6 px).
+Landscape on phones: a «Поверните телефон» cover for phones held sideways (`.rotate`: coarse pointer, landscape,
+under 500 px high — tablets are taller; a white screen with a turning phone, the page under it doesn't scroll and the
+helper dialog hides). Added 2026-11-22 at the user's request, removed the same evening («убери функцию ориентации
+полностью»), brought back on 2026-11-23 («да, верни. Нравилась»).
+
+Centring in circles (2026-11-23, user: «выровняй все цифры в кружочках», «криво стоят стрелочки», «не ровный
+крестик»): every number in a circle is centred by its own height, `text-box: trim-both cap alphabetic` on a block
+around it (the helper's steps, the Services step numbers `.wiz__n`, the corner count `.bk__n`, «+N», the tooth
+numbers), not by the font's uneven line box. The down and up chevrons (`i-chev`, `i-chev-row`, `i-chev-up`) are drawn
+0.6 units off centre towards their point, an optical correction: a «v» looks high when centred exactly
+(`i-prev`/`i-next` already had one). The ✕ of a doctor card and of the services list are 16 px in their 32 px
+circles, an offset of 8 that stays on whole pixels at 125 % and 150 % (14 px gave 9, blurred off-centre on Windows at
+125 %).
+
+Round buttons in a rounded corner sit concentric with it (2026-11-22, user: «все элементы в кружочках выравниваем,
+сейчас криво»): the circle's centre on the corner's arc centre, so the gap to the edge is even all round — offset =
+inner corner radius − button radius. The doctor panel's ✕: 36 px, 8.5 px in from the 28 px corner (1.5 px border);
+on phones 32 px, concentric with the 24 px corner (6.5 px in). The helper's ✕: 10 px in from the dialog's 32 px
+corner. (At 16 px they ran into the curve.) The icons inside every circle were measured centred (< 0.6 px).
 
 ## Keyboard and screen readers (2026-11-22, site review)
 
