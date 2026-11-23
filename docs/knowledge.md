@@ -607,6 +607,11 @@ the card's right edge and the «+N» sits over their right ends, on the seam bet
 rounded ends; their ✕ moves 44 px in. (Folding all of them into «Выбрано услуг: N» was tried the same day and taken
 back — the user wants two visible.) With one or two services the pills keep their own width.
 
+Doctors in the form on phones (2026-11-23, user: «мне кажется форма сложной»): up to 480 px the four tiles give way
+to one row of round photos (60 px; speciality, surname) above the cards of the chosen doctors; a tap chooses a doctor
+(Orange ring, Navy tick) or takes them out again (`book-pick`). Under 360 px only the speciality shows. Chosen over a
+compact list and a 2 × 2 grid, which the user was also offered.
+
 ## Back-to-top
 
 Back-to-top shows
