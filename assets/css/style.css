@@ -849,6 +849,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .vpick__chips { display: flex; flex-wrap: wrap; gap: 6px; }
 /* one line: a long name ends in «…» (whole in the title), so the chips keep one height */
 .vpick__chip { max-width: 100%; min-height: 36px; padding: 0 14px; font-size: var(--fs-m); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* phones: no hover to show the title, so a long name wraps whole instead of ending in «…» (user, 2026-11-23) */
+@media (max-width: 640px) {
+  .vpick__chip { padding: 7px 14px; border-radius: 18px; line-height: 1.3; text-align: left; white-space: normal; }
+}
 
 /* ===== Helper (dialog: tooth → symptom → which doctor, one step at a time) ===== */
 /* one size for every step */
