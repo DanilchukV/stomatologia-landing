@@ -84,10 +84,11 @@
 
 /* ===== Base ===== */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-/* no page zoom on phones (user, 2026-11-23): no double-tap or pinch zoom; see main.js for iOS */
+/* no page zoom on phones (user, 2026-11-23): no double-tap or pinch zoom; see main.js for iOS. On every element:
+   inside a scrolling box (the helper's steps, the rows that swipe) a rule on html alone no longer applied */
 @media (pointer: coarse) {
-  html { touch-action: pan-x pan-y; }
-  html.zoomed { touch-action: auto; }
+  html, html * { touch-action: pan-x pan-y; }
+  html.zoomed, html.zoomed * { touch-action: auto; }
 }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: var(--fs-l); line-height: 1.55; }
 :where(a) { color: var(--ink); }

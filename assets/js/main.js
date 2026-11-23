@@ -1289,7 +1289,8 @@
   // no page zoom on phones: iOS ignores user-scalable=no and touch-action stops only double-tap zoom, so the pinch is
   // cancelled here (Safari's gesture events, a second finger). A pinch during inertial scrolling can't be cancelled;
   // once zoomed in nothing is blocked (html.zoomed lifts touch-action too), so the visitor can pinch back out
-  const zoomedIn = () => !!window.visualViewport && visualViewport.scale > 1.01;
+  // zoomed either way: in, or out (iOS lets a page zoom out when something is wider than the screen)
+  const zoomedIn = () => !!window.visualViewport && Math.abs(visualViewport.scale - 1) > .01;
   if (window.visualViewport) visualViewport.addEventListener('resize', () => document.documentElement.classList.toggle('zoomed', zoomedIn()));
   ['gesturestart', 'gesturechange', 'gestureend'].forEach((ev) => document.addEventListener(ev, (e) => { if (!zoomedIn()) e.preventDefault(); }, { passive: false }));
   document.addEventListener('touchmove', (e) => { if (!zoomedIn() && (e.touches.length > 1 || (e.scale && e.scale !== 1))) e.preventDefault(); }, { passive: false });
