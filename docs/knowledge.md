@@ -494,6 +494,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   darker on hover/press), «ПОПУЛЯРНОЕ» is a small caption; the search field has only the box's Yellow focus ring.
 - No doctor step when the section has one doctor (or diagnostics needs none): step 1's button is «К записи» at once
   (`docStep()`).
+- The services list is two columns of their own (`.svc-col`, odd and even rows; user: «зачем тут растягивать?»): an
+  opened row grows only its column — in the shared grid it stretched the row beside it and left a gap under it.
+  In one column (container query, < 852 px) the columns dissolve and the rows' `order` keeps their sequence.
 
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
   categories. The list shows 6 services with "Показать ещё". The cards have no numbers or chevron

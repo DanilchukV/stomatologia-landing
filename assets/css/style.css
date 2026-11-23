@@ -664,7 +664,11 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @keyframes stepIn { from { opacity: 0; transform: translateY(8px); } }
 
 #pick-svc { scroll-margin-top: calc(var(--hdr-h) + 90px); }
-.svc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); align-items: start; gap: 8px 12px; animation: fadeIn .35s ease both; }
+/* two columns of their own (main.js): an opened row grows only its column, not the row beside it (user, 2026-11-23);
+   in one column (narrower than 2 × 420 px + the gap) they dissolve and the rows' `order` puts them back in sequence */
+.svc-list { container-type: inline-size; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); align-items: start; gap: 8px 12px; animation: fadeIn .35s ease both; }
+.svc-col { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+@container (max-width: 851px) { .svc-col { display: contents; } }
 .svc-row { border-radius: 16px; border: 1.5px solid var(--line); background: var(--white); overflow: hidden; transition: border-color .15s ease, box-shadow .15s ease; }
 /* found by the search or a popular pill (main.js svc-go): a Yellow ring and a light wash that fade out */
 .svc-row.is-found { animation: svcFound 2.2s ease; }

@@ -479,7 +479,12 @@
     const hiddenActive = cat.items.some((n, k) => k >= SVC_LIMIT && state.svcOpen === n);
     const expanded = state.svcAll || hiddenActive;
     const list = $('#svc-list');
-    mount(list, cat.id + expanded, () => cat.items.filter((n, k) => expanded || k < SVC_LIMIT).map(svcRowHTML).join(''));
+    // two columns of their own (odd and even rows): an opened row grows only its column; one column, the rows go back
+    // to their order (style.css)
+    mount(list, cat.id + expanded, () => {
+      const rows = cat.items.filter((n, k) => expanded || k < SVC_LIMIT).map(svcRowHTML);
+      return `<div class="svc-col">${rows.filter((r, k) => k % 2 === 0).join('')}</div><div class="svc-col">${rows.filter((r, k) => k % 2 === 1).join('')}</div>`;
+    });
     $$('.svc-row', list).forEach(syncSvcRow);
     const moreSvcs = $('#svc-all');
     moreSvcs.hidden = cat.items.length <= SVC_LIMIT;
@@ -579,7 +584,7 @@
       <span class="svc-panel__meta">${meta}</span>`;
   }
 
-  function svcRowHTML(n) {
+  function svcRowHTML(n, k) {
     const subs = n === CONSULT ? `<div class="svc-subs"><span class="caps">Выберите специалиста</span><div class="svc-subs__chips">${
       CONSULT_SUBS.map(([label, cn]) => `<button type="button" class="chip svc-subs__chip" aria-pressed="false" data-act="svc-sub" data-sub="${cn}">${label}</button>`).join('')}</div></div>` : '';
     const m = D.serviceMore[n];
@@ -591,7 +596,7 @@
           sc.p ? `<p class="svc-more__p">${esc(glue(sc.p))}</p>` : ''}</div>`).join('')}
         ${m.note ? `<p class="svc-more__note">${esc(glue(m.note))}</p>` : ''}
       </div></div></div>` : '';
-    return `<div class="svc-row" data-svc="${esc(n)}">
+    return `<div class="svc-row" data-svc="${esc(n)}" style="order: ${k}">
       <div class="svc-row__bar">
         <button type="button" class="svc-row__check" data-act="svc-check" aria-pressed="false" data-focus="chk:${esc(n)}"><span class="box box--lg">${icon('i-check', 14, 3.2)}</span></button>
         <button type="button" class="svc-row__toggle" data-act="svc-toggle" aria-expanded="false" data-focus="tgl:${esc(n)}"><span class="svc-row__txt"><span class="svc-row__label"></span>${priceHTML(n, 'svc-row__price')}</span><span class="svc-row__chev">${icon('i-chev-row', 16, 2.4)}</span></button>
