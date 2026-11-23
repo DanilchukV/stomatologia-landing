@@ -60,7 +60,7 @@
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
   const DOC_LIMIT = 3;
-  const STEPS = ['Услуги', 'Врач', 'Запись'];
+  const STEPS = ['Услуги', 'Врач'];
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
   const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
@@ -470,12 +470,7 @@
       $('.svc-bar__cur', barBox).textContent = cat ? cat.tab : '';
     }
     if (!cat) { mount(svcOpenBox, '', () => ''); return; }
-    // the shell (and its form) is rebuilt each time the panel opens, so the form is bound again
-    if (mount(svcOpenBox, 'open', panelShellHTML)) {
-      const svcForm = $('#svc-form');
-      window.SiteForm.bind(svcForm, () => markSent('svc-done'));
-      copyContacts(form, svcForm);
-    }
+    mount(svcOpenBox, 'open', panelShellHTML);
     mount($('#svc-head'), cat.id, () => panelHeadHTML(cat));
 
     // services list
@@ -512,25 +507,6 @@
     moreDocs.setAttribute('aria-expanded', docsExpanded);
     moreDocs.firstChild.textContent = docsExpanded ? 'Свернуть' : 'Показать ещё ' + (opts.length - DOC_LIMIT);
 
-    // step 3: the whole booking by doctor, services of every section included; one card, a row per part
-    const empty = bookEmpty();
-    const sum = $('#svc-sum');
-    const sumCard = sum.parentElement;
-    const sumH0 = sumCard.getBoundingClientRect().height;
-    const sumPk = $('.vpick', sum);
-    const sumPickTop = sumPk ? sumPk.getBoundingClientRect().top : null;
-    const sumRebuilt = mount(sum, visitsKey(), () => `
-      <div class="svc-sum__row"><span class="svc-sum__k">Врачи и&nbsp;услуги</span><div class="svc-sum__v">${empty
-        ? `<p class="svc-sum__empty">${glue('Не выбраны — ничего страшного: администратор поможет подобрать по телефону.')}</p>` : visitsHTML({ full: true })}
-        <button type="button" class="add-svc" data-act="add-svc">${PLUS}${empty ? 'Выбрать услугу' : 'Добавить ещё услугу'}</button></div></div>`);
-    // as in the booking form: a service ticked in an open doctor's list slides what is below it instead of a jump;
-    // other changes glide the card's height
-    const sumShape = visits().map((v) => v.id).join() + '#' + (state.addFor || '');
-    const sumDy = sumRebuilt && sumPickTop !== null && sumShape === sum.dataset.shape ? pickShift(sum, sumPickTop) : 0;
-    if (sumDy) slideAfter($('.vpick', sum), sumCard, sumH0, sumDy);
-    else if (sumRebuilt) growTo(sumCard, sumH0);
-    sum.dataset.shape = sumShape;
-
     // which step is shown, and the buttons under it
     const step = state.svcStep;
     $$('.svc-step', svcOpenBox).forEach((el) => { el.hidden = +el.dataset.step !== step; });
@@ -539,37 +515,13 @@
       if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
       b.parentElement.classList.toggle('is-done', k < step);
     });
-    // something booked while on steps 1–2: step 3 calls with a pulsing ring and «Ваша запись» above it
-    const booked = bookCount();
-    const calling = !!booked && step !== 3;
-    const wizBadge = $('.wiz__badge', svcOpenBox);
-    wizBadge.hidden = !calling;
-    wizBadge.textContent = 'Ваша запись';
-    wizBadge.parentElement.classList.toggle('is-calling', calling);
     // the section's ticked rows, counting a service ticked in another section that is also listed here
     const n = cat.items.filter((x) => (x === CONSULT ? CONSULT_SUBS.some(([, cn]) => inCart(cn)) : inCart(x))).length;
     $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
-      : step === 2 ? (noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи')) : '');
+      : noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи'));
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
-    $('.svc-nav__next', svcOpenBox).hidden = step === 3;
-    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 ? 'Выбрать врача' : 'Далее: запись';
-    $('.svc-nav__book', svcOpenBox).hidden = step !== 3 || state.sent;
-    // once sent, step 3 shows only the confirmation: no entered data, heading, consent or buttons
-    const sent = state.sent;
-    $('#svc-sum').hidden = sent;
-    $('#svc-form').hidden = sent;
-    $('#svc-consent').hidden = sent;
-    $('#svc-done').hidden = !sent;
-    $('#svc-review .panel-label').hidden = sent;
-    $('.svc-nav', svcOpenBox).hidden = sent && step === 3;
-  }
-
-  // an input with its label and error box, as in the booking form (ids prefixed with svc-)
-  function fieldHTML(name, label, type, attrs) {
-    return `<label class="field">${label}
-      <input class="field__input" type="${type}" name="${name}" ${attrs} aria-describedby="svc-err-${name}">
-      <span class="field__err" id="svc-err-${name}" role="alert" hidden>${icon('i-alert', 14, 2.4)}<span></span></span>
-    </label>`;
+    // one doctor (or none) in the section: no doctor step, step 1 goes straight on to the booking form
+    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 && docStep() ? 'Выбрать врача' : 'К записи';
   }
 
   function barHTML() {
@@ -586,44 +538,24 @@
         <div class="svc-panel__head" id="svc-head"></div>
         <div class="svc-panel__body">
           <ol class="wiz" id="svc-steps">
-            ${STEPS.map((t, k) => `<li class="wiz__item"><button type="button" class="wiz__btn" data-act="svc-step" data-step="${k + 1}"><span class="num"><span class="wiz__n">${k + 1}</span>${icon('i-check', 14, 3)}</span><span class="wiz__t">${t}</span></button>${k === STEPS.length - 1 ? '<span class="wiz__badge" aria-hidden="true" hidden></span>' : ''}</li>`).join('')}
+            ${STEPS.map((t, k) => `<li class="wiz__item"><button type="button" class="wiz__btn" data-act="svc-step" data-step="${k + 1}"><span class="num"><span class="wiz__n">${k + 1}</span>${icon('i-check', 14, 3)}</span><span class="wiz__t">${t}</span></button></li>`).join('')}
           </ol>
           <div class="svc-step" id="pick-svc" data-step="1">
             <div class="panel-label"><h4 class="panel-h" tabindex="-1">Отметьте услуги</h4><span class="panel-hint">можно несколько</span></div>
             <div class="svc-list" id="svc-list"></div>
             <button type="button" class="btn btn--ghost more-wide" id="svc-all" data-act="svc-all" aria-expanded="false"><span></span>${icon('i-chev-row', 16, 2.4)}</button>
+            ${$('#svc-grid .svc-unsure').outerHTML}
           </div>
           <div class="svc-step" id="pick-doctor" data-step="2">
             <div class="panel-label"><h4 class="panel-h" tabindex="-1">Выберите врача</h4><span class="doc-pick__who" id="doc-pick-who"></span></div>
             <div class="doc-pick__grid" id="doc-pick-grid"></div>
             <button type="button" class="btn btn--ghost more-wide" id="docs-all" data-act="docs-all" aria-expanded="false"><span></span>${icon('i-chev', 16, 2.4)}</button>
           </div>
-          <div class="svc-step" id="svc-review" data-step="3">
-            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Проверьте и отправьте заявку</h4></div>
-            <div class="svc-sum">
-              <div class="svc-sum__rows" id="svc-sum"></div>
-              <form class="svc-sum__row svc-form" id="svc-form" novalidate>
-                <span class="svc-sum__k">Контакты</span>
-                <div class="svc-sum__v svc-form__fields">
-                  ${fieldHTML('name', 'Имя', 'text', 'autocomplete="name" maxlength="40" placeholder="Как к вам обращаться"')}
-                  ${fieldHTML('phone', 'Телефон', 'tel', 'autocomplete="tel" inputmode="tel" placeholder="+375 (29) 123-45-67"')}
-                  ${fieldHTML('email', 'Эл. почта (необязательно)', 'email', 'autocomplete="email" inputmode="email" maxlength="80" placeholder="name@mail.com"')}
-                </div>
-              </form>
-              <div class="svc-done" id="svc-done" role="status" hidden>
-                <span class="svc-done__ic">${icon('i-check', 22, 2.6)}</span>
-                <div class="svc-done__text"><h5 class="svc-done__title" tabindex="-1">Заявка отправлена</h5><p class="svc-sum__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p></div>
-                <button type="button" class="btn btn--dark svc-done__again" data-act="book-again" data-from="svc">Записаться ещё раз</button>
-              </div>
-            </div>
-            <p class="svc-consent" id="svc-consent">${glue('Отправляя заявку, вы соглашаетесь на обработку персональных данных.')}</p>
-          </div>
           <div class="svc-nav">
             <button type="button" class="btn btn--ghost svc-nav__back" data-act="svc-prev">${icon('i-back', 16, 2.4)}Назад</button>
             <span class="svc-nav__info" id="svc-nav-info"></span>
             <button type="button" class="svc-nav__reset" data-act="cart-reset" hidden>${icon('i-reset', 15, 2.2)}Сбросить всё</button>
             <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next"><span></span>${icon('i-arrow', 16, 2.4)}</button>
-            <button type="submit" form="svc-form" class="btn btn--accent svc-nav__book">Отправить заявку${icon('i-arrow', 16, 2.4)}</button>
           </div>
         </div>
       </div>`;
@@ -828,16 +760,6 @@
   const form = $('#book-form');
   // Requests are not delivered anywhere yet (see docs/knowledge.md, "Booking").
   window.SiteForm.bind(form, () => markSent('book-done'));
-  // Services' step 3 and this form are one booking: the name and phone typed in either show in the other
-  const CONTACTS = ['name', 'phone'];
-  function copyContacts(from, to) {
-    if (from && to) CONTACTS.forEach((k) => { if (from.elements[k] && to.elements[k]) to.elements[k].value = from.elements[k].value; });
-  }
-  document.addEventListener('input', (e) => {
-    const f = e.target.form;
-    if (!f || !CONTACTS.includes(e.target.name) || (f.id !== 'book-form' && f.id !== 'svc-form')) return;
-    copyContacts(f, f.id === 'book-form' ? $('#svc-form') : form);
-  });
 
   function renderBooking() {
     // one row, a slot per doctor in the team's order: a tile to choose them, which becomes their card (services,
@@ -929,14 +851,14 @@
   }
 
   /* ---------- the booking in the corner ---------- */
-  // «Ваша запись · N» bottom right once something is chosen; opens the same list as step 3, with remove buttons.
+  // «Ваша запись · N» bottom right once something is chosen; opens the same list as the booking form, with remove buttons.
   // Hidden while the booking form is on screen (it shows the same) and after sending.
   const bk = $('#bk');
   function bookOnScreen() {
     const r = $('.book__card').getBoundingClientRect();
     return r.top < window.innerHeight - 120 && r.bottom > 120;
   }
-  // the open services panel has its own booking step and its buttons at the bottom, which the corner and
+  // the open services panel has its buttons at the bottom, which the corner and
   // back-to-top buttons covered on phones
   function panelAtBottom() {
     const p = $('#svc-panel');
@@ -1068,16 +990,26 @@
     const want = h < room - 20 ? under + (room - h) / 2 : under + 10;
     glideTo(window.scrollY + bar.top - want, 600);
   }
+  // the doctor step is there when the section has a choice of doctors (diagnostics without a consultation, or a
+  // section with one doctor, goes from its services straight on to the booking)
+  function docStep() {
+    const cat = catById(state.cat);
+    const roles = catRoles(cat, state.cart);
+    return !(cat.id === 'diag' && !roles.length) && docsFor(roles).length > 1;
+  }
+  // «К записи»: Services has no booking step of its own (user, 2026-11-23: one booking for the page) — the choice is
+  // already in the booking form, which the page glides to. A doctor picked with none of the section's services
+  // ticked is booked alone (not when diagnostics needs no doctor)
+  function toBooking() {
+    const c = state.cat, id = state.picks[c];
+    const noDoc = c === 'diag' && !catRoles(catById(c), state.cart).length;
+    if (id && !noDoc && !state.sent && !state.cart.some((x) => x.cid === c && itemDoc(x))) set({ extra: withDoc(id, c) });
+    scrollToId('book');
+  }
   // shows step k of the services panel; scrolls back up if the step bar is above the screen
   function goStep(k) {
     if (k < 1 || k > STEPS.length) return;
-    const patch = { svcStep: k };
-    // on to step 3 from the doctor step with none of the section's services ticked: the doctor alone is booked
-    // (not when step 2 said «Врач не нужен»)
-    const c = state.cat, id = state.picks[c];
-    const noDoc = c === 'diag' && !catRoles(catById(c), state.cart).length;
-    if (k === 3 && state.svcStep === 2 && id && !noDoc && !state.sent && !state.cart.some((x) => x.cid === c && itemDoc(x))) patch.extra = withDoc(id, c);
-    set(patch);
+    set({ svcStep: k });
     const bar = $('#svc-steps');
     if (bar.getBoundingClientRect().top < $('.svc-bar').getBoundingClientRect().bottom) scrollToId('svc-steps');
     $(`.svc-step[data-step="${k}"] .panel-h`).focus({ preventScroll: true });
@@ -1184,16 +1116,13 @@
     },
     'svc-step': (t) => goStep(+t.dataset.step),
     'svc-prev': () => goStep(state.svcStep - 1),
-    'svc-next': () => goStep(state.svcStep + 1),
+    'svc-next': () => { if (state.svcStep === 1 && docStep()) goStep(2); else toBooking(); },
     // a new booking: empty forms, no services, default doctor; back to where it was clicked
-    'book-again': (t) => {
+    'book-again': () => {
       form.reset();
-      const svcForm = $('#svc-form');
-      if (svcForm) svcForm.reset();
       const cat = catById(state.cat);
       set({ sent: false, cart: [], extra: [], notes: [], svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} });
-      if (t.dataset.from === 'svc') { scrollToId('svc-steps'); $('#pick-svc .panel-h').focus({ preventScroll: true }); }
-      else form.elements.name.focus();
+      form.elements.name.focus();
     },
 
     'cart-remove': (t) => set({ cart: state.cart.filter((x) => !(x.n === t.dataset.svc && x.cid === t.dataset.cid)) }),
@@ -1274,12 +1203,12 @@
       Object.assign(state, { sent: false, cart: [], extra: [], notes: [] });
       if (unticking) { set({}); return; }
     }
-    const list = REMOVE.includes(act) ? t.closest('#svc-sum, #book-svcs, #bk-list') : null;
+    const list = REMOVE.includes(act) ? t.closest('#book-svcs, #bk-list') : null;
     const btns = () => $$('.visit__drop, .visit__x', list);
     const at = list ? btns().indexOf(t) : -1;
     keepInView(t, () => actions[act](t, e));
     // a ✕ takes its own button away: the focus goes to the one now in its place, else to «Добавить услугу»
-    // (#svc-sum is display: contents, so visibility is checked on the button, not the list)
+    // (visibility is checked on the button, not the list)
     if (list && !t.isConnected && list.isConnected && (!document.activeElement || document.activeElement === document.body)) {
       const bkBox = list.closest('.bk');
       const left = btns();

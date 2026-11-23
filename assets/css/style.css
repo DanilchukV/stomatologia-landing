@@ -220,7 +220,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (hover: none) {
   button, .btn, .chip, summary { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   .btn:active, .chip:active, .sym-chip:active, .svc-card:active, .doc-card:not(.doc-card--none):active, .book-doc:active,
-  .hint__doc.is-pick:active, .bk__pill:active, .add-svc:active, .to-top:active { scale: .97; }
+  .hint__doc.is-pick:active, .bk__pill:active, .add-svc:active, .to-top:active, .svc-unsure:active { scale: .97; }
   .svc-row__check:active .box, .visit__x:active, .visit__drop:active, .wiz__btn:active .num { scale: .9; }
   .faq summary:active .faq__ic, .doc__toggle:active, .nav__link:active, .promise__btn:active { opacity: .7; }
 }
@@ -546,6 +546,15 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-card__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .svc-card__name { font-family: var(--f-head); font-weight: 700; font-size: var(--fs-2xl); line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; display: block; width: 100%; min-height: 2.3em; }
 .svc-card__desc { font-size: var(--fs-m); line-height: 1.5; color: var(--muted); text-wrap: balance; display: block; width: 100%; min-height: 4.5em; }
+/* «Не знаете, что выбрать?» under the sections and in step 1: opens the helper (user, 2026-11-23) */
+.svc-unsure { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 18px 8px 8px; border: 1.5px dashed var(--accent-ink); border-radius: 16px; background: color-mix(in srgb, var(--tint) 30%, var(--white)); color: var(--ink); font: inherit; font-size: var(--fs-m); text-align: left; cursor: pointer; transition: background-color .15s, border-color .15s; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { .svc-unsure:hover { background: color-mix(in srgb, var(--tint) 55%, var(--white)); } }
+.svc-unsure__ic { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--white); color: var(--accent-ink); display: grid; place-items: center; }
+.svc-unsure__ic svg { display: block; }
+.svc-unsure__t { flex: 1; min-width: 0; line-height: 1.35; }
+.svc-unsure__t b { color: var(--accent-ink); font-weight: 700; }
+.svc-unsure > .ic { flex: none; display: block; color: var(--accent-ink); }
+.svc-step .svc-unsure { margin-top: 12px; }
 /* the 2-line title reserve keeps descriptions level across a row; not needed where every title fits one line (wide) or the cards stack (phone) */
 @media (min-width: 1280px), (max-width: 640px) {
   .svc-card__name { min-height: 0; }
@@ -605,9 +614,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .wiz__item:last-child { flex: none; position: relative; }
 /* something booked while on steps 1–2: step 3 calls — its circle pulses Yellow and «Ваша запись · N» stands above it
    (main.js renderServices) */
-.wiz__badge { position: absolute; left: 4px; bottom: calc(100% + 6px); padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--ink); font-size: var(--fs-xs); font-weight: 700; line-height: 1.4; white-space: nowrap; box-shadow: 0 4px 12px rgba(12, 44, 71, .14); animation: popIn .3s ease both; }
-.wiz__item.is-calling .num { animation: wizCall 1.6s ease-out infinite; }
-@keyframes wizCall { 0% { box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 0 rgba(240, 170, 47, .65); } 100% { box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 12px rgba(240, 170, 47, 0); } }
 /* the same colours as the helper's steps: current Navy with a Yellow halo, done Navy with a tick, ahead an outline */
 .wiz__item:not(:last-child)::after { content: ""; flex: 1; min-width: 16px; height: 2px; border-radius: 2px; background: rgba(12, 44, 71, .2); }
 .wiz__item.is-done:not(:last-child)::after { background: var(--ink); }
@@ -691,26 +697,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .doc-card[aria-pressed="false"] .doc-card__tick { background: none; border: 1.5px solid var(--line); }
 .doc-card[aria-pressed="false"] .doc-card__tick .ic { visibility: hidden; }
 
-.svc-sum { display: flex; flex-direction: column; border-radius: 20px; background: var(--white); border: 1px solid var(--line); }
-.svc-sum__row { display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: baseline; gap: 8px 24px; padding: 20px 24px; }
-.svc-sum__row + .svc-sum__row { border-top: 1px solid var(--line-2); }
-.svc-sum__k { font-size: var(--fs-s); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.svc-sum__v { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
-.svc-sum__empty, .svc-sum__note { margin: 0; font-size: var(--fs-m); line-height: 1.5; color: var(--muted); text-wrap: pretty; }
-.svc-sum__rows { display: contents; }
-/* the label lines up with the first doctor's name, not with the bottom of the photo */
-.svc-sum__row:has(.visits) .svc-sum__k { align-self: start; padding-top: 22px; }
-.svc-form { border-top: 1px solid var(--line-2); }
-.svc-form__fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.svc-form .field { color: var(--muted); }
-.svc-form .field__err { color: #BF512C; }
-.svc-done { display: flex; align-items: center; gap: 18px; padding: 28px 24px; }
-.svc-done__text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.svc-done__ic { flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: var(--ink); display: grid; place-items: center; }
-.svc-done__ic .ic { display: block; }
-.svc-done__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: var(--fs-xl); }
-.svc-done__again { flex: none; margin-left: auto; min-height: 48px; padding: 0 24px; font-size: var(--fs-m); }
-.svc-consent { margin: 0; font-size: var(--fs-s); line-height: 1.5; color: var(--muted); }
 
 .svc-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-top: 22px; border-top: 1px solid var(--line); }
 .svc-nav__info { flex: 1 1 auto; min-width: 0; font-size: var(--fs-m); color: var(--muted); text-wrap: pretty; }
@@ -720,10 +706,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-nav__reset { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: none; border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: color .15s; }
 @media (hover: hover) { .svc-nav__reset:hover { color: var(--accent-ink); } }
 
-@media (max-width: 760px) {
-  .svc-sum__row { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; }
-  .svc-sum__row:has(.visits) .svc-sum__k { padding-top: 0; }
-}
 /* phone (user, 2026-11-20: pick a section at once, without scrolling): the sections are a list of rows — a small
    photo at the side, the name, a chevron — with the descriptions hidden; the open section's head is a short photo
    band with the name and the count (the rail beside it has «Все разделы») */
@@ -762,13 +744,9 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .wiz__item { align-items: flex-start; }
   .wiz__item:not(:last-child)::after { margin-top: 15px; }
   /* aligned with the circle the badge would stick 37 px out of the steps bar at 390: back to the right edge */
-  .wiz__badge { left: auto; right: 0; }
 }
 @media (max-width: 480px) {
   .svc-row__content { padding: 0 16px 18px 20px; }
-  .svc-form__fields { grid-template-columns: minmax(0, 1fr); }
-  .svc-done { flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px 20px; }
-  .svc-done__again { margin-left: 0; align-self: stretch; }
   #pick-doctor .panel-label { flex-wrap: wrap; gap: 4px 12px; }
   .doc-pick__who { flex-basis: 100%; margin-left: 0; text-align: left; }
   .doc-card { gap: 14px; padding-right: 16px; }
