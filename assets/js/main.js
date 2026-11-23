@@ -1086,9 +1086,8 @@
       if (!id) return;
       helper.close();
       // the reason goes with the doctor, so the administrator knows what it is about
-      const t = state.tooth;
-      const where = t !== null ? `зуб ${qn(t)} ${jawOf(t)} ${sideOf(t)}` : state.scope === 'jaw' ? 'вся челюсть' : '';
-      const text = currentSymptom().label + (where ? ' · ' + where : '');
+      // (the symptom only, not the tooth: user, 2026-11-23)
+      const text = currentSymptom().label;
       const notes = state.notes.some((x) => x.id === id && x.text === text) ? state.notes : state.notes.concat([{ id, text }]);
       set({ extra: withDoc(id), notes });
       scrollToId('book');
