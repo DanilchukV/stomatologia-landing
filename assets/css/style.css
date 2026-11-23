@@ -1116,6 +1116,7 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__docs { gap: 8px; }
   .hint__doc { gap: 12px; padding: 6px 12px 6px 6px; border-radius: 16px; }
   .hint__doc-ph { width: 40px; aspect-ratio: 1 / 1; border-radius: 10px; font-size: var(--fs-m); }
+  .hint__doc-ph img { object-position: 50% 0; }
   .hint__doc-name { font-size: var(--fs-m); }
   .hint__doc-spec { font-size: var(--fs-m); }
   .hint__doc-exp { display: none; }
@@ -1267,14 +1268,26 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc:hover { transform: none; box-shadow: none; }
   .doc.is-open { box-shadow: 0 0 0 1.5px var(--ink); }
   .doc-grid { flex-wrap: nowrap; }
-  /* the panel: the photo as a band on top, the story under it */
-  .doc-panel__card { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 12px 12px 20px; border-radius: 24px; }
-  .doc-panel__photo { aspect-ratio: 4 / 3; }
-  .doc-panel__photo img { object-position: 50% 12%; }
-  .doc-panel__body { padding: 0 8px; }
-  .doc-panel__name { font-size: var(--fs-2xl); }
-  /* over the photo band (12 px in, 20 px corners): 32 px and concentric with the photo's corner */
-  .doc-panel__x { top: 16px; right: 16px; width: 32px; height: 32px; background: var(--white); }
+  /* the photos are 3:4 with the head near the top edge: square crops keep the top, or the head is cut */
+  .doc__photo img { object-position: 50% 0; }
+  /* the panel, short (user, 2026-11-23: «слишком большой»): a 64 px round photo beside the name, smaller type, and
+     only education and work (the courses and certificates stay on wider screens) */
+  .doc-panel__card { display: block; padding: 16px; border-radius: 24px; }
+  .doc-panel__photo { position: absolute; top: 16px; left: 16px; width: 64px; aspect-ratio: 1 / 1; border-radius: 50%; }
+  .doc-panel__photo img { object-position: 50% 0; }
+  .doc-panel__body { gap: 14px; padding: 0; }
+  .doc-panel__head { justify-content: center; min-height: 64px; gap: 2px; padding: 0 36px 0 78px; }
+  .doc-panel__name { font-size: var(--fs-xl); }
+  .doc-panel__spec { font-size: var(--fs-s); }
+  .doc-panel__head .doc__exp { display: flex; margin-top: 2px; font-size: var(--fs-xs); }
+  .doc-panel__facts { gap: 12px; padding-top: 14px; }
+  .doc-panel__row:nth-child(n+3) { display: none; }
+  .doc-panel__row { gap: 4px; }
+  .doc-panel__list { gap: 2px; font-size: var(--fs-s); line-height: 1.4; }
+  .doc-panel__actions { gap: 8px; padding-top: 2px; }
+  .doc-panel__btn { min-height: 44px; padding: 0 16px; }
+  /* concentric with the 24 px corner: (24 - 1.5 border) - 16 = 6.5 px */
+  .doc-panel__x { top: 6.5px; right: 6.5px; width: 32px; height: 32px; }
   .doc-panel__btn { flex: 1 1 auto; }
   .side-arrow { display: none; }
   /* one dot per doctor, following the swipe (main.js), so the row says it scrolls and how far */

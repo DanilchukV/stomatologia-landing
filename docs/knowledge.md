@@ -666,6 +666,12 @@ and chose the panel under the row. To check the motion in the shot harness, re-e
 **All the stories are placeholders** written for the invented staff (universities are real, places of work are
 generic, courses, years and awards are invented) — replace them with the real ones with the names and photos.
 
+**Phones (2026-11-23, user: «врачи должны быть меньше», «Подробнее слишком большой»):** two 157 px cards on
+screen and the edge of a third, a square photo cropped from the top (the 3:4 photos have the head right at the top
+edge, so any lower crop cut it), no experience line in the card; the dots count scroll stops (doctors − cards on
+screen + 1, `swipeStops()`), not doctors. The panel is ~420 px instead of ~950: a 64 px round photo beside the
+name, smaller type, and only education and work — courses and certificates show from 641 px up.
+
 ## Contacts
 
 One address (the export had two VestMedServis clinics with a switcher in the header, the menu, the
