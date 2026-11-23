@@ -104,7 +104,8 @@ smoother, one after another from the upper left). A first try (1.5 s on a steep 
 6 px blur coming into focus) "jumped a lot" in a real browser although the measured path was smooth: an animated blur
 is repainted every frame and the text re-rasterises when the layer goes away, and the steep start reads as a lurch. Now:
 transform + opacity only, `will-change` keeps the cards on their own layer, 22 px left / 16 px up on an ease-out without a steep
-start (`cubic-bezier(.25, .46, .45, .94)`), 1.2 s, delays 0.2 / 0.4 / 0.6 s. Don't put a filter
+start (`cubic-bezier(.25, .46, .45, .94)`); first 1.2 s, then a little faster at the user's request: 0.9 s, delays
+0.15 / 0.3 / 0.45 s. Don't put a filter
 into this animation again. On phones the card row clips (it scrolls sideways), so it has 18 px of top padding, taken
 back by a negative margin. The sections below the first screen (About, Finder,
 Services, Doctors, Contacts, FAQ, the booking card) come up 18 px with a fade the first time they scroll into view

@@ -323,10 +323,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .fact__text { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 15px; }
 /* opening the page: the three cards drift in one after another from the upper left. Transform and opacity only, on
    their own layer (a blur, or a layer dropped at the end, made the text jump), and a curve without a steep start */
-.hero__facts .fact { will-change: transform, opacity; animation: factIn 1.2s cubic-bezier(.25, .46, .45, .94) both; }
-.hero__facts .fact:nth-child(1) { animation-delay: .2s; }
-.hero__facts .fact:nth-child(2) { animation-delay: .4s; }
-.hero__facts .fact:nth-child(3) { animation-delay: .6s; }
+.hero__facts .fact { will-change: transform, opacity; animation: factIn .9s cubic-bezier(.25, .46, .45, .94) both; }
+.hero__facts .fact:nth-child(1) { animation-delay: .15s; }
+.hero__facts .fact:nth-child(2) { animation-delay: .3s; }
+.hero__facts .fact:nth-child(3) { animation-delay: .45s; }
 @keyframes factIn { from { opacity: 0; transform: translate(-22px, -16px); } }
 @media (hover: hover) {
   .fact:hover { box-shadow: 0 14px 34px rgba(12, 44, 71, .14); }
