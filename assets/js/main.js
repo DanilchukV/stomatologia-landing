@@ -46,8 +46,10 @@
   const plural = (n, one, few, many) => (n % 10 === 1 && n % 100 !== 11 ? one
     : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? few : many);
   const servicesWord = (n) => plural(n, 'услуга', 'услуги', 'услуг');
-  // «от 90 руб.» from the price list (data.js prices; nothing for a service without a price)
-  const priceHTML = (n, cls) => (D.prices[n] ? `<span class="${cls}">от&nbsp;${D.prices[n]}&nbsp;руб.</span>` : '');
+  // «от 90 руб.» from the price list (data.js prices; nothing for a service without a price). Off for now (user,
+  // 2026-11-23: «пока уберем цифры с ценами»): PRICES = true shows them in the rows, the hits and the popular pills
+  const PRICES = false;
+  const priceHTML = (n, cls) => (PRICES && D.prices[n] ? `<span class="${cls}">от&nbsp;${D.prices[n]}&nbsp;руб.</span>` : '');
   const doctorsWord = (n) => plural(n, 'врач', 'врача', 'врачей');
   const initials = (name) => name.split(' ').slice(0, 2).map((w) => w[0]).join('');
   const person = (size) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c.8-4.2 3.8-6.5 7.5-6.5s6.7 2.3 7.5 6.5"/></svg>`;
@@ -636,7 +638,7 @@
   function renderFind() {
     const q = norm($('#svc-q').value).trim();
     if (q.length < 2) {
-      findBox.innerHTML = `<div class="svc-pop"><span class="svc-pop__h">Популярное</span>${POPULAR.map(([n, label]) => `<button type="button" class="chip svc-pop__chip" data-act="svc-go" data-svc="${esc(n)}">${esc(label)}${D.prices[n] ? ` <b>от&nbsp;${D.prices[n]}&nbsp;руб.</b>` : ''}</button>`).join('')}</div>`;
+      findBox.innerHTML = `<div class="svc-pop"><span class="svc-pop__h">Популярное</span>${POPULAR.map(([n, label]) => `<button type="button" class="chip svc-pop__chip" data-act="svc-go" data-svc="${esc(n)}">${esc(label)}${priceHTML(n, 'svc-pop__p')}</button>`).join('')}</div>`;
       return;
     }
     const words = q.split(' ').map((w) => ' ' + w);

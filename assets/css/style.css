@@ -574,7 +574,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-pop__chip { min-height: 38px; padding: 0 16px; border-color: transparent; background: color-mix(in srgb, var(--tint) 40%, var(--white)); font-size: var(--fs-m); }
 @media (hover: hover) { .svc-pop__chip:hover { background: color-mix(in srgb, var(--tint) 80%, var(--white)); } }
 .svc-pop__chip:active { background: color-mix(in srgb, var(--tint) 80%, var(--white)); }
-.svc-pop__chip b { color: var(--accent-ink); font-weight: 700; }
+.svc-pop__p { margin-left: 5px; color: var(--accent-ink); font-weight: 700; }
 .svc-hits { box-sizing: border-box; max-width: 760px; display: flex; flex-direction: column; border: 1.5px solid var(--line); border-radius: 18px; background: var(--white); overflow: hidden; }
 .svc-hit { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 18px; border: 0; border-top: 1px solid var(--line-2); background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .svc-hit:first-child { border-top: 0; }

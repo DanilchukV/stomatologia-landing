@@ -469,7 +469,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
 **Rework of 2026-11-23** (user: «как мы можем улучшить для пользователя раздел услуги?… сделай все»):
 - Prices: «от N руб.» (BYN) on every service, right-aligned in the row (under the name on phones); `data.js prices`,
   `priceHTML()`. Invented at the level of Brest's private clinics, like the staff — replace with the clinic's list.
-  The lead says «Цены «от» — в белорусских рублях…» instead of «узнать цену по телефону».
+  Hidden the same day (user: «пока уберем цифры с ценами»): `PRICES = false` in main.js turns every price off (the
+  rows, the hits, the popular pills) and the lead is again «…узнать ориентировочную цену можно по телефону»; the
+  list stays in `data.js` for later.
 - Search above the sections (`#svc-q`, `renderFind()`): every typed word must start a word in the service's name,
   section, description or `serviceKeys` (words people use: «чистка», «вырвать», «коронка»; ё = е); hits in the name,
   then in the keys, come first; up to 8, with section and price. Empty, it shows «Популярное» — four services with
