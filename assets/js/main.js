@@ -1158,9 +1158,19 @@
       $('#svc-q').value = '';
       renderFind();
       set({ cat: cat.id, svcStep: 1, picks: withPick(cat.id), docsAll: false, svcAll: cat.items.indexOf(n) >= SVC_LIMIT, svcOpen: n, barOpen: false });
+      // the service comes to the middle of the room under the header and the stuck bar, and lights up for a moment
+      // (user, 2026-11-23: «пусть подсвечивается и находится нужная опция»)
       const row = $$('.svc-row').find((r) => r.dataset.svc === n);
+      if (!row) return;
       const bar = $('.svc-bar');
-      if (row) glideTo(window.scrollY + row.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 10 - (bar ? bar.offsetHeight + 12 : 0), 650);
+      const under = hdr.getBoundingClientRect().bottom + (bar ? 10 + bar.offsetHeight : 0);
+      const r = row.getBoundingClientRect();
+      glideTo(window.scrollY + r.top - Math.max(under + 12, under + (window.innerHeight - under - r.height) / 2), 650);
+      row.classList.remove('is-found');
+      void row.offsetWidth; // restarts the CSS animation
+      row.classList.add('is-found');
+      clearTimeout(row.foundT);
+      row.foundT = setTimeout(() => row.classList.remove('is-found'), 2400);
     },
     // a new booking: empty forms, no services, default doctor; back to where it was clicked
     'book-again': () => {

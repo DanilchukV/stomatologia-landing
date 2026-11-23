@@ -662,6 +662,9 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 #pick-svc { scroll-margin-top: calc(var(--hdr-h) + 90px); }
 .svc-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); align-items: start; gap: 8px 12px; animation: fadeIn .35s ease both; }
 .svc-row { border-radius: 16px; border: 1.5px solid var(--line); background: var(--white); overflow: hidden; transition: border-color .15s ease, box-shadow .15s ease; }
+/* found by the search or a popular pill (main.js svc-go): a Yellow ring and a light wash that fade out */
+.svc-row.is-found { animation: svcFound 2.2s ease; }
+@keyframes svcFound { 0%, 100% { box-shadow: 0 0 0 0 rgba(240, 170, 47, 0); background-color: var(--white); } 12%, 60% { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(240, 170, 47, .45); background-color: #FFF8EA; } }
 .svc-row.is-sel { border-color: var(--ink); }
 @media (hover: hover) { .svc-row:hover { border-color: var(--accent); box-shadow: 0 6px 14px rgba(12, 44, 71, .08); } }
 .svc-row__bar { display: flex; align-items: stretch; }

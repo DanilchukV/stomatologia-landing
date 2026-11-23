@@ -473,7 +473,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
 - Search above the sections (`#svc-q`, `renderFind()`): every typed word must start a word in the service's name,
   section, description or `serviceKeys` (words people use: «чистка», «вырвать», «коронка»; ё = е); hits in the name,
   then in the keys, come first; up to 8, with section and price. Empty, it shows «Популярное» — four services with
-  prices (a swipe row on phones). A tap (`svc-go`) opens the section with that service unfolded and glides to it.
+  prices (a swipe row on phones). A tap (`svc-go`) opens the section with that service unfolded (also one behind
+  «Показать ещё»), glides it to the middle of the room under the header and the bar, and lights it up for ~2 s — a
+  Yellow ring and a light wash that fade out (`.is-found`, user: «пусть подсвечивается и находится нужная опция»).
 - «Не знаете, что выбрать? Подскажем по симптомам» (`.svc-unsure`) under the sections and in step 1 opens the helper.
 - One booking for the page: Services lost its step 3 (its own summary, contacts form and confirmation); the
   wizard is «Услуги → Врач», and «К записи» (`toBooking()`) glides to the booking form, where the choice already is
