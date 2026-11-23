@@ -1497,8 +1497,9 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__k { padding: 10px 0 0; font-family: var(--f-head); font-weight: 700; font-size: var(--fs-l); }
 .book__k-hint { display: block; margin-top: 2px; font-family: var(--f-body); font-weight: 400; font-size: var(--fs-s); color: var(--muted); }
 .book__v { min-width: 0; padding-top: 4px; display: flex; flex-direction: column; gap: 12px; }
-/* the cards' list under the doctors' row (main.js renderBooking): rebuilt on its own, laid out as the column's items */
-.book__slots-box { display: contents; }
+/* the cards' list under the doctors' row (main.js renderBooking): rebuilt and glided on its own, so the row's photos
+   are never clipped or repainted */
+.book__slots-box { display: flex; flex-direction: column; gap: 12px; }
 /* the doctors side by side (four in a row on desktop), so the form doesn't grow tall; one column on phones */
 .book__v .visits { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
 /* two columns or more: the open doctor's services go under all the cards (full width), so no card moves; one column
@@ -1689,18 +1690,17 @@ html:has(.helper[open]) { overflow: hidden; }
 
 /* ===== Rotate notice (phones held sideways) ===== */
 /* the site is portrait only on phones (user, 2026-11-22; brought back 2026-11-23): a web page can't lock the
-   orientation, so a phone on its side (coarse pointer, a short landscape screen; tablets are taller) gets this cover
-   until it is turned back */
+   orientation, so a phone on its side gets this cover until it is turned back. `html.is-sideways` comes from the
+   device's turn (header.js), not the window's shape: with the keyboard up a portrait window is wider than tall, and
+   an iPhone showed the cover while typing in the search (user, 2026-11-23) */
 .rotate { display: none; }
-@media (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
-  .rotate { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; background: var(--white); color: var(--ink); text-align: center; }
-  .rotate__ic { color: var(--accent-ink); margin-bottom: 8px; animation: rotateHint 2.4s var(--ease-out) infinite; }
-  .rotate__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: var(--fs-2xl); }
-  .rotate__text { margin: 0; font-size: var(--fs-m); color: var(--muted); }
-  html { overflow: hidden; }
-  /* the helper dialog sits in the top layer, above any z-index */
-  .helper[open] { display: none; }
-}
+html.is-sideways .rotate { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; background: var(--white); color: var(--ink); text-align: center; }
+html.is-sideways .rotate__ic { color: var(--accent-ink); margin-bottom: 8px; animation: rotateHint 2.4s var(--ease-out) infinite; }
+html.is-sideways .rotate__title { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: var(--fs-2xl); }
+html.is-sideways .rotate__text { margin: 0; font-size: var(--fs-m); color: var(--muted); }
+html.is-sideways { overflow: hidden; }
+/* the helper dialog sits in the top layer, above any z-index */
+html.is-sideways .helper[open] { display: none; }
 @keyframes rotateHint { 0%, 30% { transform: rotate(-90deg); } 60%, 100% { transform: rotate(0deg); } }
 
 /* ===== Cookie notice ===== */

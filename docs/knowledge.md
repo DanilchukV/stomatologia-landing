@@ -480,7 +480,9 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   «Показать ещё»), glides it to the middle of the room under the header and the bar, and lights it up for ~2 s — a
   Yellow ring and a light wash that fade out (`.is-found`, user: «пусть подсвечивается и находится нужная опция»).
   The keyboard: ↓/↑ mark a hit (round, `.is-active` with a Yellow edge, `aria-activedescendant`), Enter picks the
-  marked one or the first, Esc clears the field. The hits are as wide as the field.
+  marked one or the first, Esc clears the field. The hits are as wide as the field. A tap anywhere else on the page
+  clears the field and closes the hits. The corner booking hides while Services is on the screen or the search is
+  focused (on phones it popped up over the hits).
 - «Не знаете, что выбрать? Подскажем по симптомам» (`.svc-unsure`) under the sections and in step 1 opens the helper.
 - One booking for the page: Services lost its step 3 (its own summary, contacts form and confirmation); the
   wizard is «Услуги → Врач», and «К записи» (`toBooking()`) glides to the booking form, where the choice already is
@@ -681,7 +683,8 @@ Doctors in the form on phones (2026-11-23, user: «мне кажется фор�
 to one row of round photos (60 px; speciality, surname) above the cards of the chosen doctors; a tap chooses a doctor
 (Orange ring, Navy tick) or takes them out again (`book-pick`). Under 360 px only the speciality shows. Chosen over a
 compact list and a 2 × 2 grid, which the user was also offered. The row is built once and only re-marked
-(`.book-pick` in `#book-svcs`, the cards in `.book__slots-box`, `display: contents`, rebuilt by `mount`): rebuilt
+(`.book-pick` in `#book-svcs`, the cards in `.book__slots-box`, which alone is rebuilt by `mount` and glides, so the
+row is never clipped by the glide — clipped, its photos still blinked on an iPhone): rebuilt
 at every tap, its photos blinked out on an iPhone (user's recording, 2026-11-23). The chosen cards' Orange ring and
 the open card's Navy one are inset: drawn outside the card, Safari sometimes left a strip of it after the card went.
 

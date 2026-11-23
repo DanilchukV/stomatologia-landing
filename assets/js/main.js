@@ -181,8 +181,9 @@
     const more = d && !o.summary && BOOKABLE.includes(d.role) ? `<button type="button" class="visit__more" data-act="visit-add" data-id="${v.id}" data-focus="va:${v.id}" aria-expanded="${open}">${PLUS}Услуги врача</button>` : '';
     // the open doctor's services come right after the card (in a one-column list that is under it; the booking
     // form's grid moves them under all the cards, style.css), with a caret pointing at the card (placeCarets)
-    // the corner summary drops the doctor's ✕ when they have just one service: it would repeat that service's ✕
-    const drop = !(o.summary && v.items.length === 1 && !notesOf(v.id).length);
+    // the corner summary has no doctor's ✕ at all, whatever the number of services: each service has its own (user,
+    // 2026-11-23)
+    const drop = !o.summary;
     return `<li class="visit${open ? ' is-picking' : ''}" data-id="${v.id}"><div class="visit__head">${who}${drop ? `<button type="button" class="visit__drop" data-act="visit-remove" data-id="${v.id}" data-focus="slot:${v.id}" aria-label="Убрать из записи: ${esc(d ? docTitle(d) : 'диагностика')}">${icon('i-close', 16, 2.4)}</button>` : ''}</div>${notes}${svcs}${more}</li>${
       open && d ? `<li class="vpick-li">${pickerHTML(d)}</li>` : ''}`;
   }
@@ -664,6 +665,8 @@
     else findQ.removeAttribute('aria-activedescendant');
   }
   findQ.addEventListener('input', () => { findIdx = -1; renderFind(); markFind(); });
+  findQ.addEventListener('focus', () => updateFloating());
+  findQ.addEventListener('blur', () => updateFloating());
   findQ.addEventListener('keydown', (e) => {
     const hits = $$('.svc-hit', findBox);
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
@@ -682,6 +685,10 @@
       renderFind();
       markFind();
     }
+  });
+  // a tap anywhere else on the page closes the hits (the field empties, the popular row is back)
+  document.addEventListener('click', (e) => {
+    if (findQ.value && !e.target.closest('.svc-find')) { findQ.value = ''; findIdx = -1; renderFind(); markFind(); }
   });
   renderFind();
 
@@ -832,37 +839,38 @@
     // «Услуги врача», ✕) in the same place once chosen, so a chosen doctor isn't shown twice; diagnostics without a
     // doctor follows as a card of its own
     const svcsBox = $('#book-svcs');
-    const h0 = svcsBox.getBoundingClientRect().height;
-    const pk0 = $('.vpick', svcsBox);
+    // phones: the doctors as one row of round photos (speciality, surname) above the chosen ones' cards; the tiles
+    // in the slots are hidden there (style.css). A tap chooses a doctor or takes them out again. Built once and
+    // only re-marked, and outside the box that glides: rebuilt with the list, or clipped by its glide, its photos
+    // blinked on an iPhone at every tap
+    if (!$('.book-pick', svcsBox)) {
+      svcsBox.innerHTML = `<div class="book-pick" role="group" aria-label="Врачи">${D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
+        const short = d.name ? d.name.split(' ').slice(1).join(' ') || d.name : '';
+        return `<button type="button" class="book-pick__doc" data-act="book-pick" data-id="${d.id}" aria-pressed="false" aria-label="${esc(docTitle(d))}, ${esc(d.spec)}"><span class="book-pick__ph"><span class="av">${docAvatar(d, 20)}</span><span class="book-pick__tick">${icon('i-check', 12, 3)}</span></span><span class="book-pick__spec">${esc(d.spec)}</span>${short ? `<span class="book-pick__name">${esc(glue(short))}</span>` : ''}</button>`;
+      }).join('')}</div><div class="book__slots-box"></div>`;
+    }
+    const picksBox = $('.book-pick', svcsBox);
+    const slotsBox = $('.book__slots-box', svcsBox);
+    const h0 = slotsBox.getBoundingClientRect().height;
+    const pk0 = $('.vpick', slotsBox);
     const pickTop = pk0 ? pk0.getBoundingClientRect().top : null;
     const vs = visits();
     const slots = D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
       const v = vs.find((x) => x.id === d.id);
       return v ? visitHTML(v) : `<li class="visit-slot"><button type="button" class="book-doc" data-act="book-pick" data-id="${d.id}" data-focus="slot:${d.id}"><span class="av">${docAvatar(d, 20)}</span><span class="book-doc__text"><span class="book-doc__name">${esc(glue(docTitle(d)))}</span><span class="book-doc__sub">${esc(d.spec)}</span></span><span class="book-doc__add">${PLUS}Выбрать</span></button></li>`;
     }).join('') + vs.filter((v) => !v.doc || !BOOKABLE.includes(v.doc.role)).map(visitHTML).join('');
-    // phones: the doctors as one row of round photos (speciality, surname) above the chosen ones' cards; the tiles
-    // in the slots are hidden there (style.css). A tap chooses a doctor or takes them out again. Built once and
-    // only re-marked: rebuilt with the list, its photos blinked out on an iPhone at every tap
-    let picksBox = $('.book-pick', svcsBox);
-    if (!picksBox) {
-      svcsBox.innerHTML = `<div class="book-pick" role="group" aria-label="Врачи">${D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
-        const short = d.name ? d.name.split(' ').slice(1).join(' ') || d.name : '';
-        return `<button type="button" class="book-pick__doc" data-act="book-pick" data-id="${d.id}" aria-pressed="false" aria-label="${esc(docTitle(d))}, ${esc(d.spec)}"><span class="book-pick__ph"><span class="av">${docAvatar(d, 20)}</span><span class="book-pick__tick">${icon('i-check', 12, 3)}</span></span><span class="book-pick__spec">${esc(d.spec)}</span>${short ? `<span class="book-pick__name">${esc(glue(short))}</span>` : ''}</button>`;
-      }).join('')}</div><div class="book__slots-box"></div>`;
-      picksBox = $('.book-pick', svcsBox);
-    }
     $$('.book-pick__doc', picksBox).forEach((b) => b.setAttribute('aria-pressed', vs.some((x) => x.id === b.dataset.id)));
-    const rebuilt = mount($('.book__slots-box', svcsBox), visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
+    const rebuilt = mount(slotsBox, visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
       ? `<p class="book__empty">${glue('Можно не выбирать — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
       : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`}`);
     // a doctor coming or going, a services list opening or closing: the form glides, clipped at its growing edge.
     // A service ticked in an open list grows its doctor's card: then the list under the cards slides down with the
     // glide instead of jumping (clipped, it was cut off for a moment)
     const shape = vs.map((v) => v.id).join() + '#' + (state.addFor || '');
-    const dy = rebuilt && pickTop !== null && shape === svcsBox.dataset.shape ? pickShift(svcsBox, pickTop) : 0;
-    if (dy) slideAfter($('.vpick', svcsBox), svcsBox, h0, dy);
-    else if (rebuilt) growTo(svcsBox, h0);
-    svcsBox.dataset.shape = shape;
+    const dy = rebuilt && pickTop !== null && shape === slotsBox.dataset.shape ? pickShift(slotsBox, pickTop) : 0;
+    if (dy) slideAfter($('.vpick', slotsBox), slotsBox, h0, dy);
+    else if (rebuilt) growTo(slotsBox, h0);
+    slotsBox.dataset.shape = shape;
     $$('[data-act="cart-reset"]').forEach((b) => { b.hidden = bookEmpty(); });
     // the form and the confirmation share one grid cell, so the card keeps its size (see style.css)
     $('.book__card').classList.toggle('is-sent', state.sent);
@@ -926,6 +934,12 @@
   }
   // the open services panel has its buttons at the bottom, which the corner and
   // back-to-top buttons covered on phones
+  // Services on the screen (it has its own buttons, and the search's hits ran under the corner on phones; user,
+  // 2026-11-23), or the search being typed in
+  function servicesOnScreen() {
+    const r = $('#services').getBoundingClientRect();
+    return r.top < window.innerHeight - 120 && r.bottom > 120;
+  }
   function panelAtBottom() {
     const p = $('#svc-panel');
     if (!p) return false;
@@ -934,7 +948,7 @@
   }
   function renderCorner() {
     const n = bookCount();
-    const hide = !n || state.sent || bookOnScreen() || panelAtBottom();
+    const hide = !n || state.sent || bookOnScreen() || panelAtBottom() || servicesOnScreen() || document.activeElement === $('#svc-q');
     if (hide && state.bkOpen) state.bkOpen = false;
     bk.hidden = false;
     bk.classList.toggle('is-away', hide);

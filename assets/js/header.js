@@ -34,6 +34,20 @@
   window.matchMedia('(max-width: 1279px)').addEventListener('change', (e) => { if (!e.matches) setMenu(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false, hdr.contains(document.activeElement)); });
 
+  // a phone held sideways (the rotate notice, style.css): the device's turn, not the window's shape — with the
+  // keyboard up a portrait window is wider than tall. iOS reports the screen's portrait size whichever way it is
+  // turned, so a phone is told by its short side
+  function sideways() {
+    const o = screen.orientation && screen.orientation.type;
+    const turned = o ? o.indexOf('landscape') === 0 : Math.abs(window.orientation || 0) === 90;
+    return turned && Math.min(screen.width, screen.height) < 500 && window.matchMedia('(pointer: coarse)').matches;
+  }
+  const syncSide = () => document.documentElement.classList.toggle('is-sideways', sideways());
+  syncSide();
+  if (screen.orientation) screen.orientation.addEventListener('change', syncSide);
+  window.addEventListener('orientationchange', syncSide);
+  window.addEventListener('resize', syncSide);
+
   // links (most buttons on the site are links) and pictures can't be dragged out: dropped into another window or
   // tab, a link opened there
   document.addEventListener('dragstart', (e) => { if (e.target.closest && e.target.closest('a, img')) e.preventDefault(); });
