@@ -1105,7 +1105,9 @@ html:has(.helper[open]) { overflow: hidden; }
   .sym-group .caps { font-size: var(--fs-s); }
   .sym-group__chips { gap: 8px; }
   .sym-chip { min-height: clamp(32px, (100dvh - 380px) / 11, 44px); padding: 0 16px; font-size: var(--fs-m); }
-  /* step 3: small photos, no experience line, tighter type */
+  /* step 3: small photos, no experience line, tighter type; the first-visit list (the same for every answer) and the
+     direction row go, so the step fits the screen without scrolling (user, 2026-11-23) */
+  .hint__visit, .hint__row, .hint:has(.hint__note) .hint__disclaimer { display: none; }
   .hint { gap: 10px; }
   .hint__note { padding: 8px 12px; font-size: var(--fs-m); }
   .hint__answer { padding: 14px; gap: 6px; border-radius: 20px; }
@@ -1113,7 +1115,7 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__pick-note { margin-top: -4px; font-size: var(--fs-m); }
   .hint__docs { gap: 8px; }
   .hint__doc { gap: 12px; padding: 6px 12px 6px 6px; border-radius: 16px; }
-  .hint__doc-ph { width: 40px; border-radius: 10px; font-size: var(--fs-m); }
+  .hint__doc-ph { width: 40px; aspect-ratio: 1 / 1; border-radius: 10px; font-size: var(--fs-m); }
   .hint__doc-name { font-size: var(--fs-m); }
   .hint__doc-spec { font-size: var(--fs-m); }
   .hint__doc-exp { display: none; }
@@ -1142,6 +1144,9 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__row, .hint__disclaimer { display: none; }
   .hint__note { font-size: var(--fs-s); }
   .hint__answer { padding: 12px; }
+  .hint { gap: 8px; }
+  .hint__doc { padding: 4px 10px 4px 4px; }
+  .hint__doc-ph { width: 32px; border-radius: 8px; }
 }
 @media (max-width: 480px) {
   .jaw__sides { padding: 0; font-size: var(--fs-xs); }
