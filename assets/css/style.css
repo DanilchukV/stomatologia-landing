@@ -1201,10 +1201,13 @@ html:has(.helper[open]) { overflow: hidden; }
 .doctors__lead .one-line { display: block; }
 .doc-carousel { position: relative; }
 .doc-grid { display: flex; gap: 16px; align-items: stretch; }
-.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s ease, box-shadow .3s ease, opacity .45s ease; animation: pageIn .3s ease both; }
-@media (hover: hover) { .doc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12, 44, 71, .12); } }
+.doc { flex: 1 1 0; min-width: 0; background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 0 0 0 rgba(12, 44, 71, 0), 0 0 0 0 rgba(12, 44, 71, 0); transition: transform .2s ease, box-shadow .3s ease, opacity .45s ease; animation: pageIn .3s ease both; }
+/* the outline and the hover shadow are two layers, each always present (transparent when off): one shadow turning
+   into the other passed through a big dark blur for a moment (user, 2026-11-23) */
+@media (hover: hover) { .doc:hover { transform: translateY(-4px); box-shadow: 0 0 0 0 rgba(12, 44, 71, 0), 0 14px 30px rgba(12, 44, 71, .12); } }
 /* «Подробнее»: the chosen card gets a Navy outline, the others step back a little; sizes never change */
-.doc.is-open { box-shadow: 0 0 0 1.5px var(--ink); }
+.doc.is-open { box-shadow: 0 0 0 1.5px var(--ink), 0 0 0 0 rgba(12, 44, 71, 0); }
+@media (hover: hover) { .doc.is-open:hover { box-shadow: 0 0 0 1.5px var(--ink), 0 14px 30px rgba(12, 44, 71, .12); } }
 .doc-grid.has-open .doc:not(.is-open) { opacity: .55; }
 @media (hover: hover) { .doc-grid.has-open .doc:not(.is-open):hover { opacity: 1; } }
 .doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
@@ -1301,8 +1304,8 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc__foot { flex-direction: column; align-items: flex-start; gap: 16px; padding: 0 6px; }
   .doc__book { margin-left: 0; }
   .doc__toggle::after, .doc__book::after { inset: -8px -6px; }
-  .doc:hover { transform: none; box-shadow: none; }
-  .doc.is-open { box-shadow: 0 0 0 1.5px var(--ink); }
+  .doc:hover { transform: none; box-shadow: 0 0 0 0 rgba(12, 44, 71, 0), 0 0 0 0 rgba(12, 44, 71, 0); }
+  .doc.is-open, .doc.is-open:hover { box-shadow: 0 0 0 1.5px var(--ink), 0 0 0 0 rgba(12, 44, 71, 0); }
   .doc-grid { flex-wrap: nowrap; }
   /* the photos are 3:4 with the head near the top edge: square crops keep the top, or the head is cut */
   .doc__photo img { object-position: 50% 0; }
