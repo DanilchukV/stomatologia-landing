@@ -804,6 +804,12 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__all { flex: none; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: var(--white); box-shadow: 0 0 0 3px var(--tint); font: inherit; font-size: var(--fs-xs); font-weight: 700; line-height: 1; cursor: pointer; transition: background-color .15s, color .15s; }
 @media (hover: hover) { .visit__all:hover { background: var(--accent); color: var(--ink); } }
 .visit__all .ic { display: block; }
+/* phones (main.js): the folded services as one white pill, «Выбрано услуг: N», ending in the same round «+N» that
+   sits half out of it, as the «+N» beside the pills on wider screens; the whole row opens the list */
+.visit__svcs:has(> .visit__fold--sum) { padding-right: 0; }
+.visit__fold--sum { position: static; transform: none; }
+.visit__sum { display: inline-flex; align-items: center; gap: 12px; min-height: 36px; margin-right: 18px; padding: 0 0 0 14px; border: 0; border-radius: 18px; background: var(--white); color: var(--ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; }
+.visit__sum .visit__all { margin-right: -18px; }
 .visit__none { margin: 0; font-size: var(--fs-m); color: var(--muted); }
 /* the reason from the helper: a white strip like the service chips */
 .visit__note { display: flex; align-items: center; gap: 10px; margin: 0; padding: 6px 5px 6px 14px; border-radius: 18px; background: var(--white); font-size: var(--fs-m); line-height: 1.4; }

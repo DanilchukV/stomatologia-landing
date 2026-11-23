@@ -595,6 +595,11 @@ On phones (2026-11-22, site review) the list fits between the header and the but
 (`max-height` from `100dvh`, `--hdr-h` and `--cookie-h`; 72vh ran under the header at 360×640), and «Оформить» wraps
 under «Добавить услугу» when both don't fit (it stuck out of the card at 360 px).
 
+Folded services on phones (2026-11-23, user: «как мы можем скрыть список услуг к врачу … с кружочком как и в веб
+версии»): in the booking form's cards up to 640 px, two or more services fold into one white pill «Выбрано услуг: N»
+ending in the round Navy «+N ⌄» (half out of the pill, as the «+N» beside the pills on wider screens); the whole
+pill opens them, with whole names, and «Свернуть ⌃» of the same shape folds them back. One service shows as before.
+
 ## Back-to-top
 
 Back-to-top shows

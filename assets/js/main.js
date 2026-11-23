@@ -151,7 +151,7 @@
   const dropDoc = (id) => set({ cart: state.cart.filter((x) => (itemDoc(x) || '') !== id), extra: state.extra.filter((e) => e.id !== id), notes: state.notes.filter((x) => x.id !== id) });
   const notesOf = (id) => state.notes.filter((x) => x.id === id);
   // structure key for mount(): changes whenever the list would
-  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '') + '#' + state.svcsAll.join();
+  const visitsKey = () => visits().map((v) => v.id + ':' + v.items.map((x) => x.cid + '/' + x.n).join(',') + ':' + notesOf(v.id).map((x) => x.text).join(',')).join('|') + '#' + (state.addFor || '') + '#' + state.svcsAll.join() + '#' + swipeMedia.matches;
 
   // the same list in step 3 of Services and the corner button; the booking form puts the same cards in the doctors' slots
   // o.full: every service in full, names wrapping (Services' step 3, the corner list); o.summary: no «Услуги врача»
@@ -166,11 +166,17 @@
     // two services show; the rest behind a round «+N» with a down arrow at the end of the row (an up arrow folds them
     // again); one line each, a long name cut with «…», whole in its tooltip
     const all = state.svcsAll.includes(v.id);
-    const shown = all || o.full ? v.items : v.items.slice(0, SVCS_SHOWN);
-    const rest = v.items.length - SVCS_SHOWN;
-    const fold = rest > 0 && !o.full ? `<li class="visit__fold"><button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}" aria-label="${all ? 'Свернуть услуги' : 'Показать ещё ' + rest}">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</button></li>` : '';
+    // phones: two or more services fold into one row, «Выбрано услуг: N» ending in the round «+N»; open, all of them
+    // with whole names and «Свернуть» under them
+    const sum = !o.full && swipeMedia.matches && v.items.length > 1;
+    const full = o.full || (sum && all);
+    const shown = all || o.full ? v.items : v.items.slice(0, sum ? 0 : SVCS_SHOWN);
+    const rest = v.items.length - (sum ? 0 : SVCS_SHOWN);
+    const fold = sum
+      ? `<li class="visit__fold visit__fold--sum"><button type="button" class="visit__sum" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}"><span class="visit__sum-t">${all ? 'Свернуть' : `Выбрано услуг: ${rest}`}</span><span class="visit__all" aria-hidden="true">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</span></button></li>`
+      : rest > 0 && !o.full ? `<li class="visit__fold"><button type="button" class="visit__all" data-act="visit-all" data-id="${v.id}" data-focus="vall:${v.id}" aria-expanded="${all}" aria-label="${all ? 'Свернуть услуги' : 'Показать ещё ' + rest}">${all ? '' : `<span class="visit__all-n">+${rest}</span>`}${icon(all ? 'i-chev-up' : 'i-chev', 12, 2.8)}</button></li>` : '';
     const svcs = v.items.length
-      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc${o.full ? ' is-full"' : `" data-tip="${esc(x.n)}"`}><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
+      ? `<ul class="visit__svcs">${shown.map((x) => `<li class="visit__svc${full ? ' is-full"' : `" data-tip="${esc(x.n)}"`}><span class="visit__svc-n">${esc(x.n)}</span><button type="button" class="visit__x" data-act="cart-remove" data-svc="${esc(x.n)}" data-cid="${x.cid}" aria-label="Убрать: ${esc(x.n)}">${icon('i-close', 12, 2.8)}</button></li>`).join('')}${fold}</ul>`
       : notes ? '' : `<p class="visit__none">${glue('Услуги подберёт врач на приёме')}</p>`;
     const open = !o.summary && state.addFor === v.id;
     // the list it opens closes with its own ✕ (pickerHTML); the button stays dark while it is open
