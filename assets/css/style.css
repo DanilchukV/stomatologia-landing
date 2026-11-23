@@ -451,7 +451,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 640px) {
   .about__in { gap: 32px; }
   .about__gallery { gap: 10px; }
-  .about__ph { border-radius: 18px; }
+  .about__ph { aspect-ratio: 3 / 2; border-radius: 18px; }
+  .about__ph--main { aspect-ratio: 2 / 1; }
   .about__ph-ic { width: 44px; height: 44px; margin-bottom: 4px; }
   .about__ph-name { font-size: var(--fs-m); }
   .about__ph:not(.about__ph--main) .about__ph-note { display: none; }
