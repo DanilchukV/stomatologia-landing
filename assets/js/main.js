@@ -685,7 +685,7 @@
       <div class="doc-panel__body">
         <div class="doc-panel__head"><h3 class="doc-panel__name">${esc(d.name || d.spec)}</h3><span class="doc-panel__spec">${esc(d.spec)}</span>${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</div>
         <dl class="doc-panel__facts">${BIO.filter(([, k]) => d[k] && d[k].length).map(([label, k]) => `<div class="doc-panel__row"><dt>${label}</dt><dd><ul class="doc-panel__list">${d[k].map((x) => `<li>${esc(glue(x))}</li>`).join('')}</ul></dd></div>`).join('')}</dl>
-        <div class="doc-panel__actions">${BOOKABLE.includes(d.role) ? `<a href="#book" class="btn btn--dark doc-panel__btn" data-act="book-doc" data-id="${d.id}">Записаться к&nbsp;врачу</a>` : ''}<button type="button" class="btn btn--ghost doc-panel__btn" data-act="doc-more" data-id="${d.id}">Свернуть</button></div>
+        <div class="doc-panel__actions">${BOOKABLE.includes(d.role) ? `<a href="#book" class="btn btn--dark doc-panel__btn" data-act="book-doc" data-id="${d.id}">Записаться к&nbsp;врачу</a>` : ''}<button type="button" class="btn btn--ghost doc-panel__btn doc-panel__fold" data-act="doc-more" data-id="${d.id}">Свернуть</button></div>
       </div>
       <button type="button" class="doc-panel__x" data-act="doc-more" data-id="${d.id}" aria-label="Закрыть">${icon('i-close', 18, 2.4)}</button>
     </div>`;
@@ -705,7 +705,7 @@
     const track = $('#doc-track');
     const shown = swipe ? list : list.slice(page * DOCS_PER_PAGE, (page + 1) * DOCS_PER_PAGE);
     // the photo; without it the initials, without a name too a silhouette (the photo is blended, so nothing may sit under it)
-    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}">
+    const rebuilt = mount(track, swipe ? 'all' : String(page), () => shown.map((d) => `<article class="doc" data-id="${d.id}"${hasBio(d) ? ' data-act="doc-card"' : ''}>
         <div class="doc__photo">${docPhoto(d)}</div>
         <div class="doc__main">
           <div class="doc__info"><h3 class="doc__name">${esc(d.name || d.spec)}</h3><span class="doc__spec">${d.name ? esc(d.spec) : 'Фото и&nbsp;имя скоро появятся'}${d.exp ? `<span class="doc__exp">${icon('i-award', 16, 1.8)}${esc(d.exp)}</span>` : ''}</span></div>
@@ -1197,6 +1197,8 @@
     'add-svc': (t) => { if (catMenu.hidden || catMenuFor !== t) openCatMenu(t); else closeCatMenu(); },
     'add-cat': (t) => { closeCatMenu(); set({ bkOpen: false }); openCat(t.dataset.cat); },
 
+    // with a story open, a tap on another doctor's card shows theirs (user, 2026-11-23); its own buttons keep theirs
+    'doc-card': (t) => { if (state.docOpen && state.docOpen !== t.dataset.id) actions['doc-more'](t); },
     'doc-more': (t) => {
       const id = state.docOpen === t.dataset.id ? null : t.dataset.id;
       const track = $('#doc-track');

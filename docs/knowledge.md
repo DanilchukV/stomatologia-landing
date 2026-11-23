@@ -714,7 +714,9 @@ generic, courses, years and awards are invented) — replace them with the real 
 screen and the edge of a third, a square photo cropped from the top (the 3:4 photos have the head right at the top
 edge, so any lower crop cut it), no experience line in the card; the dots count scroll stops (doctors − cards on
 screen + 1, `swipeStops()`), not doctors. The panel is ~420 px instead of ~950: a 64 px round photo beside the
-name, smaller type, and only education and work — courses and certificates show from 641 px up.
+name, smaller type, and only education and work — courses and certificates show from 641 px up. On phones the panel
+has no «Свернуть» (the ✕ is enough; for staff without booking the button row goes too). With a story open, a tap on
+another doctor's card (anywhere but its buttons; `doc-card`) shows theirs — on every screen.
 
 ## Contacts
 

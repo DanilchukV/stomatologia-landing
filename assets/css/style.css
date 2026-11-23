@@ -1212,7 +1212,7 @@ html:has(.helper[open]) { overflow: hidden; }
 /* «Подробнее»: the chosen card gets a Navy outline, the others step back a little; sizes never change */
 .doc.is-open { box-shadow: 0 0 0 1.5px var(--ink), 0 0 0 0 rgba(12, 44, 71, 0); }
 @media (hover: hover) { .doc.is-open:hover { box-shadow: 0 0 0 1.5px var(--ink), 0 14px 30px rgba(12, 44, 71, .12); } }
-.doc-grid.has-open .doc:not(.is-open) { opacity: .55; }
+.doc-grid.has-open .doc:not(.is-open) { opacity: .55; cursor: pointer; }
 @media (hover: hover) { .doc-grid.has-open .doc:not(.is-open):hover { opacity: 1; } }
 .doc__photo { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; background: var(--tint); display: grid; place-items: center; }
 .doc__ini { font-family: var(--f-head); font-weight: 700; font-size: 56px; color: var(--ink); opacity: .55; }
@@ -1331,6 +1331,9 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc-panel__list { gap: 2px; font-size: var(--fs-s); line-height: 1.4; }
   .doc-panel__actions { gap: 8px; padding-top: 2px; }
   .doc-panel__btn { min-height: 44px; padding: 0 16px; }
+  /* the ✕ is enough: «Свернуть» goes, and the row with it when nothing else is left (user, 2026-11-23) */
+  .doc-panel__fold { display: none; }
+  .doc-panel__actions:not(:has(> :not(.doc-panel__fold))) { display: none; }
   /* concentric with the 24 px corner: (24 - 1.5 border) - 16 = 6.5 px */
   .doc-panel__x { top: 6.5px; right: 6.5px; width: 32px; height: 32px; }
   .doc-panel__btn { flex: 1 1 auto; }
