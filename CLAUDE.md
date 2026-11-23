@@ -144,7 +144,9 @@ page scrolls to it (`-Offset`, 100 px from the top by default).
 `box(sel)` (coordinates and size). `-Do` is a JS action before scrolling and the shot (fill fields,
 press a button). Screenshots: `$TMPDIR/stomatologia-shots/shot-<width>.png` — view them with Read.
 On Windows: `powershell -ExecutionPolicy Bypass -File tools\shot.ps1` with the same parameters;
-screenshots go to `%TEMP%\stomatologia-shots\`.
+screenshots go to `%TEMP%\stomatologia-shots\`. `-Touch` (Windows only so far) shoots as a touch screen
+(`hover: none`, `pointer: coarse`), as the mobile preview window reports — the header's call button and the
+touch-only rules show only then.
 The harness is `tools/shot.html` (index.html in an iframe, animations off). If the page hides
 blocks until they scroll into view, add that class to the harness's style override, or shots of
 lower sections come out blank.

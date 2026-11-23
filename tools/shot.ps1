@@ -11,6 +11,7 @@
 # scrolled to -Offset px from the top. -Js runs inside
 # the page, with helpers ov(sel) (horizontal overflow) and box(sel) (size and position).
 # -Do: a JS action before scrolling and the shot (fill a field, click a button), variable document. -Wait: ms to wait after it (default 400).
+# -Touch: as a touch screen (no hover, coarse pointer), like the mobile preview window.
 # Shots: %TEMP%\stomatologia-shots\shot-<width>.png. Starts the server if it isn't running.
 param(
     [string]$Page,
@@ -23,6 +24,7 @@ param(
     [double]$Scale = 1,
     [int]$Offset = 100,
     [switch]$NoShot,
+    [switch]$Touch,
     [string]$Out = "$env:TEMP\stomatologia-shots",
     [int]$Port = 8081
 )
@@ -48,9 +50,11 @@ Add-Type -AssemblyName System.Web
 # a fresh profile per run: two parallel sessions sharing a profile interfere (empty result)
 $profileDir = "$env:TEMP\stomatologia-shot-profile-$PID"
 
+# -Touch: report a touch screen (hover: none, pointer: coarse) like the dev.ps1 mobile window
+$touchArgs = @(); if ($Touch) { $touchArgs = @('--blink-settings=primaryHoverType=1,availableHoverTypes=1,primaryPointerType=2,availablePointerTypes=2') }
 function Invoke-Browser([string[]]$extra, [string]$url, [string]$stdout) {
     $a = @('--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run',
-        "--user-data-dir=`"$profileDir`"", '--virtual-time-budget=10000') + $extra + @("`"$url`"")
+        "--user-data-dir=`"$profileDir`"", '--virtual-time-budget=10000') + $touchArgs + $extra + @("`"$url`"")
     $p = @{ FilePath = $browser; ArgumentList = $a; Wait = $true; NoNewWindow = $true
             RedirectStandardError = "$Out\chrome-err.txt" }
     if ($stdout) { $p.RedirectStandardOutput = $stdout }

@@ -1285,6 +1285,10 @@
   document.addEventListener('touchmove', (e) => { if (!zoomedIn() && (e.touches.length > 1 || (e.scale && e.scale !== 1))) e.preventDefault(); }, { passive: false });
   // a second finger is blocked on touchstart too: once the first one scrolls a row, touchmove can't be cancelled
   document.addEventListener('touchstart', (e) => { if (!zoomedIn() && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  // a touchpad pinch comes as ctrl+wheel (the mobile preview window); only on touch screens, so a desktop keeps
+  // Ctrl+wheel browser zoom
+  const coarse = matchMedia('(pointer: coarse)');
+  document.addEventListener('wheel', (e) => { if (e.ctrlKey && coarse.matches && !zoomedIn()) e.preventDefault(); }, { passive: false });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (!catMenu.hidden) { const b = catMenuFor; closeCatMenu(); if (b && b.isConnected) b.focus(); return; }
