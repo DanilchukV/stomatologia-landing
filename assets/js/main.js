@@ -884,8 +884,8 @@
     const h1 = el.getBoundingClientRect().height;
     if (!h0 || Math.abs(h1 - h0) < 1 || reduceMotion.matches || !el.offsetParent || offScreen(el)) return;
     // clipped only at the bottom (the growing edge): overflow: hidden also cut the cards' outlines and focus rings at
-    // the sides
-    if (!slide) el.style.clipPath = 'inset(-12px -12px 0 -12px)';
+    // the sides; 24 px of room there: an open doctor's card reaches 16 px out, plus its 2 px outline
+    if (!slide) el.style.clipPath = 'inset(-24px -24px 0 -24px)';
     el.style.boxSizing = 'border-box';
     // border-box: the heights are measured with the padding, and the keyframes must mean the same (with content-box
     // the 4 px top padding came on top: the rows below jumped 4 px down at the start and 4 px back up at the end)
