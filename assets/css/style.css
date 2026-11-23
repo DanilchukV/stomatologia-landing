@@ -558,7 +558,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .wiz__item:last-child { flex: none; position: relative; }
 /* something booked while on steps 1–2: step 3 calls — its circle pulses Yellow and «Ваша запись · N» stands above it
    (main.js renderServices) */
-.wiz__badge { position: absolute; right: 0; bottom: calc(100% + 6px); padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--ink); font-size: 12px; font-weight: 700; line-height: 1.4; white-space: nowrap; box-shadow: 0 4px 12px rgba(12, 44, 71, .14); animation: popIn .3s ease both; }
+.wiz__badge { position: absolute; left: 4px; bottom: calc(100% + 6px); padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--ink); font-size: 12px; font-weight: 700; line-height: 1.4; white-space: nowrap; box-shadow: 0 4px 12px rgba(12, 44, 71, .14); animation: popIn .3s ease both; }
 .wiz__item.is-calling .num { animation: wizCall 1.6s ease-out infinite; }
 @keyframes wizCall { 0% { box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 0 rgba(240, 170, 47, .65); } 100% { box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 12px rgba(240, 170, 47, 0); } }
 /* the same colours as the helper's steps: current Navy with a Yellow halo, done Navy with a tick, ahead an outline */
@@ -709,6 +709,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .wiz__btn { flex-direction: column; gap: 6px; padding: 0; font-size: 13px; }
   .wiz__item { align-items: flex-start; }
   .wiz__item:not(:last-child)::after { margin-top: 15px; }
+  /* aligned with the circle the badge would stick 37 px out of the steps bar at 390: back to the right edge */
+  .wiz__badge { left: auto; right: 0; }
 }
 @media (max-width: 480px) {
   .svc-row__content { padding: 0 16px 18px 20px; }
