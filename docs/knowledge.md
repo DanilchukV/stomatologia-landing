@@ -179,7 +179,10 @@ buttons of the booking lists, a doctor card's «Подробнее» and «За�
 Landscape on phones: a «Поверните телефон» cover for phones held sideways (`.rotate`: coarse pointer, landscape,
 under 500 px high — tablets are taller; a white screen with a turning phone, the page under it doesn't scroll and the
 helper dialog hides). Added 2026-11-22 at the user's request, removed the same evening («убери функцию ориентации
-полностью»), brought back on 2026-11-23 («да, верни. Нравилась»).
+полностью»), brought back on 2026-11-23 («да, верни. Нравилась»). Since the same day `html.is-sideways` (header.js)
+decides — the device's turn (`screen.orientation`, iOS `window.orientation`) and a short side under 500 px — not
+`(orientation: landscape)`: with the keyboard up a portrait iPhone window is wider than tall, and the cover showed
+while typing in the search.
 
 Centring in circles (2026-11-23, user: «выровняй все цифры в кружочках», «криво стоят стрелочки», «не ровный
 крестик»): every number in a circle is centred by its own height, `text-box: trim-both cap alphabetic` on a block
