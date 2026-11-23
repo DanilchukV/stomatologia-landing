@@ -833,6 +833,10 @@ footer spans the same width as the sections above. The same day the whole site w
 On phones (2026-11-22, site review: 1 100 px long, and the back-to-top button covered «© 2026») «Навигация» and
 «Услуги» stand side by side, the logo and the contacts span both, and the footer has 96 px of room at the bottom.
 
+Phones (2026-11-23, user: «футер заметно сокращаем. Не нужна там точно навигация»): ~360 px instead of ~960 — the
+logo, the two phones (20 px), the address and ©. The «Навигация» and «Услуги» columns go (the burger menu has them),
+so do the blurb (the hero's lead says the same) and «Записаться на приём» (the booking form is right above).
+
 ## Removed pages
 
 The blog, documents and vacancies pages (with their scripts, the legal PDFs and the news block on the
