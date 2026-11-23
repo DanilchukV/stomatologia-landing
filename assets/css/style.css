@@ -768,7 +768,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-nav__info { flex: 1 1 calc(100% - 160px); order: -2; }
   .svc-nav__reset { order: -1; }
   .svc-nav__info:empty { display: none; }
-  .svc-nav__next, .svc-nav__book { flex: 1 1 auto; }
+  /* «Назад» fills its row up to the right edge, as the button under it (user, 2026-11-23) */
+  .svc-nav__back, .svc-nav__next, .svc-nav__book { flex: 1 1 auto; }
 }
 
 /* ===== Visits (the booking by doctor: Services' step 3, the booking form, the corner list) ===== */
