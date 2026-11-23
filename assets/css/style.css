@@ -1343,12 +1343,23 @@ html:has(.helper[open]) { overflow: hidden; }
 .clinic__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 16px; }
 .clinic__btn { flex: 1 1 auto; gap: 8px; min-height: 50px; padding: 0 22px; font-size: var(--fs-m); }
 .clinic__btn .ic { display: block; }
+.clinic__btn-short { display: none; }
 
 @media (max-width: 760px) {
   .clinic { display: block; min-height: 0; padding: 0; border-radius: 24px; background: var(--white); }
   .clinic__map { position: relative; height: 260px; }
   .clinic__body { width: auto; padding: 22px 20px; border-radius: 0; box-shadow: none; }
   .clinic__name { font-size: var(--fs-2xl); }
+}
+/* phones: a shorter map and the two buttons in one row, so the whole section fits one screen (user, 2026-11-23) */
+@media (max-width: 480px) {
+  .clinic__map { height: 150px; }
+  .clinic__body { padding: 20px 18px; }
+  .clinic__actions { flex-wrap: nowrap; gap: 8px; padding-top: 12px; }
+  /* «Записаться на приём» is just «Записаться» here, so both fit side by side down to 320 px */
+  .clinic__btn { flex: 1 1 auto; min-width: 0; min-height: 48px; padding: 0 12px; white-space: nowrap; }
+  .clinic__btn .ic, .clinic__btn-full { display: none; }
+  .clinic__btn-short { display: inline; }
 }
 
 /* ===== FAQ ===== */
