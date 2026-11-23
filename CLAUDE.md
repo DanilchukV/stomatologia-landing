@@ -95,6 +95,10 @@ copies only those; any other new top-level file (`robots.txt`, `sitemap.xml`, â€
 `cp` line. A new page reuses the header and footer markup of `index.html` (shared CSS and `header.js`)
 and gets its own small script.
 
+**Page zoom on phones is disabled on purpose** (user, 2026-11-23): `maximum-scale=1, user-scalable=no` in the
+viewport meta, `touch-action: pan-x pan-y` on `html` for touch screens, and the pinch blocking in `main.js` (iOS
+ignores the meta). Don't "fix" it. The helper's tooth-map zoom is a different feature and stays.
+
 **Bump `?v=` on CSS/JS links after changing them.** GitHub Pages lets browsers cache files for 10
 minutes, and a normal reload re-fetches the page but not its scripts, so the user saw old behaviour
 with new markup. `index.html` links `style.css` and the scripts as `â€¦?v=YYYYMMDDx`; in a commit that

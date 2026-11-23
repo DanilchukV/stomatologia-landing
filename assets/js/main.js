@@ -1259,6 +1259,15 @@
   });
   // iOS Safari applies :active (the press-in in style.css) only when the page listens for touches
   document.addEventListener('touchstart', () => {}, { passive: true });
+  // no page zoom on phones: iOS ignores user-scalable=no and touch-action stops only double-tap zoom, so the pinch is
+  // cancelled here (Safari's gesture events, a second finger). A pinch during inertial scrolling can't be cancelled;
+  // once zoomed in nothing is blocked (html.zoomed lifts touch-action too), so the visitor can pinch back out
+  const zoomedIn = () => !!window.visualViewport && visualViewport.scale > 1.01;
+  if (window.visualViewport) visualViewport.addEventListener('resize', () => document.documentElement.classList.toggle('zoomed', zoomedIn()));
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach((ev) => document.addEventListener(ev, (e) => { if (!zoomedIn()) e.preventDefault(); }, { passive: false }));
+  document.addEventListener('touchmove', (e) => { if (!zoomedIn() && (e.touches.length > 1 || (e.scale && e.scale !== 1))) e.preventDefault(); }, { passive: false });
+  // a second finger is blocked on touchstart too: once the first one scrolls a row, touchmove can't be cancelled
+  document.addEventListener('touchstart', (e) => { if (!zoomedIn() && e.touches.length > 1) e.preventDefault(); }, { passive: false });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (!catMenu.hidden) { const b = catMenuFor; closeCatMenu(); if (b && b.isConnected) b.focus(); return; }
