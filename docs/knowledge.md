@@ -281,7 +281,7 @@ beside it «Протезирование» didn't fit a third of a tablet.
 
 Hand-lettered motto (2026-11-23, user: «Amatic SC … сбоку фото, не перекрывая лицо девушки … не перегрузить»): up
 to 480 px the eyebrow «Здоровые улыбки — счастливые люди» leaves the text column and sits on the photo, on the light
-wall right of the doctor's head, in Amatic SC Bold (`--f-hand`, self-hosted, bold only), 24 px, four short lines,
+wall right of the doctor's head, over the arch's edge (half on the photo, half on white; user, same day), in Amatic SC Bold (`--f-hand`, self-hosted, bold only), 24 px, four short lines,
 Terracotta, tilted −6°, with a soft white halo; it fades in. The title keeps its place (the column's negative margin
 is 35 px smaller). From 481 px the photo's crop puts the lamp and instruments there, so the plain eyebrow stays.
 
