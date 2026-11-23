@@ -1555,9 +1555,9 @@ html:has(.helper[open]) { overflow: hidden; }
 }
 /* phones, compact (user, 2026-11-23: «футер заметно сокращаем, навигация не нужна»): the logo, the phones, the address
    and ©. The link columns go (the burger menu has them), so do the blurb (the hero's lead says the same) and the
-   button (the booking form is right above). Room under © for the back-to-top button, which covered it */
+   button (the booking form is right above) */
 @media (max-width: 640px) {
-  .ftr { padding-top: 36px; padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .ftr { padding-top: 36px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
   .ftr__in { gap: 24px; }
   .ftr__grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .ftr__about, .ftr__grid > .ftr__col:not(.ftr__contacts), .ftr__contacts .ftr__h, .ftr__cta { display: none; }
@@ -1565,6 +1565,8 @@ html:has(.helper[open]) { overflow: hidden; }
   .ftr__tel { font-size: var(--fs-xl); line-height: 1.35; }
   .ftr__addr { margin-top: 8px; gap: 0; font-size: var(--fs-s); color: var(--muted); }
   .ftr__legal { padding-top: 16px; border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--muted); }
+  /* the back-to-top button (52 px, 24 px from the right) sits over the footer's end: © stays left of it */
+  .ftr__legal span { max-width: calc(100% - 60px); }
 }
 /* touch: a taller finger area for the 21 px links, the spacing unchanged */
 @media (pointer: coarse) {

@@ -975,9 +975,12 @@
     toTop.hidden = y <= 900 || panelAtBottom();
     if (!toTop.hidden) toTop.classList.toggle('on-dark', darkUnder(toTop));
   }
+  // a link's glide marks its target at once and holds it to the end, so the sections passed on the way don't light up
+  // one after another (user, 2026-11-23)
+  let spyHold = null;
   function onScroll() {
-    let active = null;
-    SPY.forEach(([id, link]) => {
+    let active = spyHold;
+    if (active === null) SPY.forEach(([id, link]) => {
       const r = document.getElementById(id).getBoundingClientRect();
       if (r.top <= 140 && r.bottom > 140) active = link;
     });
@@ -1275,7 +1278,8 @@
     e.preventDefault();
     // where the browser's jump would stop: the target's scroll-margin-top under the top (#top's 100vh clamps to 0)
     const y = el.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
-    glideTo(y, Math.min(1200, 500 + Math.abs(y - window.scrollY) / 8));
+    holdSpy(el.id);
+    glideTo(y, Math.min(1200, 500 + Math.abs(y - window.scrollY) / 8), releaseSpy);
     history.replaceState(null, '', hash);
     // the jump used to take the keyboard focus there too; the next Tab goes on from the target
     if (!el.hasAttribute('tabindex') && !el.matches('a[href], button, input, select, textarea')) el.setAttribute('tabindex', '-1');
@@ -1317,14 +1321,23 @@
       void toTop.offsetWidth; // restarts the CSS animation
       toTop.classList.add('is-launch');
     }
-    glideTo(0, Math.min(1200, 500 + from / 8));
+    holdSpy('top');
+    glideTo(0, Math.min(1200, 500 + from / 8), releaseSpy);
   }
+  // the nav link of a section being glided to (null: not one of the spied sections, nothing held)
+  function holdSpy(id) {
+    const hit = SPY.find(([s]) => s === id);
+    spyHold = hit ? hit[1] : null;
+    if (spyHold !== null) onScroll();
+  }
+  function releaseSpy() { spyHold = null; onScroll(); }
   // the page glides to y: a slow start and a soft landing; a wheel turn or a touch stops it
-  function glideTo(y, dur) {
+  // done: called when it ends, also when stopped or not needed
+  function glideTo(y, dur, done) {
     const from = window.scrollY;
     const to = Math.max(0, Math.round(y));
-    if (Math.abs(to - from) < 2) return;
-    if (reduceMotion.matches) { window.scrollTo(0, to); return; }
+    if (Math.abs(to - from) < 2) { if (done) done(); return; }
+    if (reduceMotion.matches) { window.scrollTo(0, to); if (done) requestAnimationFrame(done); return; }
     const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
     let stopped = false;
     const stop = () => { stopped = true; };
@@ -1337,6 +1350,7 @@
       if (p < 1) { requestAnimationFrame(step); return; }
       window.removeEventListener('wheel', stop);
       window.removeEventListener('touchstart', stop);
+      if (done) done();
     })(t0);
   }
 

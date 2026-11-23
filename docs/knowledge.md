@@ -253,6 +253,11 @@ z-index 50, above the corner buttons and the cookie notice, so they blur too. Th
 hidden` on `html`, the scrollbar's width given back as padding; touchmove outside the menu cancelled for iOS < 16); a
 tap on the blur closes the menu (the click's target is the header itself there).
 
+The nav's current section (`aria-current`, scroll spy in `onScroll`) holds the target of an in-page link or of
+back-to-top from the click to the end of the glide (`holdSpy`/`releaseSpy`, `glideTo`'s `done`), so the sections
+passed on the way don't light up one after another (user, 2026-11-23). A wheel turn or a touch ends the glide and
+the hold.
+
 ## Hero
 
 The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that
@@ -835,7 +840,8 @@ On phones (2026-11-22, site review: 1 100 px long, and the back-to-top button co
 
 Phones (2026-11-23, user: «футер заметно сокращаем. Не нужна там точно навигация»): ~360 px instead of ~960 — the
 logo, the two phones (20 px), the address and ©. The «Навигация» and «Услуги» columns go (the burger menu has them),
-so do the blurb (the hero's lead says the same) and «Записаться на приём» (the booking form is right above).
+so do the blurb (the hero's lead says the same) and «Записаться на приём» (the booking form is right above). Only
+24 px under it: © keeps 60 px clear on the right instead, where the back-to-top button sits (it wraps at 360 px).
 
 ## Removed pages
 
