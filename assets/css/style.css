@@ -395,7 +395,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   /* 18px of room on top, taken back by the margin: the row clips, and the cards come in from above */
   .hero__facts { display: flex; gap: 12px; margin: -18px 0 0; padding: 18px var(--gutter) 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; }
   .hero__facts::-webkit-scrollbar { display: none; }
-  .fact { flex: 0 0 82%; scroll-snap-align: start; padding: 20px; }
+  /* the middle card stops centred, the first and last at the gutters (user, 2026-11-23: «по центру, ровненько») */
+  .fact { flex: 0 0 82%; scroll-snap-align: center; padding: 20px; }
+  .fact:first-child { scroll-snap-align: start; }
+  .fact:last-child { scroll-snap-align: end; }
   /* the row clips what sticks out of it, so a hover shadow would end in a hard line under the cards */
   .fact:hover { box-shadow: none; }
   /* one dot per card, following the swipe (main.js); they fade in as the last card lands */
@@ -490,10 +493,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .promise__item { row-gap: 0; }
   .promise__h { min-height: 0; }
   .promise__btn { min-height: 48px; cursor: pointer; }
-  .promise__chev { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; transition: transform .25s ease; }
+  .promise__chev { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; transition: transform .2s ease; }
   .promise__item.is-open .promise__chev { transform: rotate(180deg); }
-  .promise__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s var(--ease-out); }
-  .promise__more > .promise__text { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility .3s; }
+  .promise__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .2s var(--ease-out); }
+  .promise__more > .promise__text { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility .2s; }
   .promise__item.is-open .promise__more { grid-template-rows: 1fr; }
   .promise__item.is-open .promise__text { visibility: visible; padding-bottom: 10px; }
 }

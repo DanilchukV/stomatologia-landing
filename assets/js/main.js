@@ -747,7 +747,7 @@
     mount(dots, (swipe ? 'swipe' : 'pages') + n, () => Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="${swipe ? 'Врач' : 'Страница'} ${k + 1} из ${n}" data-act="doc-page" data-page="${k}"></button>`).join(''));
     syncDots(swipe ? swipeIndex() : page);
   }
-  // the card nearest the row's left edge on a phone (the doctors, or the hero's facts)
+  // the card nearest the row's left edge on a phone (the doctors)
   function swipeIndex(track = $('#doc-track')) {
     const first = track.firstElementChild;
     if (!first) return 0;
@@ -1223,7 +1223,7 @@
       if (swipeMedia.matches) { const c = $('#doc-track').children[+t.dataset.page]; if (c) $('#doc-track').scrollTo({ left: c.offsetLeft - $('#doc-track').firstElementChild.offsetLeft, behavior: reduceMotion.matches ? 'auto' : 'smooth' }); return; }
       set({ docPage: +t.dataset.page, docOpen: null });
     },
-    'fact-go': (t) => { const row = $('.hero__facts'); const c = row.children[+t.dataset.i]; if (c) row.scrollTo({ left: c.offsetLeft - row.firstElementChild.offsetLeft, behavior: reduceMotion.matches ? 'auto' : 'smooth' }); },
+    'fact-go': (t) => { const row = $('.hero__facts'); const c = row.children[+t.dataset.i]; if (c) row.scrollTo({ left: c.offsetLeft + c.offsetWidth / 2 - row.clientWidth / 2, behavior: reduceMotion.matches ? 'auto' : 'smooth' }); },
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p, docOpen: null }); },
     'book-doc': (t) => set({ extra: withDoc(t.dataset.id) }),
@@ -1278,7 +1278,7 @@
     // where the browser's jump would stop: the target's scroll-margin-top under the top (#top's 100vh clamps to 0)
     const y = el.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
     holdSpy(el.id);
-    glideTo(y, Math.min(1200, 500 + Math.abs(y - window.scrollY) / 8), releaseSpy);
+    glideTo(y, Math.min(800, 350 + Math.abs(y - window.scrollY) / 12), releaseSpy);
     history.replaceState(null, '', hash);
     // the jump used to take the keyboard focus there too; the next Tab goes on from the target
     if (!el.hasAttribute('tabindex') && !el.matches('a[href], button, input, select, textarea')) el.setAttribute('tabindex', '-1');
@@ -1321,7 +1321,7 @@
       toTop.classList.add('is-launch');
     }
     holdSpy('top');
-    glideTo(0, Math.min(1200, 500 + from / 8), releaseSpy);
+    glideTo(0, Math.min(800, 350 + from / 12), releaseSpy);
   }
   // the nav link of a section being glided to (null: not one of the spied sections, nothing held)
   function holdSpy(id) {
@@ -1489,7 +1489,9 @@
   }
   $('#doc-track').addEventListener('scroll', docCaret, { passive: true });
   $('#doc-track').addEventListener('scroll', () => { if (swipeMedia.matches) syncDots(swipeIndex()); }, { passive: true });
-  $('.hero__facts').addEventListener('scroll', (e) => { const cur = swipeIndex(e.currentTarget); $$('#fact-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.i === cur)); }, { passive: true });
+  // the card nearest the row's middle (the middle one stops centred, the first and last at the edges: style.css)
+  const factIndex = (row) => { const mid = row.scrollLeft + row.clientWidth / 2; let best = 0, d = Infinity; Array.from(row.children).forEach((c, i) => { const x = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (x < d) { d = x; best = i; } }); return best; };
+  $('.hero__facts').addEventListener('scroll', (e) => { const cur = factIndex(e.currentTarget); $$('#fact-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.i === cur)); }, { passive: true });
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
