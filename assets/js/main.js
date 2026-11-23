@@ -838,6 +838,7 @@
   // they were while wrap's height glides, unclipped. In the booking form's grid the list is placed after all the cards
   // (`order`), so the cards after it in the markup stand beside the grown card and stay.
   function slideAfter(pk, wrap, h0, dy) {
+    if (offScreen(wrap)) return;
     const li = pk.closest('li') || pk;
     const moving = [];
     const gridLast = getComputedStyle(li).order !== '0';
@@ -856,7 +857,7 @@
   function growTo(el, h0, slide) {
     if (el.glide) { el.glide.cancel(); el.style.clipPath = el.style.boxSizing = ''; }
     const h1 = el.getBoundingClientRect().height;
-    if (!h0 || Math.abs(h1 - h0) < 1 || reduceMotion.matches || !el.offsetParent) return;
+    if (!h0 || Math.abs(h1 - h0) < 1 || reduceMotion.matches || !el.offsetParent || offScreen(el)) return;
     // clipped only at the bottom (the growing edge): overflow: hidden also cut the cards' outlines and focus rings at
     // the sides
     if (!slide) el.style.clipPath = 'inset(-12px -12px 0 -12px)';
@@ -865,6 +866,13 @@
     // the 4 px top padding came on top: the rows below jumped 4 px down at the start and 4 px back up at the end)
     el.glide = el.animate({ height: [h0 + 'px', h1 + 'px'] }, { duration: 420, easing: 'cubic-bezier(.22, .7, .2, 1)' });
     el.glide.finished.then(() => { el.style.clipPath = el.style.boxSizing = ''; el.glide = null; }, () => {});
+  }
+  // an element off the screen changes height at once: animated, the browser's scroll anchoring corrected the scroll
+  // every frame in whole pixels against fractional heights, and the form on screen shook (Services at step 3 above
+  // it, a service ticked in the booking form)
+  function offScreen(el) {
+    const r = el.getBoundingClientRect();
+    return r.bottom < 0 || r.top > window.innerHeight;
   }
 
   /* ---------- the booking in the corner ---------- */

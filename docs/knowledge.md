@@ -725,6 +725,12 @@ a white card, label on the left, «Отправить заявку» at the bott
   и на пару пикселей вверх»).
   It still flickered: `mount()` rebuilt the whole list, so every doctor's photo reloaded and flashed. Now a group
   whose markup is unchanged keeps its node (matched by `outerHTML`), and a new one fades in (`.visit.is-new`).
+  It still shook (2026-11-23, user: a service and doctor chosen in Services, then services added in the form — «форма
+  начинает трястись вверх вниз»): with Services left at step 3, its booking list (above the screen) glided to its new
+  height too, and Chrome's scroll anchoring corrected the scroll every frame in whole pixels against fractional heights,
+  so the form on screen wobbled by ~1 px up and down for 420 ms. `growTo` and `slideAfter` now skip anything off the
+  screen (`offScreen()`): it changes height at once and the scroll is corrected once, unseen. Found with a CDP trace of
+  that exact sequence; the same ticks with Services closed or at step 2 were smooth.
 - One row for the doctors (2026-11-22, user: «зачем нам дублировать врачей, только уже выбранных» — the «Врач» tiles
   and the cards of the chosen doctors showed each chosen doctor twice): a slot per doctor in the team's order; a doctor
   not chosen is a tile (photo above the name, cropped from the top so the head is whole, «+ Выбрать»; a row on
