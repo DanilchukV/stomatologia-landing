@@ -557,8 +557,8 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
 - `visits()` builds the groups; `visitsHTML()` draws them the same in Services' step 3, the booking form and the
   corner list: a Mint card per doctor (photo, name, speciality, ✕ removes the doctor with their services) with the
   services as white chips (✕ each); a doctor without services says «Услуги подберёт врач на приёме».
-- `state.notes` — the helper's reason, kept with its doctor (user, 2026-11-20): «Повод: Отёк или флюс · зуб 5 сверху
-  справа» (the symptom's label, then the tooth or «вся челюсть»; nothing for «не знаю, какой зуб»), a white strip with
+- `state.notes` — the helper's reason, kept with its doctor (user, 2026-11-20): «Повод: Отёк или флюс» (the symptom's
+  label only; until 2026-11-23 the tooth followed, «· зуб 5 сверху справа» — the user took it out), a white strip with
   ✕ above the doctor's services, in place of «Услуги подберёт врач». The helper adds to what is already chosen and
   never clears it; the same doctor again gets a second reason, not a second group. «Повод», not «Жалоба»: some
   answers are wishes («Хочу белее»). The helper's «Вероятно понадобится» services are not added on purpose — a guess
