@@ -732,9 +732,8 @@
     mount(dots, (swipe ? 'swipe' : 'pages') + n, () => Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="${swipe ? 'Врач' : 'Страница'} ${k + 1} из ${n}" data-act="doc-page" data-page="${k}"></button>`).join(''));
     syncDots(swipe ? swipeIndex() : page);
   }
-  // the card nearest the row's left edge on a phone
-  function swipeIndex() {
-    const track = $('#doc-track');
+  // the card nearest the row's left edge on a phone (the doctors, or the hero's facts)
+  function swipeIndex(track = $('#doc-track')) {
     const first = track.firstElementChild;
     if (!first) return 0;
     const step = first.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0);
@@ -1187,6 +1186,7 @@
       if (swipeMedia.matches) { const c = $('#doc-track').children[+t.dataset.page]; if (c) $('#doc-track').scrollTo({ left: c.offsetLeft - $('#doc-track').firstElementChild.offsetLeft, behavior: reduceMotion.matches ? 'auto' : 'smooth' }); return; }
       set({ docPage: +t.dataset.page, docOpen: null });
     },
+    'fact-go': (t) => { const row = $('.hero__facts'); const c = row.children[+t.dataset.i]; if (c) row.scrollTo({ left: c.offsetLeft - row.firstElementChild.offsetLeft, behavior: reduceMotion.matches ? 'auto' : 'smooth' }); },
     'doc-prev': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) - 1 + p) % p, docOpen: null }); },
     'doc-next': () => { const p = docPages(); set({ docPage: (Math.min(state.docPage, p - 1) + 1) % p, docOpen: null }); },
     'book-doc': (t) => set({ extra: withDoc(t.dataset.id) }),
@@ -1427,6 +1427,7 @@
   }
   $('#doc-track').addEventListener('scroll', docCaret, { passive: true });
   $('#doc-track').addEventListener('scroll', () => { if (swipeMedia.matches) syncDots(swipeIndex()); }, { passive: true });
+  $('.hero__facts').addEventListener('scroll', (e) => { const cur = swipeIndex(e.currentTarget); $$('#fact-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.i === cur)); }, { passive: true });
   onScroll();
   // the doctors grid is built by script, so re-apply an anchor from the address once it exists
   const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
