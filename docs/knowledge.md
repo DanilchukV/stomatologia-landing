@@ -95,6 +95,18 @@ subsets (checked: the only arrow is in code comments). Nunito is lighter than Ma
 heading-font rules that were 600 are 700. For a softer look everywhere, set `--f-body` to Nunito too.
 Licences: `assets/fonts/OFL.txt`.
 
+**Type scale** (2026-11-23, after a reviewer counted 203 font-size declarations with 19 values, 14/15 and 22/23/24 px
+side by side): every size is a `:root` token — `--fs-xs` 12 · `--fs-s` 13 · `--fs-m` 15 · `--fs-l` 17 · `--fs-xl` 20 ·
+`--fs-2xl` 24 · `--fs-3xl` 32 · `--fs-4xl` 44 · `--fs-5xl` 78 (the reviewer's 13…78 plus 12 for badges and caps that
+don't fit at 13); the fluid headings clamp between tokens. The user asked to keep the look, so each old size went to
+the nearest token (11–12 → 12, 14 → 15, 16 → 15 for buttons and UI but 17 for reading text and the form input — iOS
+zooms into inputs under 16 px — 18 → 17, 19–21 → 20, 22–28 → 24, 30 → 32), then line wraps were compared before/after
+for every text element (page, Services steps 1–3, the helper; 1440 / 1024 / 390) and fixed where the layout depends
+on them: the hero lead got 548 px instead of 520 (2 lines as before), the cookie text is 13 px (the banner stays its
+size), FAQ answers on phones 15 px. Longer texts in «Подробнее» may take a line more — accepted. Exceptions, named in
+the `:root` comment: tooth numbers 10 px (17 px circles), the doctor initials placeholder 56 px, the About title up to
+52 px, the finder title up to 40 px (at 44 px «Не знаете, к какому врачу?» wraps). A new rule uses a token.
+
 ## Entrance motion
 
 Added 2026-11-23 (user: «плавно появляющиеся по очереди, как будто с левой стороны… плавное появление разделов, но
