@@ -180,7 +180,8 @@ mails to it; or Telegram) and add the sending to the `SiteForm.bind` callback in
 ### 2. Grevitident content still missing
 
 The site was switched to Grevitident on 2026-11-03 with only what stom-brest.com gives. Waiting for the
-user: opening hours, legal entity and УНП for the footer, social links, reviews, prices and
+user: opening hours, legal entity and УНП for the footer, social links, reviews, the real price list (the site
+shows an invented one, «от N руб.» in `data.js prices`, since 2026-11-23) and
 figures for "О клинике"; the doctors (therapist, surgeon, orthodontist, orthopedist,
 2 nurses, 2 administrators) and the clinic have invented names and stock photos from the user (2026-11-17) — replace them
 when the real ones come. The services catalogue (`cats`, `serviceText`, `serviceMore`, `recommend` in
