@@ -726,7 +726,7 @@
     const multi = pages > 1;
     $$('.side-arrow').forEach((b) => { b.hidden = !multi; });
     // pages on desktop; on a phone one dot per doctor of the swipeable row
-    const n = swipe ? list.length : pages;
+    const n = swipe ? swipeStops(track) : pages;
     $('#doc-dots-row').hidden = n < 2;
     const dots = $('#doc-dots');
     mount(dots, (swipe ? 'swipe' : 'pages') + n, () => Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="${swipe ? 'Врач' : 'Страница'} ${k + 1} из ${n}" data-act="doc-page" data-page="${k}"></button>`).join(''));
@@ -736,10 +736,21 @@
   function swipeIndex(track = $('#doc-track')) {
     const first = track.firstElementChild;
     if (!first) return 0;
+    const stops = swipeStops(track);
     const step = first.getBoundingClientRect().width + (parseFloat(getComputedStyle(track).columnGap) || 0);
-    // the last card can't reach the left edge: scrolled to the end is the last one
-    if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 2) return track.children.length - 1;
-    return Math.max(0, Math.min(track.children.length - 1, Math.round(track.scrollLeft / step)));
+    // the last cards can't reach the left edge: scrolled to the end is the last stop
+    if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 2) return stops - 1;
+    return Math.max(0, Math.min(stops - 1, Math.round(track.scrollLeft / step)));
+  }
+  // scroll positions of a swipeable row: with two cards on screen, one fewer than the cards
+  function swipeStops(track) {
+    const first = track.firstElementChild;
+    if (!first) return 1;
+    const cs = getComputedStyle(track);
+    const gap = parseFloat(cs.columnGap) || 0;
+    const room = track.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const perView = Math.max(1, Math.floor((room + gap + 1) / (first.getBoundingClientRect().width + gap)));
+    return Math.max(1, track.children.length - perView + 1);
   }
   function syncDots(cur) { $$('#doc-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === cur)); }
   const docPages = () => Math.max(1, Math.ceil(D.doctors.length / DOCS_PER_PAGE));
