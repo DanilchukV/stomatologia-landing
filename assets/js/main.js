@@ -1270,7 +1270,7 @@
     const list = REMOVE.includes(act) ? t.closest('#svc-sum, #book-svcs, #bk-list') : null;
     const btns = () => $$('.visit__drop, .visit__x', list);
     const at = list ? btns().indexOf(t) : -1;
-    actions[act](t, e);
+    keepInView(t, () => actions[act](t, e));
     // a ✕ takes its own button away: the focus goes to the one now in its place, else to «Добавить услугу»
     // (#svc-sum is display: contents, so visibility is checked on the button, not the list)
     if (list && !t.isConnected && list.isConnected && (!document.activeElement || document.activeElement === document.body)) {
@@ -1280,6 +1280,29 @@
       if (next && next.offsetParent) next.focus({ preventScroll: true });
     }
   });
+  // Safari has no scroll anchoring: an action that changed something above the screen (choosing a doctor in the form
+  // adds «Врач: …» to Services) moved everything under it, the form jumped (user, 2026-11-23, iPhone). There the
+  // tapped element — or its nearest ancestor still in the page after a rebuild — keeps its place for the action and
+  // the half second of glides after it; it is held in the document, not on the screen, so the page's own glides
+  // still move it. Browsers with scroll anchoring do this themselves.
+  const NO_ANCHOR = !(window.CSS && CSS.supports('overflow-anchor', 'auto'));
+  function keepInView(t, fn) {
+    if (!NO_ANCHOR) { fn(); return; }
+    const chain = [];
+    for (let el = t; el && el !== document.body; el = el.parentElement) chain.push([el, el.getBoundingClientRect().top + window.scrollY]);
+    fn();
+    const hit = chain.find(([el]) => el.isConnected && el.getClientRects().length);
+    if (!hit) return;
+    const [a] = hit;
+    let base = hit[1];
+    const fix = () => {
+      const top = a.getBoundingClientRect().top + window.scrollY;
+      if (Math.abs(top - base) >= 1) { window.scrollBy(0, top - base); base = top; }
+    };
+    fix();
+    const end = performance.now() + 500;
+    (function loop() { if (performance.now() < end && a.isConnected) { fix(); requestAnimationFrame(loop); } })();
+  }
   const NEW_BOOKING = ['svc-check', 'svc-sub', 'panel-doc', 'book-pick', 'book-doc', 'helper-book'];
   const REMOVE = ['cart-remove', 'visit-remove', 'note-remove'];
   // in-page links glide instead of jumping (registered after the actions, which may have handled the click);

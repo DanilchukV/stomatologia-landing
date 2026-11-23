@@ -194,6 +194,13 @@ inner corner radius − button radius. The doctor panel's ✕: 36 px, 8.5 px in 
 on phones 32 px, concentric with the 24 px corner (6.5 px in). The helper's ✕: 10 px in from the dialog's 32 px
 corner. (At 16 px they ran into the curve.) The icons inside every circle were measured centred (< 0.6 px).
 
+Safari has no scroll anchoring (2026-11-23, user's iPhone recording: choosing a doctor in the booking form made the
+form jump — Services above it grew by «Врач: …» and «Сбросить всё», ~50 px, and Chrome compensates such changes,
+Safari doesn't). Where `overflow-anchor` isn't supported, `keepInView` in the click handler holds the tapped element
+(or its nearest ancestor still in the page after a rebuild) at its place in the document through the action and
+half a second of glides after it, scrolling by any layout shift; the page's own glides still move it. Tested in
+Chrome with the check forced on and `overflow-anchor: none`: 0 px drift instead of up to 52.
+
 ## Keyboard and screen readers (2026-11-22, site review)
 
 - The focus ring is Navy, 3 px, 2 px off the element, with a 2 px white ring under it (`box-shadow`) that keeps it

@@ -1391,6 +1391,10 @@ html:has(.helper[open]) { overflow: hidden; }
 /* phones: a shorter map and the two buttons in one row, so the whole section fits one screen (user, 2026-11-23) */
 @media (max-width: 480px) {
   .clinic__map { height: 150px; }
+  /* smaller type: the address and the phones stood out too much (user, 2026-11-23) */
+  .clinic__name { font-size: var(--fs-xl); }
+  .clinic__row { font-size: var(--fs-m); }
+  .clinic__tels a { font-size: var(--fs-l); }
   .clinic__body { padding: 20px 18px; }
   .clinic__actions { flex-wrap: nowrap; gap: 8px; padding-top: 12px; }
   /* «Записаться на приём» is just «Записаться» here, so both fit side by side down to 320 px */
