@@ -6,6 +6,24 @@
   const $ = (sel, root) => (root || document).querySelector(sel);
   const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
 
+  /* ---------- sections coming into view ---------- */
+  // .reveal blocks are hidden before the first paint (the head script sets html.reveal-on); each comes up the first
+  // time it scrolls into view. Ones already on screen at load (a reload mid-page) only fade in, without the shift.
+  // First in the file, so an error further down can't leave the sections hidden
+  if (document.documentElement.classList.contains('reveal-on')) {
+    let atLoad = true;
+    const seen = new IntersectionObserver((es) => {
+      es.forEach((e) => {
+        if (!e.isIntersecting) return;
+        if (atLoad) e.target.classList.add('is-now');
+        e.target.classList.add('is-in');
+        seen.unobserve(e.target);
+      });
+      atLoad = false;
+    }, { rootMargin: '0px 0px -8% 0px' });
+    $$('.reveal').forEach((el) => seen.observe(el));
+  }
+
   /* ---------- text helpers ---------- */
   // Russian line breaks: short words stick to the next word, particles and dashes to the previous one,
   // numbers to the word after them; repeated until stable so chains like «и в 6 месяцев» glue whole
@@ -1352,19 +1370,6 @@
   document.addEventListener('pointerleave', hideTip);
   window.addEventListener('scroll', hideTip, { passive: true });
   document.addEventListener('click', hideTip, true);
-
-  /* ---------- sections coming into view ---------- */
-  // each section's content comes up softly the first time it scrolls into view (style.css .reveal); the ones already
-  // on screen do it on opening. Skipped with reduced motion, and without IntersectionObserver nothing is hidden
-  if ('IntersectionObserver' in window && !reduceMotion.matches) {
-    const blocks = $$('.about__in, .finder__card, .services__in, .doctors__in, .clinics__in, .faq-sec__in, .book__card');
-    const seen = new IntersectionObserver((es) => es.forEach((e) => {
-      if (!e.isIntersecting) return;
-      e.target.classList.add('is-in');
-      seen.unobserve(e.target);
-    }), { rootMargin: '0px 0px -8% 0px' });
-    blocks.forEach((el) => { el.classList.add('reveal'); seen.observe(el); });
-  }
 
   /* ---------- pictures on a slow connection ---------- */
   // a picture not loaded yet shimmers in its place (style.css img.is-loading); pictures the scripts add later are

@@ -103,14 +103,24 @@ Added 2026-11-23 (user: «плавно появляющиеся по очере�
 smoother, one after another from the upper left). A first try (1.5 s on a steep `cubic-bezier(.16, 1, .3, 1)` plus a
 6 px blur coming into focus) "jumped a lot" in a real browser although the measured path was smooth: an animated blur
 is repainted every frame and the text re-rasterises when the layer goes away, and the steep start reads as a lurch. Now:
-transform + opacity only, `will-change` keeps the cards on their own layer, 22 px left / 16 px up over 1.2 s on an
-ease-out without a steep start (`cubic-bezier(.25, .46, .45, .94)`), delays 0.2 / 0.4 / 0.6 s. Don't put a filter
+transform + opacity only, `will-change` keeps the cards on their own layer, 22 px left / 16 px up on an ease-out without a steep
+start (`cubic-bezier(.25, .46, .45, .94)`), 1.2 s, delays 0.2 / 0.4 / 0.6 s. Don't put a filter
 into this animation again. On phones the card row clips (it scrolls sideways), so it has 18 px of top padding, taken
 back by a negative margin. The sections below the first screen (About, Finder,
 Services, Doctors, Contacts, FAQ, the booking card) come up 18 px with a fade the first time they scroll into view
 (`.reveal` → `.is-in`, an IntersectionObserver in `main.js`, 0.8 s). None with reduced motion; without
 IntersectionObserver nothing is hidden. `tools/shot.html` forces `.reveal` visible, or shots of lower sections would
 come out blank.
+
+Fixed the same day (user: the site jumps on reload): main.js used to add `.reveal` itself, after the first paint, so
+sections already visible faded out and slid down 18 px about 0.2 s after load, then came back when observed; on a
+reload mid-page the whole screen did it. Now the blocks carry `class="reveal"` in the markup and a one-line script in
+the `<head>` sets `html.reveal-on` before the first paint (only with IntersectionObserver and without reduced motion);
+the CSS hides `.reveal-on .reveal:not(.is-in)`. The observer runs first in main.js, so an error further down can't
+leave the sections hidden. Blocks already on screen at load get `.is-now`: a 0.5 s fade after 0.15 s, no shift (on a
+phone the services and doctors still settle by ~50 px while main.js builds them; the delay keeps that invisible).
+Found with a CDP trace of a real reload (per-frame positions and opacity), which the harness can't show: it turns
+animations off.
 
 The FAQ invites a click on hover (mouse only): a closed question gets a Yellow outline and a soft shadow, its text
 turns Orange, the circle Yellow and its arrow dips 2 px; nothing moves or changes size (the user dislikes hover jumps).

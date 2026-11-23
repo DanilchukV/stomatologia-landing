@@ -105,10 +105,12 @@ img.is-loading { background: linear-gradient(100deg, #E3EDEB 30%, #F5F9F8 50%, #
 @keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
 /* tooltips (main.js, [data-tip]): small, next to the mouse pointer; the nav capsule's soft Mint, Navy text */
 .tip { position: fixed; z-index: 60; max-width: min(260px, calc(100vw - 16px)); box-sizing: border-box; padding: 4px 9px; border-radius: 8px; background: color-mix(in srgb, var(--tint) 35%, var(--white)); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.35; box-shadow: 0 4px 14px rgba(12, 44, 71, .16); pointer-events: none; animation: fadeIn .12s ease both; }
-/* the sections below the first screen come up softly as they scroll into view, once (main.js adds .reveal to them,
-   then .is-in; none with reduced motion or without IntersectionObserver) */
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
-.reveal.is-in { opacity: 1; transform: none; }
+/* the sections below the first screen come up softly as they scroll into view, once. Hidden from the first paint by
+   html.reveal-on (set in the head; not with reduced motion or without IntersectionObserver): hiding them from main.js
+   made visible sections fade out and come back on every reload. .is-now: on screen at load, a fade without the shift */
+.reveal-on .reveal { transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.reveal-on .reveal:not(.is-in) { opacity: 0; transform: translateY(18px); }
+.reveal-on .reveal.is-now { transform: none; transition: opacity .5s ease-out .15s; }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .ic--miter { stroke-linejoin: miter; }
