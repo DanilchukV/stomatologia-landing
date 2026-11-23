@@ -642,10 +642,38 @@
     const rank = (x) => (words.every((w) => x.name.includes(w)) ? 0 : words.every((w) => x.keys.includes(w)) ? 1 : 2);
     const hits = SVC_INDEX.filter((x) => words.every((w) => x.hay.includes(w))).sort((a, b) => rank(a) - rank(b)).slice(0, 8);
     findBox.innerHTML = hits.length
-      ? `<div class="svc-hits">${hits.map((x) => `<button type="button" class="svc-hit" data-act="svc-go" data-svc="${esc(x.n)}"><span class="svc-hit__t"><span class="svc-hit__n">${esc(glue(x.n))}</span><span class="svc-hit__c">${esc(glue(x.c.name))}</span></span>${priceHTML(x.n, 'svc-hit__p')}</button>`).join('')}</div>`
+      ? `<div class="svc-hits">${hits.map((x, i) => `<button type="button" class="svc-hit" id="svc-hit-${i}" data-act="svc-go" data-svc="${esc(x.n)}"><span class="svc-hit__t"><span class="svc-hit__n">${esc(glue(x.n))}</span><span class="svc-hit__c">${esc(glue(x.c.name))}</span></span>${priceHTML(x.n, 'svc-hit__p')}</button>`).join('')}</div>`
       : `<p class="svc-find__none">${glue('Ничего не нашлось. Попробуйте другое слово или позвоните — подскажем.')}</p>`;
   }
-  $('#svc-q').addEventListener('input', renderFind);
+  // the keyboard (user, 2026-11-23): ↓/↑ walk the hits (round), Enter picks the marked one or the first, Esc clears
+  let findIdx = -1;
+  const findQ = $('#svc-q');
+  function markFind() {
+    const hits = $$('.svc-hit', findBox);
+    hits.forEach((b, i) => b.classList.toggle('is-active', i === findIdx));
+    if (hits[findIdx]) { findQ.setAttribute('aria-activedescendant', hits[findIdx].id); hits[findIdx].scrollIntoView({ block: 'nearest' }); }
+    else findQ.removeAttribute('aria-activedescendant');
+  }
+  findQ.addEventListener('input', () => { findIdx = -1; renderFind(); markFind(); });
+  findQ.addEventListener('keydown', (e) => {
+    const hits = $$('.svc-hit', findBox);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!hits.length) return;
+      e.preventDefault();
+      const down = e.key === 'ArrowDown';
+      findIdx = findIdx < 0 ? (down ? 0 : hits.length - 1) : (findIdx + (down ? 1 : -1) + hits.length) % hits.length;
+      markFind();
+    } else if (e.key === 'Enter') {
+      if (!hits.length) return;
+      e.preventDefault();
+      hits[Math.max(0, findIdx)].click();
+    } else if (e.key === 'Escape' && findQ.value) {
+      findQ.value = '';
+      findIdx = -1;
+      renderFind();
+      markFind();
+    }
+  });
   renderFind();
 
   /* ---------- doctors carousel ---------- */
