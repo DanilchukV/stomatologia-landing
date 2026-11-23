@@ -313,6 +313,19 @@
     helper.style.setProperty('--steps-top', top + 'px');
     helper.style.setProperty('--steps-bottom', d.bottom - $('.helper__nav').getBoundingClientRect().top + 'px');
   }
+  // «Далее» / «Записаться» pressed before the step is answered: what it needs lights up for a moment (the tooth map
+  // and its hint, the symptoms, the doctors) and comes into view (user, 2026-11-23: a pale button did nothing)
+  function helperNudge() {
+    const s = state.hStep;
+    const el = s === 1 ? $('#jaw') : s === 2 ? $('#sym-wrap') : $('.hint__docs', helper);
+    if (!el) return;
+    el.classList.remove('is-nudge');
+    void el.offsetWidth; // restarts the CSS animation
+    el.classList.add('is-nudge');
+    clearTimeout(el.nudgeT);
+    el.nudgeT = setTimeout(() => el.classList.remove('is-nudge'), 1000);
+    el.scrollIntoView({ block: 'nearest', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+  }
   function hStep(k) {
     if (!canStep(k)) return;
     set({ hStep: k });
@@ -367,12 +380,13 @@
 
     const next = $('.helper__next', helper);
     next.hidden = step === 3;
-    next.disabled = !canStep(step + 1);
+    // not disabled: a press while it can't go on shows what is missing (helperNudge)
+    next.setAttribute('aria-disabled', !canStep(step + 1));
     next.firstChild.textContent = step === 1 ? 'Далее' : 'Показать врача';
     $('.helper__back', helper).hidden = step === 1;
     const book = $('.helper__book', helper);
     book.hidden = step !== 3;
-    book.disabled = !chosen;
+    book.setAttribute('aria-disabled', !chosen);
     $('#helper-info').textContent = glue(step === 1 ? (toothShort() || 'Зуб можно не выбирать — есть варианты под схемой')
       : step === 2 ? (sym ? sym.label : 'Выберите один вариант')
         : chosen ? 'Врач: ' + docTitle(docById(chosen)) : 'Выберите врача, чтобы записаться');
@@ -1077,13 +1091,13 @@
       const id = state.symptom === t.dataset.id ? null : t.dataset.id;
       set({ symptom: id, hDoc: null });
     },
-    'helper-next': () => hStep(state.hStep + 1),
+    'helper-next': () => { if (canStep(state.hStep + 1)) hStep(state.hStep + 1); else helperNudge(); },
     'helper-back': () => hStep(state.hStep - 1),
     'helper-doc': (t) => set({ hDoc: t.dataset.id }),
     // to the booking form, with the helper's doctor chosen there
     'helper-book': () => {
       const id = helperDoc();
-      if (!id) return;
+      if (!id) { helperNudge(); return; }
       helper.close();
       // the reason goes with the doctor, so the administrator knows what it is about
       // (the symptom only, not the tooth: user, 2026-11-23)

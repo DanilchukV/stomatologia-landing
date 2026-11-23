@@ -421,6 +421,10 @@ outside the dialog's rounded corners:
   tooth. «Вся схема» in the sides row (in place of the other side's label; the row is always 30 px tall, so nothing
   moves) zooms out; closing the helper or growing past 640 px resets it. Front teeth are ~40 px and are picked at
   once. Chosen over a loupe under the finger (hold and drag), which the user was also offered.
+- «Далее» and «Записаться» are never `disabled` (2026-11-23, user: a pale button did nothing and said nothing): pale
+  (`aria-disabled`) until the step is answered, and a press then gives a Yellow ring for a moment to what is missing
+  — the tooth map, whose «Нажмите на зуб на схеме» turns Terracotta, the symptom chips, or the doctors — and brings it
+  into view (`helperNudge`).
 
 ## About
 

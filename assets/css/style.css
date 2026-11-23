@@ -938,7 +938,13 @@ html:has(.helper[open]) { overflow: hidden; }
 .helper__back, .helper__next, .helper__book { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: var(--fs-m); }
 .helper__back { padding-left: 18px; }
 .helper__nav .ic { display: block; }
-.helper__next:disabled, .helper__book:disabled { opacity: .35; cursor: default; box-shadow: none; filter: none; }
+.helper__next[aria-disabled="true"], .helper__book[aria-disabled="true"] { opacity: .35; cursor: default; box-shadow: none; filter: none; }
+/* pressed before the step is answered (main.js helperNudge): what it needs gets a Yellow ring for a moment, the tooth
+   map's hint turns Terracotta */
+.jaw.is-nudge, .sym-wrap.is-nudge .sym-chip, .hint__docs.is-nudge .hint__doc { animation: nudgeRing .9s ease both; }
+.jaw.is-nudge .jaw__hint { color: var(--accent-ink); }
+.jaw__hint { transition: color .2s; }
+@keyframes nudgeRing { 0%, 100% { box-shadow: 0 0 0 0 rgba(240, 170, 47, 0); } 30% { box-shadow: 0 0 0 4px rgba(240, 170, 47, .55); } }
 
 .jaw { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 /* the whole step fits the dialog's height: the picture is 3:2 */
