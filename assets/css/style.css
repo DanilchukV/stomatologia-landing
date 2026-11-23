@@ -557,13 +557,16 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-step .svc-unsure { margin-top: 12px; }
 /* search and the popular services (main.js renderFind; user, 2026-11-23). The field's text is 17 px: under 16 an
    iPhone zooms the page in on focus */
-.svc-find { display: flex; flex-direction: column; gap: 12px; max-width: 760px; }
-.svc-find__box { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--muted); cursor: text; transition: border-color .15s, box-shadow .15s; }
+.svc-find { display: flex; flex-direction: column; gap: 12px; }
+.svc-find__box { max-width: 760px; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--muted); cursor: text; transition: border-color .15s, box-shadow .15s; }
 .svc-find__box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(240, 170, 47, .35); }
 .svc-find__ic { flex: none; display: block; }
 .svc-find__q { flex: 1; min-width: 0; height: 48px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: var(--fs-l); outline: none; }
 .svc-find__q::placeholder { color: var(--muted); opacity: 1; }
-.svc-pop { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+/* one row; where it doesn't fit it swipes (2 px of room for the focus ring) */
+.svc-pop { display: flex; align-items: center; gap: 8px; margin: -2px; padding: 2px; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.svc-pop::-webkit-scrollbar { display: none; }
+.svc-pop__h, .svc-pop__chip { flex: none; }
 .svc-pop__h { margin-right: 2px; font-size: var(--fs-s); font-weight: 600; color: var(--muted); }
 .svc-pop__chip { min-height: 38px; padding: 0 14px; font-size: var(--fs-m); }
 .svc-pop__chip b { color: var(--accent-ink); font-weight: 700; }
@@ -617,9 +620,6 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-panel__photo[data-cat="surgery"] img { object-position: 50% 28%; }
 .svc-panel__photo[data-cat="ortho"] img { object-position: 50% 35%; }
 .svc-panel__intro { position: relative; z-index: 1; flex: 0 1 420px; max-width: 420px; display: flex; flex-direction: column; gap: 12px; animation: fadeIn .4s ease both; }
-.back-link { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px 0 10px; border-radius: 999px; border: 1px solid rgba(240, 170, 47, .35); background: transparent; color: var(--white); font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: background-color .15s, color .15s; }
-@media (hover: hover) { .back-link:hover { background: var(--tint); color: var(--ink); } }
-.back-link .ic { display: block; }
 .svc-panel__name { margin: 8px 0 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(var(--fs-3xl), 3.6vw, var(--fs-4xl)); line-height: 1.1; letter-spacing: -.02em; color: var(--white); text-wrap: balance; min-height: 2.2em; display: flex; align-items: flex-end; }
 .svc-panel__desc { margin: 0; color: var(--white); font-size: var(--fs-l); line-height: 1.55; max-width: 420px; text-wrap: balance; min-height: 4.65em; }
 .svc-panel__meta { position: relative; z-index: 1; padding: 8px 16px; border-radius: 999px; background: var(--ink); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--white); font-size: var(--fs-m); font-weight: 600; white-space: nowrap; animation: fadeIn .4s ease both; }
@@ -722,7 +722,9 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 
 .svc-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-top: 22px; border-top: 1px solid var(--line); }
 .svc-nav__info { flex: 1 1 auto; min-width: 0; font-size: var(--fs-m); color: var(--muted); text-wrap: pretty; }
-.svc-nav__back, .svc-nav__next, .svc-nav__book { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: var(--fs-m); }
+.svc-nav__back, .svc-nav__next, .svc-nav__more { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: var(--fs-m); }
+.svc-nav__more { gap: 8px; padding: 0 22px; }
+.svc-nav__more-s { display: none; }
 .svc-nav__back { padding-left: 18px; }
 .svc-nav .ic { display: block; }
 .svc-nav__reset { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: none; border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: color .15s; }
@@ -734,10 +736,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 640px) {
   .svc-row__txt { flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 0; }
   .svc-row__price { font-size: var(--fs-s); }
-  /* the popular services in one row that swipes, not four rows */
-  .svc-pop { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(-1 * var(--gutter)); padding: 2px var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
-  .svc-pop::-webkit-scrollbar { display: none; }
-  .svc-pop__h, .svc-pop__chip { flex: none; }
+  /* the popular row swipes from edge to edge */
+  .svc-pop { margin: 0 calc(-1 * var(--gutter)); padding: 2px var(--gutter); }
   .svc-grid { gap: 8px; }
   .svc-card { flex-direction: row; align-items: center; gap: 14px; padding: 8px 18px 8px 8px; border-radius: 20px; }
   .svc-card__photo { flex: none; align-self: auto; width: 76px; height: 64px; margin: 0; border-radius: 14px; overflow: hidden; -webkit-mask-image: none; mask-image: none; }
@@ -747,7 +747,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-panel__head { min-height: 0; padding: 84px 14px 14px; gap: 10px 16px; align-items: center; }
   .svc-panel__photo { width: 100%; bottom: auto; height: 150px; -webkit-mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, .45) 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, .45) 70%, transparent 100%); }
   .svc-panel__intro { gap: 0; }
-  .svc-panel__intro .back-link, .svc-panel__desc { display: none; }
+  .svc-panel__desc { display: none; }
   .svc-panel__name { margin: 0; font-size: var(--fs-2xl); }
   .svc-panel__meta { padding: 6px 12px; font-size: var(--fs-s); }
   /* with a section open the sections hide behind one button in the sticky bar (user: «сделаем кнопку открыть
@@ -782,7 +782,11 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-nav__reset { order: -1; }
   .svc-nav__info:empty { display: none; }
   /* «Назад» fills its row up to the right edge, as the button under it (user, 2026-11-23) */
-  .svc-nav__back, .svc-nav__next, .svc-nav__book { flex: 1 1 auto; }
+  .svc-nav__back, .svc-nav__next, .svc-nav__more { flex: 1 1 auto; }
+  /* «Ещё услуга»: the long label and «К записи» don't fit one row */
+  .svc-nav__more { padding: 0 14px; }
+  .svc-nav__more-l { display: none; }
+  .svc-nav__more-s { display: inline; }
 }
 
 /* ===== Visits (the booking by doctor: Services' step 3, the booking form, the corner list) ===== */

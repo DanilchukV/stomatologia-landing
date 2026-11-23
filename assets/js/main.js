@@ -520,6 +520,8 @@
     $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
       : noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи'));
     $('.svc-nav__back', svcOpenBox).hidden = step === 1;
+    // a service ticked: «Выбрать ещё услугу» beside «К записи» opens the sections' menu (user, 2026-11-23)
+    $('.svc-nav__more', svcOpenBox).hidden = step !== 1 || !state.cart.length;
     // one doctor (or none) in the section: no doctor step, step 1 goes straight on to the booking form
     $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 && docStep() ? 'Выбрать врача' : 'К записи';
   }
@@ -555,6 +557,7 @@
             <button type="button" class="btn btn--ghost svc-nav__back" data-act="svc-prev">${icon('i-back', 16, 2.4)}Назад</button>
             <span class="svc-nav__info" id="svc-nav-info"></span>
             <button type="button" class="svc-nav__reset" data-act="cart-reset" hidden>${icon('i-reset', 15, 2.2)}Сбросить всё</button>
+            <button type="button" class="btn btn--ghost svc-nav__more" data-act="add-svc" hidden>${PLUS}<span class="svc-nav__more-l">Выбрать ещё услугу</span><span class="svc-nav__more-s">Ещё услуга</span></button>
             <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next"><span></span>${icon('i-arrow', 16, 2.4)}</button>
           </div>
         </div>
@@ -567,7 +570,6 @@
     const img = 'assets/img/services/' + cat.id;
     return `<span class="svc-panel__photo" data-cat="${cat.id}" aria-hidden="true"><img src="${img}.webp" srcset="${img}-800.webp 800w, ${img}.webp 1600w" sizes="(max-width: 1240px) 66vw, 792px" alt=""></span>
       <div class="svc-panel__intro">
-        <button type="button" class="back-link" data-act="cat-close">${icon('i-back', 16, 2.4)}Все разделы</button>
         <h3 class="svc-panel__name" tabindex="-1">${esc(glue(cat.name))}</h3>
         <p class="svc-panel__desc">${esc(glue(cat.desc))}</p>
       </div>
@@ -972,10 +974,11 @@
   }
   // the scroll that puts the open section's tab bar where it sticks, 10 px under the header: positive while the
   // section is lower on the page, negative when it is above (a footer link, a card low in a scrolled grid). The bar
-  // follows the section's head (the grid hides while a section is open), so it can be measured before it exists.
+  // follows the search under the section's head (the grid hides while a section is open), so it can be measured
+  // before it exists. The bar comes under the search, so the sections, not the search, are at the top (user)
   function barShift() {
     const gap = parseFloat(getComputedStyle($('.services__in')).rowGap) || 0;
-    return $('.services__head').getBoundingClientRect().bottom + gap - (hdr.getBoundingClientRect().bottom + 10);
+    return $('.svc-find').getBoundingClientRect().bottom + gap - (hdr.getBoundingClientRect().bottom + 10);
   }
   // phones: the section opens where it is (no jump to line it up); the page glides only when the panel's top is
   // above the screen, so the section starts under the bar, or when the section is off the screen (the footer)
@@ -998,12 +1001,13 @@
   }
   // «Все разделы»: on desktop the bar stays where it is and the cards take the panel's place under it; scrolled down
   // into the (much taller) panel, the page is set back before the first frame, so the grid starts right under the
-  // stuck bar instead of what lies below Services showing for a moment. Phones (no bar over the grid) glide to the title.
+  // stuck bar instead of what lies below Services showing for a moment. Phones (no bar over the grid) glide to the list of
+  // sections, under the search, so the choice is what shows (user, 2026-11-23)
   function closeCat() {
     if (!state.cat) return;
     set({ cat: null, barOpen: false });
     if (swipeMedia.matches) {
-      glideTo(window.scrollY + $('#services').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 8, 550);
+      glideTo(window.scrollY + $('#svc-grid').getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 12, 550);
       return;
     }
     const shift = barShift();
