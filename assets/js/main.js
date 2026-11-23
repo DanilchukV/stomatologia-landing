@@ -263,15 +263,6 @@
   const sideOf = (n) => (n <= 8 || n >= 25 ? 'справа' : 'слева');
   const jawOf = (n) => (n <= 16 ? 'сверху' : 'снизу');
   const pct = (v, total) => Math.round(v / total * 10000) / 100;
-  // phones: the molars (6–8 in a quadrant) are ~22–30 px on the map, so a tap on one zooms into that side first
-  // (style.css .is-zoom-r / .is-zoom-l); zoomed, every tap picks a tooth
-  const jawZoomed = () => jaw.classList.contains('is-zoom-r') || jaw.classList.contains('is-zoom-l');
-  function jawZoom(side) {
-    jaw.classList.toggle('is-zoom-r', side === 'r');
-    jaw.classList.toggle('is-zoom-l', side === 'l');
-    $('.jaw__out').hidden = !side;
-  }
-  helper.addEventListener('close', () => jawZoom(null));
 
   function buildTeeth() {
     const map = $('#jaw-map');
@@ -1037,13 +1028,11 @@
   const actions = {
     tooth: (t) => {
       const n = +t.dataset.tooth;
-      if (swipeMedia.matches && !jawZoomed() && qn(n) >= 6) { jawZoom(sideOf(n) === 'справа' ? 'r' : 'l'); return; }
       if (state.tooth === n) { set({ tooth: null }); return; }
       const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
       // a doctor picked for another tooth or symptom isn't a choice made for this one
       set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null, hDoc: null });
     },
-    'jaw-out': () => jawZoom(null),
     'pick-jaw': () => { if (state.scope !== 'jaw') set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     'skip-tooth': () => { if (state.tooth !== null || !state.skipTooth || state.scope === 'jaw') set({ skipTooth: true, scope: 'tooth', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     symptom: (t) => {
@@ -1421,7 +1410,6 @@
   window.addEventListener('resize', schedule);
   swipeMedia.addEventListener('change', render);
   swipeMedia.addEventListener('change', syncPromises);
-  swipeMedia.addEventListener('change', () => jawZoom(null));
   syncPromises();
   // the panel's caret follows its card when the page is resized or the phone row is swiped
   window.addEventListener('resize', docCaret);

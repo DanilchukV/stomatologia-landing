@@ -381,13 +381,8 @@ outside the dialog's rounded corners:
   1, 16, 17, 32 — only for them the "Мешает зуб мудрости" chip appears, and another symptom on a
   wisdom tooth adds a note about the surgeon.
 - "По всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
-- Zoom on phones (2026-11-23, user: «сложно нажать на восьмёрки»): the map is ~332 px wide there and the molars
-  are 22–30 px, smaller than a finger. Below 641 px a tap on a molar (6–8 in its quadrant) doesn't pick it: the map
-  zooms ×2 into that side (`.is-zoom-r` / `.is-zoom-l`, a transform inside the clipping `.jaw__view`; the middle half
-  of the height stays in view, where all the molars are), the molars become 45–80 px, and every tap then picks a
-  tooth. «Вся схема» in the sides row (in place of the other side's label; the row is always 30 px tall, so nothing
-  moves) zooms out; closing the helper or growing past 640 px resets it. Front teeth are ~40 px and are picked at
-  once. Chosen over a loupe under the finger (hold and drag), which the user was also offered.
+- Tried and removed (2026-11-23): on phones a tap on a molar zoomed the map ×2 into that side, with a «Вся схема»
+  button to zoom out (commit `f48bc30`); the user asked to take it out the same day.
 
 ## About
 
