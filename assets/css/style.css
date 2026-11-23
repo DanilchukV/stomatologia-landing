@@ -552,7 +552,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-unsure__ic { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--white); color: var(--accent-ink); display: grid; place-items: center; }
 .svc-unsure__ic svg { display: block; }
 .svc-unsure__t { flex: 1; min-width: 0; line-height: 1.35; }
-.svc-unsure__t b { color: var(--accent-ink); font-weight: 700; }
+.svc-unsure__t b { color: var(--accent-ink); font-weight: 700; white-space: nowrap; }
 .svc-unsure > .ic { flex: none; display: block; color: var(--accent-ink); }
 .svc-step .svc-unsure { margin-top: 12px; }
 /* search and the popular services (main.js renderFind; user, 2026-11-23). The field's text is 17 px: under 16 an
@@ -795,6 +795,9 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .doc-card__av { width: 72px; }
   /* the count and «Сбросить всё» share the first row, the buttons the second */
   .svc-nav__info { flex: 1 1 calc(100% - 160px); order: -2; }
+  /* nothing chosen (no «Сбросить всё»): the line takes the row, «К записи» goes under it — beside it the line broke
+     into four */
+  .svc-nav:not(:has(.svc-nav__reset:not([hidden]))) .svc-nav__info { flex-basis: 100%; }
   .svc-nav__reset { order: -1; }
   .svc-nav__info:empty { display: none; }
   /* «Назад» fills its row up to the right edge, as the button under it (user, 2026-11-23) */
@@ -803,6 +806,13 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .svc-nav__more { padding: 0 14px; }
   .svc-nav__more-l { display: none; }
   .svc-nav__more-s { display: inline; }
+}
+/* «Подскажем по симптомам» stays on one line: under 390 px without the arrow; at 320 px it wraps after all */
+@media (max-width: 389px) {
+  .svc-unsure > .ic { display: none; }
+}
+@media (max-width: 359px) {
+  .svc-unsure__t b { white-space: normal; }
 }
 
 /* ===== Visits (the booking by doctor: Services' step 3, the booking form, the corner list) ===== */
