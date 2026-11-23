@@ -457,7 +457,7 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .about__ph:not(.about__ph--main) .about__ph-note { display: none; }
   .about__chip { left: 10px; bottom: 10px; padding: 6px 12px; font-size: var(--fs-s); }
   /* only the headings show; a tap opens the text under one (the FAQ's chevron, the drawer of the service rows) */
-  .promise__grid { gap: 4px; }
+  .promise__grid { gap: 14px; }
   .promise__item { row-gap: 0; }
   .promise__h { min-height: 0; }
   .promise__btn { min-height: 48px; cursor: pointer; }
