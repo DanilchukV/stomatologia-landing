@@ -726,7 +726,13 @@
     const panel = $('#doc-panel');
     const panelIn = $('#doc-panel-in');
     mount(panelIn, 'all', () => `<div class="doc-panel__stack">${list.filter(hasBio).map(docPanelHTML).join('')}</div>`);
+    // on a phone the panel is as tall as the shown story (style.css): switching stories with it open glides the height
+    const was = swipe && open && panel.classList.contains('is-open') ? panelIn.offsetHeight : 0;
     if (open) $$('.doc-panel__card', panelIn).forEach((c) => c.classList.toggle('is-cur', c.dataset.id === open.id));
+    const now = was ? panelIn.offsetHeight : 0;
+    if (was && Math.abs(now - was) > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      panelIn.animate([{ height: was + 'px' }, { height: now + 'px' }], { duration: 400, easing: 'cubic-bezier(.45, 0, .2, 1)' });
+    }
     panel.classList.toggle('is-open', !!open);
     panel.setAttribute('aria-hidden', !open);
     // folded, its buttons are out of the Tab order too

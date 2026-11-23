@@ -1300,6 +1300,8 @@ html:has(.helper[open]) { overflow: hidden; }
   .doc-panel__head .doc__exp { display: flex; margin-top: 2px; font-size: var(--fs-xs); }
   .doc-panel__facts { gap: 12px; padding-top: 14px; }
   .doc-panel__row:nth-child(n+3) { display: none; }
+  /* only the shown story takes room, so a short one leaves no gap under the buttons (main.js glides the height) */
+  .doc-panel__stack > .doc-panel__card:not(.is-cur) { display: none; }
   .doc-panel__row { gap: 4px; }
   .doc-panel__list { gap: 2px; font-size: var(--fs-s); line-height: 1.4; }
   .doc-panel__actions { gap: 8px; padding-top: 2px; }
