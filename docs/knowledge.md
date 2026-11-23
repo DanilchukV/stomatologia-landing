@@ -247,6 +247,12 @@ Phone numbers (2026-11-18, user's request): on a computer a `tel:` link opens Sk
 and adds `.tel-text`; such an `<a>` is styled as plain text, and `.hdr__call` (the round phone button of
 the burger header) is hidden without its link.
 
+Burger menu open (2026-11-23, user: «блюрим всю подложку и не даём передвигаться скролом»): the page under the
+header blurs (6 px) and dims — the header's `::before`, fixed from `--hdr-h` down, fading in — and the header goes to
+z-index 50, above the corner buttons and the cookie notice, so they blur too. The page doesn't scroll (`overflow:
+hidden` on `html`, the scrollbar's width given back as padding; touchmove outside the menu cancelled for iOS < 16); a
+tap on the blur closes the menu (the click's target is the header itself there).
+
 ## Hero
 
 The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that

@@ -5,18 +5,33 @@
   const burger = hdr.querySelector('.hdr__burger');
   // opening moves the focus into the menu (it comes before the burger in the markup, so Tab skipped it);
   // closing from the keyboard brings it back to the burger
+  // open, the page doesn't scroll; a desktop's scrollbar width goes to padding, so nothing shifts sideways
+  function lockScroll(on) {
+    const de = document.documentElement;
+    const sw = on ? window.innerWidth - de.clientWidth : 0;
+    de.style.overflow = on ? 'hidden' : '';
+    document.body.style.paddingRight = sw > 0 ? sw + 'px' : '';
+  }
+  // iOS before 16 scrolls a page with overflow: hidden by touch: outside the menu a move is cancelled
+  document.addEventListener('touchmove', (e) => {
+    if (hdr.classList.contains('is-menu') && !e.target.closest('.hdr__menu')) e.preventDefault();
+  }, { passive: false });
   function setMenu(open, refocus) {
     if (open === hdr.classList.contains('is-menu')) return;
     hdr.classList.toggle('is-menu', open);
+    lockScroll(open);
     burger.setAttribute('aria-expanded', open);
     if (open) hdr.querySelector('.hdr__menu a').focus({ preventScroll: true });
     else if (refocus) burger.focus();
   }
   burger.addEventListener('click', () => setMenu(!hdr.classList.contains('is-menu')));
-  // a link in the menu, a click outside the header or Escape closes it
+  // a link in the menu, a click outside the header (the blurred page is the header's ::before, so the header itself
+  // is the target there) or Escape closes it
   document.addEventListener('click', (e) => {
-    if (hdr.classList.contains('is-menu') && (!e.target.closest('.hdr') || e.target.closest('.hdr__menu a'))) setMenu(false);
+    if (hdr.classList.contains('is-menu') && (!e.target.closest('.hdr') || e.target === hdr || e.target.closest('.hdr__menu a'))) setMenu(false);
   });
+  // wider than the burger the menu is the header's row again: a menu left open would keep the page locked
+  window.matchMedia('(max-width: 1279px)').addEventListener('change', (e) => { if (!e.matches) setMenu(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false, hdr.contains(document.activeElement)); });
 
   // links (most buttons on the site are links) and pictures can't be dragged out: dropped into another window or
