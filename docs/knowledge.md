@@ -425,6 +425,11 @@ outside the dialog's rounded corners:
   (`aria-disabled`) until the step is answered, and a press then gives a Yellow ring for a moment to what is missing
   — the tooth map, whose «Нажмите на зуб на схеме» turns Terracotta, the symptom chips, or the doctors — and brings it
   into view (`helperNudge`).
+- Phone height tiers go by the helper's body, not the screen (2026-11-23, user: an iPhone 15 showed the short tier —
+  no group captions, a half-empty window — while an iPhone 16 was fine): `.helper__body` is a size container; the
+  chip heights use `cqh`, the short tier is `@container (max-height: 532px)`, the tall one `(min-height: 732px)`
+  (its content box; the body's padding is 24 px). iOS answers a height media query for the screen with Safari's bars
+  out, while the dialog fills the screen once they fold away, so `(max-height: 680px)` matched a 760 px tall window.
 
 ## About
 

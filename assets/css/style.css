@@ -929,7 +929,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .helper__k { font-size: var(--fs-s); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
 .helper__h { margin: 0; font-family: var(--f-head); font-weight: 700; font-size: clamp(var(--fs-2xl), 2.4vw, var(--fs-3xl)); line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; }
 .helper__lead { margin: 0; max-width: 660px; color: var(--muted); font-size: var(--fs-l); text-wrap: pretty; }
-.helper__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 40px 24px; scrollbar-width: thin; scrollbar-color: rgba(12, 44, 71, .3) transparent; }
+/* a size container: the phone tiers of the steps (chip sizes, the short tier) go by its height */
+.helper__body { container-type: size; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 40px 24px; scrollbar-width: thin; scrollbar-color: rgba(12, 44, 71, .3) transparent; }
 .helper__body::-webkit-scrollbar { width: 8px; }
 .helper__body::-webkit-scrollbar-thumb { background: rgba(12, 44, 71, .3); border-radius: 8px; }
 .hpane { display: flex; flex-direction: column; gap: 16px; animation: stepIn .3s var(--ease-out) both; }
@@ -1144,13 +1145,13 @@ html:has(.helper[open]) { overflow: hidden; }
   .jaw__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .jaw__or { grid-column: 1 / -1; text-align: center; margin: 0; font-size: var(--fs-m); }
   .jaw__btn { min-height: 44px; padding: 0 10px; font-size: var(--fs-m); white-space: nowrap; }
-  /* step 2: the chips grow with the screen height to fill it (user, 2026-11-23); 380 px is the dialog head and nav,
+  /* step 2: the chips grow with the helper's body (its content box, cqh) to fill it (user, 2026-11-23); 232 px is
      the captions and the gaps, 11 the rows of chips at 15 px on a 360 px screen */
   .sym-wrap { gap: 18px; }
   .sym-group { gap: 8px; }
   .sym-group .caps { font-size: var(--fs-s); }
   .sym-group__chips { gap: 8px; }
-  .sym-chip { min-height: clamp(32px, (100dvh - 380px) / 11, 44px); padding: 0 16px; font-size: var(--fs-m); }
+  .sym-chip { min-height: clamp(32px, (100cqh - 232px) / 11, 44px); padding: 0 16px; font-size: var(--fs-m); }
   /* step 3: small photos, no experience line, tighter type; the first-visit list (the same for every answer) and the
      direction row go, so the step fits the screen without scrolling (user, 2026-11-23) */
   .hint__visit, .hint__row, .hint:has(.hint__note) .hint__disclaimer { display: none; }
@@ -1177,13 +1178,15 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__sec .bullets li::before { margin-top: 7px; }
   .hint__disclaimer { font-size: var(--fs-xs); }
 }
-/* tall phones: 17 px chips, 13 rows of them (358 px: the same fixed parts with smaller gaps) */
-@media (max-width: 640px) and (min-height: 880px) {
+/* tall phones: 17 px chips, 13 rows of them (210 px: the same fixed parts with smaller gaps). These two tiers ask the
+   helper's body (a size container) for its height, not the screen: iOS answers a height media query for the screen
+   with Safari's bars out, so a phone whose bars had folded away got the short tier in a tall window (iPhone 15) */
+@media (max-width: 640px) { @container (min-height: 732px) {
   .sym-wrap { gap: 14px; }
-  .sym-chip { min-height: clamp(40px, (100dvh - 358px) / 13, 48px); font-size: var(--fs-l); }
-}
-/* short phones (small Androids, iPhone SE): the group captions, the direction row and the disclaimer go too */
-@media (max-width: 640px) and (max-height: 680px) {
+  .sym-chip { min-height: clamp(40px, (100cqh - 210px) / 13, 48px); font-size: var(--fs-l); }
+} }
+/* short (small Androids, iPhone SE): the group captions, the direction row and the disclaimer go too */
+@media (max-width: 640px) { @container (max-height: 532px) {
   .sym-group .caps { display: none; }
   .sym-wrap { gap: 5px; }
   .sym-group__chips { gap: 5px; }
@@ -1194,7 +1197,7 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint { gap: 8px; }
   .hint__doc { padding: 4px 10px 4px 4px; }
   .hint__doc-ph { width: 32px; border-radius: 8px; }
-}
+} }
 @media (max-width: 480px) {
   .jaw__sides { padding: 0; font-size: var(--fs-xs); }
 }
