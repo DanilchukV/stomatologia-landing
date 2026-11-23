@@ -23,11 +23,11 @@
 <link rel="preload" href="assets/fonts/nunito-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/nunito-sans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <script>'use strict'; if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('reveal-on');</script>
-<link rel="stylesheet" href="assets/css/style.css?v=20261126p">
-<script src="assets/js/header.js?v=20261126p" defer></script>
-<script src="assets/js/data.js?v=20261126p" defer></script>
-<script src="assets/js/form.js?v=20261126p" defer></script>
-<script src="assets/js/main.js?v=20261126p" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261126r">
+<script src="assets/js/header.js?v=20261126r" defer></script>
+<script src="assets/js/data.js?v=20261126r" defer></script>
+<script src="assets/js/form.js?v=20261126r" defer></script>
+<script src="assets/js/main.js?v=20261126r" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Перейти к содержимому</a>
@@ -214,6 +214,10 @@
     <div class="services__head">
       <h2 class="title" id="services-title" tabindex="-1">Услуги</h2>
       <p class="services__lead">Цены «от»&nbsp;— в&nbsp;белорусских рублях. Точный план и&nbsp;стоимость врач назовёт после осмотра, до&nbsp;начала лечения.</p>
+    </div>
+    <div class="svc-find">
+      <label class="svc-find__box"><svg class="svc-find__ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="svc-find__q" id="svc-q" type="search" placeholder="Найти услугу: чистка, имплант, коронка…" autocomplete="off" enterkeyhint="search" aria-label="Найти услугу" aria-controls="svc-found"></label>
+      <div class="svc-find__out" id="svc-found" aria-live="polite"></div>
     </div>
     <div class="svc-bar-box" id="svc-bar-box"></div>
     <div class="svc-grid grid-in" id="svc-grid">

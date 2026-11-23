@@ -466,6 +466,22 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
 
 ## Services
 
+**Rework of 2026-11-23** (user: «как мы можем улучшить для пользователя раздел услуги?… сделай все»):
+- Prices: «от N руб.» (BYN) on every service, right-aligned in the row (under the name on phones); `data.js prices`,
+  `priceHTML()`. Invented at the level of Brest's private clinics, like the staff — replace with the clinic's list.
+  The lead says «Цены «от» — в белорусских рублях…» instead of «узнать цену по телефону».
+- Search above the sections (`#svc-q`, `renderFind()`): every typed word must start a word in the service's name,
+  section, description or `serviceKeys` (words people use: «чистка», «вырвать», «коронка»; ё = е); hits in the name,
+  then in the keys, come first; up to 8, with section and price. Empty, it shows «Популярное» — four services with
+  prices (a swipe row on phones). A tap (`svc-go`) opens the section with that service unfolded and glides to it.
+- «Не знаете, что выбрать? Подскажем по симптомам» (`.svc-unsure`) under the sections and in step 1 opens the helper.
+- One booking for the page: Services lost its step 3 (its own summary, contacts form and confirmation); the
+  wizard is «Услуги → Врач», and «К записи» (`toBooking()`) glides to the booking form, where the choice already is
+  (a doctor picked with none of the section's services ticked is added alone, as step 3 did). The notes below that
+  mention Services' step 3, `svc-sum` or `svc-form` describe that removed step.
+- No doctor step when the section has one doctor (or diagnostics needs none): step 1's button is «К записи» at once
+  (`docStep()`).
+
 - The six cards open a panel (the grid is hidden while it is open); the sticky bar switches
   categories. The list shows 6 services with "Показать ещё". The cards have no numbers or chevron
   buttons since 2026-11-18 (user's request). Compact since 2026-11-19 (user: all six should fit one screen):

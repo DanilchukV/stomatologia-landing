@@ -619,6 +619,33 @@
     }
   }
 
+  /* ---------- services search and the popular ones ---------- */
+  // empty: a row of popular services with their prices; typed: the services whose name, section, description or
+  // search words (data.js serviceKeys) hold every word typed (ё = е). A tap opens the section with that service
+  // unfolded (svc-go). User, 2026-11-23: people don't know which section a service is in
+  const POPULAR = [['Профессиональная гигиена', 'Чистка зубов'], ['Лечение кариеса', 'Лечение кариеса'], ['Имплантация', 'Имплантация'], ['Консультация терапевта', 'Консультация']];
+  // words match from their start («чистка» isn't found in «очистка»); a hit in the name, then in the search words,
+  // ranks before one in the section or the description
+  const norm = (s) => ' ' + s.toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/g, ' ');
+  const catOf = (n) => D.cats.find((c) => c.items.includes(n));
+  const SVC_INDEX = D.cats.flatMap((c) => c.items.map((n) => ({ n, c, name: norm(n), keys: norm(D.serviceKeys[n] || ''), hay: norm([n, c.name, D.serviceText[n] || '', D.serviceKeys[n] || ''].join(' ')) })));
+  const findBox = $('#svc-found');
+  function renderFind() {
+    const q = norm($('#svc-q').value).trim();
+    if (q.length < 2) {
+      findBox.innerHTML = `<div class="svc-pop"><span class="svc-pop__h">Популярное:</span>${POPULAR.map(([n, label]) => `<button type="button" class="chip svc-pop__chip" data-act="svc-go" data-svc="${esc(n)}">${esc(label)}${D.prices[n] ? ` <b>от&nbsp;${D.prices[n]}&nbsp;руб.</b>` : ''}</button>`).join('')}</div>`;
+      return;
+    }
+    const words = q.split(' ').map((w) => ' ' + w);
+    const rank = (x) => (words.every((w) => x.name.includes(w)) ? 0 : words.every((w) => x.keys.includes(w)) ? 1 : 2);
+    const hits = SVC_INDEX.filter((x) => words.every((w) => x.hay.includes(w))).sort((a, b) => rank(a) - rank(b)).slice(0, 8);
+    findBox.innerHTML = hits.length
+      ? `<div class="svc-hits">${hits.map((x) => `<button type="button" class="svc-hit" data-act="svc-go" data-svc="${esc(x.n)}"><span class="svc-hit__t"><span class="svc-hit__n">${esc(glue(x.n))}</span><span class="svc-hit__c">${esc(glue(x.c.name))}</span></span>${priceHTML(x.n, 'svc-hit__p')}</button>`).join('')}</div>`
+      : `<p class="svc-find__none">${glue('Ничего не нашлось. Попробуйте другое слово или позвоните — подскажем.')}</p>`;
+  }
+  $('#svc-q').addEventListener('input', renderFind);
+  renderFind();
+
   /* ---------- doctors carousel ---------- */
   // on a phone all cards are one swipeable row (CSS), so no pages
   const swipeMedia = window.matchMedia('(max-width: 640px)');
@@ -1117,6 +1144,18 @@
     'svc-step': (t) => goStep(+t.dataset.step),
     'svc-prev': () => goStep(state.svcStep - 1),
     'svc-next': () => { if (state.svcStep === 1 && docStep()) goStep(2); else toBooking(); },
+    // a search result or a popular service: its section opens with it unfolded, and the page glides to it (under the
+    // header and the stuck tab bar)
+    'svc-go': (t) => {
+      const n = t.dataset.svc, cat = catOf(n);
+      if (!cat) return;
+      $('#svc-q').value = '';
+      renderFind();
+      set({ cat: cat.id, svcStep: 1, picks: withPick(cat.id), docsAll: false, svcAll: cat.items.indexOf(n) >= SVC_LIMIT, svcOpen: n, barOpen: false });
+      const row = $$('.svc-row').find((r) => r.dataset.svc === n);
+      const bar = $('.svc-bar');
+      if (row) glideTo(window.scrollY + row.getBoundingClientRect().top - hdr.getBoundingClientRect().bottom - 10 - (bar ? bar.offsetHeight + 12 : 0), 650);
+    },
     // a new booking: empty forms, no services, default doctor; back to where it was clicked
     'book-again': () => {
       form.reset();

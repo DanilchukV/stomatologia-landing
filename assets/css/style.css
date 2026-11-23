@@ -555,6 +555,28 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-unsure__t b { color: var(--accent-ink); font-weight: 700; }
 .svc-unsure > .ic { flex: none; display: block; color: var(--accent-ink); }
 .svc-step .svc-unsure { margin-top: 12px; }
+/* search and the popular services (main.js renderFind; user, 2026-11-23). The field's text is 17 px: under 16 an
+   iPhone zooms the page in on focus */
+.svc-find { display: flex; flex-direction: column; gap: 12px; max-width: 760px; }
+.svc-find__box { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--muted); cursor: text; transition: border-color .15s, box-shadow .15s; }
+.svc-find__box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(240, 170, 47, .35); }
+.svc-find__ic { flex: none; display: block; }
+.svc-find__q { flex: 1; min-width: 0; height: 48px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: var(--fs-l); outline: none; }
+.svc-find__q::placeholder { color: var(--muted); opacity: 1; }
+.svc-pop { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.svc-pop__h { margin-right: 2px; font-size: var(--fs-s); font-weight: 600; color: var(--muted); }
+.svc-pop__chip { min-height: 38px; padding: 0 14px; font-size: var(--fs-m); }
+.svc-pop__chip b { color: var(--accent-ink); font-weight: 700; }
+.svc-hits { display: flex; flex-direction: column; border: 1.5px solid var(--line); border-radius: 18px; background: var(--white); overflow: hidden; }
+.svc-hit { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 18px; border: 0; border-top: 1px solid var(--line-2); background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.svc-hit:first-child { border-top: 0; }
+@media (hover: hover) { .svc-hit:hover { background: color-mix(in srgb, var(--tint) 35%, var(--white)); } }
+.svc-hit:active { background: color-mix(in srgb, var(--tint) 35%, var(--white)); }
+.svc-hit__t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.svc-hit__n { font-size: var(--fs-m); font-weight: 600; line-height: 1.3; }
+.svc-hit__c { font-size: var(--fs-s); color: var(--muted); }
+.svc-hit__p { flex: none; font-size: var(--fs-m); font-weight: 700; white-space: nowrap; }
+.svc-find__none { margin: 0; font-size: var(--fs-m); color: var(--muted); }
 /* the 2-line title reserve keeps descriptions level across a row; not needed where every title fits one line (wide) or the cards stack (phone) */
 @media (min-width: 1280px), (max-width: 640px) {
   .svc-card__name { min-height: 0; }
@@ -712,6 +734,10 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 640px) {
   .svc-row__txt { flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 0; }
   .svc-row__price { font-size: var(--fs-s); }
+  /* the popular services in one row that swipes, not four rows */
+  .svc-pop { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(-1 * var(--gutter)); padding: 2px var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
+  .svc-pop::-webkit-scrollbar { display: none; }
+  .svc-pop__h, .svc-pop__chip { flex: none; }
   .svc-grid { gap: 8px; }
   .svc-card { flex-direction: row; align-items: center; gap: 14px; padding: 8px 18px 8px 8px; border-radius: 20px; }
   .svc-card__photo { flex: none; align-self: auto; width: 76px; height: 64px; margin: 0; border-radius: 14px; overflow: hidden; -webkit-mask-image: none; mask-image: none; }
