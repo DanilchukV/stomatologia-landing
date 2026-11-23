@@ -120,7 +120,7 @@ start (`cubic-bezier(.25, .46, .45, .94)`); first 1.2 s, then a little faster at
 0.15 / 0.3 / 0.45 s. Don't put a filter
 into this animation again. On phones the card row clips (it scrolls sideways), so it has 18 px of top padding, taken
 back by a negative margin. The sections below the first screen (About, Finder,
-Services, Doctors, Contacts, FAQ, the booking card) come up 18 px with a fade the first time they scroll into view
+Services, Doctors, Contacts, FAQ; not the booking card, see below) come up 18 px with a fade the first time they scroll into view
 (`.reveal` → `.is-in`, an IntersectionObserver in `main.js`, 0.8 s). None with reduced motion; without
 IntersectionObserver nothing is hidden. `tools/shot.html` forces `.reveal` visible, or shots of lower sections would
 come out blank.
@@ -134,6 +134,11 @@ leave the sections hidden. Blocks already on screen at load get `.is-now`: a 0.5
 phone the services and doctors still settle by ~50 px while main.js builds them; the delay keeps that invisible).
 Found with a CDP trace of a real reload (per-frame positions and opacity), which the harness can't show: it turns
 animations off.
+
+The booking card was taken out of it the same day (user: the form shakes when, after choosing services in Services,
+you scroll down to it): the whole 1170 px form faded in sliding 18 px while the page was still scrolling, and at that
+very moment the corner «Ваша запись» vanished in one frame while back-to-top glided down. The form is a working area,
+it just stands; the corner booking now fades out (`.bk.is-away`, 0.2 s) instead of `hidden`.
 
 The FAQ invites a click on hover (mouse only): a closed question gets a Yellow outline and a soft shadow, its text
 turns Orange, the circle Yellow and its arrow dips 2 px; nothing moves or changes size (the user dislikes hover jumps).

@@ -887,7 +887,8 @@
     const n = bookCount();
     const hide = !n || state.sent || bookOnScreen() || panelAtBottom();
     if (hide && state.bkOpen) state.bkOpen = false;
-    bk.hidden = hide;
+    bk.hidden = false;
+    bk.classList.toggle('is-away', hide);
     toTop.classList.toggle('is-raised', !hide);
     if (hide) return;
     mount(bk, 'bk', () => `<div class="bk__pop" id="bk-pop" role="dialog" aria-labelledby="bk-title" hidden>
