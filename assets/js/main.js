@@ -628,7 +628,8 @@
   // empty: a row of popular services with their prices; typed: the services whose name, section, description or
   // search words (data.js serviceKeys) hold every word typed (ё = е). A tap opens the section with that service
   // unfolded (svc-go). User, 2026-11-23: people don't know which section a service is in
-  const POPULAR = [['Профессиональная гигиена', 'Чистка зубов'], ['Лечение кариеса', 'Лечение кариеса'], ['Имплантация', 'Имплантация'], ['Консультация терапевта', 'Консультация']];
+  const POPULAR = [['Профессиональная гигиена', 'Чистка зубов'], ['Лечение кариеса', 'Лечение кариеса'], ['Имплантация', 'Имплантация'], ['Консультация терапевта', 'Консультация'],
+    ['Отбеливание зубов', 'Отбеливание'], ['Простое и сложное удаление', 'Удаление зуба'], ['Брекеты', 'Брекеты'], ['Виниры', 'Виниры']];
   // words match from their start («чистка» isn't found in «очистка»); a hit in the name, then in the search words,
   // ranks before one in the section or the description
   const norm = (s) => ' ' + s.toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/g, ' ');

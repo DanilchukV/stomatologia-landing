@@ -474,12 +474,13 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   list stays in `data.js` for later.
 - Search above the sections (`#svc-q`, `renderFind()`): every typed word must start a word in the service's name,
   section, description or `serviceKeys` (words people use: «чистка», «вырвать», «коронка»; ё = е); hits in the name,
-  then in the keys, come first; up to 8, with section and price. Empty, it shows «Популярное» — four services with
+  then in the keys, come first; up to 8, with section and price. Empty, it shows «Популярное» — eight services (the
+  pills grow to end at the tab bar's right edge; the field is as wide as the bar too) with
   prices (a swipe row on phones). A tap (`svc-go`) opens the section with that service unfolded (also one behind
   «Показать ещё»), glides it to the middle of the room under the header and the bar, and lights it up for ~2 s — a
   Yellow ring and a light wash that fade out (`.is-found`, user: «пусть подсвечивается и находится нужная опция»).
   The keyboard: ↓/↑ mark a hit (round, `.is-active` with a Yellow edge, `aria-activedescendant`), Enter picks the
-  marked one or the first, Esc clears the field. The hits are as wide as the field (760 px at most).
+  marked one or the first, Esc clears the field. The hits are as wide as the field.
 - «Не знаете, что выбрать? Подскажем по симптомам» (`.svc-unsure`) under the sections and in step 1 opens the helper.
 - One booking for the page: Services lost its step 3 (its own summary, contacts form and confirmation); the
   wizard is «Услуги → Врач», and «К записи» (`toBooking()`) glides to the booking form, where the choice already is
