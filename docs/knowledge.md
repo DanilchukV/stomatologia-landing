@@ -793,7 +793,10 @@ The VestMedServis staff was removed on 2026-11-03; the section came back the sam
 and short specialities without «Стоматолог-» (`Терапевт`, `Хирург`…). Photos (2026-11-17, from the user, white background): `assets/img/doctors/<id>.webp`,
 600×800 (3:4 crop of the source, cwebp -q 80); `mix-blend-mode: multiply` on a light tint box turns the white
 background into the box colour, so nothing may be drawn under a photo. Clinic photos in the About collage:
-`assets/img/clinic/` (building 1400 px wide with the address chip, reception and cabinet 900 px). Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
+`assets/img/clinic/` (building 1400 px wide with the address chip, reception and cabinet 900 px). Screens up to 480 px get
+`building-800`, `reception-480` and `cabinet-480` (2026-11-24, made from those with cwebp -q 80 -m 6 -sharp_yuv: 2× of
+the box on a 430 px phone) through `<picture>` with a `media` source, not `srcset` + `sizes`: with `w` candidates a 3×
+phone still picks the big file. The section is near the top, so `loading="lazy"` doesn't keep them out of the first load. Each `doctors` entry in `data.js` has `id` (doctors are picked by it,
 since names may change), `name`, `spec`, `role`, `photo` (file in `assets/img/doctors/`, without
 `.webp`) and, for the 4 doctors, `exp`. While `name` is empty a silhouette and the speciality stand in everywhere; fill the entries and
 check the lead text in `index.html`.
