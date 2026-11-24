@@ -868,6 +868,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .visit__svc-n { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* Services' step 3 and the corner list show every name in full, wrapping */
 .visit__svc.is-full .visit__svc-n { white-space: normal; overflow: visible; overflow-wrap: break-word; }
+/* touch screens have no hover title to read the cut-off part: the names wrap there too */
+@media (hover: none) { .visit__svc-n { white-space: normal; overflow: visible; overflow-wrap: break-word; } }
 /* the round «+N» (an up arrow folds them again): Navy, at the right end of the services and in the middle of their
    height, reaching a little over the chips' ends; a ring in the card's Mint cuts it out of them, and the list keeps
    28 px on the right, so it never covers a chip's ✕ */
@@ -881,8 +883,13 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 480px) {
   .book__slots .visit__svcs:has(> .visit__fold) { padding-right: 0; }
   .book__slots .visit__svcs:has(> .visit__fold) > .visit__svc { flex-basis: 100%; padding-right: 44px; }
+  /* every ✕ at the same place, at the chip's right end */
+  .book__slots .visit__svcs:has(> .visit__fold) .visit__svc-n { flex: 1; }
   /* right: 0, the circle (36 px) concentric with the pills' rounded ends (36 px tall) */
   .book__slots .visit__fold { right: 0; }
+  /* unfolded (names wrap on touch screens): the ↑ goes under the list, so no chip keeps 44 px empty for it */
+  .book__slots .visit__svcs:has(.visit__all[aria-expanded="true"]) > .visit__svc { padding-right: 5px; }
+  .book__slots .visit__fold:has(> [aria-expanded="true"]) { position: static; transform: none; flex-basis: 100%; justify-content: flex-end; }
 }
 .visit__none { margin: 0; font-size: var(--fs-m); color: var(--muted); }
 /* the reason from the helper: a white strip like the service chips */
