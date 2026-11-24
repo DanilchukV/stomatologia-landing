@@ -72,6 +72,8 @@ out on 2026-11-03 (each column of the patch interpolated between the rows above 
 re-encoded as WebP). `og-image.jpg` was rebuilt from an HTML layout with the new logo and address.
 On 2026-11-23 a new photo («Улыбающийся стоматолог в современной клинике») was tried and taken back the same day;
 the old one is linked as `hero.webp?v=3` so browsers that cached the new one under `?v=2` reload it.
+Screens up to 480 px get `hero-1100.webp` (2026-11-24, 29 KB instead of 61): the phone box is 310 px tall, so `cover`
+draws the 16:9 picture about 550 px wide, and 1100 is 2× of that. Same `<picture>` way as the clinic photos.
 
 Search engines (2026-11-24, site review): `<link rel="canonical">` to the Pages URL and a schema.org `Dentist` block
 (JSON-LD in `<head>`: name, address, both phones, the og image). It carries the site's current, invented address and
