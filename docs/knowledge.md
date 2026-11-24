@@ -747,8 +747,9 @@ the card's right edge and the «+N» sits over their right ends, on the seam bet
 rounded ends; their ✕ moves 44 px in. (Folding all of them into «Выбрано услуг: N» was tried the same day and taken
 back — the user wants two visible.) With one or two services the pills keep their own width.
 
-Under the cards on phones (≤ 480 px, 2026-11-24, user) «Ещё услуга» (the short label of «Добавить ещё услугу») and
-«Сбросить всё» share one row as two equal 44 px pills; under 360 px their text is 13 px, so each keeps one line.
+Under the cards on phones (≤ 480 px, 2026-11-24, user) «Сбросить всё» (left, as in Services) and «Ещё услуга» (the
+short label of «Добавить ещё услугу», right) share one row as two equal 44 px pills; under 360 px their text is 13 px,
+so each keeps one line.
 «Сбросить всё» in the booking form (desktop and phones) then scrolls the page to the section's top (`scrollToId('book')`):
 the emptied list was much longer than what stays, and the page was left somewhere below the form. On Safari the
 button's place isn't held for it (`keepInView`), which would cancel that scroll.
