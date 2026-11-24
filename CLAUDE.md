@@ -18,6 +18,12 @@ then removed (in git history) until the new clinic has its own. The original Cla
 as plain HTML/CSS/JS (no React, no CDN) and made responsive — see `docs/knowledge.md`. Some content
 from the design is still missing (open task 1).
 
+**Temporary English copy (2026-11-24):** `en.html` with its own `assets/js/{main,data,form,header}-en.js`, made only to
+show the site to a PM by link — https://danilchukv.github.io/stomatologia-landing/en.html. Not linked from `index.html`,
+`noindex`, nothing of the Russian site was changed for it. It is a frozen copy: changes to the Russian site are not
+mirrored there unless the user asks. To remove it, delete those five files (the Pages workflow copies root `*.html`
+automatically, nothing else refers to them).
+
 ## Stack
 
 None. A static `index.html` plus the `assets/` folder. No build step, no dependencies, no npm, no
