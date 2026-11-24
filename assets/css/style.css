@@ -1226,15 +1226,15 @@ html:has(.helper[open]) { overflow: hidden; }
      direction row go, so the step fits the screen without scrolling (user, 2026-11-23) */
   .hint__visit, .hint__row, .hint:has(.hint__note) .hint__disclaimer { display: none; }
   /* the spacing grows with the room the body has (its content box, cqh; user, 2026-11-24: «дадим подышать»): the
-     short tier keeps the old tight values, a tall phone gets 22 px between the blocks */
-  .hint { gap: clamp(8px, (100cqh - 380px) / 4, 22px); margin-top: clamp(0px, (100cqh - 400px) / 5, 14px); }
+     short tier keeps the old tight values, a tall phone gets 32 px between the blocks, a roomier card and a 56 px photo */
+  .hint { gap: clamp(8px, (100cqh - 380px) / 4, 32px); margin-top: clamp(0px, (100cqh - 400px) / 4, 22px); }
   .hint__note { padding: 8px 12px; font-size: var(--fs-m); }
-  .hint__answer { padding: clamp(12px, (100cqh - 360px) / 8, 18px); gap: clamp(6px, (100cqh - 380px) / 10, 10px); border-radius: 20px; }
+  .hint__answer { padding: clamp(12px, (100cqh - 360px) / 8, 22px); gap: clamp(6px, (100cqh - 380px) / 8, 14px); border-radius: 20px; }
   .hint__answer-v { font-size: var(--fs-xl); }
   .hint__pick-note { margin-top: -4px; font-size: var(--fs-m); }
-  .hint__docs { gap: 8px; }
-  .hint__doc { gap: 12px; padding: 6px 12px 6px 6px; border-radius: 16px; }
-  .hint__doc-ph { width: 40px; aspect-ratio: 1 / 1; border-radius: 10px; font-size: var(--fs-m); }
+  .hint__docs { gap: clamp(8px, (100cqh - 400px) / 10, 12px); }
+  .hint__doc { gap: clamp(12px, (100cqh - 400px) / 8, 16px); padding: clamp(6px, (100cqh - 420px) / 10, 10px) 12px clamp(6px, (100cqh - 420px) / 10, 10px) clamp(6px, (100cqh - 420px) / 10, 10px); border-radius: 16px; }
+  .hint__doc-ph { width: clamp(40px, (100cqh - 300px) / 5, 56px); aspect-ratio: 1 / 1; border-radius: 10px; font-size: var(--fs-m); }
   .hint__doc-ph img { object-position: 50% 0; }
   .hint__doc-name { font-size: var(--fs-m); }
   .hint__doc-spec { font-size: var(--fs-m); }
@@ -1243,9 +1243,9 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__visit .bullets li { font-size: var(--fs-m); line-height: 1.4; }
   .hint__more { gap: 8px; }
   .hint__row { padding-bottom: 8px; font-size: var(--fs-m); }
-  .hint__sec { gap: clamp(6px, (100cqh - 380px) / 10, 10px); }
+  .hint__sec { gap: clamp(6px, (100cqh - 380px) / 8, 14px); }
   /* the likely services in a run, not one per line */
-  .hint__sec .bullets { flex-direction: row; flex-wrap: wrap; gap: clamp(2px, (100cqh - 400px) / 20, 6px) 16px; }
+  .hint__sec .bullets { flex-direction: row; flex-wrap: wrap; gap: clamp(2px, (100cqh - 400px) / 12, 10px) 16px; }
   .hint__sec .bullets li { font-size: var(--fs-m); line-height: 1.4; }
   .hint__sec .bullets li::before { margin-top: 7px; }
   .hint__disclaimer { font-size: var(--fs-xs); }

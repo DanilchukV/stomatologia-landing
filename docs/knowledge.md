@@ -473,13 +473,14 @@ outside the dialog's rounded corners:
   chip heights use `cqh`, the short tier is `@container (max-height: 532px)`, the tall one `(min-height: 732px)`
   (its content box; the body's padding is 24 px). iOS answers a height media query for the screen with Safari's bars
   out, while the dialog fills the screen once they fold away, so `(max-height: 680px)` matched a 760 px tall window.
-- Step 3 on phones breathes with the room (2026-11-24, user: «дадим подышать, а то слитно»): the gaps between the
-  blocks, the answer card's padding and the list's spacing are `clamp()`s of the body's height (`cqh`) — the old tight
-  values where the body is short, up to 22 px gaps and a 14 px space under the lead on a tall phone. A new shortest
-  tier (`@container (max-height: 400px)`, 360×640 with the bars) trims a little more: a wisdom tooth's note with two
-  doctors («Зуба нет») had run 19 px past the body there. Checked every symptom on teeth 1, 8 and 25: no scroll at
-  390×844, 390×700 and 360×640 (worst case 124 / 45 / 3 px to spare); 375×553 and 320×568 still scroll at step 3
-  (as before, 22 px less now).
+- Step 3 on phones breathes with the room (2026-11-24, user: «дадим подышать, а то слитно», and again: the first
+  pass, up to 22 px, still left a tall phone half empty): the gaps between the blocks, the answer card's padding and
+  gap, the doctor card's padding and photo, and the list's spacing are `clamp()`s of the body's height (`cqh`) — the
+  old tight values where the body is short; on a tall phone 32 px between the blocks, 22 px under the lead, a 22 px
+  padded card, a 56 px photo, 10 px between the likely services. A shortest tier (`@container (max-height: 400px)`,
+  360×640 with the bars) trims a little more: a wisdom tooth's note with two doctors («Зуба нет») had run 19 px past
+  the body there. Checked every symptom on teeth 1, 8 and 25: no scroll at 390×860, 390×760, 390×700 and 360×640
+  (worst case 44 / 10 / 36 / 3 px to spare); 375×553 and 320×568 still scroll at step 3, as before.
 
 ## About
 
