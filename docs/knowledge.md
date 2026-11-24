@@ -694,8 +694,9 @@ Until then the whole booking had one doctor (`docPick`): ticking caries in «Л�
   (`doc` on the cart item, which `itemDoc` honours before the section's pick, so e.g. «Виниры» can go to the
   orthopedist while the rest of «Эстетика» stays with the therapist) or takes out a booked one. In all three lists
   (Services' step 3 and the booking form; the corner list only sums the booking up since 2026-11-23, user: «просто как
-  суммирует», `visitsHTML({ full: true, summary: true })`; a doctor with a single service has no ✕ of their own there,
-  it would repeat the service's ✕). A group re-rendered for its open/closed button doesn't fade in
+  суммирует», `visitsHTML({ full: true, summary: true })`; a doctor with services has no ✕ of their own there,
+  each service has its own — a doctor without services has one since 2026-11-24, or they could not be taken out there
+  (user)). A group re-rendered for its open/closed button doesn't fade in
   again: `.is-new` is only for a doctor not in the list before (`data-id`).
   Several doctors (2026-11-22, user): the groups keep the team's order (the doctor tiles' order, `visits()` sorts
   by it; before, a doctor jumped to the front when a service was added); in the booking form a card shows two services (three until
