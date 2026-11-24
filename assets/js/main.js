@@ -664,6 +664,12 @@
   // the keyboard (user, 2026-11-23): ↓/↑ walk the hits (round), Enter picks the marked one or the first, Esc clears
   let findIdx = -1;
   const findQ = $('#svc-q');
+  // the full hint needs ~330 px: phones get a shorter one instead of «…имплант, кор»
+  const phPhone = window.matchMedia('(max-width: 640px)'), phTiny = window.matchMedia('(max-width: 359px)');
+  const findPh = () => { findQ.placeholder = phTiny.matches ? 'Найти услугу' : phPhone.matches ? 'Чистка, имплант, коронка…' : 'Найти услугу: чистка, имплант, коронка…'; };
+  phPhone.addEventListener('change', findPh);
+  phTiny.addEventListener('change', findPh);
+  findPh();
   function markFind() {
     const hits = $$('.svc-hit', findBox);
     hits.forEach((b, i) => { b.classList.toggle('is-active', i === findIdx); b.setAttribute('aria-selected', i === findIdx); });
