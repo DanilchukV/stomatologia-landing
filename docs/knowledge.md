@@ -849,13 +849,7 @@ screen + 1, `swipeStops()`), not doctors. The panel is ~420 px instead of ~950: 
 name, smaller type, and only education and work — courses and certificates show from 641 px up. On phones the panel
 has no «Свернуть» (the ✕ is enough; for staff without booking the button row goes too). With a story open, a tap on
 another doctor's card (anywhere but its buttons; `doc-card`) shows theirs — on every screen.
-On phones an open story's panel works as a carousel (2026-11-24, user: «в области карточек переключение только по
-тапу, а в области подробнее — как карусель»): a sideways swipe across the panel (touch events, > 50 px and 1.5× more
-sideways than down) shows the next or previous doctor with a story (`docStep`), the row scrolling to their card if
-it is off screen; the new story's photo and text slide in 32 px from that side and fade in (300 ms). The row of cards
-only scrolls — a story there changes by a tap on a card (`doc-card`); for an hour the row's stop opened the visible
-doctor's story, which the user didn't want. When the open card is scrolled off along the row, the panel's caret
-fades out (`.no-caret`) instead of staying clamped at the edge and pointing past it.
+On phones a carousel for the open story (swipe the panel for the next doctor; first also the row) was tried on2026-11-24 and taken back the same day at the user's request (in git history, f31659a / 3545f09).
 
 Phones (2026-11-24, user): the lead «Опытные специалисты по всем направлениям.» is one line — its size follows the
 screen (`clamp(13px, (100vw − 2 gutters) / 22.4, 17px)`: 16 px at 390, 14.6 at 360, 13 at 320), left-aligned; in the

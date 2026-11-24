@@ -1346,9 +1346,7 @@ html:has(.helper[open]) { overflow: hidden; }
 .doc-panel__stack { display: grid; }
 .doc-panel__stack > .doc-panel__card { grid-area: 1 / 1; visibility: hidden; }
 .doc-panel__stack > .doc-panel__card.is-cur { visibility: visible; animation: fadeIn .35s ease both; }
-.doc-panel__card::before { content: ''; position: absolute; top: -9px; left: var(--caret-x, 50%); width: 16px; height: 16px; margin-left: -8px; background: var(--white); border-left: 1.5px solid var(--ink); border-top: 1.5px solid var(--ink); border-top-left-radius: 4px; transform: rotate(45deg); transition: left .4s var(--ease-out), opacity .2s; }
-/* the open card scrolled off along the row (phones): the caret fades rather than pointing past it */
-.doc-panel.no-caret .doc-panel__card::before { opacity: 0; }
+.doc-panel__card::before { content: ''; position: absolute; top: -9px; left: var(--caret-x, 50%); width: 16px; height: 16px; margin-left: -8px; background: var(--white); border-left: 1.5px solid var(--ink); border-top: 1.5px solid var(--ink); border-top-left-radius: 4px; transform: rotate(45deg); transition: left .4s var(--ease-out); }
 .doc-panel__photo { position: relative; aspect-ratio: 3 / 4; border-radius: 20px; overflow: hidden; background: var(--tint); display: grid; place-items: center; align-self: start; }
 .doc-panel__body { min-width: 0; display: flex; flex-direction: column; gap: 18px; padding: 8px 40px 0 0; }
 .doc-panel__head { display: flex; flex-direction: column; gap: 4px; }
