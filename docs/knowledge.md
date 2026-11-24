@@ -614,7 +614,8 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   the 2026-10-21 ones were the design's). Cards: a 176 px strip that bleeds to the
   card edges and fades into the card; the `<img>` is lazy, so the six photos don't load with the page.
   Screens up to 640 px show the card photo as a 76 × 64 thumbnail and get `-360.webp` (2026-11-24, made from the 1600 px
-  ones, ~10 KB) through `<picture>`: the card's `sizes` says 100vw there, so a 3× phone took the 1600 px file.
+  ones, ~10 KB) through `<picture>`: the card's `sizes` says 100vw there, so a 3× phone took the 1600 px file. The
+  phone tab list of an open category (44 px thumbnails) uses `-360` too, the same files the cards already loaded.
   The open category's dark head: the photo covers its right 66 % and fades in from its left edge
   (`--fade`, 24 % for "treat", 48 % for the rest); the per-category crops (set for the new pictures so faces
   stay in frame) are in CSS
