@@ -923,8 +923,11 @@ the reformat (it jumped to the end), and Backspace/Delete on a bracket, space or
 Code review the same day: the caret moves only for digits the formatter adds or drops in front (`leadDelta`), not for
 digits cut off past 12 (or 15 abroad), so typing «56» in the middle of a full number no longer gives «65»; a «+»
 deleted with Delete goes alone (it isn't a separator, so the digit after it stays).
-After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card,
-the hidden part keeps its space via `visibility`), so the card doesn't shrink or jump; the corner
+After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card). The form
+used to keep its space (`visibility`), which left a tall empty card around the confirmation (719 px on a phone);
+since 2026-11-24 (user: «при отправке не будет столько свободного пространства») the form is `display: none` and the
+card glides down to the confirmation's height in .4 s (`glideBook`: the body's height animated from the old to the
+new one, then released); «Записаться ещё раз» glides it back up the same way. The corner
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle
 of the screen (`markSent`). Headless Chrome in `tools/shot` neither runs smooth scrolling nor fires
 `requestAnimationFrame` reliably — to check, patch `scrollIntoView` to `behavior: 'instant'` in `-Do`.

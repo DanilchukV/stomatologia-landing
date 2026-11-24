@@ -1526,10 +1526,13 @@ html:has(.helper[open]) { overflow: hidden; }
    first doctor pushed the whole form down */
 .book__list-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .book__reset--list { display: none; }
-/* form and confirmation sit in one cell; the hidden one keeps its space, so nothing jumps on send */
+/* form and confirmation sit in one cell; once sent the form goes and the card glides down to the confirmation's
+   height (main.js glideBook), so it is never a tall empty card */
 .book__body { display: grid; }
 .book__form, .book__done { grid-area: 1 / 1; }
-.book__card:not(.is-sent) .book__done, .book__card.is-sent .book__form { visibility: hidden; }
+.book__card:not(.is-sent) .book__done { visibility: hidden; }
+.book__card.is-sent .book__form { display: none; }
+.book__card.is-sent .book__done { align-self: start; }
 .book__card.is-sent .book__reset { visibility: hidden; }
 .book__form { display: flex; flex-direction: column; }
 .book__row { display: grid; grid-template-columns: 170px minmax(0, 1fr); align-items: start; gap: 12px 24px; margin: 0; padding: 20px 0; border: 0; border-top: 1px solid rgba(12, 44, 71, .15); min-width: 0; }

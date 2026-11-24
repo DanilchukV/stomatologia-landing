@@ -242,9 +242,23 @@
     }
     return true;
   }
+  // the booking card glides between the form's height and the confirmation's, so it neither jumps nor stays empty
+  function glideBook(change) {
+    const body = $('.book__body');
+    const h0 = body.offsetHeight;
+    change();
+    const h1 = body.offsetHeight;
+    if (Math.abs(h1 - h0) < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    body.style.overflow = 'hidden';
+    body.style.height = h0 + 'px';
+    void body.offsetHeight; // commit the start height before the transition
+    body.style.transition = 'height .4s var(--ease-out)';
+    body.style.height = h1 + 'px';
+    setTimeout(() => { body.style.height = body.style.overflow = body.style.transition = ''; }, 450);
+  }
   // after sending: show the confirmation and bring it to the middle of the screen
   function markSent(id) {
-    set({ sent: true });
+    glideBook(() => set({ sent: true }));
     const box = document.getElementById(id);
     box.scrollIntoView({ behavior: 'smooth', block: 'center' });
     // the pressed button is gone: the focus goes to the confirmation, so a screen reader reads it
@@ -1239,7 +1253,7 @@
     'book-again': () => {
       form.reset();
       const cat = catById(state.cat);
-      set({ sent: false, cart: [], extra: [], notes: [], svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} });
+      glideBook(() => set({ sent: false, cart: [], extra: [], notes: [], svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} }));
       form.elements.name.focus();
     },
 
