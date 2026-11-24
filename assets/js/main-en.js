@@ -241,9 +241,9 @@
     }
     return true;
   }
-  // the booking card glides between the form's height and the confirmation's, so it neither jumps nor stays empty
+  // the booking card glides between the form's height and the confirmation's (no head then), so it neither jumps nor stays empty
   function glideBook(change) {
-    const body = $('.book__body');
+    const body = $('.book__card');
     const h0 = body.offsetHeight;
     change();
     const h1 = body.offsetHeight;
@@ -282,15 +282,41 @@
   const sideOf = (n) => (n <= 8 || n >= 25 ? 'right' : 'left');
   const jawOf = (n) => (n <= 16 ? 'upper' : 'lower');
   const pct = (v, total) => Math.round(v / total * 10000) / 100;
-  // phones: the molars (6–8 in a quadrant) are ~22–30 px on the map, so a tap on one zooms into that side first
-  // (style.css .is-zoom-r / .is-zoom-l); zoomed, every tap picks a tooth
-  const jawZoomed = () => jaw.classList.contains('is-zoom-r') || jaw.classList.contains('is-zoom-l');
-  function jawZoom(side) {
-    jaw.classList.toggle('is-zoom-r', side === 'r');
-    jaw.classList.toggle('is-zoom-l', side === 'l');
-    $('.jaw__out').hidden = !side;
+  function pickTooth(n) {
+    if (state.tooth === n) return;
+    const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
+    // a doctor picked for another tooth or symptom isn't a choice made for this one
+    set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null, hDoc: null });
   }
-  helper.addEventListener('close', () => jawZoom(null));
+
+  // phones: «Приблизить» under the map doubles it inside its window, which then scrolls under the finger over the
+  // whole jaw, and a tap picks a tooth (style.css .jaw.is-zoom). It opens on the chosen tooth, else on the middle; the
+  // change glides (a scale from the old size around the point in the window's middle)
+  function jawZoom(on) {
+    const view = $('.jaw__view', jaw), map = $('#jaw-map');
+    if (jaw.classList.contains('is-zoom') === on) return;
+    const k = on ? 2 : 0.5;
+    // the point in the window's middle, in the map's new size
+    const cx = (view.scrollLeft + view.clientWidth / 2) * k, cy = (view.scrollTop + view.clientHeight / 2) * k;
+    jaw.classList.toggle('is-zoom', on);
+    const btn = $('.jaw__zoom', jaw);
+    btn.setAttribute('aria-pressed', on);
+    $('.jaw__zoom-t', btn).textContent = on ? 'Zoom out' : 'Zoom in';
+    render();
+    let ox = cx, oy = cy;
+    if (on) {
+      const t = state.tooth !== null && $(`.tooth[data-tooth="${state.tooth}"]`, map);
+      if (t) { ox = t.offsetLeft + t.offsetWidth / 2; oy = t.offsetTop + t.offsetHeight / 2; }
+      view.scrollLeft = ox - view.clientWidth / 2;
+      view.scrollTop = oy - view.clientHeight / 2;
+      ox = view.scrollLeft + view.clientWidth / 2;
+      oy = view.scrollTop + view.clientHeight / 2;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !map.animate) return;
+    map.style.transformOrigin = `${ox}px ${oy}px`;
+    map.animate([{ transform: `scale(${1 / k})` }, { transform: 'none' }], { duration: 300, easing: 'cubic-bezier(.2, .7, .2, 1)' });
+  }
+  helper.addEventListener('close', () => jawZoom(false));
 
   function buildTeeth() {
     const map = $('#jaw-map');
@@ -378,7 +404,7 @@
     $$('.tooth', jaw).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.tooth === tooth));
     $('#tooth-hint').textContent = glue(tooth !== null
       ? `Tooth ${qn(tooth)} selected — ${D.toothNames[tooth]}, ${tooth <= 16 ? 'upper' : 'lower'} jaw, ${sideOf(tooth)} side`
-      : s.scope === 'jaw' ? 'A question about the whole jaw' : 'Tap a tooth on the chart');
+      : s.scope === 'jaw' ? 'A question about the whole jaw' : jaw.classList.contains('is-zoom') ? 'Move the chart with your finger and tap a tooth' : 'Tap a tooth on the chart');
 
     // symptom chips: the set depends on scope, and "wisdom tooth" only shows for a wisdom tooth
     const wrap = $('#sym-wrap');
@@ -1126,13 +1152,10 @@
   const actions = {
     tooth: (t) => {
       const n = +t.dataset.tooth;
-      if (swipeMedia.matches && !jawZoomed() && qn(n) >= 6) { jawZoom(sideOf(n) === 'right' ? 'r' : 'l'); return; }
       if (state.tooth === n) { set({ tooth: null }); return; }
-      const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
-      // a doctor picked for another tooth or symptom isn't a choice made for this one
-      set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null, hDoc: null });
+      pickTooth(n);
     },
-    'jaw-out': () => jawZoom(null),
+    'jaw-zoom': () => jawZoom(!jaw.classList.contains('is-zoom')),
     'pick-jaw': () => { if (state.scope !== 'jaw') set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     'skip-tooth': () => { if (state.tooth !== null || !state.skipTooth || state.scope === 'jaw') set({ skipTooth: true, scope: 'tooth', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     symptom: (t) => {
@@ -1578,7 +1601,7 @@
   window.addEventListener('resize', schedule);
   swipeMedia.addEventListener('change', render);
   swipeMedia.addEventListener('change', syncPromises);
-  swipeMedia.addEventListener('change', () => jawZoom(null));
+  swipeMedia.addEventListener('change', () => jawZoom(false));
   syncPromises();
   // the panel's caret follows its card when the page is resized or the phone row is swiped
   window.addEventListener('resize', docCaret);

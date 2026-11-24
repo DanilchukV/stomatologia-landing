@@ -30,16 +30,16 @@
   // deferred scripts have run (or failed) by now: without main.js nothing would ever show the sections
   document.addEventListener('DOMContentLoaded', () => { if (!h.classList.contains('reveal-live')) h.classList.remove('reveal-on'); });
 }</script>
-<link rel="stylesheet" href="assets/css/style.css?v=20261127l">
+<link rel="stylesheet" href="assets/css/style.css?v=20261127o">
 <style>
   /* English-only fix, so style.css stays untouched: the short team lead hugged the right edge once it wrapped under
      the title (the long specs in the phone booking row get a soft hyphen in main-en.js instead) */
   @media (max-width: 760px) { .doctors__lead { margin-left: 0; } }
 </style>
-<script src="assets/js/header-en.js?v=20261124a" defer></script>
-<script src="assets/js/data-en.js?v=20261124a" defer></script>
-<script src="assets/js/form-en.js?v=20261124a" defer></script>
-<script src="assets/js/main-en.js?v=20261124a" defer></script>
+<script src="assets/js/header-en.js?v=20261124b" defer></script>
+<script src="assets/js/data-en.js?v=20261124b" defer></script>
+<script src="assets/js/form-en.js?v=20261124b" defer></script>
+<script src="assets/js/main-en.js?v=20261124b" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -494,14 +494,14 @@
               <span class="jaw__side"><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-back"/></svg>Right side</span>
               <span class="jaw__mid">Front view</span>
               <span class="jaw__side">Left side<svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-fwd"/></svg></span>
-              <button type="button" class="jaw__out" data-act="jaw-out" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M7.5 10.5h6"/></svg>Whole chart</button>
-            </div>
+                          </div>
             <div class="jaw__view">
               <div class="jaw__map" id="jaw-map">
                 <img class="jaw__img" src="assets/img/teeth.webp?v=2" alt="Tooth chart: upper and lower jaw" loading="lazy">
               </div>
             </div>
           </div>
+          <button type="button" class="jaw__zoom" data-act="jaw-zoom" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M7.5 10.5h6"/><path class="jaw__zoom-plus" d="M10.5 7.5v6"/></svg><span class="jaw__zoom-t">Zoom in</span></button>
           <span class="jaw__hint" id="tooth-hint" aria-live="polite"></span>
           <span class="jaw__note">The chart is shown the way the doctor sees you: your right side is&nbsp;on&nbsp;the left, your left side is&nbsp;on&nbsp;the right.</span>
         </div>
