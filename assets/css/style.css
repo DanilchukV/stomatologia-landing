@@ -761,13 +761,14 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 
 .svc-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-top: 22px; border-top: 1px solid var(--line); }
 .svc-nav__info { flex: 1 1 auto; min-width: 0; font-size: var(--fs-m); color: var(--muted); text-wrap: pretty; }
-.svc-nav__back, .svc-nav__next, .svc-nav__more { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: var(--fs-m); }
+.svc-nav__back, .svc-nav__next, .svc-nav__more, .svc-nav__reset { flex: none; gap: 10px; min-height: 52px; padding: 0 26px; font-size: var(--fs-m); }
 .svc-nav__more { gap: 8px; padding: 0 22px; }
 .svc-nav__more-s { display: none; }
 .svc-nav__back { padding-left: 18px; }
 .svc-nav .ic { display: block; }
-.svc-nav__reset { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: none; border-radius: 999px; background: none; color: var(--ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: color .15s; }
-@media (hover: hover) { .svc-nav__reset:hover { color: var(--accent-ink); } }
+/* «Сбросить всё»: a pill like «Ещё услуга» beside it, a ✕ and Terracotta — it takes things away (user, 2026-11-24) */
+.svc-nav__reset { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 22px; border: 1.5px solid var(--accent-ink); border-radius: 999px; background: var(--white); color: var(--accent-ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: background-color .15s; }
+@media (hover: hover) { .svc-nav__reset:hover { background: rgba(191, 81, 44, .08); color: var(--accent-ink); } }
 
 /* phone (user, 2026-11-20: pick a section at once, without scrolling): the sections are a list of rows — a small
    photo at the side, the name, a chevron — with the descriptions hidden; the open section's head is a short photo
@@ -816,17 +817,12 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   .doc-pick__who { flex-basis: 100%; margin-left: 0; text-align: left; }
   .doc-card { gap: 14px; padding-right: 16px; }
   .doc-card__av { width: 72px; }
-  /* the count and «Сбросить всё» share the first row, the buttons the second */
-  .svc-nav__info { flex: 1 1 calc(100% - 160px); order: -2; }
-  /* nothing chosen (no «Сбросить всё»): the line takes the row, «К записи» goes under it — beside it the line broke
-     into four */
-  .svc-nav:not(:has(.svc-nav__reset:not([hidden]))) .svc-nav__info { flex-basis: 100%; }
-  .svc-nav__reset { order: -1; }
+  /* the count takes the first row, «Сбросить всё» and «Ещё услуга» share the second (two equal pills), «К записи» the
+     third; nothing chosen, the count and «К записи» only */
+  .svc-nav__info { flex-basis: 100%; }
   .svc-nav__info:empty { display: none; }
-  /* «Назад» fills its row up to the right edge, as the button under it (user, 2026-11-23) */
-  .svc-nav__back, .svc-nav__next, .svc-nav__more { flex: 1 1 auto; }
-  /* «Ещё услуга»: the long label and «К записи» don't fit one row */
-  .svc-nav__more { padding: 0 14px; }
+  .svc-nav__next, .svc-nav__more, .svc-nav__reset { flex: 1 1 auto; }
+  .svc-nav__reset, .svc-nav__more { flex-basis: calc(50% - 8px); padding: 0 12px; }
   .svc-nav__more-l { display: none; }
   .svc-nav__more-s { display: inline; }
 }
@@ -1541,8 +1537,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .book__titles { display: flex; flex-direction: column; gap: 10px; }
 .book__lead { margin: 0; color: var(--muted); font-size: var(--fs-l); }
-.book__reset { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: border-color .15s, color .15s; }
-@media (hover: hover) { .book__reset:hover { border-color: var(--accent-ink); color: var(--accent-ink); } }
+.book__reset { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--accent-ink); border-radius: 999px; background: var(--white); color: var(--accent-ink); font: inherit; font-size: var(--fs-m); font-weight: 600; cursor: pointer; transition: border-color .15s, color .15s; }
+@media (hover: hover) { .book__reset:hover { background: rgba(191, 81, 44, .08); } }
 .book__reset .ic { display: block; }
 /* phones: «Сбросить всё» sits under the list (below the doctor tiles), not under the title, where appearing with the
    first doctor pushed the whole form down */

@@ -62,8 +62,6 @@
   const SPY = [['top', 'top'], ['calm', 'calm'], ['finder', 'calm'], ['services', 'services'], ['doctors', 'doctors'], ['clinics', 'clinics'], ['faq', 'clinics'], ['book', 'clinics']];
   const SVC_LIMIT = 6;
   const DOCS_PER_PAGE = 4;
-  const DOC_LIMIT = 3;
-  const STEPS = ['Услуги', 'Врач'];
   const CONSULT = 'Консультация специалистов';
   const CONSULT_SUBS = [['Терапевт', 'Консультация терапевта'], ['Ортопед', 'Консультация ортопеда'], ['Хирург', 'Консультация хирурга'], ['Ортодонт', 'Консультация ортодонта']];
   const CONSULT_ROLE = { 'Консультация терапевта': 'ther', 'Консультация ортопеда': 'orth', 'Консультация хирурга': 'surg', 'Консультация ортодонта': 'ortd' };
@@ -74,11 +72,11 @@
   /* ---------- state ---------- */
   const state = {
     hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null,
-    cat: null, svcOpen: null, svcMore: null, addFor: null, svcsAll: [], svcAll: false, docsAll: false, barOpen: false,
+    cat: null, svcOpen: null, svcMore: null, addFor: null, svcsAll: [], svcAll: false, barOpen: false,
     // cart: ticked services {n, cat (name), cid}; picks: the doctor chosen per section;
     // extra: doctors booked without services {id, cid} (cid: the section's step 2 it came from, else null)
     // notes: what the helper was told {id (doctor), text}, shown in that doctor's group
-    svcStep: 1, picks: {}, extra: [], notes: [], cart: [], bkOpen: false,
+    picks: {}, extra: [], notes: [], cart: [], bkOpen: false,
     docPage: 0, docOpen: null,
     sent: false
   };
@@ -92,7 +90,7 @@
       if (!roles.includes(dp.role)) {
         const pick = autoDoc(roles);
         state.picks = { ...state.picks, diag: pick };
-        // a doctor booked alone from diagnostics' step 2 (goStep) goes with it
+        // a doctor booked alone from diagnostics («К записи» with nothing ticked, toBooking) goes with it
         state.extra = state.extra.filter((x) => x.cid !== 'diag' || x.id === pick);
       }
     }
@@ -533,47 +531,13 @@
     moreSvcs.setAttribute('aria-expanded', expanded);
     moreSvcs.firstChild.textContent = expanded ? 'Свернуть' : 'Показать ещё ' + (cat.items.length - SVC_LIMIT);
 
-    // doctor choice: in diagnostics it follows the chosen consultation
-    const roles = catRoles(cat, state.cart);
-    const pick = state.picks[cat.id] || null;
-    const docs = docsFor(roles);
-    // diagnostics without a consultation: no doctor to choose, said the same way as in step 3
-    const noDoc = cat.id === 'diag' && !roles.length;
-    $('#pick-doctor .panel-h').textContent = noDoc ? 'Врач не нужен' : 'Выберите врача';
-    $('#doc-pick-who').textContent = glue(docs.length ? (docs.length === 1 ? 'Принимает ' : 'Принимают ') + docs.map((d) => d.spec.toLowerCase()).join(', ')
-      : noDoc ? 'Врач понадобится, только если отметить консультацию' : 'Врача подберём при записи');
-
-    const opts = docs.map((d) => ({ id: d.id, title: docTitle(d), av: docAvatar(d, 40), sub: d.name ? d.spec : 'Фото и имя скоро появятся' }));
-    const picked = opts.findIndex((d) => d.id === pick);
-    const docsExpanded = state.docsAll || picked >= DOC_LIMIT;
-    const grid = $('#doc-pick-grid');
-    mount(grid, roles.join() + docsExpanded + noDoc, () => (noDoc
-      ? `<div class="doc-card doc-card--none"><span class="doc-card__av">${icon('i-grid', 32, 1.8)}</span><span class="doc-card__text"><span class="doc-card__name">Диагностика</span><span class="doc-card__sub">${glue('Без записи к врачу — снимки и сканирование делают сразу')}</span></span></div>`
-      : '') + opts.filter((d, k) => docsExpanded || k < DOC_LIMIT).map((d) => `<button type="button" class="doc-card" aria-pressed="false" data-act="panel-doc" data-id="${d.id}" data-focus="pdoc:${d.id}"><span class="doc-card__av">${d.av}</span><span class="doc-card__text"><span class="doc-card__name">${esc(d.title)}</span>${d.sub ? `<span class="doc-card__sub">${esc(d.sub)}</span>` : ''}</span><span class="doc-card__tick">${icon('i-check', 16, 2.8)}</span></button>`).join(''));
-    $$('.doc-card', grid).forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === pick));
-    const moreDocs = $('#docs-all');
-    moreDocs.hidden = opts.length <= DOC_LIMIT;
-    moreDocs.setAttribute('aria-expanded', docsExpanded);
-    moreDocs.firstChild.textContent = docsExpanded ? 'Свернуть' : 'Показать ещё ' + (opts.length - DOC_LIMIT);
-
-    // which step is shown, and the buttons under it
-    const step = state.svcStep;
-    $$('.svc-step', svcOpenBox).forEach((el) => { el.hidden = +el.dataset.step !== step; });
-    $$('.wiz__btn', svcOpenBox).forEach((b) => {
-      const k = +b.dataset.step;
-      if (k === step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
-      b.parentElement.classList.toggle('is-done', k < step);
-    });
     // every service chosen, in all sections: counted for this section only, a second one from another section went
-    // unseen (user, 2026-11-23: «почему одна, если я выбрала две?»)
+    // unseen (user, 2026-11-23: «почему одна, если я выбрала две?»). No doctor step (user, 2026-11-24): the section's
+    // doctor is picked automatically, and «К записи» goes straight on to the booking form
     const n = state.cart.length;
-    $('#svc-nav-info').textContent = glue(step === 1 ? (n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону')
-      : noDoc ? 'Без записи к врачу' : 'Врач: ' + (pick ? docTitle(docById(pick)) : 'подберём при записи'));
-    $('.svc-nav__back', svcOpenBox).hidden = step === 1;
+    $('#svc-nav-info').textContent = glue(n ? 'Выбрано ' + n + ' ' + servicesWord(n) : 'Можно не выбирать — поможем по телефону');
     // a service ticked: «Выбрать ещё услугу» beside «К записи» opens the sections' menu (user, 2026-11-23)
-    $('.svc-nav__more', svcOpenBox).hidden = step !== 1 || !state.cart.length;
-    // one doctor (or none) in the section: no doctor step, step 1 goes straight on to the booking form
-    $('.svc-nav__next', svcOpenBox).firstChild.textContent = step === 1 && docStep() ? 'Выбрать врача' : 'К записи';
+    $('.svc-nav__more', svcOpenBox).hidden = !n;
   }
 
   function barHTML() {
@@ -589,26 +553,17 @@
       <div class="svc-panel" id="svc-panel">
         <div class="svc-panel__head" id="svc-head"></div>
         <div class="svc-panel__body">
-          <ol class="wiz" id="svc-steps">
-            ${STEPS.map((t, k) => `<li class="wiz__item"><button type="button" class="wiz__btn" data-act="svc-step" data-step="${k + 1}"><span class="num"><span class="wiz__n">${k + 1}</span>${icon('i-check', 14, 3)}</span><span class="wiz__t">${t}</span></button></li>`).join('')}
-          </ol>
-          <div class="svc-step" id="pick-svc" data-step="1">
+          <div class="svc-step" id="pick-svc">
             <div class="panel-label"><h4 class="panel-h" tabindex="-1">Отметьте услуги</h4><span class="panel-hint">можно несколько</span></div>
             <div class="svc-list" id="svc-list"></div>
             <button type="button" class="btn btn--ghost more-wide" id="svc-all" data-act="svc-all" aria-expanded="false"><span></span>${icon('i-chev-row', 16, 2.4)}</button>
             ${$('#svc-grid .svc-unsure').outerHTML}
           </div>
-          <div class="svc-step" id="pick-doctor" data-step="2">
-            <div class="panel-label"><h4 class="panel-h" tabindex="-1">Выберите врача</h4><span class="doc-pick__who" id="doc-pick-who"></span></div>
-            <div class="doc-pick__grid" id="doc-pick-grid"></div>
-            <button type="button" class="btn btn--ghost more-wide" id="docs-all" data-act="docs-all" aria-expanded="false"><span></span>${icon('i-chev', 16, 2.4)}</button>
-          </div>
           <div class="svc-nav">
-            <button type="button" class="btn btn--ghost svc-nav__back" data-act="svc-prev">${icon('i-back', 16, 2.4)}Назад</button>
             <span class="svc-nav__info" id="svc-nav-info"></span>
-            <button type="button" class="svc-nav__reset" data-act="cart-reset" hidden>${icon('i-reset', 15, 2.2)}Сбросить всё</button>
+            <button type="button" class="btn btn--ghost svc-nav__reset" data-act="cart-reset" hidden>${icon('i-close', 14, 2.6)}Сбросить всё</button>
             <button type="button" class="btn btn--ghost svc-nav__more" data-act="add-svc" hidden>${PLUS}<span class="svc-nav__more-l">Выбрать ещё услугу</span><span class="svc-nav__more-s">Ещё услуга</span></button>
-            <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next"><span></span>${icon('i-arrow', 16, 2.4)}</button>
+            <button type="button" class="btn btn--dark svc-nav__next" data-act="svc-next">К&nbsp;записи${icon('i-arrow', 16, 2.4)}</button>
           </div>
         </div>
       </div>`;
@@ -914,7 +869,7 @@
     $$('.book-pick__doc', picksBox).forEach((b) => b.setAttribute('aria-pressed', vs.some((x) => x.id === b.dataset.id)));
     const rebuilt = mount(slotsBox, visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
       ? `<p class="book__empty">${glue('Можно не выбирать — администратор поможет подобрать по телефону.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить услугу</button>`
-      : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-reset', 16, 2.2)}Сбросить всё</button></div>`}`);
+      : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}Добавить ещё услугу</button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-close', 14, 2.6)}Сбросить всё</button></div>`}`);
     // a doctor coming or going, a services list opening or closing: the form glides, clipped at its growing edge.
     // A service ticked in an open list grows its doctor's card: then the list under the cards slides down with the
     // glide instead of jumping (clipped, it was cut off for a moment)
@@ -1094,12 +1049,12 @@
   // the tab bar stays above the section: opening one puts its panel in the grid's place under the bar, and on
   // desktop the page scrolls so the section's steps come right under the bar stuck under the header
   function openCat(id) {
-    set({ cat: id, svcStep: 1, picks: withPick(id), docsAll: false, svcAll: false, svcOpen: null, barOpen: false });
+    set({ cat: id, picks: withPick(id), svcAll: false, svcOpen: null, barOpen: false });
     if (swipeMedia.matches) revealPanel();
     else {
       // the section's steps and services right under the stuck tab bar, its head photo scrolled away above
       // (user, 2026-11-23: «вот так центрируем»)
-      const shift = $('#svc-steps').getBoundingClientRect().top - (hdr.getBoundingClientRect().bottom + 10 + $('.svc-bar').offsetHeight + 16);
+      const shift = $('#pick-svc').getBoundingClientRect().top - (hdr.getBoundingClientRect().bottom + 10 + $('.svc-bar').offsetHeight + 16);
       if (Math.abs(shift) > 1) window.scrollTo({ top: window.scrollY + shift, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
     }
     $('.svc-panel__name').focus({ preventScroll: true });
@@ -1126,13 +1081,6 @@
     const want = h < room - 20 ? under + (room - h) / 2 : under + 10;
     glideTo(window.scrollY + bar.top - want, 600);
   }
-  // the doctor step is there when the section has a choice of doctors (diagnostics without a consultation, or a
-  // section with one doctor, goes from its services straight on to the booking)
-  function docStep() {
-    const cat = catById(state.cat);
-    const roles = catRoles(cat, state.cart);
-    return !(cat.id === 'diag' && !roles.length) && docsFor(roles).length > 1;
-  }
   // «К записи»: Services has no booking step of its own (user, 2026-11-23: one booking for the page) — the choice is
   // already in the booking form, which the page glides to. A doctor picked with none of the section's services
   // ticked is booked alone (not when diagnostics needs no doctor)
@@ -1141,14 +1089,6 @@
     const noDoc = c === 'diag' && !catRoles(catById(c), state.cart).length;
     if (id && !noDoc && !state.sent && !state.cart.some((x) => x.cid === c && itemDoc(x))) set({ extra: withDoc(id, c) });
     scrollToId('book');
-  }
-  // shows step k of the services panel; scrolls back up if the step bar is above the screen
-  function goStep(k) {
-    if (k < 1 || k > STEPS.length) return;
-    set({ svcStep: k });
-    const bar = $('#svc-steps');
-    if (bar.getBoundingClientRect().top < $('.svc-bar').getBoundingClientRect().bottom) scrollToId('svc-steps');
-    $(`.svc-step[data-step="${k}"] .panel-h`).focus({ preventScroll: true });
   }
   const actions = {
     tooth: (t) => {
@@ -1223,7 +1163,7 @@
       // adding replaces this section's consultation; pressing a chosen one takes out only that one
       const cart = adding ? state.cart.filter((x) => !(isConsult(x.n) && x.cid === cat.id)).concat([{ n: cn, cat: cat.name, cid: cat.id }])
         : state.cart.filter((x) => x.n !== cn);
-      set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(adding ? [CONSULT_ROLE[cn]] : catRoles(cat, cart)) }, docsAll: false });
+      set({ cart, picks: { ...state.picks, [cat.id]: autoDoc(adding ? [CONSULT_ROLE[cn]] : catRoles(cat, cart)) } });
     },
     'svc-toggle': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcOpen: state.svcOpen === n ? null : n }); },
     'svc-more': (t) => { const n = t.closest('.svc-row').dataset.svc; set({ svcMore: state.svcMore === n ? null : n }); },
@@ -1235,21 +1175,7 @@
         scrollToId('pick-svc');
       } else set({ svcAll: true });
     },
-    // the section's doctor; if that section's doctor was booked alone (see goStep), the new one takes the place
-    'panel-doc': (t) => {
-      const c = state.cat;
-      const patch = { picks: { ...state.picks, [c]: t.dataset.id } };
-      if (state.extra.some((e) => e.cid === c)) patch.extra = withDoc(t.dataset.id, c);
-      set(patch);
-    },
-    'docs-all': (t) => {
-      const collapsing = t.getAttribute('aria-expanded') === 'true';
-      set({ docsAll: !collapsing });
-      if (collapsing) scrollToId('pick-doctor');
-    },
-    'svc-step': (t) => goStep(+t.dataset.step),
-    'svc-prev': () => goStep(state.svcStep - 1),
-    'svc-next': () => { if (state.svcStep === 1 && docStep()) goStep(2); else toBooking(); },
+    'svc-next': () => toBooking(),
     // a search result or a popular service: its section opens with it unfolded, and the page glides to it (under the
     // header and the stuck tab bar)
     'svc-go': (t) => {
@@ -1257,7 +1183,7 @@
       if (!cat) return;
       $('#svc-q').value = '';
       renderFind();
-      set({ cat: cat.id, svcStep: 1, picks: withPick(cat.id), docsAll: false, svcAll: cat.items.indexOf(n) >= SVC_LIMIT, svcOpen: n, barOpen: false });
+      set({ cat: cat.id, picks: withPick(cat.id), svcAll: cat.items.indexOf(n) >= SVC_LIMIT, svcOpen: n, barOpen: false });
       // the service comes to the middle of the room under the header and the stuck bar, and lights up for a moment
       // (user, 2026-11-23: «пусть подсвечивается и находится нужная опция»)
       const row = $$('.svc-row').find((r) => r.dataset.svc === n);
@@ -1276,7 +1202,7 @@
     'book-again': () => {
       form.reset();
       const cat = catById(state.cat);
-      glideBook(() => set({ sent: false, cart: [], extra: [], notes: [], svcStep: 1, svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} }));
+      glideBook(() => set({ sent: false, cart: [], extra: [], notes: [], svcOpen: null, picks: cat ? { [cat.id]: autoDoc(catRoles(cat, [])) } : {} }));
       form.elements.name.focus();
     },
 
@@ -1394,7 +1320,7 @@
     const end = performance.now() + 500;
     (function loop() { if (performance.now() < end && a.isConnected) { fix(); requestAnimationFrame(loop); } })();
   }
-  const NEW_BOOKING = ['svc-check', 'svc-sub', 'panel-doc', 'book-pick', 'book-doc', 'helper-book'];
+  const NEW_BOOKING = ['svc-check', 'svc-sub', 'book-pick', 'book-doc', 'helper-book'];
   const REMOVE = ['cart-remove', 'visit-remove', 'note-remove'];
   // in-page links glide instead of jumping (registered after the actions, which may have handled the click);
   // the skip link keeps its jump, it has to move the focus

@@ -535,8 +535,18 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   screen; user: «вот так центрируем»), and on phones «Все разделы» glides
   to the list of sections, so the choice shows rather than the search. The popular pills have no outline (soft Mint,
   darker on hover/press), «ПОПУЛЯРНОЕ» is a small caption; the search field has only the box's Yellow focus ring.
-- No doctor step when the section has one doctor (or diagnostics needs none): step 1's button is «К записи» at once
-  (`docStep()`).
+- No doctor step at all since 2026-11-24 (user: «зачем нам второй шаг врач?»): the panel is the services and «К
+  записи», with no step bar, «Назад» or «Выбрать врача». Before, sections with two doctors (Эстетика; diagnostics with
+  consultations) had a step 2 to pick one, and the bar «1 Услуги — 2 Врач» showed even where step 2 never came. The
+  section's doctor is picked automatically (`state.picks`, `autoDoc`: the first doctor of its roles), and the booking
+  form shows it, where another doctor can be added. The notes below about Services' step 2 (`panel-doc`, `docs-all`,
+  `goStep`, `#pick-doctor`) describe that removed step; its styles (`.wiz`, `.doc-pick`, `.doc-card`) stay in style.css
+  because the temporary English copy (`en.html`, `main-en.js`) still has the step.
+- «Сбросить всё» (2026-11-24, user: «крестик вместо стрелочки … кнопкой как и рядом … цветом»): a ✕ instead of the
+  circular arrow, and a pill like its neighbours — in the Services nav as tall as «Ещё услуга» (52 px; on phones the two
+  share a row in equal halves, the count above, «К записи» under them), in the booking form the 40 px pill it was.
+  Terracotta outline and text (a light Terracotta wash on hover): it takes things away, and it doesn't compete with the
+  Navy «К записи».
 - The services list is two columns of their own (`.svc-col`, odd and even rows; user: «зачем тут растягивать?»): an
   opened row grows only its column — in the shared grid it stretched the row beside it and left a gap under it.
   In one column (container query, < 852 px) the columns dissolve and the rows' `order` keeps their sequence.
