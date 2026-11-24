@@ -328,12 +328,15 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
   /* the burger a little smaller and the logo a little bigger, so neither outweighs the other */
   .hdr__call, .hdr__burger { width: 44px; height: 44px; }
   .logo:not(.logo--lg) { --s: 22px; }
+  /* the subtitle at 0.44 of the name was 9.7 px: bigger with almost no spacing, the same width as the name */
+  .logo:not(.logo--lg) .logo__sub { font-size: 11px; letter-spacing: .04em; margin-right: -.04em; }
   .addr { display: none; }
   .hdr__cta { flex: 1 1 100%; }
 }
 /* 320 px (iPhone SE 1st gen): the yellow dot and the end of «КЛИНИКА» went under the burger */
 @media (max-width: 359px) {
   .logo:not(.logo--lg) { --s: 19px; }
+  .logo:not(.logo--lg) .logo__sub { font-size: 10px; letter-spacing: 0; margin-right: 0; }
 }
 
 /* ===== Hero ===== */
