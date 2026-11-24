@@ -626,6 +626,8 @@ a, button, summary, label { -webkit-tap-highlight-color: transparent; }
 .svc-bar__sep { flex: none; width: 1px; height: 24px; background: var(--line); margin: 0 4px; }
 /* the tabs grow to fill the capsule and never shrink, so narrow screens scroll them */
 .svc-bar__tab { flex: 1 0 auto; min-height: 40px; padding: 0 16px; font-size: var(--fs-m); white-space: nowrap; }
+/* only the chosen tab is outlined: six outlined pills inside the outlined capsule were frames in frames */
+.svc-bar__tab[aria-pressed="false"] { border-color: transparent; }
 /* the button and the section photos are for the phone's drop-down list only */
 .svc-bar__toggle, .svc-bar__ph { display: none; }
 /* tablets: an edge with more tabs behind it fades (main.js tabsFade) */
