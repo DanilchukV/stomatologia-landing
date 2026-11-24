@@ -1218,7 +1218,9 @@
       set({ cart: state.cart.concat([{ n, cat: c.name, cid: c.id, doc: t.dataset.id }]) });
     },
     // "Сбросить всё": the picked services and doctors, in Services and the booking form alike (name and phone stay)
-    'cart-reset': () => set({ cart: [], extra: [], notes: [], svcOpen: null }),
+    // from the booking form the page goes to the section's top: the list it emptied was far longer than what stays
+    // (user, 2026-11-24)
+    'cart-reset': (t) => { const inBook = !!t.closest('#book'); set({ cart: [], extra: [], notes: [], svcOpen: null }); if (inBook) scrollToId('book'); },
     'book-pick': (t) => { const id = t.dataset.id; if (inBooking(id)) dropDoc(id); else set({ extra: withDoc(id) }); },
     // the corner button: open or fold the list; «Добавить услугу» goes back to all the sections
     'bk-toggle': () => set({ bkOpen: !state.bkOpen }),
@@ -1287,7 +1289,8 @@
     const list = REMOVE.includes(act) ? t.closest('#book-svcs, #bk-list') : null;
     const btns = () => $$('.visit__drop, .visit__x', list);
     const at = list ? btns().indexOf(t) : -1;
-    keepInView(t, () => actions[act](t, e));
+    // «Сбросить всё» in the booking form scrolls to the section itself, which holding the button's place would undo
+    if (act === 'cart-reset' && t.closest('#book')) actions[act](t, e); else keepInView(t, () => actions[act](t, e));
     // a ✕ takes its own button away: the focus goes to the one now in its place, else to «Добавить услугу»
     // (visibility is checked on the button, not the list)
     if (list && !t.isConnected && list.isConnected && (!document.activeElement || document.activeElement === document.body)) {
