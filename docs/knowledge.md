@@ -453,13 +453,22 @@ outside the dialog's rounded corners:
   1, 16, 17, 32 — only for them the "Мешает зуб мудрости" chip appears, and another symptom on a
   wisdom tooth adds a note about the surgeon.
 - "По всей челюсти" switches to the jaw symptom set (`symptomGroups.jaw`) and tints all teeth.
-- Zoom on phones (2026-11-23, user: «сложно нажать на восьмёрки»): the map is ~332 px wide there and the molars
-  are 22–30 px, smaller than a finger. Below 641 px a tap on a molar (6–8 in its quadrant) doesn't pick it: the map
-  zooms ×2 into that side (`.is-zoom-r` / `.is-zoom-l`, a transform inside the clipping `.jaw__view`; the middle half
-  of the height stays in view, where all the molars are), the molars become 45–80 px, and every tap then picks a
-  tooth. «Вся схема» in the sides row (in place of the other side's label; the row is always 30 px tall, so nothing
-  moves) zooms out; closing the helper or growing past 640 px resets it. Front teeth are ~40 px and are picked at
-  once. Chosen over a loupe under the finger (hold and drag), which the user was also offered.
+- Loupe on phones (2026-11-24, user: «по середине лупу и можно было водить по целой челюсти и выбрать зуб»; it
+  replaced the ×2 zoom into a side on a molar tap, built 2026-11-23 for «сложно нажать на восьмёрки», in git
+  history). Below 641 px the map is edge to edge (the body's gutters taken back, no frame: 390 → 260 px tall instead
+  of 332 → 221) and «Вопрос не про один зуб?» with its two buttons sits at the bottom, just above «Далее» (user chose
+  "bigger, not stretched" over stretching the picture's height). A 120 px loupe (×2.5, `LENS_S`) rests in the
+  middle of the map; a finger anywhere on the map moves it by the same distance (relative, like a touchpad — the
+  finger never hides it), the tooth under its ring lights up (`.is-aim`) and is named in the hint line, and letting
+  go picks it (user chose "let go — picked" over "drag, then tap inside the loupe"). A tap (under 6 px of movement)
+  moves the loupe to the tapped point and picks the tooth there. The aim is the outline under the ring
+  (`elementFromPoint`), else the nearest tooth middle within 4 % of the width; on gum nothing changes. After a pick
+  the loupe glides onto the tooth's middle and shows its number badge (the ring hides, `.is-on-pick`). At the screen's
+  edges the loupe stops whole and its ring moves off-centre (`--ax`). Inside it is a copy of the map (`lensSync`, on
+  every helper render: fills and badges stay in step), positioned by transforms; the tap that ends a drag is
+  swallowed in the capture phase so the tooth button under the finger doesn't toggle (keyboard Enter on a tooth still
+  picks it, and the loupe goes to it). `.jaw__view` has `touch-action: none` on phones (the helper doesn't scroll at
+  step 1). Desktop and tablets keep plain taps (a tap on the chosen tooth unpicks it).
 - «Далее» and «Записаться» are never `disabled` (2026-11-23, user: a pale button did nothing and said nothing): pale
   (`aria-disabled`) until the step is answered, and a press then gives a Yellow ring for a moment to what is missing
   — the tooth map, whose «Нажмите на зуб на схеме» turns Terracotta, the symptom chips, or the doctors — and brings it

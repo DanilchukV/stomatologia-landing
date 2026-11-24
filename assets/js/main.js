@@ -283,15 +283,100 @@
   const sideOf = (n) => (n <= 8 || n >= 25 ? 'справа' : 'слева');
   const jawOf = (n) => (n <= 16 ? 'сверху' : 'снизу');
   const pct = (v, total) => Math.round(v / total * 10000) / 100;
-  // phones: the molars (6–8 in a quadrant) are ~22–30 px on the map, so a tap on one zooms into that side first
-  // (style.css .is-zoom-r / .is-zoom-l); zoomed, every tap picks a tooth
-  const jawZoomed = () => jaw.classList.contains('is-zoom-r') || jaw.classList.contains('is-zoom-l');
-  function jawZoom(side) {
-    jaw.classList.toggle('is-zoom-r', side === 'r');
-    jaw.classList.toggle('is-zoom-l', side === 'l');
-    $('.jaw__out').hidden = !side;
+  function pickTooth(n) {
+    if (state.tooth === n) return;
+    const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
+    // a doctor picked for another tooth or symptom isn't a choice made for this one
+    set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null, hDoc: null });
   }
-  helper.addEventListener('close', () => jawZoom(null));
+
+  // phones: a loupe over the map (the molars are ~26–35 px there). It rests in the middle; a finger anywhere on the
+  // map moves it by the same distance, so the finger never hides it; the tooth under its ring lights up and letting go
+  // picks it. A tap moves it to the tapped point and picks the tooth there. The loupe shows a copy of the map,
+  // rebuilt on every helper render (lensSync)
+  const LENS_S = 2.5;
+  const lensEl = $('#jaw-lens');
+  const lensView = $('.jaw__view', jaw);
+  const lensOn = () => window.matchMedia('(max-width: 640px)').matches;
+  const toothC = {}; // each tooth's middle (its number badge) as fractions of the map
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  let lens = { x: 0.5, y: 0.5 }, lensFor = null, lensAim = null, lensDrag = null, lensTook = false;
+  function lensAimAt(x, y) {
+    const r = $('#jaw-map').getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + x * r.width, r.top + y * r.height);
+    const t = hit && hit.closest('#jaw-map .tooth');
+    if (t) return +t.dataset.tooth;
+    // between two outlines: the nearest middle within 4 % of the width (the map is 3:2)
+    let best = null, d0 = 0.04;
+    Object.keys(toothC).forEach((n) => { const d = Math.hypot(toothC[n][0] - x, (toothC[n][1] - y) / 1.5); if (d < d0) { d0 = d; best = +n; } });
+    return best;
+  }
+  function lensPlace() {
+    const map = $('#jaw-map');
+    const W = map.offsetWidth, H = map.offsetHeight, R = lensEl.offsetWidth / 2;
+    // at the screen's edges the loupe stops whole and its ring moves off its middle, to the point it shows
+    const left = Math.min(W - 2 * R, Math.max(0, lens.x * W - R)), ax = lens.x * W - left;
+    lensEl.style.transform = `translate(${left}px, ${lens.y * H - R}px)`;
+    lensEl.style.setProperty('--ax', ax + 'px');
+    lensEl.classList.toggle('is-on-pick', !lensDrag && state.tooth !== null && lensFor === state.tooth);
+    const c = $('.jaw__map', lensEl);
+    if (c) { c.style.width = W + 'px'; c.style.transform = `translate(${ax - lens.x * W * LENS_S}px, ${R - lens.y * H * LENS_S}px) scale(${LENS_S})`; }
+    const n = lensDrag && lensDrag.moved ? lensAimAt(lens.x, lens.y) : null;
+    if (n === lensAim) return;
+    $$('.is-aim', jaw).forEach((b) => b.classList.remove('is-aim'));
+    lensAim = n;
+    if (n !== null) {
+      $$(`[data-tooth="${n}"]`, jaw).forEach((b) => b.classList.add('is-aim'));
+      $('#tooth-hint').textContent = glue(`Зуб ${qn(n)} — ${D.toothNames[n]}, ${jawOf(n)} ${sideOf(n)}`);
+    }
+  }
+  function lensSync() {
+    if (!helper.open || !lensOn()) return;
+    // the loupe goes to a tooth chosen another way (keyboard, back from step 2), and back to the middle without one
+    if (!lensDrag && lensFor !== state.tooth) {
+      lensFor = state.tooth;
+      lens = state.tooth !== null ? { x: toothC[state.tooth][0], y: toothC[state.tooth][1] } : { x: 0.5, y: 0.5 };
+    }
+    const c = $('#jaw-map').cloneNode(true);
+    c.removeAttribute('id');
+    $('.jaw__lens-in', lensEl).replaceChildren(c);
+    lensPlace();
+  }
+  lensView.addEventListener('pointerdown', (e) => {
+    if (!lensOn() || e.button > 0 || lensDrag) return;
+    lensTook = false;
+    const r = $('#jaw-map').getBoundingClientRect();
+    lensDrag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, lx: lens.x, ly: lens.y, r, moved: false };
+    try { lensView.setPointerCapture(e.pointerId); } catch (err) { /* a synthetic pointer */ }
+    lensEl.classList.remove('is-glide');
+  });
+  lensView.addEventListener('pointermove', (e) => {
+    const g = lensDrag;
+    if (!g || e.pointerId !== g.id) return;
+    const dx = e.clientX - g.sx, dy = e.clientY - g.sy;
+    if (!g.moved && Math.hypot(dx, dy) < 6) return;
+    g.moved = true;
+    lens = { x: clamp01(g.lx + dx / g.r.width), y: clamp01(g.ly + dy / g.r.height) };
+    lensPlace();
+  });
+  function lensEnd(e) {
+    const g = lensDrag;
+    if (!g || e.pointerId !== g.id) return;
+    const cancel = e.type === 'pointercancel';
+    if (!g.moved && !cancel) lens = { x: clamp01((e.clientX - g.r.left) / g.r.width), y: clamp01((e.clientY - g.r.top) / g.r.height) };
+    const n = cancel ? null : lensAimAt(lens.x, lens.y);
+    lensDrag = null;
+    // the click that follows this touch is the loupe's, not the tooth button's (keyboard clicks still pick)
+    lensTook = !cancel;
+    setTimeout(() => { lensTook = false; }, 400);
+    lensEl.classList.add('is-glide');
+    if (n !== null) { lens = { x: toothC[n][0], y: toothC[n][1] }; lensFor = n; }
+    if (n !== null && n !== state.tooth) pickTooth(n); else render();
+  }
+  lensView.addEventListener('pointerup', lensEnd);
+  lensView.addEventListener('pointercancel', lensEnd);
+  lensView.addEventListener('click', (e) => { if (lensTook) { lensTook = false; e.stopPropagation(); e.preventDefault(); } }, true);
+  helper.addEventListener('close', () => { lens = { x: 0.5, y: 0.5 }; lensFor = null; });
 
   function buildTeeth() {
     const map = $('#jaw-map');
@@ -307,6 +392,7 @@
       b.innerHTML = `<svg viewBox="${x} ${y} ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path class="tooth__shape" d="${d}"/></svg>`
         + `<span class="tooth__n" style="left:${cx}%;top:${cy}%"><span>${qn(n)}</span></span>`;
       map.appendChild(b);
+      toothC[n] = [(x + w * cx / 100) / 1536, (y + h * cy / 100) / 1024];
     });
   }
 
@@ -379,7 +465,8 @@
     $$('.tooth', jaw).forEach((b) => b.setAttribute('aria-pressed', +b.dataset.tooth === tooth));
     $('#tooth-hint').textContent = glue(tooth !== null
       ? `Выбран зуб ${qn(tooth)} — ${D.toothNames[tooth]}, ${tooth <= 16 ? 'верхняя' : 'нижняя'} челюсть, ${sideOf(tooth) === 'справа' ? 'правая' : 'левая'} сторона`
-      : s.scope === 'jaw' ? 'Выбран вопрос по всей челюсти' : 'Нажмите на зуб на схеме');
+      : s.scope === 'jaw' ? 'Выбран вопрос по всей челюсти' : lensOn() ? 'Ведите пальцем по схеме и отпустите на зубе' : 'Нажмите на зуб на схеме');
+    lensSync();
 
     // symptom chips: the set depends on scope, and "wisdom tooth" only shows for a wisdom tooth
     const wrap = $('#sym-wrap');
@@ -1127,13 +1214,9 @@
   const actions = {
     tooth: (t) => {
       const n = +t.dataset.tooth;
-      if (swipeMedia.matches && !jawZoomed() && qn(n) >= 6) { jawZoom(sideOf(n) === 'справа' ? 'r' : 'l'); return; }
       if (state.tooth === n) { set({ tooth: null }); return; }
-      const keep = state.scope !== 'jaw' && !(state.symptom === 'wisdom' && !WISDOM.includes(n));
-      // a doctor picked for another tooth or symptom isn't a choice made for this one
-      set({ tooth: n, scope: 'tooth', skipTooth: false, symptom: keep ? state.symptom : null, hDoc: null });
+      pickTooth(n);
     },
-    'jaw-out': () => jawZoom(null),
     'pick-jaw': () => { if (state.scope !== 'jaw') set({ skipTooth: true, scope: 'jaw', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     'skip-tooth': () => { if (state.tooth !== null || !state.skipTooth || state.scope === 'jaw') set({ skipTooth: true, scope: 'tooth', tooth: null, symptom: null, hDoc: null }); hStep(2); },
     symptom: (t) => {
@@ -1160,6 +1243,7 @@
       set({ hStep: 1, tooth: null, scope: null, skipTooth: false, symptom: null, hDoc: null });
       helper.showModal();
       alignSteps();
+      lensSync();
       $('#helper-body').scrollTop = 0;
     },
     'helper-close': () => helper.close(),
@@ -1579,7 +1663,7 @@
   window.addEventListener('resize', schedule);
   swipeMedia.addEventListener('change', render);
   swipeMedia.addEventListener('change', syncPromises);
-  swipeMedia.addEventListener('change', () => jawZoom(null));
+  swipeMedia.addEventListener('change', lensSync);
   syncPromises();
   // the panel's caret follows its card when the page is resized or the phone row is swiped
   window.addEventListener('resize', docCaret);

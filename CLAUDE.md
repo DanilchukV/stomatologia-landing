@@ -98,7 +98,7 @@ and gets its own small script.
 **Page zoom on phones is disabled on purpose** (user, 2026-11-23, twice): `maximum-scale=1, user-scalable=no` in the
 viewport meta, `touch-action: pan-x pan-y` on every element for touch screens (on `html` alone a pinch inside a
 scrolling box — the helper — still zoomed on an iPhone), and the pinch blocking in `main.js` (iOS
-ignores the meta). Don't "fix" it. The helper's tooth-map zoom is a different feature and stays.
+ignores the meta). Don't "fix" it. The helper's tooth-map loupe is a different feature and stays.
 
 **Bump `?v=` on CSS/JS links after changing them.** GitHub Pages lets browsers cache files for 10
 minutes, and a normal reload re-fetches the page but not its scripts, so the user saw old behaviour

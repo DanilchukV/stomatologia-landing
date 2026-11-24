@@ -1023,14 +1023,10 @@ html:has(.helper[open]) { overflow: hidden; }
 .jaw__sides { box-sizing: border-box; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 8px 0; font-size: var(--fs-s); font-weight: 600; color: var(--ink); white-space: nowrap; }
 .jaw__side { display: inline-flex; align-items: center; gap: 6px; }
 .jaw__mid { font-family: var(--f-head); font-size: var(--fs-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.jaw__map { position: relative; width: 100%; aspect-ratio: 1536 / 1024; transform-origin: 0 0; transition: transform .35s var(--ease-out); }
-/* phones: a tap on a molar zooms ×2 into that side (main.js); the window keeps the middle half of the height, where
-   all the molars are, and the selected tooth's number badge stays its normal size */
-.jaw__view { overflow: hidden; }
-.jaw__out { display: none; }
-.jaw.is-zoom-r .jaw__map { transform: scale(2) translate(0, -25%); }
-.jaw.is-zoom-l .jaw__map { transform: scale(2) translate(-50%, -25%); }
-.jaw.is-zoom-r .tooth__n, .jaw.is-zoom-l .tooth__n { transform: translate(-50%, -50%) scale(.5); }
+.jaw__map { position: relative; width: 100%; aspect-ratio: 1536 / 1024; }
+.jaw__view { position: relative; }
+/* phones only (below): the loupe over the map, main.js lensSync */
+.jaw__lens { display: none; }
 .jaw__img { display: block; width: 100%; height: 100%; object-fit: contain; }
 /* only the tooth outline is clickable, not its bounding box */
 .tooth { position: absolute; background: transparent; border: none; padding: 0; margin: 0; cursor: pointer; pointer-events: none; }
@@ -1200,19 +1196,29 @@ html:has(.helper[open]) { overflow: hidden; }
   .helper__back { padding: 0 18px 0 14px; }
   .helper__next, .helper__book { min-width: 0; padding: 0 16px; white-space: nowrap; }
   .hpane { gap: 12px; }
-  /* step 1: the picture as wide as the screen allows, the two ways out in one row */
-  .jaw { padding: 8px; gap: 6px; border-radius: 20px; }
+  /* step 1: the picture edge to edge, no frame (the body's 20 px gutters taken back), the two ways out in one row at
+     the bottom, just above «Далее» */
+  .hpane[data-step="1"] { min-height: 100%; }
+  .jaw { margin: 0 -20px; padding: 0; gap: 6px; border: 0; border-radius: 0; overflow-x: clip; }
   .jaw__frame { min-width: 0; max-width: none; }
   .jaw__note { display: none; }
-  /* the row is as tall as «Вся схема», so the map doesn't move when the button shows; zoomed, the button takes the
-     place of the other side's label */
-  .jaw__sides { min-height: 30px; padding-top: 0; }
-  .jaw__out { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--white); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
-  .jaw__out[hidden] { display: none; }
-  .jaw__out:active { scale: .97; }
-  .jaw.is-zoom-r .jaw__side:nth-child(3), .jaw.is-zoom-l .jaw__side:first-child { display: none; }
-  .jaw.is-zoom-l .jaw__out { order: -1; }
-  .jaw__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .jaw__sides { padding: 0 16px; }
+  .jaw__hint { padding: 0 16px; }
+  /* the loupe: 120 px, ×2.5 (main.js LENS_S); a finger anywhere on the map moves it, so the map takes no page scroll.
+     The copy of the map inside it follows without delay; a tap's jump glides */
+  .jaw__view { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .jaw__lens { display: block; position: absolute; z-index: 2; left: 0; top: 0; width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: var(--white); box-shadow: 0 0 0 3px var(--white), 0 0 0 4.5px var(--ink), 0 12px 28px rgba(12, 44, 71, .3); pointer-events: none; will-change: transform; }
+  .jaw__lens-in { position: absolute; inset: 0; }
+  .jaw__lens .jaw__map { position: absolute; left: 0; top: 0; transform-origin: 0 0; transition: none; }
+  .jaw__lens .tooth__n { transform: translate(-50%, -50%) scale(.5); }
+  .jaw__lens.is-glide, .jaw__lens.is-glide .jaw__map { transition: transform .25s var(--ease-out); }
+  /* the aim: a small Navy ring with a white halo in the loupe's middle */
+  .jaw__cross { position: absolute; left: var(--ax, 50%); top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 50%; box-shadow: 0 0 0 2px rgba(255, 255, 255, .85); }
+  .jaw__lens.is-glide .jaw__cross { transition: left .25s var(--ease-out); }
+  /* resting on the chosen tooth the loupe shows its number badge, not the ring over it */
+  .jaw__lens.is-on-pick .jaw__cross { opacity: 0; }
+  .tooth.is-aim .tooth__shape { fill: rgba(171, 200, 196, .55); stroke: #0C2C47; }
+  .jaw__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
   .jaw__or { grid-column: 1 / -1; text-align: center; margin: 0; font-size: var(--fs-m); }
   .jaw__btn { min-height: 44px; padding: 0 10px; font-size: var(--fs-m); white-space: nowrap; }
   /* step 2: the chips grow with the helper's body (its content box, cqh) to fill it (user, 2026-11-23); 232 px is
@@ -1269,11 +1275,16 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__doc-ph { width: 32px; border-radius: 8px; }
 } }
 @media (max-width: 480px) {
-  .jaw__sides { padding: 0; font-size: var(--fs-xs); }
+  .jaw__sides { font-size: var(--fs-xs); }
 }
 /* 320 px: «Какой врач нужен» ran under the close button */
 @media (max-width: 360px) {
   .hstep__t { overflow: hidden; text-overflow: ellipsis; }
+}
+/* 320 px: «Не знаю, какой зуб» stuck 8 px out of its half, and the edge-to-edge map left the step 2 px too tall */
+@media (max-width: 359px) {
+  .hpane[data-step="1"] { gap: 8px; }
+  .jaw__btn { padding: 0 8px; gap: 6px; font-size: var(--fs-s); }
 }
 
 /* ===== Doctors ===== */

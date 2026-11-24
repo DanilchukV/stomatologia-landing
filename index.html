@@ -37,11 +37,11 @@
   // deferred scripts have run (or failed) by now: without main.js nothing would ever show the sections
   document.addEventListener('DOMContentLoaded', () => { if (!h.classList.contains('reveal-live')) h.classList.remove('reveal-on'); });
 }</script>
-<link rel="stylesheet" href="assets/css/style.css?v=20261127m">
-<script src="assets/js/header.js?v=20261127m" defer></script>
-<script src="assets/js/data.js?v=20261127m" defer></script>
-<script src="assets/js/form.js?v=20261127m" defer></script>
-<script src="assets/js/main.js?v=20261127m" defer></script>
+<link rel="stylesheet" href="assets/css/style.css?v=20261127n">
+<script src="assets/js/header.js?v=20261127n" defer></script>
+<script src="assets/js/data.js?v=20261127n" defer></script>
+<script src="assets/js/form.js?v=20261127n" defer></script>
+<script src="assets/js/main.js?v=20261127n" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Перейти к содержимому</a>
@@ -496,12 +496,12 @@
               <span class="jaw__side"><svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-back"/></svg>Правая сторона</span>
               <span class="jaw__mid">Вид спереди</span>
               <span class="jaw__side">Левая сторона<svg class="ic" width="14" height="14" stroke-width="2.4" aria-hidden="true"><use href="#i-fwd"/></svg></span>
-              <button type="button" class="jaw__out" data-act="jaw-out" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M7.5 10.5h6"/></svg>Вся схема</button>
             </div>
             <div class="jaw__view">
               <div class="jaw__map" id="jaw-map">
                 <img class="jaw__img" src="assets/img/teeth.webp?v=2" alt="Схема зубов: верхняя и нижняя челюсть" loading="lazy">
               </div>
+              <div class="jaw__lens" id="jaw-lens" aria-hidden="true" inert><div class="jaw__lens-in"></div><span class="jaw__cross"></span></div>
             </div>
           </div>
           <span class="jaw__hint" id="tooth-hint" aria-live="polite"></span>
