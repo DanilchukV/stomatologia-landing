@@ -798,6 +798,60 @@
   function syncDots(cur) { $$('#doc-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === cur)); }
   const docPages = () => Math.max(1, Math.ceil(D.doctors.length / DOCS_PER_PAGE));
 
+  // phones, a story open: it works as a carousel (user, 2026-11-24). A swipe across the panel shows the next or the
+  // previous doctor's story, the row scrolling to their card; a swipe of the row shows the story of the doctor whose
+  // card it stops on, so the caret never points past the screen. The new story's content slides in from that side
+  function docShow(id, dir) {
+    const track = $('#doc-track');
+    set({ docOpen: id });
+    const card = $(`.doc[data-id="${id}"]`, track);
+    if (card) {
+      const t = track.getBoundingClientRect(), c = card.getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+      if (c.left < t.left + pad - 2 || c.right > t.right - pad + 2) {
+        track.scrollTo({ left: track.scrollLeft + c.left - t.left - pad, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      }
+    }
+    const cur = $(`.doc-panel__card.is-cur`, $('#doc-panel-in'));
+    if (cur && dir && !reduceMotion.matches) {
+      $$('.doc-panel__photo, .doc-panel__body', cur).forEach((el) => el.animate(
+        [{ transform: `translateX(${dir * 32}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'cubic-bezier(.22, .7, .2, 1)' }));
+    }
+  }
+  function docStep(dir) {
+    const list = D.doctors.filter(hasBio);
+    const k = list.findIndex((d) => d.id === state.docOpen);
+    const next = list[k + dir];
+    if (next) docShow(next.id, dir);
+  }
+  let docTouch = null;
+  $('#doc-panel').addEventListener('touchstart', (e) => {
+    const p = e.touches[0];
+    docTouch = e.touches.length === 1 && swipeMedia.matches && state.docOpen ? { x: p.clientX, y: p.clientY } : null;
+  }, { passive: true });
+  $('#doc-panel').addEventListener('touchend', (e) => {
+    if (!docTouch) return;
+    const p = e.changedTouches[0], dx = p.clientX - docTouch.x, dy = p.clientY - docTouch.y;
+    docTouch = null;
+    // a clear sideways swipe, not a scroll of the page that drifted
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) docStep(dx < 0 ? 1 : -1);
+  }, { passive: true });
+  let docRowTimer = 0;
+  $('#doc-track').addEventListener('scroll', () => {
+    if (!swipeMedia.matches || !state.docOpen) return;
+    clearTimeout(docRowTimer);
+    docRowTimer = setTimeout(() => {
+      const track = $('#doc-track');
+      const open = $('.doc.is-open', track);
+      const t = track.getBoundingClientRect();
+      const inView = (el) => { const r = el.getBoundingClientRect(); return r.left >= t.left - 2 && r.right <= t.right + 2; };
+      if (!state.docOpen || (open && inView(open))) return;
+      const cards = [...track.children];
+      const cand = cards.find((el) => el.dataset.act === 'doc-card' && inView(el));
+      if (cand) docShow(cand.dataset.id, cards.indexOf(cand) > cards.indexOf(open) ? 1 : -1);
+    }, 160);
+  }, { passive: true });
+
   /* ---------- «Что мы гарантируем» ---------- */
   // on phones each promise opens with its heading (style.css); wider, the texts always show and the headings are
   // disabled buttons, so they are plain text to keyboards and screen readers
