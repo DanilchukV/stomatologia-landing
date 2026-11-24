@@ -1709,6 +1709,15 @@ html:has(.helper[open]) { overflow: hidden; }
   /* in line with the back-to-top button, 24 px from the edge */
   .bk__pill { margin-right: 12px; }
 }
+/* low phones (360×640): the foot took 188 px and left the list a 184 px window; no note, one row of buttons, a round
+   «+» without its words beside «Оформить» */
+@media (max-width: 760px) and (max-height: 700px) {
+  .bk__foot { margin-top: 8px; padding: 12px; }
+  .bk__note { display: none; }
+  .bk__actions { flex-wrap: nowrap; }
+  .bk__add { width: 48px; padding: 0; justify-content: center; }
+  .bk__add-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 
 /* ===== Back to top ===== */
 .to-top { position: fixed; right: 24px; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 39; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--ink); background: var(--ink); color: var(--white); box-shadow: 0 10px 26px rgba(12, 44, 71, .22); cursor: pointer; display: grid; place-items: center; padding: 0; line-height: 0; animation: topIn .25s ease both; transition: background-color .25s ease, color .25s ease, border-color .25s ease, transform .15s, bottom .25s ease; }

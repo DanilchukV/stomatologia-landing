@@ -972,7 +972,7 @@
         <div class="bk__list" id="bk-list"></div>
         <div class="bk__foot">
           <p class="bk__note">${glue('Администратор перезвонит, согласует время и подтвердит запись.')}</p>
-          <div class="bk__actions"><button type="button" class="btn btn--ghost bk__add" data-act="add-svc">${PLUS}Добавить услугу</button><a href="#book" class="btn btn--dark bk__go" data-act="bk-go">Оформить${icon('i-arrow', 16, 2.4)}</a></div>
+          <div class="bk__actions"><button type="button" class="btn btn--ghost bk__add" data-act="add-svc">${PLUS}<span class="bk__add-t">Добавить услугу</span></button><a href="#book" class="btn btn--dark bk__go" data-act="bk-go">Оформить${icon('i-arrow', 16, 2.4)}</a></div>
         </div>
       </div>
       <button type="button" class="bk__pill" data-act="bk-toggle" aria-expanded="false" aria-controls="bk-pop"><span class="bk__count" id="bk-count"></span><span>Ваша запись</span>${icon('i-chev-up', 16, 2.4)}</button>`);
