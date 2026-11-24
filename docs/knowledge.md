@@ -829,6 +829,12 @@ name, smaller type, and only education and work — courses and certificates sho
 has no «Свернуть» (the ✕ is enough; for staff without booking the button row goes too). With a story open, a tap on
 another doctor's card (anywhere but its buttons; `doc-card`) shows theirs — on every screen.
 
+Phones (2026-11-24, user): the lead «Опытные специалисты по всем направлениям.» is one line — its size follows the
+screen (`clamp(13px, (100vw − 2 gutters) / 22.4, 17px)`: 16 px at 390, 14.6 at 360, 13 at 320), left-aligned; in the
+cards «Записаться» stands above «Подробнее» (`order: -1`), so «Подробнее» is always the bottom line, level on every
+card, nurses' and administrators' too (before, it sat above «Записаться» on doctors' cards and at the bottom on the
+others'); the foot lost its 28 px min-height there, which had set the single «Подробнее» 5 px higher.
+
 ## Contacts
 
 One address (the export had two VestMedServis clinics with a switcher in the header, the menu, the
