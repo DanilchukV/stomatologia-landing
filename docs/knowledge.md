@@ -734,9 +734,11 @@ On touch screens (no hover, so no tooltip) the cards' service names wrap instead
 review). In the phone form's cards with 3+ services every ✕ stands at the pill's right end (the name takes the rest);
 unfolded, the round ↑ goes under the list, right-aligned, so the pills drop the 44 px they keep for it when folded.
 
-On desktop and tablets the form's chosen-doctor cards carry their ✕ as a 24 px badge on the photo's top-right corner
-(2026-11-24, site review): in four 220 px columns the ✕ beside the name left it 96 px and every name wrapped; now
-the name has ~140 px and stays on one line.
+On desktop and tablets (≥ 481 px) a chosen doctor's card in the form is laid out like the tile it replaces (user,
+2026-11-24): the 60 px round photo in the middle, the name and the speciality under it, centred, the ✕ in the card's
+top right corner, «Услуги подберёт врач на приёме» and «Услуги врача» centred. In four 220 px columns the ✕ beside the
+name had left it 96 px and every name wrapped (site review); a ✕ badge on the photo, tried the same day, looked out
+of place to the user.
 
 Services in the form's cards on phones (2026-11-23, user): two show, then the round «+N»; up to 480 px, with 3+ (the «+N»
 there) the two pills reach
