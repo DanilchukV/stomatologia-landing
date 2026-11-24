@@ -1228,9 +1228,11 @@ html:has(.helper[open]) { overflow: hidden; }
   /* step 3: small photos, no experience line, tighter type; the first-visit list (the same for every answer) and the
      direction row go, so the step fits the screen without scrolling (user, 2026-11-23) */
   .hint__visit, .hint__row, .hint:has(.hint__note) .hint__disclaimer { display: none; }
-  .hint { gap: 10px; }
+  /* the spacing grows with the room the body has (its content box, cqh; user, 2026-11-24: «дадим подышать»): the
+     short tier keeps the old tight values, a tall phone gets 22 px between the blocks */
+  .hint { gap: clamp(8px, (100cqh - 380px) / 4, 22px); margin-top: clamp(0px, (100cqh - 400px) / 5, 14px); }
   .hint__note { padding: 8px 12px; font-size: var(--fs-m); }
-  .hint__answer { padding: 14px; gap: 6px; border-radius: 20px; }
+  .hint__answer { padding: clamp(12px, (100cqh - 360px) / 8, 18px); gap: clamp(6px, (100cqh - 380px) / 10, 10px); border-radius: 20px; }
   .hint__answer-v { font-size: var(--fs-xl); }
   .hint__pick-note { margin-top: -4px; font-size: var(--fs-m); }
   .hint__docs { gap: 8px; }
@@ -1244,9 +1246,9 @@ html:has(.helper[open]) { overflow: hidden; }
   .hint__visit .bullets li { font-size: var(--fs-m); line-height: 1.4; }
   .hint__more { gap: 8px; }
   .hint__row { padding-bottom: 8px; font-size: var(--fs-m); }
-  .hint__sec { gap: 6px; }
+  .hint__sec { gap: clamp(6px, (100cqh - 380px) / 10, 10px); }
   /* the likely services in a run, not one per line */
-  .hint__sec .bullets { flex-direction: row; flex-wrap: wrap; gap: 2px 16px; }
+  .hint__sec .bullets { flex-direction: row; flex-wrap: wrap; gap: clamp(2px, (100cqh - 400px) / 20, 6px) 16px; }
   .hint__sec .bullets li { font-size: var(--fs-m); line-height: 1.4; }
   .hint__sec .bullets li::before { margin-top: 7px; }
   .hint__disclaimer { font-size: var(--fs-xs); }
@@ -1266,10 +1268,14 @@ html:has(.helper[open]) { overflow: hidden; }
   .sym-chip { min-height: 32px; padding: 0 11px; font-size: var(--fs-m); }
   .hint__row, .hint__disclaimer { display: none; }
   .hint__note { font-size: var(--fs-s); }
-  .hint__answer { padding: 12px; }
-  .hint { gap: 8px; }
   .hint__doc { padding: 4px 10px 4px 4px; }
   .hint__doc-ph { width: 32px; border-radius: 8px; }
+} }
+/* the shortest (360×640 with the bars): a wisdom tooth's note and two doctors ran 19 px past the body */
+@media (max-width: 640px) { @container (max-height: 400px) {
+  .hint { gap: 6px; }
+  .hint__answer { padding: 10px 12px; gap: 4px; }
+  .hint__doc { padding: 2px 10px 2px 2px; }
 } }
 @media (max-width: 480px) {
   .jaw__sides { font-size: var(--fs-xs); }
