@@ -15,17 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     # GitHub Free serves Pages only from public repos; while the repo is private, skip instead of failing
     if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
       # Only the site goes live: tools/, docs/ and CLAUDE.md stay in the repo
       - run: mkdir _site && cp -r *.html assets _site/
       - uses: actions/upload-pages-artifact@v5
+
+  # A separate job: in the same job deploy-pages looked for the artifact 0.2 s after the upload and found none
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
         uses: actions/deploy-pages@v5
