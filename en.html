@@ -30,16 +30,16 @@
   // deferred scripts have run (or failed) by now: without main.js nothing would ever show the sections
   document.addEventListener('DOMContentLoaded', () => { if (!h.classList.contains('reveal-live')) h.classList.remove('reveal-on'); });
 }</script>
-<link rel="stylesheet" href="assets/css/style.css?v=20261127p">
+<link rel="stylesheet" href="assets/css/style.css?v=20261127z">
 <style>
   /* English-only fix, so style.css stays untouched: the short team lead hugged the right edge once it wrapped under
      the title (the long specs in the phone booking row get a soft hyphen in main-en.js instead) */
   @media (max-width: 760px) { .doctors__lead { margin-left: 0; } }
 </style>
-<script src="assets/js/header-en.js?v=20261124b" defer></script>
-<script src="assets/js/data-en.js?v=20261124b" defer></script>
-<script src="assets/js/form-en.js?v=20261124b" defer></script>
-<script src="assets/js/main-en.js?v=20261124b" defer></script>
+<script src="assets/js/header-en.js?v=20261124c" defer></script>
+<script src="assets/js/data-en.js?v=20261124c" defer></script>
+<script src="assets/js/form-en.js?v=20261124c" defer></script>
+<script src="assets/js/main-en.js?v=20261124c" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -56,7 +56,6 @@
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
-  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></symbol>
@@ -382,7 +381,7 @@
         <h2 class="title">Book an&nbsp;appointment</h2>
         <p class="book__lead">Leave your number&nbsp;— we'll call you back and find a&nbsp;convenient time.</p>
       </div>
-      <button type="button" class="book__reset" data-act="cart-reset" hidden><svg class="ic" width="16" height="16" stroke-width="2.2" aria-hidden="true"><use href="#i-reset"/></svg>Reset all</button>
+      <button type="button" class="book__reset" data-act="cart-reset" hidden><svg class="ic" width="14" height="14" stroke-width="2.6" aria-hidden="true"><use href="#i-close"/></svg>Reset all</button>
     </div>
     <div class="book__body">
       <form class="book__form" id="book-form" novalidate>
