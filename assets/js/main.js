@@ -847,7 +847,7 @@
     if (!$('.book-pick', svcsBox)) {
       svcsBox.innerHTML = `<div class="book-pick" role="group" aria-label="Врачи">${D.doctors.filter((d) => BOOKABLE.includes(d.role)).map((d) => {
         const short = d.name ? d.name.split(' ').slice(1).join(' ') || d.name : '';
-        return `<button type="button" class="book-pick__doc" data-act="book-pick" data-id="${d.id}" aria-pressed="false" aria-label="${esc(docTitle(d))}, ${esc(d.spec)}"><span class="book-pick__ph"><span class="av">${docAvatar(d, 20)}</span><span class="book-pick__tick">${icon('i-check', 12, 3)}</span></span><span class="book-pick__spec">${esc(d.spec)}</span>${short ? `<span class="book-pick__name">${esc(glue(short))}</span>` : ''}</button>`;
+        return `<button type="button" class="book-pick__doc" data-act="book-pick" data-id="${d.id}" aria-pressed="false" aria-label="${esc(d.spec)}${short ? ' ' + esc(short) : ''}${d.name ? ', ' + esc(d.name) : ''}"><span class="book-pick__ph"><span class="av">${docAvatar(d, 20)}</span><span class="book-pick__tick">${icon('i-check', 12, 3)}</span></span><span class="book-pick__spec">${esc(d.spec)}</span>${short ? `<span class="book-pick__name">${esc(glue(short))}</span>` : ''}</button>`;
       }).join('')}</div><div class="book__slots-box"></div>`;
     }
     const picksBox = $('.book-pick', svcsBox);
