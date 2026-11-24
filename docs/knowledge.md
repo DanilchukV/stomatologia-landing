@@ -73,6 +73,10 @@ re-encoded as WebP). `og-image.jpg` was rebuilt from an HTML layout with the new
 On 2026-11-23 a new photo («Улыбающийся стоматолог в современной клинике») was tried and taken back the same day;
 the old one is linked as `hero.webp?v=3` so browsers that cached the new one under `?v=2` reload it.
 
+Search engines (2026-11-24, site review): `<link rel="canonical">` to the Pages URL and a schema.org `Dentist` block
+(JSON-LD in `<head>`: name, address, both phones, the og image). It carries the site's current, invented address and
+phones; no opening hours yet — update it together with the page when the real data and a domain come.
+
 ## Typography (line breaks)
 
 Russian rules, applied on 2026-11-03 to every visible text: short words (prepositions, conjunctions,
@@ -225,6 +229,13 @@ Chrome with the check forced on and `overflow-anchor: none`: 0 px drift instead 
   confirmations are `role="status"`); «Записаться ещё раз» → step 1's heading; a ✕ in a booking list → the next ✕,
   else «Добавить услугу». These targets have `tabindex="-1"`, and `[tabindex="-1"]:focus` has no outline.
 - The folded doctor panel is `inert`, so Tab no longer lands on its hidden buttons.
+- Second review (2026-11-24): the carousel dots are 24×24 buttons (Lighthouse's minimum target) drawing a 10 px dot
+  as `::before`; a −7 px vertical margin keeps their row 10 px tall, and the visible gap went 10 → 14 px (24 px
+  between centres is the least that passes). The services search is a combobox: `role="combobox"`,
+  `aria-expanded`, `aria-controls="svc-list"` on the field, the hits `role="listbox"` / `role="option"` with
+  `aria-selected` following ↓/↑; the hits are no longer a live region (it read every name at each letter), a hidden
+  `role="status"` (`#svc-said`) says «Найдено 6 услуг» instead. The booking's round doctor photos are named starting
+  with their visible words («Терапевт Ковалёва, Анна Ковалёва»), so voice control finds them.
 
 ## Header
 
@@ -293,6 +304,10 @@ back-to-top from the click to the end of the glide (`holdSpy`/`releaseSpy`, `gli
 passed on the way don't light up one after another (user, 2026-11-23). A wheel turn or a touch ends the glide and
 the hold.
 
+The logo's subtitle is 0.44 of the name with wide spacing on desktop; on phones that made it 9.7 px (8.4 px at
+320), so there it has its own size (2026-11-24): 11 px with .04em spacing beside the 22 px name, 10 px with none
+beside the 19 px one — the same width as the name in both, so nothing moves toward the burger.
+
 ## Hero
 
 The photo's right edge lines up with the header's "Записаться" button (2026-11-19, user's request; before that
@@ -330,6 +345,10 @@ to 480 px the eyebrow «Здоровые улыбки — счастливые �
 wall right of the doctor's head, over the arch's edge (half on the photo, half on white; user, same day), in Amatic SC Bold (`--f-hand`, self-hosted, bold only), 24 px, four short lines,
 Terracotta, tilted −6°, with a soft white halo; it fades in. The title keeps its place (the column's negative margin
 is 35 px smaller). From 481 px the photo's crop puts the lamp and instruments there, so the plain eyebrow stays.
+
+Low phones (`max-height: 700px`: iPhone SE 375×667, 360×640; 2026-11-24): the arch is 220 px instead of 310, so the
+two buttons stand at ~511 px instead of ~601 and stay on the first screen with the browser bars; the motto moves up
+by the same 90 px (`top: -118px`), back to 6 px into the photo.
 
 ## Finder (the helper's mini section)
 
@@ -527,7 +546,10 @@ isolate` on `.about__ph` keeps Safari from drawing the zoomed photo past the cor
   section open, and on 2026-11-22 the tabs flew back into the cards; the user found the way back flickering and
   jumpy, and chose the permanent bar with no flight (in git history: `flyToTabs`, `flyToCards`). Phones keep the bar
   only with a section open (their grid is a list of rows already); there «Все разделы» glides back to the Services
-  title. The tab bar is a floating capsule (rounded, 1 px Navy border),
+  title. Inside it only the chosen tab is outlined (2026-11-24, site review: six outlined pills in the outlined
+  capsule were frames in frames; the bar itself stays, per the user's 2026-11-22 choice). The search field's hint is
+  shorter on phones (main.js `findPh`): «Чистка, имплант, коронка…» up to 640 px, «Найти услугу» up to 359 px — the
+  full one needs ~330 px and was cut at «…кор». The tab bar is a floating capsule (rounded, 1 px Navy border),
   sticky 10 px under the header (user: the straight full-width bar looked out of place). The tabs grow to fill it
   (`flex: 1 0 auto`), so there is no empty end on the right; where they don't fit they scroll. The scrolling row has
   2 px of room on every side (`padding: 2px; margin: -2px`): on a Windows screen scaled to 125 % the chips' top and
@@ -683,6 +705,17 @@ the booking card is on screen (it shows the same) and after sending; the back-to
 On phones (2026-11-22, site review) the list fits between the header and the button, the cookie notice counted
 (`max-height` from `100dvh`, `--hdr-h` and `--cookie-h`; 72vh ran under the header at 360×640), and «Оформить» wraps
 under «Добавить услугу» when both don't fit (it stuck out of the card at 360 px).
+On low phones (≤ 760 × ≤ 700 px, 2026-11-24) the foot is 73 px instead of 188: no note, and the buttons in one row —
+a round 48 px «+» (its words kept for screen readers, `.bk__add-t`) beside «Оформить»; the list's window at 360×640
+went from 184 to 303 px.
+
+On touch screens (no hover, so no tooltip) the cards' service names wrap instead of ending in «…» (2026-11-24, site
+review). In the phone form's cards with 3+ services every ✕ stands at the pill's right end (the name takes the rest);
+unfolded, the round ↑ goes under the list, right-aligned, so the pills drop the 44 px they keep for it when folded.
+
+On desktop and tablets the form's chosen-doctor cards carry their ✕ as a 24 px badge on the photo's top-right corner
+(2026-11-24, site review): in four 220 px columns the ✕ beside the name left it 96 px and every name wrapped; now
+the name has ~140 px and stays on one line.
 
 Services in the form's cards on phones (2026-11-23, user): two show, then the round «+N»; up to 480 px, with 3+ (the «+N»
 there) the two pills reach
