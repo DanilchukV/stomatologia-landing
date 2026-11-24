@@ -1545,6 +1545,11 @@ html:has(.helper[open]) { overflow: hidden; }
    (phones) keeps them right under their card */
 @media (min-width: 481px) {
   .book__v .visits .vpick-li { grid-column: 1 / -1; order: 1; }
+  /* the ✕ sits on the photo's corner, so the name has the card's whole width (in four 220 px columns it had 96 px and
+     every name wrapped) */
+  .book__v .visit__head { position: relative; }
+  .book__v .visit__drop { position: absolute; top: -6px; left: 26px; width: 24px; height: 24px; box-shadow: 0 0 0 2px var(--tint); }
+  .book__v .visit__drop .ic { width: 12px; height: 12px; }
 }
 
 /* the doctors' row: a slot per doctor; not chosen — a tile (photo above the name, «+ Выбрать»), chosen — their card
