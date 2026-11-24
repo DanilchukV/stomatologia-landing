@@ -235,7 +235,7 @@ Chrome with the check forced on and `overflow-anchor: none`: 0 px drift instead 
   `aria-expanded`, `aria-controls="svc-list"` on the field, the hits `role="listbox"` / `role="option"` with
   `aria-selected` following ↓/↑; the hits are no longer a live region (it read every name at each letter), a hidden
   `role="status"` (`#svc-said`) says «Найдено 6 услуг» instead. The booking's round doctor photos are named starting
-  with their visible words («Терапевт Ковалёва, Анна Ковалёва»), so voice control finds them.
+  with their visible words («Терапевт Ковалёва, Анна Ковалёва»), so voice control finds them; the two caption spans have a space between them (a flex column, so it doesn't show), or their text read «ТерапевтКовалёва».
 
 ## Header
 
@@ -346,7 +346,7 @@ wall right of the doctor's head, over the arch's edge (half on the photo, half o
 Terracotta, tilted −6°, with a soft white halo; it fades in. The title keeps its place (the column's negative margin
 is 35 px smaller). From 481 px the photo's crop puts the lamp and instruments there, so the plain eyebrow stays.
 
-Low phones (`max-height: 700px`: iPhone SE 375×667, 360×640; 2026-11-24): the arch is 220 px instead of 310, so the
+Low phones (`max-height: 650px`, lowered from 700 the same day so iPhones 12–16 in Safari, ~390×660, keep the full arch: iPhone SE in Safari ~375×553, 360×640 with browser bars; 2026-11-24): the arch is 220 px instead of 310, so the
 two buttons stand at ~511 px instead of ~601 and stay on the first screen with the browser bars; the motto moves up
 by the same 90 px (`top: -118px`), back to 6 px into the photo.
 
