@@ -868,7 +868,7 @@
     $$('.book-pick__doc', picksBox).forEach((b) => b.setAttribute('aria-pressed', vs.some((x) => x.id === b.dataset.id)));
     const rebuilt = mount(slotsBox, visitsKey() + '#slots', () => `<ul class="visits book__slots">${slots}</ul>${bookEmpty()
       ? `<p class="book__empty">${glue('You can skip this — the administrator will help you choose by phone.')}</p><button type="button" class="add-svc" data-act="add-svc">${PLUS}Add a service</button>`
-      : `<div class="book__list-acts"><button type="button" class="add-svc" data-act="add-svc">${PLUS}<span class="add-svc__l">Add another service</span><span class="add-svc__s">One more</span></button><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-close', 14, 2.6)}Reset all</button></div>`}`);
+      : `<div class="book__list-acts"><button type="button" class="book__reset book__reset--list" data-act="cart-reset">${icon('i-close', 14, 2.6)}Reset all</button><button type="button" class="add-svc" data-act="add-svc">${PLUS}<span class="add-svc__l">Add another service</span><span class="add-svc__s">One more</span></button></div>`}`);
     // a doctor coming or going, a services list opening or closing: the form glides, clipped at its growing edge.
     // A service ticked in an open list grows its doctor's card: then the list under the cards slides down with the
     // glide instead of jumping (clipped, it was cut off for a moment)

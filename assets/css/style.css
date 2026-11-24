@@ -1636,11 +1636,10 @@ html:has(.helper[open]) { overflow: hidden; }
   .book__head .book__reset { display: none; }
   .book__reset--list { display: inline-flex; }
   /* «Сбросить всё» and «Ещё услуга» share one row, two equal pills, «Сбросить всё» on the left as in Services (user,
-     2026-11-24) */
+     2026-11-24): first in the markup (main.js), not by `order`, or Tab and screen readers go right to left */
   .book__list-acts > * { flex: 1 1 0; justify-content: center; min-height: 44px; padding: 0 12px; }
   .book__list-acts .add-svc__l { display: none; }
   .book__list-acts .add-svc__s { display: inline; }
-  .book__list-acts .book__reset--list { order: -1; }
   /* the doctors as one row of round photos (main.js; user, 2026-11-23: the four tiles made the form look heavy):
      a tap chooses one — an Orange ring and a Navy tick — and their card comes under the row */
   .book-pick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
