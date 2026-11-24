@@ -1535,6 +1535,8 @@ html:has(.helper[open]) { overflow: hidden; }
 .book__card.is-sent .book__form { display: none; }
 .book__card.is-sent .book__done { align-self: start; }
 .book__card.is-sent .book__reset { visibility: hidden; }
+/* the title and «Оставьте номер…» go too: after sending they asked for what was already done (user, 2026-11-24) */
+.book__card.is-sent .book__head { display: none; }
 .book__form { display: flex; flex-direction: column; }
 .book__row { display: grid; grid-template-columns: 170px minmax(0, 1fr); align-items: start; gap: 12px 24px; margin: 0; padding: 20px 0; border: 0; border-top: 1px solid rgba(12, 44, 71, .15); min-width: 0; }
 .book__k { padding: 10px 0 0; font-family: var(--f-head); font-weight: 700; font-size: var(--fs-l); }

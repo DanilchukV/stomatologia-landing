@@ -242,9 +242,9 @@
     }
     return true;
   }
-  // the booking card glides between the form's height and the confirmation's, so it neither jumps nor stays empty
+  // the booking card glides between the form's height and the confirmation's (no head then), so it neither jumps nor stays empty
   function glideBook(change) {
-    const body = $('.book__body');
+    const body = $('.book__card');
     const h0 = body.offsetHeight;
     change();
     const h1 = body.offsetHeight;

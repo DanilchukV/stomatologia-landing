@@ -926,8 +926,9 @@ deleted with Delete goes alone (it isn't a separator, so the digit after it stay
 After sending, "Заявка отправлена" takes the form's place in the same grid cell (`.is-sent` on the card). The form
 used to keep its space (`visibility`), which left a tall empty card around the confirmation (719 px on a phone);
 since 2026-11-24 (user: «при отправке не будет столько свободного пространства») the form is `display: none` and the
-card glides down to the confirmation's height in .4 s (`glideBook`: the body's height animated from the old to the
-new one, then released); «Записаться ещё раз» glides it back up the same way. The corner
+card glides down to the confirmation's height in .4 s (`glideBook`: the card's height animated from the old to the
+new one, then released); «Записаться ещё раз» glides it back up the same way. The title and «Оставьте номер…» hide
+with the form (user, same day: after sending they made no sense). The corner
 button disappears too, and the confirmation (here or in the services panel) is scrolled to the middle
 of the screen (`markSent`). Headless Chrome in `tools/shot` neither runs smooth scrolling nor fires
 `requestAnimationFrame` reliably — to check, patch `scrollIntoView` to `behavior: 'instant'` in `-Do`.
