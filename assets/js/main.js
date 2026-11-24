@@ -645,15 +645,20 @@
   const findBox = $('#svc-found');
   function renderFind() {
     const q = norm($('#svc-q').value).trim();
+    // a combobox for screen readers: the hits are its listbox, and a short count is read instead of every name
+    const said = (t, open) => { $('#svc-q').setAttribute('aria-expanded', open); $('#svc-said').textContent = t; };
     if (q.length < 2) {
+      said('', false);
       findBox.innerHTML = `<div class="svc-pop"><span class="svc-pop__h">Популярное</span>${POPULAR.map(([n, label]) => `<button type="button" class="chip svc-pop__chip" data-act="svc-go" data-svc="${esc(n)}">${esc(label)}${priceHTML(n, 'svc-pop__p')}</button>`).join('')}</div>`;
       return;
     }
     const words = q.split(' ').map((w) => ' ' + w);
     const rank = (x) => (words.every((w) => x.name.includes(w)) ? 0 : words.every((w) => x.keys.includes(w)) ? 1 : 2);
     const hits = SVC_INDEX.filter((x) => words.every((w) => x.hay.includes(w))).sort((a, b) => rank(a) - rank(b)).slice(0, 8);
+    const k = hits.length % 100 > 10 && hits.length % 100 < 15 ? 2 : [2, 0, 1, 1, 1, 2, 2, 2, 2, 2][hits.length % 10];
+    said(hits.length ? `${['Найдена', 'Найдено', 'Найдено'][k]} ${hits.length} ${['услуга', 'услуги', 'услуг'][k]}` : 'Ничего не нашлось', hits.length > 0);
     findBox.innerHTML = hits.length
-      ? `<div class="svc-hits">${hits.map((x, i) => `<button type="button" class="svc-hit" id="svc-hit-${i}" data-act="svc-go" data-svc="${esc(x.n)}"><span class="svc-hit__t"><span class="svc-hit__n">${esc(glue(x.n))}</span><span class="svc-hit__c">${esc(glue(x.c.name))}</span></span>${priceHTML(x.n, 'svc-hit__p')}</button>`).join('')}</div>`
+      ? `<div class="svc-hits" id="svc-list" role="listbox" aria-label="Найденные услуги">${hits.map((x, i) => `<button type="button" class="svc-hit" id="svc-hit-${i}" role="option" aria-selected="false" tabindex="-1" data-act="svc-go" data-svc="${esc(x.n)}"><span class="svc-hit__t"><span class="svc-hit__n">${esc(glue(x.n))}</span><span class="svc-hit__c">${esc(glue(x.c.name))}</span></span>${priceHTML(x.n, 'svc-hit__p')}</button>`).join('')}</div>`
       : `<p class="svc-find__none">${glue('Ничего не нашлось. Попробуйте другое слово или позвоните — подскажем.')}</p>`;
   }
   // the keyboard (user, 2026-11-23): ↓/↑ walk the hits (round), Enter picks the marked one or the first, Esc clears
@@ -661,7 +666,7 @@
   const findQ = $('#svc-q');
   function markFind() {
     const hits = $$('.svc-hit', findBox);
-    hits.forEach((b, i) => b.classList.toggle('is-active', i === findIdx));
+    hits.forEach((b, i) => { b.classList.toggle('is-active', i === findIdx); b.setAttribute('aria-selected', i === findIdx); });
     if (hits[findIdx]) { findQ.setAttribute('aria-activedescendant', hits[findIdx].id); hits[findIdx].scrollIntoView({ block: 'nearest' }); }
     else findQ.removeAttribute('aria-activedescendant');
   }
