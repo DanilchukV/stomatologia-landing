@@ -723,7 +723,10 @@
     const card = $('.doc.is-open', $('#doc-track'));
     if (!card) return;
     const c = card.getBoundingClientRect(), p = panel.getBoundingClientRect();
-    panel.style.setProperty('--caret-x', Math.max(32, Math.min(p.width - 32, c.left + c.width / 2 - p.left)) + 'px');
+    const x = c.left + c.width / 2 - p.left;
+    panel.style.setProperty('--caret-x', Math.max(32, Math.min(p.width - 32, x)) + 'px');
+    // the open card scrolled off along the row: no caret pointing past it
+    panel.classList.toggle('no-caret', x < 16 || x > p.width - 16);
   }
   function renderDoctors() {
     const list = D.doctors;
@@ -798,9 +801,9 @@
   function syncDots(cur) { $$('#doc-dots .dot').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.page === cur)); }
   const docPages = () => Math.max(1, Math.ceil(D.doctors.length / DOCS_PER_PAGE));
 
-  // phones, a story open: it works as a carousel (user, 2026-11-24). A swipe across the panel shows the next or the
-  // previous doctor's story, the row scrolling to their card; a swipe of the row shows the story of the doctor whose
-  // card it stops on, so the caret never points past the screen. The new story's content slides in from that side
+  // phones, a story open: the panel works as a carousel (user, 2026-11-24). A swipe across it shows the next or the
+  // previous doctor's story, the row scrolling to their card if it is off screen. The row only scrolls: a story there
+  // changes by a tap on a card (doc-card). The new story's content slides in from that side
   function docShow(id, dir) {
     const track = $('#doc-track');
     set({ docOpen: id });
@@ -835,21 +838,6 @@
     docTouch = null;
     // a clear sideways swipe, not a scroll of the page that drifted
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) docStep(dx < 0 ? 1 : -1);
-  }, { passive: true });
-  let docRowTimer = 0;
-  $('#doc-track').addEventListener('scroll', () => {
-    if (!swipeMedia.matches || !state.docOpen) return;
-    clearTimeout(docRowTimer);
-    docRowTimer = setTimeout(() => {
-      const track = $('#doc-track');
-      const open = $('.doc.is-open', track);
-      const t = track.getBoundingClientRect();
-      const inView = (el) => { const r = el.getBoundingClientRect(); return r.left >= t.left - 2 && r.right <= t.right + 2; };
-      if (!state.docOpen || (open && inView(open))) return;
-      const cards = [...track.children];
-      const cand = cards.find((el) => el.dataset.act === 'doc-card' && inView(el));
-      if (cand) docShow(cand.dataset.id, cards.indexOf(cand) > cards.indexOf(open) ? 1 : -1);
-    }, 160);
   }, { passive: true });
 
   /* ---------- «Что мы гарантируем» ---------- */
