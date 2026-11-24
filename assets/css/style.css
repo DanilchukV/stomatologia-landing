@@ -140,6 +140,8 @@ img.is-loading { background: linear-gradient(100deg, #E3EDEB 30%, #F5F9F8 50%, #
 .reveal-on .reveal { transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
 .reveal-on .reveal:not(.is-in) { opacity: 0; transform: translateY(18px); }
 .reveal-on .reveal.is-now { transform: none; transition: opacity .5s ease-out .15s; }
+/* print: the sections not scrolled to yet would come out blank (same selector, or the hiding rule wins) */
+@media print { .reveal-on .reveal:not(.is-in) { opacity: 1; transform: none; } }
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .ic--miter { stroke-linejoin: miter; }

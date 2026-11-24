@@ -11,6 +11,7 @@
   // time it scrolls into view. Ones already on screen at load (a reload mid-page) only fade in, without the shift.
   // First in the file, so an error further down can't leave the sections hidden
   if (document.documentElement.classList.contains('reveal-on')) {
+    document.documentElement.classList.add('reveal-live');
     let atLoad = true;
     const seen = new IntersectionObserver((es) => {
       es.forEach((e) => {

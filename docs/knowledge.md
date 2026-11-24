@@ -138,6 +138,14 @@ phone the services and doctors still settle by ~50 px while main.js builds them;
 Found with a CDP trace of a real reload (per-frame positions and opacity), which the harness can't show: it turns
 animations off.
 
+When main.js doesn't run at all (2026-11-24, site review N7): the head script set `reveal-on` but only main.js shows
+the blocks, so a failed or blocked main.js left everything below the first screen blank, and printing the page
+without scrolling it gave 7 blank sheets of 12. Now main.js marks `html.reveal-live` as it starts observing, and the
+head script, on `DOMContentLoaded` (deferred scripts have run or failed by then — no timer to guess, main.js is
+~107 KB and slow on a bad connection), drops `reveal-on` if the mark isn't there: the sections just show, without the
+animation. Printing: `@media print` shows the unrevealed blocks; it needs the same selector as the hiding rule
+(`.reveal-on .reveal:not(.is-in)`), a shorter one loses on specificity.
+
 The booking card was taken out of it the same day (user: the form shakes when, after choosing services in Services,
 you scroll down to it): the whole 1170 px form faded in sliding 18 px while the page was still scrolling, and at that
 very moment the corner «Ваша запись» vanished in one frame while back-to-top glided down. The form is a working area,
