@@ -30,16 +30,16 @@
   // deferred scripts have run (or failed) by now: without main.js nothing would ever show the sections
   document.addEventListener('DOMContentLoaded', () => { if (!h.classList.contains('reveal-live')) h.classList.remove('reveal-on'); });
 }</script>
-<link rel="stylesheet" href="assets/css/style.css?v=20261128b">
+<link rel="stylesheet" href="assets/css/style.css?v=20261128c">
 <style>
   /* English-only fix, so style.css stays untouched: the short team lead hugged the right edge once it wrapped under
      the title (the long specs in the phone booking row get a soft hyphen in main-en.js instead) */
   @media (max-width: 760px) { .doctors__lead { margin-left: 0; } }
 </style>
-<script src="assets/js/header-en.js?v=20261124d" defer></script>
-<script src="assets/js/data-en.js?v=20261124d" defer></script>
-<script src="assets/js/form-en.js?v=20261124d" defer></script>
-<script src="assets/js/main-en.js?v=20261124d" defer></script>
+<script src="assets/js/header-en.js?v=20261125a" defer></script>
+<script src="assets/js/data-en.js?v=20261125a" defer></script>
+<script src="assets/js/form-en.js?v=20261125a" defer></script>
+<script src="assets/js/main-en.js?v=20261125a" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -118,7 +118,7 @@
       </div>
     </div>
     <div class="hero__media">
-      <img class="hero__img" src="assets/img/hero.webp?v=3" alt="A dentist in the clinic's treatment room" fetchpriority="high">
+      <picture><source media="(max-width: 480px)" srcset="assets/img/hero-1100.webp"><img class="hero__img" src="assets/img/hero.webp?v=3" alt="A dentist in the clinic's treatment room" fetchpriority="high"></picture>
     </div>
   </div>
   <div class="hero__facts">
@@ -159,14 +159,14 @@
     </div>
     <div class="about__gallery">
       <figure class="about__ph about__ph--main">
-        <img src="assets/img/clinic/building.webp" alt="The clinic building, entrance from the street" loading="lazy">
+        <picture><source media="(max-width: 480px)" srcset="assets/img/clinic/building-800.webp"><img src="assets/img/clinic/building.webp" alt="The clinic building, entrance from the street" loading="lazy"></picture>
         <span class="about__chip"><svg class="ic" width="16" height="16" stroke-width="2" aria-hidden="true"><use href="#i-pin"/></svg>Brest, 18&nbsp;Lipovaya&nbsp;St</span>
       </figure>
       <figure class="about__ph">
-        <img src="assets/img/clinic/reception.webp" alt="Lobby and reception desk" loading="lazy">
+        <picture><source media="(max-width: 480px)" srcset="assets/img/clinic/reception-480.webp"><img src="assets/img/clinic/reception.webp" alt="Lobby and reception desk" loading="lazy"></picture>
       </figure>
       <figure class="about__ph">
-        <img src="assets/img/clinic/cabinet.webp" alt="Dental treatment room" loading="lazy">
+        <picture><source media="(max-width: 480px)" srcset="assets/img/clinic/cabinet-480.webp"><img src="assets/img/clinic/cabinet.webp" alt="Dental treatment room" loading="lazy"></picture>
       </figure>
     </div>
     <div class="promise">
@@ -234,32 +234,32 @@
     <div class="svc-bar-box" id="svc-bar-box"></div>
     <div class="svc-grid grid-in" id="svc-grid">
       <button type="button" class="svc-card" data-act="cat" data-cat="diag">
-        <span class="svc-card__photo" aria-hidden="true"><img src="assets/img/services/diag-800.webp" srcset="assets/img/services/diag-800.webp 800w, assets/img/services/diag.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></span>
+        <span class="svc-card__photo" aria-hidden="true"><picture><source media="(max-width: 640px)" srcset="assets/img/services/diag-360.webp"><img src="assets/img/services/diag-800.webp" srcset="assets/img/services/diag-800.webp 800w, assets/img/services/diag.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></picture></span>
         <span class="svc-card__name">Consultation and diagnostics</span>
         <span class="svc-card__desc">Specialist consultation and digital diagnostics: X-rays, 3D&nbsp;scans, intraoral scanning and photo records.</span>
       </button>
       <button type="button" class="svc-card" data-act="cat" data-cat="treat">
-        <span class="svc-card__photo" aria-hidden="true"><img src="assets/img/services/treat-800.webp" srcset="assets/img/services/treat-800.webp 800w, assets/img/services/treat.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></span>
+        <span class="svc-card__photo" aria-hidden="true"><picture><source media="(max-width: 640px)" srcset="assets/img/services/treat-360.webp"><img src="assets/img/services/treat-800.webp" srcset="assets/img/services/treat-800.webp 800w, assets/img/services/treat.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></picture></span>
         <span class="svc-card__name">Dental treatment</span>
         <span class="svc-card__desc">Treatment of cavities, pulpitis and periodontitis, microscope work and professional cleaning.</span>
       </button>
       <button type="button" class="svc-card" data-act="cat" data-cat="prost">
-        <span class="svc-card__photo" aria-hidden="true"><img src="assets/img/services/prost-800.webp" srcset="assets/img/services/prost-800.webp 800w, assets/img/services/prost.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></span>
+        <span class="svc-card__photo" aria-hidden="true"><picture><source media="(max-width: 640px)" srcset="assets/img/services/prost-360.webp"><img src="assets/img/services/prost-800.webp" srcset="assets/img/services/prost-800.webp 800w, assets/img/services/prost.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></picture></span>
         <span class="svc-card__name">Prosthetics</span>
         <span class="svc-card__desc">Crowns, inlays and dentures, including implant-supported prosthetics.</span>
       </button>
       <button type="button" class="svc-card" data-act="cat" data-cat="aesthetic">
-        <span class="svc-card__photo" aria-hidden="true"><img src="assets/img/services/aesthetic-800.webp" srcset="assets/img/services/aesthetic-800.webp 800w, assets/img/services/aesthetic.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></span>
+        <span class="svc-card__photo" aria-hidden="true"><picture><source media="(max-width: 640px)" srcset="assets/img/services/aesthetic-360.webp"><img src="assets/img/services/aesthetic-800.webp" srcset="assets/img/services/aesthetic-800.webp 800w, assets/img/services/aesthetic.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></picture></span>
         <span class="svc-card__name">Cosmetic dentistry</span>
         <span class="svc-card__desc">Restoring the shape and color of teeth: restorations, whitening and veneers.</span>
       </button>
       <button type="button" class="svc-card" data-act="cat" data-cat="surgery">
-        <span class="svc-card__photo" aria-hidden="true"><img src="assets/img/services/surgery-800.webp" srcset="assets/img/services/surgery-800.webp 800w, assets/img/services/surgery.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></span>
+        <span class="svc-card__photo" aria-hidden="true"><picture><source media="(max-width: 640px)" srcset="assets/img/services/surgery-360.webp"><img src="assets/img/services/surgery-800.webp" srcset="assets/img/services/surgery-800.webp 800w, assets/img/services/surgery.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></picture></span>
         <span class="svc-card__name">Surgery and implants</span>
         <span class="svc-card__desc">Simple and surgical extraction, tooth-saving surgery, bone grafting and dental implants.</span>
       </button>
       <button type="button" class="svc-card" data-act="cat" data-cat="ortho">
-        <span class="svc-card__photo" aria-hidden="true"><img src="assets/img/services/ortho-800.webp" srcset="assets/img/services/ortho-800.webp 800w, assets/img/services/ortho.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></span>
+        <span class="svc-card__photo" aria-hidden="true"><picture><source media="(max-width: 640px)" srcset="assets/img/services/ortho-360.webp"><img src="assets/img/services/ortho-800.webp" srcset="assets/img/services/ortho-800.webp 800w, assets/img/services/ortho.webp 1600w" sizes="(max-width: 760px) 100vw, 400px" alt="" loading="lazy"></picture></span>
         <span class="svc-card__name">Orthodontics</span>
         <span class="svc-card__desc">Bite correction and teeth straightening for adults and children.</span>
       </button>
